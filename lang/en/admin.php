@@ -77,12 +77,11 @@ return [
             'sns_discord' => 'Discord URL',
         ],
         
-        // Colors Section
-        'colors' => [
-            'title' => 'Color Settings',
-            'primary' => 'Primary Color',
-            'secondary' => 'Secondary Color',
-            'accent' => 'Accent Color',
+        // Appearance Section
+        'appearance' => [
+            'title' => 'Appearance Mode Settings',
+            'description' => 'Configure the theme appearance mode (light/dark).',
+            'mode_help' => 'Auto: Follows user system settings / Light: Bright theme / Dark: Dark theme',
         ],
     ],
 ];

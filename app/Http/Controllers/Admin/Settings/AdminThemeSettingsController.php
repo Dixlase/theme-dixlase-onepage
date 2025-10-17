@@ -58,9 +58,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_youtube',
             'footer_sns_pinterest',
             'footer_sns_discord',
-            'primary_color',
-            'secondary_color',
-            'accent_color',
+            'appearance_mode',
         ]);
         
         // デフォルト値を設定
@@ -87,9 +85,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_youtube' => null,
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
-            'primary_color' => '#3b82f6',
-            'secondary_color' => '#6b7280',
-            'accent_color' => '#10b981',
+            'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
         ];
         
         // デフォルト値とマージ

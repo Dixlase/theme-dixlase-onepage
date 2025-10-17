@@ -16,6 +16,10 @@
     ],
     "author": "exc-D inc. <info@exc-d.com>",
     "license": "AGPL-3.0-or-later",
+    "dependencies": {
+        "alpinejs": "^3.13.0",
+        "@alpinejs/collapse": "^3.13.0"
+    },
     "devDependencies": {
         "vite": "^5.0.0"
     },

@@ -30,4 +30,9 @@
     ])
 @endif
 
+{{-- Alpine.js x-cloak style --}}
+<style>
+    [x-cloak] { display: none !important; }
+</style>
+
 @stack('styles')

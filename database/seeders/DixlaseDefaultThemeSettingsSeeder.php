@@ -45,10 +45,8 @@ class DixlaseDefaultThemeSettingsSeeder extends Seeder
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
             
-            // Colors
-            'primary_color' => '#3b82f6',
-            'secondary_color' => '#6b7280',
-            'accent_color' => '#10b981',
+            // Appearance Mode
+            'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
             
             'created_at' => now(),
             'updated_at' => now(),
