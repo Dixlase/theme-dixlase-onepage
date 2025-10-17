@@ -73,10 +73,8 @@ class UpdateThemeSettingsRequest extends FormRequest
             'footer_sns_pinterest' => 'nullable|string|max:500',
             'footer_sns_discord' => 'nullable|string|max:500',
             
-            // Colors
-            'primary_color' => 'required|string|max:7',
-            'secondary_color' => 'required|string|max:7',
-            'accent_color' => 'required|string|max:7',
+            // Appearance Mode
+            'appearance_mode' => 'required|in:0,1,2',
         ];
     }
 
@@ -90,9 +88,8 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_background_image_id.exists' => '選択された画像が見つかりません。',
             'footer_links.*.title.required' => 'リンクタイトルは必須です。',
             'footer_links.*.url.required' => 'リンクURLは必須です。',
-            'primary_color.required' => 'プライマリーカラーは必須です。',
-            'secondary_color.required' => 'セカンダリーカラーは必須です。',
-            'accent_color.required' => 'アクセントカラーは必須です。',
+            'appearance_mode.required' => '外観モードは必須です。',
+            'appearance_mode.in' => '外観モードは有効な値を選択してください。',
         ];
     }
 
@@ -113,9 +110,7 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_button_secondary_link' => __('themes::admin.settings.hero.button_secondary_link'),
             'footer_description' => __('themes::admin.settings.footer.description'),
             'footer_copyright' => __('themes::admin.settings.footer.copyright'),
-            'primary_color' => __('themes::admin.settings.colors.primary_color'),
-            'secondary_color' => __('themes::admin.settings.colors.secondary_color'),
-            'accent_color' => __('themes::admin.settings.colors.accent_color'),
+            'appearance_mode' => __('common.appearance_mode'),
         ];
     }
 

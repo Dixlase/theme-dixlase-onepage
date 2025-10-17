@@ -1,5 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html 
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}" 
+    class="scroll-smooth"
+    x-data="appearanceTheme('{{ $themeSettings->appearance_mode ?? '0' }}')"
+    x-init="init()"
+    :class="{ 'dark': isDark, 'light': !isDark }"
+>
 <head>
     @include('themes::partials.head')
     
@@ -19,13 +25,9 @@
     @include('themes::partials.footer')
 
     {{-- Scripts --}}
-    @if(!(app()->environment('local') && file_exists(public_path('hot'))))
-        {{-- Viteが起動していない場合のみJSを読み込む（起動時は上で読み込み済み） --}}
-        @vite([
-            'resources/src/front/js/scripts.js',
-            'themes/DixlaseDefaultTheme/resources/assets/js/app.js'
-        ])
-    @endif
+    @vite([
+        'themes/DixlaseDefaultTheme/resources/src/js/app.js'
+    ])
     
     @stack('scripts')
 </body>

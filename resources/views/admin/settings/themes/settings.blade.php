@@ -301,16 +301,29 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </div>
         </div>
 
-        {{-- Color Settings --}}
+        {{-- Appearance Mode Settings --}}
         <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {{ __('themes::admin.settings.colors.title') }}
+                {{ __('themes::admin.settings.appearance.title') }}
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <x-form.color name="primary_color" :label="__('themes::admin.settings.colors.primary')" :value="old('primary_color', $settings->primary_color ?? '#3b82f6')" />
-                <x-form.color name="secondary_color" :label="__('themes::admin.settings.colors.secondary')" :value="old('secondary_color', $settings->secondary_color ?? '#6b7280')" />
-                <x-form.color name="accent_color" :label="__('themes::admin.settings.colors.accent')" :value="old('accent_color', $settings->accent_color ?? '#10b981')" />
-            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                {{ __('themes::admin.settings.appearance.description') }}
+            </p>
+            <fieldset>
+                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    {{ __('common.appearance_mode') }}
+                </legend>
+                @include('components::form.radio-group', [
+                    'name' => 'appearance_mode',
+                    'options' => [
+                        '0' => __('common.auto'),
+                        '1' => __('common.light'),
+                        '2' => __('common.dark')
+                    ],
+                    'value' => old('appearance_mode', $settings->appearance_mode ?? '0'),
+                    'help' => __('themes::admin.settings.appearance.mode_help')
+                ])
+            </fieldset>
         </div>
 
     </form>
