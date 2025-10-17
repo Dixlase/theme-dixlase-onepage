@@ -4,7 +4,7 @@
 
 @section('content')
 {{-- Hero Section --}}
-<x-themes::hero />
+@include('themes::partials.hero')
 
 {{-- Main Content Area (Customizable via Front Page Settings) --}}
 <section class="py-24 bg-gradient-to-b from-[#0F1117] to-[#12141C]">

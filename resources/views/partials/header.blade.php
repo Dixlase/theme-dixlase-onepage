@@ -1,9 +1,16 @@
 @php
     // テーマ設定はServiceProviderから自動的に渡される
-    $headerLogoId = $themeSettings->header_logo_id ?? null;
-    $headerLogo = $headerLogoId ? \App\Models\Media::find($headerLogoId) : null;
     $logoText = config('app.name', 'Dixlase');
     $hasAdminBar = auth('member')->check();
+    
+    // ロゴサイズ設定（ヘッダー用は sm サイズ）
+    $logoSize = 'sm';
+    $sizeClasses = [
+        'sm' => 'h-8',
+        'md' => 'h-10',
+        'lg' => 'h-12',
+    ];
+    $heightClass = $sizeClasses[$logoSize] ?? $sizeClasses['sm'];
 @endphp
 
 <header class="fixed w-full z-50 transition-all duration-300 py-6 {{ $hasAdminBar ? 'top-12' : 'top-0' }}">
@@ -11,13 +18,29 @@
         <div class="flex items-center justify-between w-full">
             {{-- Site Logo --}}
             <div class="flex-shrink-0">
-                <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
-                    @if($headerLogo)
-                        <img src="{{ asset('storage/' . $headerLogo->file_path) }}" alt="{{ $logoText }}" class="h-8 w-auto">
-                    @else
-                        <h1 class="text-2xl font-bold text-white">
+                <a href="{{ url('/') }}" class="flex items-center space-x-3 group" aria-label="Home">
+                    @if($themeSettings->headerLogo && $themeSettings->headerLogoPath)
+                        {{-- テーマ設定のロゴ画像 --}}
+                        <img 
+                            src="{{ asset('storage/' . $themeSettings->headerLogoPath) }}" 
+                            alt="{{ $logoText }}" 
+                            class="{{ $heightClass }} w-auto"
+                        >
+                        {{-- サイト名 --}}
+                        <span class="text-xl font-bold text-white">
                             {{ $logoText }}
-                        </h1>
+                        </span>
+                    @else
+                        {{-- デフォルトロゴ (SVG + テキスト) --}}
+                        <svg class="{{ $heightClass }} w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" class="fill-blue-600"/>
+                            <text x="20" y="28" class="fill-white font-bold text-2xl" font-family="system-ui, sans-serif" text-anchor="middle">
+                                {{ substr($logoText, 0, 1) }}
+                            </text>
+                        </svg>
+                        <span class="text-xl font-bold text-white">
+                            {{ $logoText }}
+                        </span>
                     @endif
                 </a>
             </div>

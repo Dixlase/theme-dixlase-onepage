@@ -107,6 +107,9 @@ class DixlaseDefaultThemeServiceProvider extends ServiceProvider
                     $themeSettings = $this->getDefaultThemeSettings();
                 }
                 
+                // メディアオブジェクトとパスを取得して追加
+                $this->loadMediaForThemeSettings($themeSettings);
+                
                 $view->with('themeSettings', $themeSettings);
             } catch (\Exception $e) {
                 // エラー時はデフォルト値を使用
@@ -147,5 +150,110 @@ class DixlaseDefaultThemeServiceProvider extends ServiceProvider
             'secondary_color' => '#6b7280',
             'accent_color' => '#10b981',
         ];
+    }
+    
+    /**
+     * テーマ設定にメディアオブジェクトとパスを追加
+     * 
+     * @param object $themeSettings
+     * @return void
+     */
+    protected function loadMediaForThemeSettings(object $themeSettings): void
+    {
+        $mediaPath = config('admin.mediaPath', 'media');
+        
+        // ヘッダーロゴ
+        if (!empty($themeSettings->header_logo_id)) {
+            $headerLogo = \App\Models\Media::find($themeSettings->header_logo_id);
+            $themeSettings->headerLogo = $headerLogo;
+            $themeSettings->headerLogoPath = $headerLogo ? $mediaPath . '/' . $headerLogo->path : null;
+        } else {
+            $themeSettings->headerLogo = null;
+            $themeSettings->headerLogoPath = null;
+        }
+        
+        // ファビコン
+        if (!empty($themeSettings->favicon_id)) {
+            $favicon = \App\Models\Media::find($themeSettings->favicon_id);
+            $themeSettings->favicon = $favicon;
+            $themeSettings->faviconPath = $favicon ? $mediaPath . '/' . $favicon->path : null;
+        } else {
+            $themeSettings->favicon = null;
+            $themeSettings->faviconPath = null;
+        }
+        
+        // ヒーロー背景画像
+        if (!empty($themeSettings->hero_background_image_id)) {
+            $heroBackground = \App\Models\Media::find($themeSettings->hero_background_image_id);
+            $themeSettings->heroBackground = $heroBackground;
+            $themeSettings->heroBackgroundPath = $heroBackground ? $mediaPath . '/' . $heroBackground->path : null;
+        } else {
+            $themeSettings->heroBackground = null;
+            $themeSettings->heroBackgroundPath = null;
+        }
+        
+        // SNSリンクのURL生成
+        $themeSettings->snsLinks = $this->generateSnsLinks($themeSettings);
+    }
+    
+    /**
+     * SNSリンクのURLを生成
+     * アカウント名やIDから完全なURLを生成する
+     * 
+     * @param object $themeSettings
+     * @return array
+     */
+    protected function generateSnsLinks(object $themeSettings): array
+    {
+        return [
+            'instagram' => $this->generateSnsUrl('instagram', $themeSettings->footer_sns_instagram ?? null),
+            'x' => $this->generateSnsUrl('x', $themeSettings->footer_sns_x ?? null),
+            'facebook' => $this->generateSnsUrl('facebook', $themeSettings->footer_sns_facebook ?? null),
+            'tiktok' => $this->generateSnsUrl('tiktok', $themeSettings->footer_sns_tiktok ?? null),
+            'bluesky' => $this->generateSnsUrl('bluesky', $themeSettings->footer_sns_bluesky ?? null),
+            'threads' => $this->generateSnsUrl('threads', $themeSettings->footer_sns_threads ?? null),
+            'linkedin' => $this->generateSnsUrl('linkedin', $themeSettings->footer_sns_linkedin ?? null),
+            'youtube' => $this->generateSnsUrl('youtube', $themeSettings->footer_sns_youtube ?? null),
+            'pinterest' => $this->generateSnsUrl('pinterest', $themeSettings->footer_sns_pinterest ?? null),
+            'discord' => $this->generateSnsUrl('discord', $themeSettings->footer_sns_discord ?? null),
+        ];
+    }
+    
+    /**
+     * 各SNSの完全なURLを生成
+     * 
+     * @param string $platform
+     * @param string|null $value
+     * @return string|null
+     */
+    protected function generateSnsUrl(string $platform, ?string $value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+        
+        // 既に完全なURLの場合はそのまま返す
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        }
+        
+        // プラットフォームごとのURL生成
+        return match($platform) {
+            'instagram' => 'https://www.instagram.com/' . ltrim($value, '@') . '/',
+            'x' => 'https://twitter.com/' . ltrim($value, '@'),
+            'facebook' => 'https://www.facebook.com/' . ltrim($value, '@'),
+            'tiktok' => 'https://www.tiktok.com/@' . ltrim($value, '@'),
+            'bluesky' => 'https://bsky.app/profile/' . ltrim($value, '@'),
+            'threads' => 'https://www.threads.net/@' . ltrim($value, '@'),
+            'linkedin' => str_starts_with($value, 'company/') 
+                ? 'https://www.linkedin.com/' . $value 
+                : 'https://www.linkedin.com/in/' . $value,
+            'youtube' => str_starts_with($value, '@') 
+                ? 'https://www.youtube.com/' . $value 
+                : 'https://www.youtube.com/@' . $value,
+            'pinterest' => 'https://www.pinterest.com/' . ltrim($value, '@') . '/',
+            'discord' => $value, // Discordは招待リンクなのでそのまま
+            default => $value,
+        };
     }
 }

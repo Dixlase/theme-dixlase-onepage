@@ -1,6 +1,5 @@
 @php
     // テーマ設定はServiceProviderから自動的に渡される
-    $heroBackground = $themeSettings->hero_background_image_id ?? null;
     $heroMainTitle = $themeSettings->hero_main_title ?? 'Welcome to ' . config('app.name', 'Dixlase');
     $heroSubTitle = $themeSettings->hero_sub_title ?? 'Modern CMS Platform for Building Amazing Websites';
     $heroButtonText = $themeSettings->hero_button_text ?? 'Get Started';
@@ -10,8 +9,16 @@
 @endphp
 
 <section class="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-br from-[#0F1117] via-[#1a1d2e] to-[#0F1117]">
+    {{-- Background Image --}}
+    @if($themeSettings->heroBackground && $themeSettings->heroBackgroundPath)
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('storage/' . $themeSettings->heroBackgroundPath) }}" alt="Hero Background" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-br from-[#0F1117]/80 via-[#1a1d2e]/80 to-[#0F1117]/80"></div>
+        </div>
+    @endif
+    
     {{-- Background Glow Effects --}}
-    <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden z-0">
         <div class="absolute top-1/4 left-10 w-72 h-72 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
         <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-purple-400/10 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
     </div>
