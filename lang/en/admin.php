@@ -10,7 +10,8 @@ return [
     'settings' => [
         'title' => 'Theme Settings',
         'updated_successfully' => 'Theme settings updated successfully',
-        'select_image' => 'Select Image',
+        'select_logo_image' => 'Select Logo Image',
+        'select_favicon_image' => 'Select Favicon Image',
         
         // Header Section
         'header' => [
