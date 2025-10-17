@@ -1,28 +1,27 @@
 {{--
 This file is part of Dixlase.
+
 Copyright (C) 2025 exc-D inc.
+https://exc-d.com
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 --}}
 
 @extends('layouts.admin')
 
 @section('content')
-<div class="max-w-6xl mx-auto mt-12">
-    @if(session('success'))
-        <div class="mb-4 p-4 bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-lg">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if($errors->any())
-        <div class="mb-4 p-4 bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg">
-            <ul class="list-disc list-inside">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
+<div class="max-w-6xl mx-auto mt-6">
     <form id="theme-settings-form" action="{{ route('admin.settings.themes.settings.update') }}" method="POST" class="space-y-6" x-data="themeSettings()">
         @csrf
         @method('PUT')
@@ -41,6 +40,7 @@ Copyright (C) 2025 exc-D inc.
                         'label' => __('themes::admin.settings.header.header_logo'),
                         'help' => __('themes::admin.settings.header.header_logo_help'),
                         'error' => $errors->first('header_logo_id'),
+                        'buttonText' => __('themes::admin.settings.select_logo_image')
                     ])
                 </div>
                 <div>
@@ -51,7 +51,8 @@ Copyright (C) 2025 exc-D inc.
                         'label' => __('themes::admin.settings.header.favicon'),
                         'help' => __('themes::admin.settings.header.favicon_help'),
                         'error' => $errors->first('favicon_id'),
-                        'aspectRatio' => 'square'
+                        'aspectRatio' => 'square',
+                        'buttonText' => __('themes::admin.settings.select_favicon_image')
                     ])
                 </div>
             </div>
@@ -65,15 +66,8 @@ Copyright (C) 2025 exc-D inc.
             <div class="space-y-4">
                 {{-- Basic Settings --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {{ __('themes::admin.settings.hero.basic_settings') }}
-                    </label>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
-                                {{ __('themes::admin.settings.hero.background_section') }}
-                            </label>
-                            
                             @include('components.media-picker', [
                                 'name' => 'hero_background_image_id',
                                 'value' => $settings->hero_background_image_id ?? null,
@@ -326,9 +320,8 @@ Copyright (C) 2025 exc-D inc.
 @section('save')
     <!-- 保存ボタンとモーダル -->
     @include('components.save', [
-        'id' => 'confirmationModal',
+        'id_confirmation' => 'confirmationModal',
         'label' => __('common.save'),
-        'onclick' => "openModal('confirmationModal')",
         'title' => __('common.save_confirmation_title'),
         'message' => __('common.save_confirmation_message'),
         'confirm_label' => __('common.save'),

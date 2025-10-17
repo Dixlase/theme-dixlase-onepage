@@ -10,7 +10,8 @@ return [
     'settings' => [
         'title' => 'テーマ設定',
         'updated_successfully' => 'テーマ設定が更新されました',
-        'select_image' => '画像を選択',
+        'select_logo_image' => 'ロゴ画像を選択',
+        'select_favicon_image' => 'ファビコンを選択',
         
         // Header Section
         'header' => [
