@@ -8,19 +8,19 @@
     $heroButtonSecondaryLink = $themeSettings->hero_button_secondary_link ?? null;
 @endphp
 
-<section class="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-br from-[#0F1117] via-[#1a1d2e] to-[#0F1117]">
+<section class="relative min-h-screen flex flex-col justify-center overflow-hidden">
     {{-- Background Image --}}
     @if($themeSettings->heroBackground && $themeSettings->heroBackgroundPath)
         <div class="absolute inset-0 z-0">
             <img src="{{ asset('storage/' . $themeSettings->heroBackgroundPath) }}" alt="Hero Background" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-br from-[#0F1117]/80 via-[#1a1d2e]/80 to-[#0F1117]/80"></div>
+            <div class="absolute inset-0 "></div>
         </div>
     @endif
     
     {{-- Background Glow Effects --}}
     <div class="absolute inset-0 overflow-hidden z-0">
-        <div class="absolute top-1/4 left-10 w-72 h-72 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
-        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-purple-400/10 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/4 left-10 w-72 h-72 bg-gray-500/100 rounded-full filter blur-3xl animate-pulse-slow"></div>
+        <div class="absolute bottom-2/4 right-20 w-96 h-96 bg-gray-400/100 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
     </div>
 
     {{-- Content --}}
@@ -28,7 +28,7 @@
         <div class="flex flex-col lg:flex-row items-center">
             <div class="lg:w-1/2">
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                    <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{{ $heroMainTitle }}</span>
+                    <span class="bg-gradient-to-r from-gray-400 via-gray-400 to-white bg-clip-text text-transparent">{{ $heroMainTitle }}</span>
                 </h1>
                 
                 @if($heroSubTitle)

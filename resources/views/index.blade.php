@@ -6,12 +6,11 @@
 {{-- Hero Section --}}
 @include('themes::partials.hero')
 
-{{-- Main Content Area (Customizable via Front Page Settings) --}}
+{{-- 
 <section class="py-24 bg-gradient-to-b from-[#0F1117] to-[#12141C]">
     <div class="container mx-auto px-4">
-        {{-- Features Section --}}
+
         <div id="features" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {{-- Feature 1: Fast & Modern --}}
             <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/5">
             <div class="text-center">
                 <div class="bg-purple-500/20 rounded-lg w-12 h-12 flex items-center justify-center mb-5 text-purple-400 mx-auto">
@@ -28,7 +27,6 @@
             </div>
         </div>
 
-        {{-- Feature 2: Customizable --}}
         <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/5">
             <div class="text-center">
                 <div class="bg-purple-500/20 rounded-lg w-12 h-12 flex items-center justify-center mb-5 text-purple-400 mx-auto">
@@ -45,7 +43,6 @@
             </div>
         </div>
 
-        {{-- Feature 3: Secure --}}
         <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/5">
             <div class="text-center">
                 <div class="bg-purple-500/20 rounded-lg w-12 h-12 flex items-center justify-center mb-5 text-purple-400 mx-auto">
@@ -63,7 +60,6 @@
         </div>
     </div>
 
-        {{-- CTA Section --}}
         <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-12 md:p-16 text-center text-white shadow-2xl">
         <h2 class="text-3xl md:text-5xl font-bold mb-6">
             {{ __('Ready to Get Started?') }}
@@ -80,4 +76,5 @@
         </div>
     </div>
 </section>
+--}}
 @endsection
