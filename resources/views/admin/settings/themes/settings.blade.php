@@ -140,12 +140,24 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     </label>
                     <div class="space-y-3">
                         <template x-for="(link, index) in footerLinks" :key="index">
-                            <div class="flex gap-3 items-start">
-                                <input type="text" :name="'footer_links[' + index + '][title]'" x-model="link.title" :placeholder="'{{ __('themes::admin.settings.footer.link_title') }}'" class="flex-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                                <input type="text" :name="'footer_links[' + index + '][url]'" x-model="link.url" :placeholder="'{{ __('themes::admin.settings.footer.link_url') }}'" class="flex-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                                <button type="button" @click="removeFooterLink(index)" class="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                            <div class="flex flex-col justify-center md:justify-start md:flex-row gap-3 items-stretch md:items-start">
+                                <div class="w-full md:flex-1">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        {{ __('themes::admin.settings.footer.link_title') }}
+                                    </label>
+                                    <input type="text" :name="'footer_links[' + index + '][title]'" x-model="link.title" :placeholder="'{{ __('themes::admin.settings.footer.link_title') }}'" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                                </div>
+                                <div class="w-full md:flex-1">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        {{ __('themes::admin.settings.footer.link_url') }}
+                                    </label>
+                                    <input type="text" :name="'footer_links[' + index + '][url]'" x-model="link.url" :placeholder="'{{ __('themes::admin.settings.footer.link_url') }}'" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                                </div>
+                                <div class="w-24 md:w-auto md:self-end">
+                                    <button type="button" @click="removeFooterLink(index)" class="w-full px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
                             </div>
                         </template>
                     </div>
