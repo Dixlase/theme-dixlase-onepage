@@ -10,15 +10,15 @@
     $snsLinks = $themeSettings->snsLinks ?? [];
 @endphp
 
-<footer class="bg-[#12141C] pt-16 pb-8">
+<footer class="bg-gray-100 dark:bg-[#12141C] pt-16 pb-8">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-8">
             {{-- About Section --}}
             <div class="lg:col-span-2">
-                <h2 class="text-2xl font-bold text-white mb-4">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                     {{ config('app.name', 'Dixlase') }}
                 </h2>
-                <p class="text-gray-400 mb-6 max-w-xs">
+                <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-xs">
                     {{ $footerDescription }}
                 </p>
                 
@@ -26,52 +26,52 @@
                 @if(array_filter($snsLinks))
                     <div class="flex space-x-4">
                         @if($snsLinks['facebook'])
-                            <a href="{{ $snsLinks['facebook'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="Facebook">
+                            <a href="{{ $snsLinks['facebook'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Facebook">
                                 <i class="fa-brands fa-facebook text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['x'])
-                            <a href="{{ $snsLinks['x'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="X (Twitter)">
+                            <a href="{{ $snsLinks['x'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="X (Twitter)">
                                 <i class="fa-brands fa-x-twitter text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['instagram'])
-                            <a href="{{ $snsLinks['instagram'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="Instagram">
+                            <a href="{{ $snsLinks['instagram'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Instagram">
                                 <i class="fa-brands fa-instagram text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['tiktok'])
-                            <a href="{{ $snsLinks['tiktok'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="TikTok">
+                            <a href="{{ $snsLinks['tiktok'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="TikTok">
                                 <i class="fa-brands fa-tiktok text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['bluesky'])
-                            <a href="{{ $snsLinks['bluesky'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="Bluesky">
+                            <a href="{{ $snsLinks['bluesky'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Bluesky">
                                 <i class="fa-brands fa-bluesky text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['threads'])
-                            <a href="{{ $snsLinks['threads'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="Threads">
+                            <a href="{{ $snsLinks['threads'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Threads">
                                 <i class="fa-brands fa-threads text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['linkedin'])
-                            <a href="{{ $snsLinks['linkedin'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="LinkedIn">
+                            <a href="{{ $snsLinks['linkedin'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="LinkedIn">
                                 <i class="fa-brands fa-linkedin text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['youtube'])
-                            <a href="{{ $snsLinks['youtube'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="YouTube">
+                            <a href="{{ $snsLinks['youtube'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="YouTube">
                                 <i class="fa-brands fa-youtube text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['pinterest'])
-                            <a href="{{ $snsLinks['pinterest'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="Pinterest">
+                            <a href="{{ $snsLinks['pinterest'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Pinterest">
                                 <i class="fa-brands fa-pinterest text-xl"></i>
                             </a>
                         @endif
                         @if($snsLinks['discord'])
-                            <a href="{{ $snsLinks['discord'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-500 transition-colors" aria-label="Discord">
+                            <a href="{{ $snsLinks['discord'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Discord">
                                 <i class="fa-brands fa-discord text-xl"></i>
                             </a>
                         @endif
@@ -89,7 +89,7 @@
                         <ul class="space-y-2">
                             @foreach($chunk as $link)
                                 <li>
-                                    <a href="{{ $link['url'] ?? '#' }}" class="text-gray-400 hover:text-purple-500 transition-colors">
+                                    <a href="{{ $link['url'] ?? '#' }}" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors">
                                         {{ $link['title'] ?? '' }}
                                     </a>
                                 </li>
@@ -101,8 +101,8 @@
         </div>
 
         {{-- Copyright --}}
-        <div class="border-t border-white/10 pt-8 flex justify-center">
-            <p class="text-gray-400 text-sm mb-4 md:mb-0">
+        <div class="border-t border-gray-300 dark:border-white/10 pt-8 flex justify-center">
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 md:mb-0">
                 {{ $footerCopyright }}
             </p>
         </div>
