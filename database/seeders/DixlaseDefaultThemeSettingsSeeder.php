@@ -18,39 +18,45 @@ class DixlaseDefaultThemeSettingsSeeder extends Seeder
             return;
         }
 
-        DB::table('thm_dixlase_default_theme_settings')->insert([
+        $settings = [
             // Hero Section
-            'hero_background_image_id' => null,
-            'hero_main_title' => 'Welcome to ' . config('app.name', 'Dixlase'),
-            'hero_sub_title' => 'Modern CMS Platform for Building Amazing Websites',
-            'hero_button_text' => 'Get Started',
-            'hero_button_link' => '#',
-            'hero_button_secondary_text' => 'Learn More',
-            'hero_button_secondary_link' => '#features',
+            ['name' => 'hero_background_image_id', 'value' => null],
+            ['name' => 'hero_main_title', 'value' => 'Welcome to ' . config('app.name', 'Dixlase')],
+            ['name' => 'hero_sub_title', 'value' => 'Modern CMS Platform for Building Amazing Websites'],
+            ['name' => 'hero_button_text', 'value' => 'Get Started'],
+            ['name' => 'hero_button_link', 'value' => '#'],
+            ['name' => 'hero_button_secondary_text', 'value' => 'Learn More'],
+            ['name' => 'hero_button_secondary_link', 'value' => '#features'],
             
             // Footer
-            'footer_description' => 'Powered by Dixlase CMS',
-            'footer_links' => json_encode([]),
-            'footer_copyright' => '© ' . date('Y') . ' ' . config('app.name', 'Dixlase') . '. All rights reserved.',
+            ['name' => 'footer_description', 'value' => 'Powered by Dixlase CMS'],
+            ['name' => 'footer_links', 'value' => json_encode([])],
+            ['name' => 'footer_copyright', 'value' => '© ' . date('Y') . ' ' . config('app.name', 'Dixlase') . '. All rights reserved.'],
             
             // SNS Links
-            'footer_sns_instagram' => null,
-            'footer_sns_x' => null,
-            'footer_sns_facebook' => null,
-            'footer_sns_tiktok' => null,
-            'footer_sns_bluesky' => null,
-            'footer_sns_threads' => null,
-            'footer_sns_linkedin' => null,
-            'footer_sns_youtube' => null,
-            'footer_sns_pinterest' => null,
-            'footer_sns_discord' => null,
+            ['name' => 'footer_sns_instagram', 'value' => null],
+            ['name' => 'footer_sns_x', 'value' => null],
+            ['name' => 'footer_sns_facebook', 'value' => null],
+            ['name' => 'footer_sns_tiktok', 'value' => null],
+            ['name' => 'footer_sns_bluesky', 'value' => null],
+            ['name' => 'footer_sns_threads', 'value' => null],
+            ['name' => 'footer_sns_linkedin', 'value' => null],
+            ['name' => 'footer_sns_youtube', 'value' => null],
+            ['name' => 'footer_sns_pinterest', 'value' => null],
+            ['name' => 'footer_sns_discord', 'value' => null],
             
             // Appearance Mode
-            'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
-            
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+            ['name' => 'appearance_mode', 'value' => '0'], // 0: Auto, 1: Light, 2: Dark
+        ];
+
+        foreach ($settings as $setting) {
+            DB::table('thm_dixlase_default_theme_settings')->insert([
+                'name' => $setting['name'],
+                'value' => $setting['value'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         $this->command->info('Dixlase Default Theme settings created successfully!');
     }

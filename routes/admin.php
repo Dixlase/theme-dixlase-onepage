@@ -23,8 +23,23 @@
 use Illuminate\Support\Facades\Route;
 use Themes\DixlaseDefaultTheme\App\Http\Controllers\Admin\Settings\AdminThemeSettingsController;
 
-// このファイルはコアのroutes/admin.phpから読み込まれます
-// すでに admin.ip と auth:member, log.admin.activity ミドルウェアが適用されています
+/*
+|--------------------------------------------------------------------------
+| テーマ管理画面ルート（自動読み込み）
+|--------------------------------------------------------------------------
+|
+| このファイルはテーマが有効化されている場合、ThemeServiceProviderによって
+| 自動的に読み込まれます。以下のミドルウェアが自動適用されます：
+|
+| - admin.ip: IPアドレスフィルタリング
+| - auth:member: 管理メンバー認証
+| - verified: メール認証済みチェック
+| - log.admin.activity: 管理画面操作ログ
+|
+| ルートプレフィックス: /admin（動的に取得）
+| ルート名プレフィックス: admin.
+|
+*/
 
 // テーマ設定
 Route::prefix('settings/themes')
