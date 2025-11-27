@@ -51,7 +51,7 @@ Route::prefix('settings/themes')
             ->name('settings');
         
         // 更新は編集権限が必要
-        Route::put('/settings', [AdminThemeSettingsController::class, 'update'])
+        Route::post('/settings', [AdminThemeSettingsController::class, 'update'])
             ->middleware(['check.menu.access:settings.themes.settings', 'check.menu.edit:settings.themes.settings'])
             ->name('settings.update');
     });

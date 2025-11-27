@@ -24,7 +24,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 <div class="max-w-6xl mx-auto mt-6">
     <form id="theme-settings-form" action="{{ route('admin.settings.themes.settings.update') }}" method="POST" class="space-y-6" x-data="themeSettings()">
         @csrf
-        @method('PUT')
 
         {{-- Header & Favicon Settings --}}
         <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
