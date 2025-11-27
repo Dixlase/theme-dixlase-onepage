@@ -2,7 +2,7 @@
     "name": "dixlase/dixlase-default-theme",
     "description": "Default theme for Dixlase CMS",
     "type": "dixlase-theme",
-    "license": "AGPL-3.0-or-later",
+    "license": "GPL-3.0",
     "authors": [
         {
             "name": "exc-D inc.",
