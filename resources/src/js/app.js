@@ -154,5 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Dixlase Default Theme Loaded');
 });
 
-// Alpine.js を起動
-Alpine.start();
+// Alpine.js を起動（既に初期化されていない場合のみ）
+if (!window.Alpine._started) {
+    Alpine.start();
+}

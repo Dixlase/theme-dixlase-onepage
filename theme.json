@@ -41,5 +41,34 @@
             "body": "system-ui, -apple-system, sans-serif",
             "heading": "system-ui, -apple-system, sans-serif"
         }
+    },
+    "permissions": {
+        "database": {
+            "own_tables": true,
+            "core_tables": [
+                "media:read"
+            ]
+        },
+        "storage": {
+            "own_directory": true,
+            "public_uploads": false,
+            "temp_files": false
+        },
+        "settings": {
+            "read_core": true,
+            "write_own": true
+        },
+        "assets": {
+            "custom_css": true,
+            "custom_js": true,
+            "external_resources": false
+        },
+        "system": {
+            "register_shortcodes": false,
+            "register_middleware": false,
+            "register_commands": false,
+            "register_blade_directives": false,
+            "modify_routes": true
+        }
     }
 }
