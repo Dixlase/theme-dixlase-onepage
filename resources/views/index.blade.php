@@ -6,6 +6,37 @@
 {{-- Hero Section --}}
 @include('themes::partials.hero')
 
+{{-- Front Page Content --}}
+@if(!empty($frontContent))
+<section class="front-content py-16">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
+            @if($frontEditorType === 'blade')
+                {!! shortcode_parse(\Illuminate\Support\Facades\Blade::render($frontContent)) !!}
+            @elseif($frontEditorType === 'markdown')
+                {!! shortcode_parse(\Illuminate\Support\Str::markdown($frontContent)) !!}
+            @else
+                {!! shortcode_parse($frontContent) !!}
+            @endif
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- Contact Form Section --}}
+@if(function_exists('dls_inquiry_enabled') && dls_inquiry_enabled())
+<section class="inquiry-section py-16 bg-gray-100 dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
+                {{ __('dixlase-inquiry::front.form.heading') }}
+            </h2>
+            {!! dls_inquiry_form() !!}
+        </div>
+    </div>
+</section>
+@endif
+
 {{-- 
 <section class="py-24 bg-gradient-to-b from-[#0F1117] to-[#12141C]">
     <div class="container mx-auto px-4">

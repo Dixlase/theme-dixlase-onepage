@@ -22,15 +22,9 @@
 // Dixlase Default Theme - Main JavaScript Entry Point
 // =============================================================================
 
-// Alpine.js をインポート
-import Alpine from 'alpinejs';
-import collapse from '@alpinejs/collapse';
-
-// Alpine.js プラグインを登録
-Alpine.plugin(collapse);
-
-// グローバルに Alpine を公開（デバッグ用）
-window.Alpine = Alpine;
+// Alpine.js はコア（common/js/app.js）で読み込み済み
+// テーマではグローバルの Alpine を使用する
+const Alpine = window.Alpine;
 
 
 
@@ -154,7 +148,5 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Dixlase Default Theme Loaded');
 });
 
-// Alpine.js を起動（既に初期化されていない場合のみ）
-if (!window.Alpine._started) {
-    Alpine.start();
-}
+// Alpine.js はコア側で既に起動済みのため、ここでは起動しない
+// （common/js/app.js で Alpine.start() が呼ばれている）

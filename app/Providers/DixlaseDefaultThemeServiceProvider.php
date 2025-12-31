@@ -111,11 +111,50 @@ class DixlaseDefaultThemeServiceProvider extends ServiceProvider
                 $this->loadMediaForThemeSettings($themeSettings);
                 
                 $view->with('themeSettings', $themeSettings);
+                
+                // ナビゲーションアイテムを取得（メニュープラグインから）
+                $navigationItems = $this->getNavigationItems();
+                $view->with('navigationItems', $navigationItems);
             } catch (\Exception $e) {
                 // エラー時はデフォルト値を使用
                 $view->with('themeSettings', $this->getDefaultThemeSettings());
+                $view->with('navigationItems', []);
             }
         });
+    }
+    
+    /**
+     * ナビゲーションアイテムを取得
+     * メニュープラグインが有効な場合はそこから取得、なければデフォルト
+     * 
+     * @return array
+     */
+    protected function getNavigationItems(): array
+    {
+        // メニュープラグインのヘルパー関数が存在するか確認
+        if (function_exists('dls_menu_items')) {
+            // ヘッダーロケーションまたはデフォルトメニューからアイテムを取得
+            $items = dls_menu_items(true);
+            
+            if (!empty($items)) {
+                return $items;
+            }
+        }
+        
+        // メニュープラグインがない場合やメニューが空の場合はデフォルト
+        return $this->getDefaultNavigationItems();
+    }
+    
+    /**
+     * デフォルトのナビゲーションアイテムを取得
+     * 
+     * @return array
+     */
+    protected function getDefaultNavigationItems(): array
+    {
+        return [
+            ['label' => 'Home', 'url' => url('/')],
+        ];
     }
     
     /**
