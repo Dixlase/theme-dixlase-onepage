@@ -67,7 +67,7 @@
     </div>
 </section>
 
-<style>
+<style @cspNonce>
     @keyframes pulse-slow {
         0%, 100% {
             opacity: 0.3;

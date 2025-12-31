@@ -70,5 +70,15 @@
             "register_blade_directives": false,
             "modify_routes": true
         }
+    },
+    "csp": {
+        "external_domains": {
+            "fonts": [
+                "https://fonts.bunny.net"
+            ],
+            "styles": [
+                "https://fonts.bunny.net"
+            ]
+        }
     }
 }

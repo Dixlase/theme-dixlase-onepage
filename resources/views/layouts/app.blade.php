@@ -25,9 +25,13 @@
     @include('themes::partials.footer')
 
     {{-- Scripts --}}
-    @vite([
-        'themes/DixlaseDefaultTheme/resources/src/js/app.js'
-    ])
+    @if(app()->environment('local') && file_exists(public_path('hot')))
+        @vite([
+            'themes/DixlaseDefaultTheme/resources/src/js/app.js'
+        ])
+    @else
+        {!! load_front_assets([], ['js/app.js']) !!}
+    @endif
     
     @stack('scripts')
 </body>

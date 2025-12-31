@@ -37,7 +37,7 @@ return [
                 'themes' => [
                     'children' => [
                         'settings' => [
-                            'text' => 'admin.nav.settings.themes.settings',
+                            'text' => 'admin/nav.settings.themes.settings',
                             'route' => 'admin.settings.themes.settings',
                             'icon' => 'fas fa-fw fa-cog',
                         ],

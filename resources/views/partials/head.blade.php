@@ -22,16 +22,15 @@
         'themes/DixlaseDefaultTheme/resources/assets/js/app.js'
     ])
 @else
-    {{-- 本番環境またはViteが起動していない場合 --}}
-    @vite([
-        'resources/src/front/scss/style.scss',
-        'themes/DixlaseDefaultTheme/resources/assets/css/variables.css',
-        'themes/DixlaseDefaultTheme/resources/assets/css/style.css'
-    ])
+    {{-- 本番/ステージング環境: シンボリックリンク経由でアセットを読み込む --}}
+    {!! load_front_assets(
+        ['scss/style.scss'],
+        ['css/variables.css', 'css/style.css']
+    ) !!}
 @endif
 
 {{-- Alpine.js x-cloak style --}}
-<style>
+<style @cspNonce>
     [x-cloak] { display: none !important; }
 </style>
 
