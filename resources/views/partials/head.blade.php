@@ -5,8 +5,8 @@
 <title>{{ config('app.name', 'Dixlase') }} @yield('title')</title>
 
 {{-- Favicon --}}
-@if($themeSettings->favicon && $themeSettings->faviconPath)
-    <link rel="icon" type="{{ $themeSettings->favicon->type }}" href="{{ asset('storage/' . $themeSettings->faviconPath) }}">
+@if(isset($themeSettings->favicon_id) && $themeSettings->favicon_id)
+    <link rel="icon" href="{{ asset('storage/' . $themeSettings->favicon_id) }}">
 @endif
 
 {{-- Fonts --}}

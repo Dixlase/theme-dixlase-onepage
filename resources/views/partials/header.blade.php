@@ -2,6 +2,17 @@
     // テーマ設定はServiceProviderから自動的に渡される
     $logoText = config('app.name', 'Dixlase');
     $hasAdminBar = auth('member')->check();
+    $hasUserLoginBar = auth('user')->check() || !auth('user')->check(); // ログインバーは常に表示
+    
+    // ヘッダーの位置を計算
+    $headerTopClass = 'top-0';
+    if ($hasAdminBar && $hasUserLoginBar) {
+        $headerTopClass = 'top-[7rem]'; // 管理バー(3rem) + ログインバー(4rem)
+    } elseif ($hasAdminBar) {
+        $headerTopClass = 'top-12'; // 管理バーのみ(3rem)
+    } elseif ($hasUserLoginBar) {
+        $headerTopClass = 'top-16'; // ログインバーのみ(4rem)
+    }
     
     // ロゴサイズ設定（ヘッダー用は sm サイズ）
     $logoSize = 'sm';
@@ -15,17 +26,17 @@
 
 <header 
     x-data="{ mobileMenuOpen: false }" 
-    class="fixed h-14 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $hasAdminBar ? 'top-12' : 'top-0' }}"
+    class="fixed h-14 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $headerTopClass }}"
 >
     <div class="container h-full mx-auto px-4 flex justify-between items-center">
         <div class="flex items-center justify-between w-full">
             {{-- Site Logo --}}
             <div class="flex-shrink-0">
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group" aria-label="Home">
-                    @if($themeSettings->headerLogo && $themeSettings->headerLogoPath)
+                    @if(isset($themeSettings->header_logo_id) && $themeSettings->header_logo_id)
                         {{-- テーマ設定のロゴ画像 --}}
                         <img 
-                            src="{{ asset('storage/' . $themeSettings->headerLogoPath) }}" 
+                            src="{{ asset('storage/' . $themeSettings->header_logo_id) }}" 
                             alt="{{ $logoText }}" 
                             class="{{ $heightClass }} w-auto"
                         >

@@ -23,21 +23,57 @@
 // =============================================================================
 
 /**
+ * Alpine.js: アピアランステーマコンポーネント
+ * ダークモード/ライトモードの切り替えを管理
+ */
+window.appearanceTheme = function (mode) {
+    return {
+        isDark: false,
+        mode: mode, // '0': システム設定, '1': ライト, '2': ダーク
+
+        init() {
+            // 初期状態の設定
+            this.updateTheme();
+
+            // システム設定の変更を監視
+            if (this.mode === '0') {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                    this.updateTheme();
+                });
+            }
+        },
+
+        updateTheme() {
+            if (this.mode === '2') {
+                // ダークモード固定
+                this.isDark = true;
+            } else if (this.mode === '1') {
+                // ライトモード固定
+                this.isDark = false;
+            } else {
+                // システム設定に従う
+                this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            }
+        }
+    };
+};
+
+/**
  * ダークモード切り替え
  */
 function initDarkMode() {
     const darkModeToggle = document.querySelector('[data-dark-mode-toggle]');
-    
+
     if (darkModeToggle) {
         darkModeToggle.addEventListener('click', () => {
             document.documentElement.classList.toggle('dark');
-            
+
             // ローカルストレージに保存
             const isDark = document.documentElement.classList.contains('dark');
             localStorage.setItem('darkMode', isDark ? 'dark' : 'light');
         });
     }
-    
+
     // 初期状態の設定
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode === 'dark') {
@@ -52,7 +88,7 @@ function initDarkMode() {
  */
 function initScrollToTop() {
     const scrollTopBtn = document.querySelector('[data-scroll-top]');
-    
+
     if (scrollTopBtn) {
         // スクロール位置に応じて表示/非表示
         window.addEventListener('scroll', () => {
@@ -62,7 +98,7 @@ function initScrollToTop() {
                 scrollTopBtn.classList.add('hidden');
             }
         });
-        
+
         // クリックでトップへスクロール
         scrollTopBtn.addEventListener('click', () => {
             window.scrollTo({
@@ -78,10 +114,10 @@ function initScrollToTop() {
  */
 function initExternalLinks() {
     const links = document.querySelectorAll('a[href^="http"]');
-    
+
     links.forEach(link => {
         const url = new URL(link.href);
-        
+
         // 外部リンクの場合
         if (url.hostname !== window.location.hostname) {
             link.setAttribute('target', '_blank');
@@ -113,7 +149,7 @@ function initLazyLoading() {
                 }
             });
         });
-        
+
         const images = document.querySelectorAll('img[data-src]');
         images.forEach(img => imageObserver.observe(img));
     }
@@ -127,6 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollToTop();
     initExternalLinks();
     initLazyLoading();
-    
+
     console.log('Dixlase Default Theme Loaded');
 });

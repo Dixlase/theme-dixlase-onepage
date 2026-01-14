@@ -16,6 +16,11 @@
     {{-- 管理バー（管理者ログイン時のみ表示） --}}
     <x-admin-bar />
     
+    {{-- ログインバー（ユーザー認証表示） --}}
+    @if(view()->exists('users-plugin::components.login-bar'))
+        @include('users-plugin::components.login-bar')
+    @endif
+    
     @include('themes::partials.header')
 
     <main class="flex-grow">
@@ -27,6 +32,7 @@
     {{-- Scripts --}}
     @if(app()->environment('local') && file_exists(public_path('hot')))
         @vite([
+            'resources/src/common/js/app.js',
             'themes/DixlaseDefaultTheme/resources/src/js/app.js'
         ])
     @else
