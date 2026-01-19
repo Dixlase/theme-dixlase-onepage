@@ -14,7 +14,7 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
     {{-- 管理バー（管理者ログイン時のみ表示） --}}
-    <x-admin-bar />
+    <x-ui.admin-bar />
     
     {{-- ログインバー（ユーザー認証表示） --}}
     @if(view()->exists('users-plugin::components.login-bar'))
@@ -40,5 +40,6 @@
     @endif
     
     @stack('scripts')
+
 </body>
 </html>
