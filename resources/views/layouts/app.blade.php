@@ -16,11 +16,6 @@
     {{-- 管理バー（管理者ログイン時のみ表示） --}}
     <x-ui.admin-bar />
     
-    {{-- ログインバー（ユーザー認証表示） --}}
-    @if(view()->exists('users-plugin::components.login-bar'))
-        @include('users-plugin::components.login-bar')
-    @endif
-    
     @include('themes::partials.header')
 
     <main class="flex-grow">
