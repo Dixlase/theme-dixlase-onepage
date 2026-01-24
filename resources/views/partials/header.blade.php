@@ -2,17 +2,9 @@
     // テーマ設定はServiceProviderから自動的に渡される
     $logoText = config('app.name', 'Dixlase');
     $hasAdminBar = auth('member')->check();
-    $hasUserLoginBar = auth('user')->check() || !auth('user')->check(); // ログインバーは常に表示
     
-    // ヘッダーの位置を計算
-    $headerTopClass = 'top-0';
-    if ($hasAdminBar && $hasUserLoginBar) {
-        $headerTopClass = 'top-[7rem]'; // 管理バー(3rem) + ログインバー(4rem)
-    } elseif ($hasAdminBar) {
-        $headerTopClass = 'top-12'; // 管理バーのみ(3rem)
-    } elseif ($hasUserLoginBar) {
-        $headerTopClass = 'top-16'; // ログインバーのみ(4rem)
-    }
+    // ヘッダーの位置を計算（管理バーがある場合のみ下げる）
+    $headerTopClass = $hasAdminBar ? 'top-12' : 'top-0';
     
     // ロゴサイズ設定（ヘッダー用は sm サイズ）
     $logoSize = 'sm';
@@ -28,7 +20,7 @@
     x-data="{ mobileMenuOpen: false }" 
     class="fixed h-14 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $headerTopClass }}"
 >
-    <div class="container h-full mx-auto px-4 flex justify-between items-center">
+    <div class="w-full h-full px-4 flex justify-between items-center">
         <div class="flex items-center justify-between w-full">
             {{-- Site Logo --}}
             <div class="flex-shrink-0">
@@ -113,6 +105,13 @@
                     {{-- メニューが空の場合 --}}
                 @endforelse
             </nav>
+
+            {{-- User Auth Buttons (provided by DixlaseUsers plugin) --}}
+            @if(view()->exists('dixlase-users::components.auth-buttons'))
+            <div class="hidden lg:flex items-center ml-4">
+                @include('dixlase-users::components.auth-buttons')
+            </div>
+            @endif
 
             {{-- Desktop Language Switcher (provided by DixlaseMultilingual plugin) --}}
             @if(function_exists('dls_multilingual_switcher'))
@@ -199,6 +198,15 @@
                     {{ __('No menu items') }}
                 </p>
             @endforelse
+
+            {{-- Mobile User Auth (provided by DixlaseUsers plugin) --}}
+            @if(view()->exists('dixlase-users::components.auth-buttons'))
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="px-4 py-2">
+                    @include('dixlase-users::components.auth-buttons')
+                </div>
+            </div>
+            @endif
 
             {{-- Mobile Language Switcher (provided by DixlaseMultilingual plugin) --}}
             @if(function_exists('dls_multilingual_switcher'))
