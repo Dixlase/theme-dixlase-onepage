@@ -4,18 +4,18 @@ import { resolve } from 'path';
 export default defineConfig({
     build: {
         // ビルド出力先
-        outDir: '../../public/assets/themes/dixlase-default-theme',
+        outDir: '../../public/assets/themes/dixlase-one-page',
         emptyOutDir: true,
-        
+
         // ソースマップ
         sourcemap: process.env.NODE_ENV === 'development',
-        
+
         // ロールアップオプション
         rollupOptions: {
             input: {
                 // SCSS (開発時)
                 'theme-style': resolve(__dirname, 'resources/src/front/scss/style.scss'),
-                
+
                 // JavaScript (Alpine.js含む)
                 'app': resolve(__dirname, 'resources/src/js/app.js'),
             },
@@ -41,13 +41,13 @@ export default defineConfig({
                 },
             },
         },
-        
+
         // マニフェストファイル生成
         manifest: true,
-        
+
         // 最小化
         minify: process.env.NODE_ENV === 'production' ? 'terser' : false,
-        
+
         // Terserオプション
         terserOptions: {
             compress: {
@@ -55,7 +55,7 @@ export default defineConfig({
             },
         },
     },
-    
+
     // 開発サーバー設定
     server: {
         host: '0.0.0.0',
@@ -65,17 +65,17 @@ export default defineConfig({
             host: 'localhost',
         },
     },
-    
+
     // プレビューサーバー設定
     preview: {
         port: 5174,
     },
-    
+
     // 依存関係の最適化
     optimizeDeps: {
         include: [],
     },
-    
+
     // CSS設定
     css: {
         devSourcemap: true,

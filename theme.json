@@ -1,22 +1,23 @@
 {
-    "name": "Dixlase Default Theme",
-    "package_name": "dixlase/dixlase-default-theme",
-    "slug": "dixlase-default-theme",
+    "name": "Dixlase OnePage",
+    "package_name": "dixlase/dixlase-one-page",
+    "slug": "dixlase-one-page",
     "version": "1.0.0",
     "description": {
-        "ja": "Dixlaseのデフォルトテーマ。シンプルでモダンなデザイン。",
-        "en": "Default theme for Dixlase. Simple and modern design."
+        "ja": "Dixlase OnePage テーマ。プラグイン連動型のシングルページ/LP用テーマ。",
+        "en": "Dixlase OnePage theme. Plugin-driven single page / landing page theme."
     },
     "author": "exc-D inc.",
     "email": "info@exc-d.com",
     "url": "https://exc-d.com",
     "license": "GPL-3.0",
     "license_template": "license-gpl.txt",
-    "namespace": "Themes\\DixlaseDefaultTheme",
+    "namespace": "Themes\\DixlaseOnePage",
     "type": "dixlase-theme",
     "screenshot": "screenshot.png",
     "tags": [
-        "default",
+        "onepage",
+        "landing",
         "simple",
         "modern",
         "responsive"
@@ -24,6 +25,11 @@
     "requires": {
         "dixlase": ">=1.0.0",
         "php": ">=8.2"
+    },
+    "assets": {
+        "common": ["js/app.js"],
+        "admin": [],
+        "front": ["front/scss/style.scss"]
     },
     "supports": {
         "dark_mode": true,

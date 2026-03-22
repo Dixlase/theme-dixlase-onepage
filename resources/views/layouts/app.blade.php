@@ -13,8 +13,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
-    {{-- 管理バー（管理者ログイン時のみ表示） --}}
-    <x-ui.admin-bar />
+    {{-- 管理バー・メンテナンスバナー（管理者ログイン時のみ表示） --}}
+    <div class="sticky top-0" style="z-index: 9999;">
+        {{-- メンテナンスバナー（メンテナンス中のみ表示） --}}
+        <x-ui-maintenance-banner />
+        {{-- 管理バー --}}
+        <x-ui-admin-bar />
+    </div>
     
     @include('themes::partials.header')
 
@@ -28,7 +33,7 @@
     @if(app()->environment('local') && file_exists(public_path('hot')))
         @vite([
             'resources/src/common/js/app.js',
-            'themes/DixlaseDefaultTheme/resources/src/js/app.js'
+            'themes/DixlaseOnePage/resources/src/js/app.js'
         ])
     @else
         {!! load_front_assets([], ['js/app.js']) !!}

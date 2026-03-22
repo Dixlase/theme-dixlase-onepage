@@ -4,6 +4,9 @@
 
 <title>{{ config('app.name', 'Dixlase') }} @yield('title')</title>
 
+{{-- SEOメタタグ・OGP・JSON-LD（DixlaseSEOプラグインから注入） --}}
+{!! $seoHeadMeta ?? '' !!}
+
 {{-- Favicon --}}
 @if(isset($themeSettings->favicon_id) && $themeSettings->favicon_id)
     <link rel="icon" href="{{ asset('storage/' . $themeSettings->favicon_id) }}">
@@ -18,8 +21,8 @@
     {{-- Vite開発サーバーが起動している場合 --}}
     @vite([
         'resources/src/front/scss/style.scss',
-        'themes/DixlaseDefaultTheme/resources/src/front/scss/style.scss',
-        'themes/DixlaseDefaultTheme/resources/assets/js/app.js'
+        'themes/DixlaseOnePage/resources/src/front/scss/style.scss',
+        'themes/DixlaseOnePage/resources/assets/js/app.js'
     ])
 @else
     {{-- 本番/ステージング環境: シンボリックリンク経由でアセットを読み込む --}}

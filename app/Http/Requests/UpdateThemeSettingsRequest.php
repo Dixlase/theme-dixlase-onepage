@@ -20,7 +20,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Themes\DixlaseDefaultTheme\App\Http\Requests;
+namespace Themes\DixlaseOnePage\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

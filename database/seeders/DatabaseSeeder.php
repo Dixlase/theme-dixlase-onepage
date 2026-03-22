@@ -20,7 +20,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Themes\DixlaseDefaultTheme\Database\Seeders;
+namespace Themes\DixlaseOnePage\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
@@ -33,8 +33,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ThemeSettingsSeeder::class,
-            DixlaseDefaultThemeSettingsSeeder::class,
-            ThemeRolePermissionSeeder::class,
+            DixlaseOnePageSettingsSeeder::class,
         ]);
     }
 }

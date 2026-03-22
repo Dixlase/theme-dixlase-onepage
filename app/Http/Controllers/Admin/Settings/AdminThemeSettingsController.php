@@ -20,12 +20,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Themes\DixlaseDefaultTheme\App\Http\Controllers\Admin\Settings;
+namespace Themes\DixlaseOnePage\App\Http\Controllers\Admin\Settings;
 
 use App\Http\Controllers\Admin\AdminLoggedInController;
 use App\Models\Media;
-use Themes\DixlaseDefaultTheme\App\Http\Requests\UpdateThemeSettingsRequest;
-use Themes\DixlaseDefaultTheme\App\Models\ThemeSetting;
+use Themes\DixlaseOnePage\App\Http\Requests\UpdateThemeSettingsRequest;
+use Themes\DixlaseOnePage\App\Models\ThemeSetting;
 
 class AdminThemeSettingsController extends AdminLoggedInController
 {

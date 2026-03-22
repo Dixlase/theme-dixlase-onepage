@@ -32,27 +32,27 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </h3>
             <div class="space-y-4">
                 <div>
-                    @include('components.media-picker', [
-                        'name' => 'header_logo_id',
-                        'value' => $settings->header_logo_id ?? null,
-                        'media' => $headerLogo ?? null,
-                        'label' => __('themes::admin.settings.header.header_logo'),
-                        'help' => __('themes::admin.settings.header.header_logo_help'),
-                        'error' => $errors->first('header_logo_id'),
-                        'buttonText' => __('themes::admin.settings.select_logo_image')
-                    ])
+                    <x-media.picker
+                        name="header_logo_id"
+                        :value="$settings->header_logo_id ?? null"
+                        :media="$headerLogo ?? null"
+                        :label="__('themes::admin.settings.header.header_logo')"
+                        :help="__('themes::admin.settings.header.header_logo_help')"
+                        :error="$errors->first('header_logo_id')"
+                        :buttonText="__('themes::admin.settings.select_logo_image')"
+                    />
                 </div>
                 <div>
-                    @include('components.media-picker', [
-                        'name' => 'favicon_id',
-                        'value' => $settings->favicon_id ?? null,
-                        'media' => $favicon ?? null,
-                        'label' => __('themes::admin.settings.header.favicon'),
-                        'help' => __('themes::admin.settings.header.favicon_help'),
-                        'error' => $errors->first('favicon_id'),
-                        'aspectRatio' => 'square',
-                        'buttonText' => __('themes::admin.settings.select_favicon_image')
-                    ])
+                    <x-media.picker
+                        name="favicon_id"
+                        :value="$settings->favicon_id ?? null"
+                        :media="$favicon ?? null"
+                        :label="__('themes::admin.settings.header.favicon')"
+                        :help="__('themes::admin.settings.header.favicon_help')"
+                        :error="$errors->first('favicon_id')"
+                        aspectRatio="square"
+                        :buttonText="__('themes::admin.settings.select_favicon_image')"
+                    />
                 </div>
             </div>
         </div>
@@ -67,16 +67,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 <div>
                     <div class="space-y-4">
                         <div>
-                            @include('components.media-picker', [
-                                'name' => 'hero_background_image_id',
-                                'value' => $settings->hero_background_image_id ?? null,
-                                'media' => $heroBackgroundImage ?? null,
-                                'label' => __('themes::admin.settings.hero.background_image'),
-                                'help' => __('themes::admin.settings.hero.background_image_help'),
-                                'error' => $errors->first('hero_background_image_id'),
-                                'aspectRatio' => 'hero',
-                                'buttonText' => __('themes::admin.settings.hero.select_background_image')
-                            ])
+                            <x-media.picker
+                                name="hero_background_image_id"
+                                :value="$settings->hero_background_image_id ?? null"
+                                :media="$heroBackgroundImage ?? null"
+                                :label="__('themes::admin.settings.hero.background_image')"
+                                :help="__('themes::admin.settings.hero.background_image_help')"
+                                :error="$errors->first('hero_background_image_id')"
+                                aspectRatio="hero"
+                                :buttonText="__('themes::admin.settings.hero.select_background_image')"
+                            />
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
@@ -87,13 +87,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                     <label class="block text-xs font-medium text-gray-500 dark:text-gray-500 mb-1">
                                         {{ __('themes::admin.settings.hero.main_title_label') }}
                                     </label>
-                                    <x-form.text name="hero_main_title" :label="__('themes::admin.settings.hero.main_title')" :value="old('hero_main_title', $settings->hero_main_title ?? '')" required :help="__('themes::admin.settings.hero.main_title_help')" />
+                                    <x-form-text name="hero_main_title" :label="__('themes::admin.settings.hero.main_title')" :value="old('hero_main_title', $settings->hero_main_title ?? '')" required :help="__('themes::admin.settings.hero.main_title_help')" />
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-gray-500 dark:text-gray-500 mb-1">
                                         {{ __('themes::admin.settings.hero.sub_title_label') }}
                                     </label>
-                                    <x-form.textarea name="hero_sub_title" :label="__('themes::admin.settings.hero.sub_title')" :value="old('hero_sub_title', $settings->hero_sub_title ?? '')" rows="2" :help="__('themes::admin.settings.hero.sub_title_help')" />
+                                    <x-form-textarea name="hero_sub_title" :label="__('themes::admin.settings.hero.sub_title')" :value="old('hero_sub_title', $settings->hero_sub_title ?? '')" rows="2" :help="__('themes::admin.settings.hero.sub_title_help')" />
                                 </div>
                             </div>
                         </div>
@@ -106,8 +106,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         {{ __('themes::admin.settings.hero.primary_button') }}
                     </label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <x-form.text name="hero_button_text" :label="__('themes::admin.settings.hero.button_text')" :value="old('hero_button_text', $settings->hero_button_text ?? '')" />
-                        <x-form.text name="hero_button_link" :label="__('themes::admin.settings.hero.button_link')" :value="old('hero_button_link', $settings->hero_button_link ?? '')" />
+                        <x-form-text name="hero_button_text" :label="__('themes::admin.settings.hero.button_text')" :value="old('hero_button_text', $settings->hero_button_text ?? '')" />
+                        <x-form-text name="hero_button_link" :label="__('themes::admin.settings.hero.button_link')" :value="old('hero_button_link', $settings->hero_button_link ?? '')" />
                     </div>
                 </div>
                 
@@ -117,8 +117,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         {{ __('themes::admin.settings.hero.secondary_button') }}
                     </label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <x-form.text name="hero_button_secondary_text" :label="__('themes::admin.settings.hero.button_secondary_text')" :value="old('hero_button_secondary_text', $settings->hero_button_secondary_text ?? '')" />
-                        <x-form.text name="hero_button_secondary_link" :label="__('themes::admin.settings.hero.button_secondary_link')" :value="old('hero_button_secondary_link', $settings->hero_button_secondary_link ?? '')" />
+                        <x-form-text name="hero_button_secondary_text" :label="__('themes::admin.settings.hero.button_secondary_text')" :value="old('hero_button_secondary_text', $settings->hero_button_secondary_text ?? '')" />
+                        <x-form-text name="hero_button_secondary_link" :label="__('themes::admin.settings.hero.button_secondary_link')" :value="old('hero_button_secondary_link', $settings->hero_button_secondary_link ?? '')" />
                     </div>
                 </div>
             </div>
@@ -130,7 +130,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 {{ __('themes::admin.settings.footer.title') }}
             </h3>
             <div class="space-y-4">
-                <x-form.textarea name="footer_description" :label="__('themes::admin.settings.footer.description')" :value="old('footer_description', $settings->footer_description ?? '')" rows="3" :help="__('themes::admin.settings.footer.description_help')" />
+                <x-form-textarea name="footer_description" :label="__('themes::admin.settings.footer.description')" :value="old('footer_description', $settings->footer_description ?? '')" rows="3" :help="__('themes::admin.settings.footer.description_help')" />
                 
                 {{-- Footer Links --}}
                 <div>
@@ -170,7 +170,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         {{ __('themes::admin.settings.footer.copyright_section') }}
                     </label>
-                    <x-form.text name="footer_copyright" :label="__('themes::admin.settings.footer.copyright')" :value="old('footer_copyright', $settings->footer_copyright ?? '')" :help="__('themes::admin.settings.footer.copyright_help')" />
+                    <x-form-text name="footer_copyright" :label="__('themes::admin.settings.footer.copyright')" :value="old('footer_copyright', $settings->footer_copyright ?? '')" :help="__('themes::admin.settings.footer.copyright_help')" />
                 </div>
                 
                 {{-- SNS Links --}}
@@ -324,16 +324,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 <legend class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                     {{ __('common.appearance_mode') }}
                 </legend>
-                @include('components::form.radio-group', [
-                    'name' => 'appearance_mode',
-                    'options' => [
+                <x-form-radio-card-group
+                    name="appearance_mode"
+                    :options="[
                         '0' => __('common.auto'),
                         '1' => __('common.light'),
                         '2' => __('common.dark')
-                    ],
-                    'value' => old('appearance_mode', $settings->appearance_mode ?? '0'),
-                    'help' => __('themes::admin.settings.appearance.mode_help')
-                ])
+                    ]"
+                    :value="old('appearance_mode', $settings->appearance_mode ?? '0')"
+                    :help="__('themes::admin.settings.appearance.mode_help')"
+                />
             </fieldset>
         </div>
 
@@ -343,15 +343,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @section('save')
     <!-- 保存ボタンとモーダル -->
-    @include('components.save', [
-        'id_confirmation' => 'confirmationModal',
-        'label' => __('common.save'),
-        'title' => __('common.save_confirmation_title'),
-        'message' => __('common.save_confirmation_message'),
-        'confirm_label' => __('common.save'),
-        'cancel_label' => __('common.cancel'),
-        'form' => 'theme-settings-form',
-    ])
+    <x-admin.save-button
+        id_confirmation="confirmationModal"
+        :label="__('common.save')"
+        :title="__('common.save_confirmation_title')"
+        :message="__('common.save_confirmation_message')"
+        :confirm_label="__('common.save')"
+        :cancel_label="__('common.cancel')"
+        form="theme-settings-form"
+    />
 @endsection
 
 @push('scripts')

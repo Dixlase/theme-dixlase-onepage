@@ -1,7 +1,7 @@
 {
-    "name": "dixlase-default-theme",
+    "name": "dixlase-one-page",
     "version": "1.0.0",
-    "description": "Default theme for Dixlase",
+    "description": "Dixlase OnePage theme - Plugin-driven single page / landing page theme",
     "private": true,
     "type": "module",
     "scripts": {
