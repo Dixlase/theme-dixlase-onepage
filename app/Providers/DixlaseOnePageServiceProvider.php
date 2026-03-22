@@ -20,27 +20,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Themes\DixlaseDefaultTheme\App\Providers;
+namespace Themes\DixlaseOnePage\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
-use Themes\DixlaseDefaultTheme\App\Models\ThemeSetting;
-use App\Helpers\AdminHelper;
+use Themes\DixlaseOnePage\App\Models\ThemeSetting;
 
-class DixlaseDefaultThemeServiceProvider extends ServiceProvider
+class DixlaseOnePageServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        // Merge admin navigation config
-        AdminHelper::mergeAdminNavigation(
-            'DixlaseDefaultTheme',
-            __DIR__ . '/../../config/admin.php'
-        );
+        //
     }
 
     /**
@@ -77,10 +72,10 @@ class DixlaseDefaultThemeServiceProvider extends ServiceProvider
             // データベース接続を試みる
             try {
                 // テーブルが存在し、かつデータが存在しない場合のみシード
-                if (DB::getSchemaBuilder()->hasTable('thm_dixlase_default_theme_settings')) {
-                    if (!DB::table('thm_dixlase_default_theme_settings')->exists()) {
+                if (DB::getSchemaBuilder()->hasTable('thm_dixlase_one_page_settings')) {
+                    if (!DB::table('thm_dixlase_one_page_settings')->exists()) {
                         Artisan::call('db:seed', [
-                            '--class' => 'Themes\\DixlaseDefaultTheme\\Database\\Seeders\\DixlaseDefaultThemeSettingsSeeder'
+                            '--class' => 'Themes\\DixlaseOnePage\\Database\\Seeders\\DixlaseOnePageSettingsSeeder'
                         ]);
                     }
                 }

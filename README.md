@@ -1,6 +1,6 @@
-# Dixlase Default Theme
+# Dixlase OnePage
 
-Dixlaseのデフォルトテーマ。シンプルでモダンなデザイン。
+Dixlase OnePage テーマ。プラグイン連動型のシングルページ/LP用テーマ。
 
 ## 概要
 
@@ -23,7 +23,7 @@ Dixlaseのデフォルトテーマ。シンプルでモダンなデザイン。
 
 ```bash
 # テーマディレクトリに移動
-cd themes/DixlaseDefaultTheme
+cd themes/DixlaseOnePage
 
 # 依存関係のインストール
 npm install

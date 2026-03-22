@@ -21,7 +21,7 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Themes\DixlaseDefaultTheme\App\Http\Controllers\Admin\Settings\AdminThemeSettingsController;
+use Themes\DixlaseOnePage\App\Http\Controllers\Admin\Settings\AdminThemeSettingsController;
 
 /*
 |--------------------------------------------------------------------------

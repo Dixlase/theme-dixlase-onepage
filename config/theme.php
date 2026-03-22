@@ -6,12 +6,12 @@ return [
     | Theme Configuration
     |--------------------------------------------------------------------------
     |
-    | This file contains the configuration options for the Dixlase Default Theme.
+    | This file contains the configuration options for the Dixlase OnePage theme.
     | You can customize colors, fonts, and other theme settings here.
     |
     */
 
-    'name' => 'Dixlase Default Theme',
+    'name' => 'Dixlase OnePage',
     'version' => '1.0.0',
 
     /*

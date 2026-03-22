@@ -2,6 +2,18 @@
 
 @section('title', ' - ' . __('Home'))
 
+@if(!empty($hasCustomCss))
+@push('styles')
+<link rel="stylesheet" href="{{ route('front.custom-style') }}?v={{ $customAssetVersion }}">
+@endpush
+@endif
+
+@if(!empty($hasCustomJs))
+@push('scripts')
+<script src="{{ route('front.custom-script') }}?v={{ $customAssetVersion }}"></script>
+@endpush
+@endif
+
 @section('content')
 {{-- Hero Section --}}
 @include('themes::partials.hero')

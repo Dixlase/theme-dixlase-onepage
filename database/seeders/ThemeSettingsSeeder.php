@@ -20,10 +20,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Themes\DixlaseDefaultTheme\Database\Seeders;
+namespace Themes\DixlaseOnePage\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Themes\DixlaseDefaultTheme\App\Models\ThemeSetting;
+use Themes\DixlaseOnePage\App\Models\ThemeSetting;
 
 class ThemeSettingsSeeder extends Seeder
 {

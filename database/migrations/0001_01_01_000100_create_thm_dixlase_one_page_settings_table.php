@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('thm_dixlase_default_theme_settings', function (Blueprint $table) {
+        Schema::create('thm_dixlase_one_page_settings', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique()->comment('設定キー名');
             $table->text('value')->nullable()->comment('設定値');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('thm_dixlase_default_theme_settings');
+        Schema::dropIfExists('thm_dixlase_one_page_settings');
     }
 };

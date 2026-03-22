@@ -1,6 +1,6 @@
 {
-    "name": "dixlase/dixlase-default-theme",
-    "description": "Default theme for Dixlase CMS",
+    "name": "dixlase/dixlase-one-page",
+    "description": "Dixlase OnePage theme - Plugin-driven single page / landing page theme",
     "type": "dixlase-theme",
     "license": "GPL-3.0",
     "authors": [
@@ -16,13 +16,13 @@
     "require-dev": {},
     "autoload": {
         "psr-4": {
-            "Dixlase\\Themes\\DefaultTheme\\": "src/"
+            "Dixlase\\Themes\\OnePage\\": "src/"
         }
     },
     "extra": {
         "dixlase": {
             "type": "theme",
-            "slug": "dixlase-default-theme",
+            "slug": "dixlase-one-page",
             "version": "1.0.0"
         }
     },

@@ -21,5 +21,17 @@
  */
 
 return [
-    //
+    'settings' => [
+        'children' => [
+            'themes' => [
+                'children' => [
+                    'settings' => [
+                        'text' => 'admin/navigation.settings.themes.settings',
+                        'route' => 'admin.settings.themes.settings',
+                        'icon' => 'fas fa-fw fa-cog',
+                    ],
+                ],
+            ],
+        ],
+    ],
 ];

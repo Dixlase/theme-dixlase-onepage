@@ -1,11 +1,11 @@
 <?php
 
-namespace Themes\DixlaseDefaultTheme\Database\Seeders;
+namespace Themes\DixlaseOnePage\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DixlaseDefaultThemeSettingsSeeder extends Seeder
+class DixlaseOnePageSettingsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,8 +13,8 @@ class DixlaseDefaultThemeSettingsSeeder extends Seeder
     public function run(): void
     {
         // 既存のデータがあるかチェック
-        if (DB::table('thm_dixlase_default_theme_settings')->exists()) {
-            $this->command->info('Dixlase Default Theme settings already exist. Skipping...');
+        if (DB::table('thm_dixlase_one_page_settings')->exists()) {
+            $this->command->info('Dixlase OnePage settings already exist. Skipping...');
             return;
         }
 
@@ -50,7 +50,7 @@ class DixlaseDefaultThemeSettingsSeeder extends Seeder
         ];
 
         foreach ($settings as $setting) {
-            DB::table('thm_dixlase_default_theme_settings')->insert([
+            DB::table('thm_dixlase_one_page_settings')->insert([
                 'name' => $setting['name'],
                 'value' => $setting['value'],
                 'created_at' => now(),
@@ -58,6 +58,6 @@ class DixlaseDefaultThemeSettingsSeeder extends Seeder
             ]);
         }
 
-        $this->command->info('Dixlase Default Theme settings created successfully!');
+        $this->command->info('Dixlase OnePage settings created successfully!');
     }
 }

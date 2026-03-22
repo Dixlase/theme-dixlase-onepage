@@ -20,7 +20,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Themes\DixlaseDefaultTheme\App\Models;
+namespace Themes\DixlaseOnePage\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -30,7 +30,7 @@ class ThemeSetting extends Model
     /**
      * テーブル名
      */
-    protected $table = 'thm_dixlase_default_theme_settings';
+    protected $table = 'thm_dixlase_one_page_settings';
 
     /**
      * 複数代入可能な属性
