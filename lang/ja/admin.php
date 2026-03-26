@@ -12,7 +12,7 @@ return [
         'updated_successfully' => 'テーマ設定が更新されました',
         'select_logo_image' => 'ロゴ画像を選択',
         'select_favicon_image' => 'ファビコンを選択',
-        
+
         // Header Section
         'header' => [
             'title' => 'ヘッダー・ファビコン設定',
@@ -21,7 +21,7 @@ return [
             'favicon' => 'ファビコン',
             'favicon_help' => 'ブラウザのタブに表示されるアイコンを設定します。（推奨サイズ: 32x32px または 64x64px）',
         ],
-        
+
         // Hero Section
         'hero' => [
             'title' => 'ヒーローセクション設定',
@@ -44,7 +44,7 @@ return [
             'button_secondary_text' => 'ボタンテキスト',
             'button_secondary_link' => 'ボタンリンク',
         ],
-        
+
         // Footer Section
         'footer' => [
             'title' => 'フッター設定',
@@ -76,12 +76,20 @@ return [
             'sns_pinterest' => 'Pinterest URL',
             'sns_discord' => 'Discord URL',
         ],
-        
+
         // Appearance Section
         'appearance' => [
-            'title' => '外観モード設定',
+            'title' => '外観モード',
             'description' => 'テーマの外観モード（ライト/ダーク）を設定します。',
             'mode_help' => '自動: ユーザーのシステム設定に従います / ライト: 明るいテーマ / ダーク: 暗いテーマ',
+        ],
+
+        // Editor UI
+        'editor' => [
+            'preview_title' => 'テーマプレビュー',
+            'click_to_edit' => 'クリックで編集',
+            'sidebar_open' => '設定パネルを開く',
+            'sidebar_close' => '設定パネルを閉じる',
         ],
     ],
 ];
