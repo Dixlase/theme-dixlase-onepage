@@ -12,7 +12,7 @@ return [
         'updated_successfully' => 'Theme settings updated successfully',
         'select_logo_image' => 'Select Logo Image',
         'select_favicon_image' => 'Select Favicon Image',
-        
+
         // Header Section
         'header' => [
             'title' => 'Header & Favicon Settings',
@@ -21,7 +21,7 @@ return [
             'favicon' => 'Favicon',
             'favicon_help' => 'Set the icon to be displayed in the browser tab. (Recommended size: 32x32px or 64x64px)',
         ],
-        
+
         // Hero Section
         'hero' => [
             'title' => 'Hero Section Settings',
@@ -44,7 +44,7 @@ return [
             'button_secondary_text' => 'Button Text',
             'button_secondary_link' => 'Button Link',
         ],
-        
+
         // Footer Section
         'footer' => [
             'title' => 'Footer Settings',
@@ -76,12 +76,20 @@ return [
             'sns_pinterest' => 'Pinterest URL',
             'sns_discord' => 'Discord URL',
         ],
-        
+
         // Appearance Section
         'appearance' => [
-            'title' => 'Appearance Mode Settings',
+            'title' => 'Appearance Mode',
             'description' => 'Configure the theme appearance mode (light/dark).',
             'mode_help' => 'Auto: Follows user system settings / Light: Bright theme / Dark: Dark theme',
+        ],
+
+        // Editor UI
+        'editor' => [
+            'preview_title' => 'Theme Preview',
+            'click_to_edit' => 'Click to edit',
+            'sidebar_open' => 'Open settings panel',
+            'sidebar_close' => 'Close settings panel',
         ],
     ],
 ];
