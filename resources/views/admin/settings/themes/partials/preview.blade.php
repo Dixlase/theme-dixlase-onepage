@@ -19,11 +19,11 @@ Theme settings preview - Scaled container rendering of header + hero + footer
     </div>
 
     {{-- Scaled Preview Container --}}
-    <div class="bg-gray-900 rounded-xl overflow-hidden shadow-2xl relative" style="height: 680px;">
-        <div class="origin-top-left w-[1440px] absolute top-0 left-1/2" style="transform: translateX(-50%) scale(var(--preview-scale, 0.5));">
+    <div class="bg-gray-950 rounded-xl overflow-hidden shadow-2xl relative w-full" id="preview-outer" style="min-height: 400px;">
+        <div class="w-[1440px] dark absolute top-0 left-0" id="preview-inner" style="transform-origin: top left;">
 
             {{-- ===== HEADER PREVIEW ===== --}}
-            <header class="h-14 w-full flex items-center bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 px-6">
+            <header class="h-14 w-full flex items-center bg-gray-900/80 backdrop-blur-md shadow-lg shadow-gray-700/10 px-6">
                 <div class="flex items-center justify-between w-full">
                     {{-- Logo --}}
                     <div class="flex items-center space-x-3 cursor-pointer group" @click="$refs.headerLogoPickerTrigger && $refs.headerLogoPickerTrigger.click()">
@@ -144,13 +144,13 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             </section>
 
             {{-- ===== FOOTER PREVIEW ===== --}}
-            <footer class="bg-gray-100 dark:bg-[#12141C] pt-12 pb-6">
+            <footer class="bg-[#12141C] pt-12 pb-6">
                 <div class="container mx-auto px-8">
                     <div class="pb-6">
-                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{{ config('app.name', 'Dixlase') }}</h2>
+                        <h2 class="text-2xl font-bold text-white mb-3">{{ config('app.name', 'Dixlase') }}</h2>
                         {{-- Footer description --}}
                         <div class="relative group cursor-pointer" @click.stop="startEdit('footerDescription')">
-                            <p class="text-gray-600 dark:text-gray-400 max-w-xs" x-show="editing !== 'footerDescription'" x-text="footerDescription"></p>
+                            <p class="text-gray-400 max-w-xs" x-show="editing !== 'footerDescription'" x-text="footerDescription"></p>
                             <input
                                 x-show="editing === 'footerDescription'"
                                 x-model="footerDescription"
@@ -167,8 +167,8 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         </div>
                     </div>
                     {{-- Copyright --}}
-                    <div class="border-t border-gray-300 dark:border-white/10 pt-6 flex justify-center">
-                        <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="footerCopyright"></p>
+                    <div class="border-t border-white/10 pt-6 flex justify-center">
+                        <p class="text-gray-400 text-sm" x-text="footerCopyright"></p>
                     </div>
                 </div>
             </footer>

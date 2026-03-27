@@ -58,7 +58,7 @@ Theme settings right sidebar - non-visual settings
             <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
         </button>
         <div x-show="open" x-collapse>
-            <x-form-radio-card-group
+            <x-form-select
                 name="appearance_mode"
                 :options="[
                     '0' => __('common.auto'),
@@ -66,8 +66,8 @@ Theme settings right sidebar - non-visual settings
                     '2' => __('common.dark')
                 ]"
                 :value="old('appearance_mode', $settings->appearance_mode ?? '0')"
-                :help="__('themes::admin.settings.appearance.mode_help')"
             />
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
         </div>
     </div>
 

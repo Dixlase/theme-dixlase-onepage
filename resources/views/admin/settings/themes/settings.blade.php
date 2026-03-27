@@ -96,14 +96,17 @@ function themeSettingsEditor() {
         },
 
         updatePreviewScale() {
-            const container = this.$el.querySelector('[style*="--preview-scale"]')?.parentElement;
-            if (container) {
-                const containerWidth = container.offsetWidth;
-                const scale = Math.min(containerWidth / 1440, 0.65);
-                container.style.setProperty('--preview-scale', scale);
-                // Adjust container height based on scale
-                const contentHeight = 600 + 14 + 200; // hero + header + footer approx
-                container.style.height = (contentHeight * scale + 40) + 'px';
+            const outer = document.getElementById('preview-outer');
+            const inner = document.getElementById('preview-inner');
+            if (outer && inner) {
+                const containerWidth = outer.offsetWidth;
+                const scale = containerWidth / 1440;
+                inner.style.transform = 'scale(' + scale + ')';
+                // Set container height to match scaled content
+                const contentHeight = inner.scrollHeight || 900;
+                outer.style.height = Math.max(contentHeight * scale, 300) + 'px';
+                // Reset left offset (scale fits exactly to container width)
+                inner.style.left = '0px';
             }
         },
 
