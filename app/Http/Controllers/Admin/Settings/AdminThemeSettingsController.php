@@ -59,14 +59,16 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_pinterest',
             'footer_sns_discord',
             'appearance_mode',
+            'header_menu_id',
+            'show_inquiry_form',
         ]);
-        
+
         // デフォルト値を設定
         $defaults = [
             'header_logo_id' => null,
             'favicon_id' => null,
             'hero_background_image_id' => null,
-            'hero_main_title' => 'Welcome to ' . config('app.name', 'Dixlase'),
+            'hero_main_title' => 'Welcome to '.config('app.name', 'Dixlase'),
             'hero_sub_title' => 'Modern CMS Platform for Building Amazing Websites',
             'hero_button_text' => 'Get Started',
             'hero_button_link' => '#',
@@ -74,7 +76,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_button_secondary_link' => '#features',
             'footer_description' => 'Powered by Dixlase CMS',
             'footer_links' => '[]',
-            'footer_copyright' => '© ' . date('Y') . ' ' . config('app.name', 'Dixlase') . '. All rights reserved.',
+            'footer_copyright' => '© '.date('Y').' '.config('app.name', 'Dixlase').'. All rights reserved.',
             'footer_sns_instagram' => null,
             'footer_sns_x' => null,
             'footer_sns_facebook' => null,
@@ -86,56 +88,78 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
+            'header_menu_id' => null,
+            'show_inquiry_form' => '0',
         ];
-        
+
         // デフォルト値とマージ
-        $settingsData = array_merge($defaults, array_filter($settingsData, fn($v) => $v !== null));
-        
+        $settingsData = array_merge($defaults, array_filter($settingsData, fn ($v) => $v !== null));
+
         // オブジェクトに変換
         $settings = (object) $settingsData;
-        
+
         // JSON文字列をデコード
         if (isset($settings->footer_links) && is_string($settings->footer_links)) {
             $settings->footer_links = json_decode($settings->footer_links, true) ?? [];
         }
-        
+
         // メディアを取得
         $headerLogo = null;
         if (isset($settings->header_logo_id)) {
             $headerLogo = Media::find($settings->header_logo_id);
         }
-        
+
         $favicon = null;
         if (isset($settings->favicon_id)) {
             $favicon = Media::find($settings->favicon_id);
         }
-        
+
         $heroBackgroundImage = null;
         if (isset($settings->hero_background_image_id)) {
             $heroBackgroundImage = Media::find($settings->hero_background_image_id);
         }
-        
+
         $this->viewParams['settings'] = $settings;
         $this->viewParams['headerLogo'] = $headerLogo;
         $this->viewParams['favicon'] = $favicon;
         $this->viewParams['heroBackgroundImage'] = $heroBackgroundImage;
-        
+
+        // Plugin integration
+        $menuPluginEnabled = \App\Helpers\PluginHelper::isEnabled('dixlase-menus');
+        $inquiryPluginEnabled = \App\Helpers\PluginHelper::isEnabled('dixlase-inquiry');
+
+        $this->viewParams['menuPluginEnabled'] = $menuPluginEnabled;
+        $this->viewParams['inquiryPluginEnabled'] = $inquiryPluginEnabled;
+
+        // Build menu options for select
+        $menuOptions = ['' => __('themes::admin.settings.plugins.menu.none')];
+        if ($menuPluginEnabled) {
+            $menus = \Plugins\DixlaseMenus\App\Models\Menu::query()
+                ->active()
+                ->ordered()
+                ->get();
+            foreach ($menus as $menu) {
+                $menuOptions[$menu->id] = $menu->name;
+            }
+        }
+        $this->viewParams['menuOptions'] = $menuOptions;
+
         return view('themes::admin.settings.themes.settings', $this->viewParams);
     }
-    
+
     /**
      * テーマ設定を更新
      */
     public function update(UpdateThemeSettingsRequest $request)
     {
         $validated = $request->validated();
-        
+
         // キーバリュー形式で保存
         ThemeSetting::setValues($validated);
-        
+
         // キャッシュをクリア
         ThemeSetting::clearAllCache();
-        
+
         return redirect()
             ->route('admin.settings.themes.settings')
             ->with('success', __('themes::admin.settings.updated_successfully'));

@@ -44,7 +44,7 @@ class UpdateThemeSettingsRequest extends FormRequest
             // Header & Favicon
             'header_logo_id' => 'nullable|integer|exists:media,id',
             'favicon_id' => 'nullable|integer|exists:media,id',
-            
+
             // Hero Section
             'hero_background_image_id' => 'nullable|integer|exists:media,id',
             'hero_main_title' => 'required|string|max:255',
@@ -53,14 +53,14 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_button_link' => 'nullable|string|max:500',
             'hero_button_secondary_text' => 'nullable|string|max:100',
             'hero_button_secondary_link' => 'nullable|string|max:500',
-            
+
             // Footer
             'footer_description' => 'nullable|string|max:1000',
             'footer_links' => 'nullable|array',
             'footer_links.*.title' => 'required|string|max:100',
             'footer_links.*.url' => 'required|string|max:500',
             'footer_copyright' => 'nullable|string|max:500',
-            
+
             // SNS Links
             'footer_sns_instagram' => 'nullable|string|max:500',
             'footer_sns_x' => 'nullable|string|max:500',
@@ -72,9 +72,13 @@ class UpdateThemeSettingsRequest extends FormRequest
             'footer_sns_youtube' => 'nullable|string|max:500',
             'footer_sns_pinterest' => 'nullable|string|max:500',
             'footer_sns_discord' => 'nullable|string|max:500',
-            
+
             // Appearance Mode
             'appearance_mode' => 'required|in:0,1,2',
+
+            // Plugin Integration
+            'header_menu_id' => 'nullable|integer',
+            'show_inquiry_form' => 'nullable|in:0,1',
         ];
     }
 
@@ -84,7 +88,7 @@ class UpdateThemeSettingsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'hero_main_title.required' => __('themes::admin.settings.hero.main_title') . 'は必須です。',
+            'hero_main_title.required' => __('themes::admin.settings.hero.main_title').'は必須です。',
             'hero_background_image_id.exists' => '選択された画像が見つかりません。',
             'footer_links.*.title.required' => 'リンクタイトルは必須です。',
             'footer_links.*.url.required' => 'リンクURLは必須です。',
@@ -122,7 +126,7 @@ class UpdateThemeSettingsRequest extends FormRequest
     {
         if ($this->has('footer_links') && is_array($this->footer_links)) {
             $this->merge([
-                'footer_links' => json_encode($this->footer_links)
+                'footer_links' => json_encode($this->footer_links),
             ]);
         }
     }

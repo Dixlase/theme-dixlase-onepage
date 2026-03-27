@@ -61,11 +61,12 @@ Theme settings right sidebar - non-visual settings
             <x-form-select
                 name="appearance_mode"
                 :options="[
-                    '0' => __('common.auto'),
-                    '1' => __('common.light'),
-                    '2' => __('common.dark')
+                    '0' => __('themes::admin.settings.appearance.mode_auto'),
+                    '1' => __('themes::admin.settings.appearance.mode_light'),
+                    '2' => __('themes::admin.settings.appearance.mode_dark')
                 ]"
                 :value="old('appearance_mode', $settings->appearance_mode ?? '0')"
+                x-model="appearanceMode"
             />
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
         </div>
@@ -175,6 +176,48 @@ Theme settings right sidebar - non-visual settings
     </div>
 
     <hr class="border-gray-200 dark:border-gray-700">
+
+    {{-- ===== Header Menu (Plugin: DixlaseMenus) ===== --}}
+    @if($menuPluginEnabled)
+    <div x-data="{ open: false }">
+        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <span><i class="fas fa-bars mr-1.5"></i>{{ __('themes::admin.settings.plugins.menu.title') }}</span>
+            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
+        </button>
+        <div x-show="open" x-collapse>
+            <x-form-select
+                name="header_menu_id"
+                :options="$menuOptions"
+                :value="old('header_menu_id', $settings->header_menu_id ?? '')"
+            />
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.menu.help') }}</p>
+        </div>
+    </div>
+
+    <hr class="border-gray-200 dark:border-gray-700">
+    @endif
+
+    {{-- ===== Contact Form (Plugin: DixlaseInquiry) ===== --}}
+    @if($inquiryPluginEnabled)
+    <div x-data="{ open: false }">
+        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <span><i class="fas fa-envelope mr-1.5"></i>{{ __('themes::admin.settings.plugins.inquiry.title') }}</span>
+            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
+        </button>
+        <div x-show="open" x-collapse>
+            <input type="hidden" name="show_inquiry_form" value="0">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="show_inquiry_form" value="1"
+                    {{ old('show_inquiry_form', $settings->show_inquiry_form ?? '0') === '1' ? 'checked' : '' }}
+                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.plugins.inquiry.enable') }}</span>
+            </label>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
+        </div>
+    </div>
+
+    <hr class="border-gray-200 dark:border-gray-700">
+    @endif
 
     {{-- ===== SNS Links ===== --}}
     <div x-data="{ open: false }">
