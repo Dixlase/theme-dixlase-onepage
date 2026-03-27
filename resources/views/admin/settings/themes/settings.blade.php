@@ -85,14 +85,14 @@ function themeSettingsEditor() {
         init() {
             this.$dispatch('right-sidebar-active');
 
-            // Calculate preview scale based on container width
+            // Recalculate preview scale whenever container size changes
             this.$nextTick(() => {
+                const outer = document.getElementById('preview-outer');
+                if (outer) {
+                    new ResizeObserver(() => this.updatePreviewScale()).observe(outer);
+                }
                 this.updatePreviewScale();
             });
-            window.addEventListener('resize', () => this.updatePreviewScale());
-
-            // Listen for media picker changes to update preview
-            this.$watch('editing', () => {});
         },
 
         updatePreviewScale() {
