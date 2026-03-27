@@ -66,7 +66,7 @@ Theme settings right sidebar - non-visual settings
                     '2' => __('themes::admin.settings.appearance.mode_dark')
                 ]"
                 :value="old('appearance_mode', $settings->appearance_mode ?? '0')"
-                x-model="appearanceMode"
+                xModel="appearanceMode"
             />
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
         </div>
