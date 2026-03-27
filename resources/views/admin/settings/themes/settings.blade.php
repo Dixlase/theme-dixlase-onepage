@@ -79,6 +79,10 @@ function themeSettingsEditor() {
         headerLogoPreviewUrl: @json($headerLogo ? asset(config('admin.mediaPath', 'media') . '/' . $headerLogo->path) : null),
         heroBgPreviewUrl: @json($heroBackgroundImage ? asset(config('admin.mediaPath', 'media') . '/' . $heroBackgroundImage->path) : null),
 
+        // Device preview
+        previewDevice: 'desktop',
+        previewDeviceWidth: 1440,
+
         // Editing state
         editing: null,
 
@@ -95,18 +99,28 @@ function themeSettingsEditor() {
             });
         },
 
+        setPreviewDevice(device) {
+            const widths = { mobile: 375, tablet: 768, desktop: 1440 };
+            this.previewDevice = device;
+            this.previewDeviceWidth = widths[device];
+            this.$nextTick(() => this.updatePreviewScale());
+        },
+
         updatePreviewScale() {
             const outer = document.getElementById('preview-outer');
             const inner = document.getElementById('preview-inner');
             if (outer && inner) {
                 const containerWidth = outer.offsetWidth;
-                const scale = containerWidth / 1440;
+                const deviceWidth = this.previewDeviceWidth;
+                const scale = Math.min(containerWidth / deviceWidth, 1);
                 inner.style.transform = 'scale(' + scale + ')';
                 // Set container height to match scaled content
                 const contentHeight = inner.scrollHeight || 900;
                 outer.style.height = Math.max(contentHeight * scale, 300) + 'px';
-                // Reset left offset (scale fits exactly to container width)
-                inner.style.left = '0px';
+                // Center horizontally when device is narrower than container
+                const scaledWidth = deviceWidth * scale;
+                const offsetX = (containerWidth - scaledWidth) / 2;
+                inner.style.left = Math.max(offsetX, 0) + 'px';
             }
         },
 
