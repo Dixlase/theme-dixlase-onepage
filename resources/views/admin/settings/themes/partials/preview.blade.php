@@ -13,14 +13,34 @@ Theme settings preview - Scaled container rendering of header + hero + footer
         <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">
             <i class="fas fa-eye mr-1.5"></i>{{ __('themes::admin.settings.editor.preview_title') }}
         </h3>
-        <span class="text-xs text-gray-400 dark:text-gray-500">
-            {{ __('themes::admin.settings.editor.click_to_edit') }}
-        </span>
+
+        <div class="flex items-center gap-3">
+            {{-- Device Toggle Buttons --}}
+            <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 gap-0.5">
+                <button type="button" @click="setPreviewDevice('mobile')"
+                    :class="previewDevice === 'mobile' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 dark:text-blue-400' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'"
+                    class="px-2.5 py-1.5 rounded-md transition-all text-xs" title="Mobile (375px)">
+                    <i class="fas fa-mobile-alt"></i>
+                </button>
+                <button type="button" @click="setPreviewDevice('tablet')"
+                    :class="previewDevice === 'tablet' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 dark:text-blue-400' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'"
+                    class="px-2.5 py-1.5 rounded-md transition-all text-xs" title="Tablet (768px)">
+                    <i class="fas fa-tablet-alt"></i>
+                </button>
+                <button type="button" @click="setPreviewDevice('desktop')"
+                    :class="previewDevice === 'desktop' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 dark:text-blue-400' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'"
+                    class="px-2.5 py-1.5 rounded-md transition-all text-xs" title="Desktop (1440px)">
+                    <i class="fas fa-desktop"></i>
+                </button>
+            </div>
+
+            <span class="text-xs text-gray-400 dark:text-gray-500" x-text="previewDeviceWidth + 'px'"></span>
+        </div>
     </div>
 
     {{-- Scaled Preview Container --}}
     <div class="bg-gray-950 rounded-xl overflow-hidden shadow-2xl relative w-full" id="preview-outer" style="min-height: 400px;">
-        <div class="w-[1440px] dark absolute top-0 left-0" id="preview-inner" style="transform-origin: top left;">
+        <div class="dark absolute top-0 left-0 transition-[width] duration-300" id="preview-inner" :style="'width: ' + previewDeviceWidth + 'px; transform-origin: top left;'">
 
             {{-- ===== HEADER PREVIEW ===== --}}
             <header class="h-14 w-full flex items-center bg-gray-900/80 backdrop-blur-md shadow-lg shadow-gray-700/10 px-6">
