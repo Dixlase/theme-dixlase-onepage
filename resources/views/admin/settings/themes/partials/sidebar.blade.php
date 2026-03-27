@@ -30,27 +30,6 @@ Theme settings right sidebar - non-visual settings
      }"
      :style="rightSidebarReady ? 'transition: transform 300ms ease-in-out' : ''">
 
-    {{-- ===== Favicon ===== --}}
-    <div x-data="{ open: true }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-globe mr-1.5"></i>{{ __('themes::admin.settings.header.favicon') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <x-media.picker
-                name="favicon_id"
-                :value="$settings->favicon_id ?? null"
-                :media="$favicon ?? null"
-                :help="__('themes::admin.settings.header.favicon_help')"
-                :error="$errors->first('favicon_id')"
-                aspectRatio="square"
-                :buttonText="__('themes::admin.settings.select_favicon_image')"
-            />
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
-
     {{-- ===== Appearance Mode ===== --}}
     <div x-data="{ open: true }">
         <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -74,21 +53,21 @@ Theme settings right sidebar - non-visual settings
 
     <hr class="border-gray-200 dark:border-gray-700">
 
-    {{-- ===== Hero Background Image ===== --}}
-    <div x-data="{ open: true }">
+    {{-- ===== Favicon ===== --}}
+    <div x-data="{ open: false }">
         <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-image mr-1.5"></i>{{ __('themes::admin.settings.hero.background_image') }}</span>
+            <span><i class="fas fa-globe mr-1.5"></i>{{ __('themes::admin.settings.header.favicon') }}</span>
             <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
         </button>
         <div x-show="open" x-collapse>
             <x-media.picker
-                name="hero_background_image_id"
-                :value="$settings->hero_background_image_id ?? null"
-                :media="$heroBackgroundImage ?? null"
-                :help="__('themes::admin.settings.hero.background_image_help')"
-                :error="$errors->first('hero_background_image_id')"
-                aspectRatio="hero"
-                :buttonText="__('themes::admin.settings.hero.select_background_image')"
+                name="favicon_id"
+                :value="$settings->favicon_id ?? null"
+                :media="$favicon ?? null"
+                :help="__('themes::admin.settings.header.favicon_help')"
+                :error="$errors->first('favicon_id')"
+                aspectRatio="square"
+                :buttonText="__('themes::admin.settings.select_favicon_image')"
             />
         </div>
     </div>
@@ -114,6 +93,69 @@ Theme settings right sidebar - non-visual settings
     </div>
 
     <hr class="border-gray-200 dark:border-gray-700">
+
+    {{-- ===== Header Menu (Plugin: DixlaseMenus) ===== --}}
+    @if($menuPluginEnabled)
+    <div x-data="{ open: false }">
+        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <span><i class="fas fa-bars mr-1.5"></i>{{ __('themes::admin.settings.plugins.menu.title') }}</span>
+            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
+        </button>
+        <div x-show="open" x-collapse>
+            <x-form-select
+                name="header_menu_id"
+                :options="$menuOptions"
+                :value="old('header_menu_id', $settings->header_menu_id ?? '')"
+            />
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.menu.help') }}</p>
+        </div>
+    </div>
+
+    <hr class="border-gray-200 dark:border-gray-700">
+    @endif
+
+    {{-- ===== Hero Background Image ===== --}}
+    <div x-data="{ open: true }">
+        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <span><i class="fas fa-image mr-1.5"></i>{{ __('themes::admin.settings.hero.background_image') }}</span>
+            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
+        </button>
+        <div x-show="open" x-collapse>
+            <x-media.picker
+                name="hero_background_image_id"
+                :value="$settings->hero_background_image_id ?? null"
+                :media="$heroBackgroundImage ?? null"
+                :help="__('themes::admin.settings.hero.background_image_help')"
+                :error="$errors->first('hero_background_image_id')"
+                aspectRatio="hero"
+                :buttonText="__('themes::admin.settings.hero.select_background_image')"
+            />
+        </div>
+    </div>
+
+    <hr class="border-gray-200 dark:border-gray-700">
+
+    {{-- ===== Contact Form (Plugin: DixlaseInquiry) ===== --}}
+    @if($inquiryPluginEnabled)
+    <div x-data="{ open: false }">
+        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <span><i class="fas fa-envelope mr-1.5"></i>{{ __('themes::admin.settings.plugins.inquiry.title') }}</span>
+            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
+        </button>
+        <div x-show="open" x-collapse>
+            <input type="hidden" name="show_inquiry_form" value="0">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="show_inquiry_form" value="1"
+                    {{ old('show_inquiry_form', $settings->show_inquiry_form ?? '0') === '1' ? 'checked' : '' }}
+                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.plugins.inquiry.enable') }}</span>
+            </label>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
+        </div>
+    </div>
+
+    <hr class="border-gray-200 dark:border-gray-700">
+    @endif
 
     {{-- ===== Footer Links ===== --}}
     <div x-data="{ open: false }">
@@ -147,21 +189,6 @@ Theme settings right sidebar - non-visual settings
 
     <hr class="border-gray-200 dark:border-gray-700">
 
-    {{-- ===== Copyright ===== --}}
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-copyright mr-1.5"></i>{{ __('themes::admin.settings.footer.copyright_section') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <x-form-text name="footer_copyright" :label="__('themes::admin.settings.footer.copyright')"
-                         x-model="footerCopyright"
-                         :help="__('themes::admin.settings.footer.copyright_help')" />
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
-
     {{-- ===== Footer Description ===== --}}
     <div x-data="{ open: false }">
         <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -176,48 +203,6 @@ Theme settings right sidebar - non-visual settings
     </div>
 
     <hr class="border-gray-200 dark:border-gray-700">
-
-    {{-- ===== Header Menu (Plugin: DixlaseMenus) ===== --}}
-    @if($menuPluginEnabled)
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-bars mr-1.5"></i>{{ __('themes::admin.settings.plugins.menu.title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <x-form-select
-                name="header_menu_id"
-                :options="$menuOptions"
-                :value="old('header_menu_id', $settings->header_menu_id ?? '')"
-            />
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.menu.help') }}</p>
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
-    @endif
-
-    {{-- ===== Contact Form (Plugin: DixlaseInquiry) ===== --}}
-    @if($inquiryPluginEnabled)
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-envelope mr-1.5"></i>{{ __('themes::admin.settings.plugins.inquiry.title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <input type="hidden" name="show_inquiry_form" value="0">
-            <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="show_inquiry_form" value="1"
-                    {{ old('show_inquiry_form', $settings->show_inquiry_form ?? '0') === '1' ? 'checked' : '' }}
-                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
-                <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.plugins.inquiry.enable') }}</span>
-            </label>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
-    @endif
 
     {{-- ===== SNS Links ===== --}}
     <div x-data="{ open: false }">
@@ -254,6 +239,21 @@ Theme settings right sidebar - non-visual settings
                     </div>
                 @endforeach
             </div>
+        </div>
+    </div>
+
+    <hr class="border-gray-200 dark:border-gray-700">
+
+    {{-- ===== Copyright ===== --}}
+    <div x-data="{ open: false }">
+        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <span><i class="fas fa-copyright mr-1.5"></i>{{ __('themes::admin.settings.footer.copyright_section') }}</span>
+            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
+        </button>
+        <div x-show="open" x-collapse>
+            <x-form-text name="footer_copyright" :label="__('themes::admin.settings.footer.copyright')"
+                         x-model="footerCopyright"
+                         :help="__('themes::admin.settings.footer.copyright_help')" />
         </div>
     </div>
 

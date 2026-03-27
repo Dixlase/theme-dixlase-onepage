@@ -94,16 +94,18 @@ function themeSettingsEditor() {
 
             // Recalculate preview scale whenever container size changes
             this.$nextTick(() => {
+                const resizeHandler = () => this.updatePreviewScale();
                 const outer = document.getElementById('preview-outer');
                 if (outer) {
-                    new ResizeObserver(() => this.updatePreviewScale()).observe(outer);
+                    new ResizeObserver(resizeHandler).observe(outer);
+                }
+                // Also observe main content area for left sidebar toggle
+                const main = document.getElementById('admin-main-content');
+                if (main) {
+                    new ResizeObserver(resizeHandler).observe(main);
                 }
                 this.updatePreviewScale();
-                this.applyAppearanceMode();
             });
-
-            // Watch appearance mode changes
-            this.$watch('appearanceMode', () => this.applyAppearanceMode());
         },
 
         setPreviewDevice(device) {
@@ -128,19 +130,6 @@ function themeSettingsEditor() {
                 const scaledWidth = deviceWidth * scale;
                 const offsetX = (containerWidth - scaledWidth) / 2;
                 inner.style.left = Math.max(offsetX, 0) + 'px';
-            }
-        },
-
-        applyAppearanceMode() {
-            const inner = document.getElementById('preview-inner');
-            if (!inner) return;
-            const mode = this.appearanceMode;
-            if (mode === '1') {
-                // Light mode
-                inner.classList.remove('dark');
-            } else {
-                // Dark mode or Auto (preview defaults to dark)
-                inner.classList.add('dark');
             }
         },
 

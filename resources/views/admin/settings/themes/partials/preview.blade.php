@@ -40,7 +40,9 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
     {{-- Scaled Preview Container --}}
     <div class="rounded-xl overflow-hidden shadow-2xl relative w-full border border-gray-200 dark:border-gray-700" id="preview-outer" style="min-height: 400px;">
-        <div class="dark absolute top-0 left-0 transition-[width] duration-300" id="preview-inner" :style="'width: ' + previewDeviceWidth + 'px; transform-origin: top left;'">
+        <div class="absolute top-0 left-0 transition-[width] duration-300" id="preview-inner"
+             :class="appearanceMode === '1' ? '' : 'dark'"
+             :style="'width: ' + previewDeviceWidth + 'px; transform-origin: top left;'">
 
             {{-- ===== HEADER PREVIEW ===== --}}
             <header class="h-14 w-full flex items-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 px-6">
