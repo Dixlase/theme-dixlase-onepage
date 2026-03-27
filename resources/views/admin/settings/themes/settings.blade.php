@@ -83,6 +83,9 @@ function themeSettingsEditor() {
         previewDevice: 'desktop',
         previewDeviceWidth: 1440,
 
+        // Appearance mode: 0=Auto, 1=Light, 2=Dark
+        appearanceMode: @json(old('appearance_mode', $settings->appearance_mode ?? '0')),
+
         // Editing state
         editing: null,
 
@@ -96,7 +99,11 @@ function themeSettingsEditor() {
                     new ResizeObserver(() => this.updatePreviewScale()).observe(outer);
                 }
                 this.updatePreviewScale();
+                this.applyAppearanceMode();
             });
+
+            // Watch appearance mode changes
+            this.$watch('appearanceMode', () => this.applyAppearanceMode());
         },
 
         setPreviewDevice(device) {
@@ -121,6 +128,19 @@ function themeSettingsEditor() {
                 const scaledWidth = deviceWidth * scale;
                 const offsetX = (containerWidth - scaledWidth) / 2;
                 inner.style.left = Math.max(offsetX, 0) + 'px';
+            }
+        },
+
+        applyAppearanceMode() {
+            const inner = document.getElementById('preview-inner');
+            if (!inner) return;
+            const mode = this.appearanceMode;
+            if (mode === '1') {
+                // Light mode
+                inner.classList.remove('dark');
+            } else {
+                // Dark mode or Auto (preview defaults to dark)
+                inner.classList.add('dark');
             }
         },
 

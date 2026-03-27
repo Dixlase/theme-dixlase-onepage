@@ -81,7 +81,25 @@ return [
         'appearance' => [
             'title' => 'Appearance Mode',
             'description' => 'Configure the theme appearance mode (light/dark).',
+            'mode_auto' => 'Auto',
+            'mode_light' => 'Light',
+            'mode_dark' => 'Dark',
             'mode_help' => 'Auto: Follows user system settings / Light: Bright theme / Dark: Dark theme',
+        ],
+
+        // Plugin Integration
+        'plugins' => [
+            'menu' => [
+                'title' => 'Header Menu',
+                'select_menu' => 'Select a menu',
+                'none' => 'No menu',
+                'help' => 'Select a menu to display in the header navigation.',
+            ],
+            'inquiry' => [
+                'title' => 'Contact Form',
+                'enable' => 'Display contact form above footer',
+                'help' => 'Display the inquiry form section above the footer.',
+            ],
         ],
 
         // Editor UI

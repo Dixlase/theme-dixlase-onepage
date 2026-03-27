@@ -39,11 +39,11 @@ Theme settings preview - Scaled container rendering of header + hero + footer
     </div>
 
     {{-- Scaled Preview Container --}}
-    <div class="bg-gray-950 rounded-xl overflow-hidden shadow-2xl relative w-full" id="preview-outer" style="min-height: 400px;">
+    <div class="rounded-xl overflow-hidden shadow-2xl relative w-full border border-gray-200 dark:border-gray-700" id="preview-outer" style="min-height: 400px;">
         <div class="dark absolute top-0 left-0 transition-[width] duration-300" id="preview-inner" :style="'width: ' + previewDeviceWidth + 'px; transform-origin: top left;'">
 
             {{-- ===== HEADER PREVIEW ===== --}}
-            <header class="h-14 w-full flex items-center bg-gray-900/80 backdrop-blur-md shadow-lg shadow-gray-700/10 px-6">
+            <header class="h-14 w-full flex items-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 px-6">
                 <div class="flex items-center justify-between w-full">
                     {{-- Logo --}}
                     <div class="flex items-center space-x-3 cursor-pointer group" @click="$refs.headerLogoPickerTrigger && $refs.headerLogoPickerTrigger.click()">
@@ -72,11 +72,11 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             </header>
 
             {{-- ===== HERO PREVIEW ===== --}}
-            <section class="relative min-h-[600px] flex flex-col justify-center overflow-hidden bg-gray-950">
+            <section class="relative min-h-[600px] flex flex-col justify-center overflow-hidden bg-gray-100 dark:bg-gray-950">
                 {{-- Background glow --}}
                 <div class="absolute inset-0 overflow-hidden z-0">
-                    <div class="absolute top-1/4 left-10 w-72 h-72 bg-gray-500/30 rounded-full filter blur-3xl"></div>
-                    <div class="absolute bottom-2/4 right-20 w-96 h-96 bg-gray-400/30 rounded-full filter blur-3xl"></div>
+                    <div class="absolute top-1/4 left-10 w-72 h-72 bg-purple-300/30 dark:bg-gray-500/30 rounded-full filter blur-3xl"></div>
+                    <div class="absolute bottom-2/4 right-20 w-96 h-96 bg-blue-300/30 dark:bg-gray-400/30 rounded-full filter blur-3xl"></div>
                 </div>
 
                 {{-- Hero background image --}}
@@ -92,7 +92,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         {{-- Main Title --}}
                         <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
                             <h1 class="text-5xl lg:text-6xl font-bold leading-tight" x-show="editing !== 'heroMainTitle'">
-                                <span class="bg-gradient-to-r from-gray-400 via-gray-400 to-white bg-clip-text text-transparent" x-text="heroMainTitle"></span>
+                                <span class="bg-gradient-to-r from-gray-700 via-gray-700 to-gray-900 dark:from-gray-400 dark:via-gray-400 dark:to-white bg-clip-text text-transparent" x-text="heroMainTitle"></span>
                             </h1>
                             <input
                                 x-show="editing === 'heroMainTitle'"
@@ -111,7 +111,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
                         {{-- Sub Title --}}
                         <div class="relative group cursor-pointer mb-8" @click.stop="startEdit('heroSubTitle')">
-                            <p class="text-lg text-gray-300 max-w-lg" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
+                            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-lg" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
                             <textarea
                                 x-show="editing === 'heroSubTitle'"
                                 x-model="heroSubTitle"
@@ -146,7 +146,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
                             {{-- Secondary button --}}
                             <div class="relative group cursor-pointer" @click.stop="startEdit('heroButtonSecondary')">
-                                <div class="inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-700 text-white py-6" x-show="editing !== 'heroButtonSecondary'">
+                                <div class="inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white py-6" x-show="editing !== 'heroButtonSecondary'">
                                     <span x-text="heroButtonSecondaryText || '{{ __('themes::admin.settings.hero.button_secondary_text') }}'"></span>
                                 </div>
                                 <div x-show="editing === 'heroButtonSecondary'" class="flex gap-2" @click.away="stopEdit()">
@@ -164,13 +164,13 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             </section>
 
             {{-- ===== FOOTER PREVIEW ===== --}}
-            <footer class="bg-[#12141C] pt-12 pb-6">
+            <footer class="bg-gray-100 dark:bg-[#12141C] pt-12 pb-6">
                 <div class="container mx-auto px-8">
                     <div class="pb-6">
-                        <h2 class="text-2xl font-bold text-white mb-3">{{ config('app.name', 'Dixlase') }}</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{{ config('app.name', 'Dixlase') }}</h2>
                         {{-- Footer description --}}
                         <div class="relative group cursor-pointer" @click.stop="startEdit('footerDescription')">
-                            <p class="text-gray-400 max-w-xs" x-show="editing !== 'footerDescription'" x-text="footerDescription"></p>
+                            <p class="text-gray-600 dark:text-gray-400 max-w-xs" x-show="editing !== 'footerDescription'" x-text="footerDescription"></p>
                             <input
                                 x-show="editing === 'footerDescription'"
                                 x-model="footerDescription"
@@ -187,8 +187,8 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         </div>
                     </div>
                     {{-- Copyright --}}
-                    <div class="border-t border-white/10 pt-6 flex justify-center">
-                        <p class="text-gray-400 text-sm" x-text="footerCopyright"></p>
+                    <div class="border-t border-gray-300 dark:border-white/10 pt-6 flex justify-center">
+                        <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="footerCopyright"></p>
                     </div>
                 </div>
             </footer>
