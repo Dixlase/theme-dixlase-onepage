@@ -7,6 +7,47 @@ https://exc-d.com
 Theme settings preview - Scaled container rendering of header + hero + footer
 --}}
 
+{{-- Preview theme styles (isolated from admin dark mode) --}}
+<style @cspNonce>
+[data-preview-theme="dark"] { background: #030712; }
+[data-preview-theme="dark"] .pv-header { background: rgba(17,24,39,0.8); }
+[data-preview-theme="dark"] .pv-app-name { color: #fff; }
+[data-preview-theme="dark"] .pv-hero { background: #030712; }
+[data-preview-theme="dark"] .pv-glow-1 { background: rgba(107,114,128,0.3); }
+[data-preview-theme="dark"] .pv-glow-2 { background: rgba(156,163,175,0.3); }
+[data-preview-theme="dark"] .pv-title span { background-image: linear-gradient(to right, #9ca3af, #9ca3af, #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+[data-preview-theme="dark"] .pv-subtitle { color: #d1d5db; }
+[data-preview-theme="dark"] .pv-btn-secondary { border-color: #374151; color: #fff; }
+[data-preview-theme="dark"] .pv-nav-item { color: #9ca3af; }
+[data-preview-theme="dark"] .pv-contact { background: #111827; border-color: #1f2937; }
+[data-preview-theme="dark"] .pv-contact-title { color: #fff; }
+[data-preview-theme="dark"] .pv-contact-desc { color: #9ca3af; }
+[data-preview-theme="dark"] .pv-contact-field { background: #374151; }
+[data-preview-theme="dark"] .pv-footer { background: #12141C; }
+[data-preview-theme="dark"] .pv-footer-title { color: #fff; }
+[data-preview-theme="dark"] .pv-footer-text { color: #9ca3af; }
+[data-preview-theme="dark"] .pv-footer-border { border-color: rgba(255,255,255,0.1); }
+
+[data-preview-theme="light"] { background: #fff; }
+[data-preview-theme="light"] .pv-header { background: rgba(255,255,255,0.8); }
+[data-preview-theme="light"] .pv-app-name { color: #111827; }
+[data-preview-theme="light"] .pv-hero { background: #f3f4f6; }
+[data-preview-theme="light"] .pv-glow-1 { background: rgba(216,180,254,0.3); }
+[data-preview-theme="light"] .pv-glow-2 { background: rgba(147,197,253,0.3); }
+[data-preview-theme="light"] .pv-title span { background-image: linear-gradient(to right, #374151, #374151, #111827); -webkit-background-clip: text; background-clip: text; color: transparent; }
+[data-preview-theme="light"] .pv-subtitle { color: #4b5563; }
+[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db; color: #111827; }
+[data-preview-theme="light"] .pv-nav-item { color: #6b7280; }
+[data-preview-theme="light"] .pv-contact { background: #f9fafb; border-color: #e5e7eb; }
+[data-preview-theme="light"] .pv-contact-title { color: #111827; }
+[data-preview-theme="light"] .pv-contact-desc { color: #6b7280; }
+[data-preview-theme="light"] .pv-contact-field { background: #e5e7eb; }
+[data-preview-theme="light"] .pv-footer { background: #f3f4f6; }
+[data-preview-theme="light"] .pv-footer-title { color: #111827; }
+[data-preview-theme="light"] .pv-footer-text { color: #4b5563; }
+[data-preview-theme="light"] .pv-footer-border { border-color: #d1d5db; }
+</style>
+
 <div class="relative">
     {{-- Preview Header --}}
     <div class="flex items-center justify-between mb-4">
@@ -41,11 +82,12 @@ Theme settings preview - Scaled container rendering of header + hero + footer
     {{-- Scaled Preview Container --}}
     <div class="rounded-xl overflow-hidden shadow-2xl relative w-full border border-gray-200 dark:border-gray-700" id="preview-outer" style="min-height: 400px;">
         <div class="absolute top-0 left-0 transition-[width] duration-300" id="preview-inner"
-             :class="appearanceMode === '1' ? '' : 'dark'"
+             data-preview-theme="{{ ($settings->appearance_mode ?? '0') === '1' ? 'light' : 'dark' }}"
+             @appearance-changed.window="$el.dataset.previewTheme = $event.detail.mode === '1' ? 'light' : 'dark'"
              :style="'width: ' + previewDeviceWidth + 'px; transform-origin: top left;'">
 
             {{-- ===== HEADER PREVIEW ===== --}}
-            <header class="h-14 w-full flex items-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 px-6">
+            <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
                 <div class="flex items-center justify-between w-full">
                     {{-- Logo --}}
                     <div class="flex items-center space-x-3 cursor-pointer group" @click="$refs.headerLogoPickerTrigger && $refs.headerLogoPickerTrigger.click()">
@@ -58,7 +100,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                 <text x="20" y="28" class="fill-white font-bold text-2xl" font-family="system-ui, sans-serif" text-anchor="middle">D</text>
                             </svg>
                         </template>
-                        <span class="text-xl font-bold text-gray-900 dark:text-white">{{ config('app.name', 'Dixlase') }}</span>
+                        <span class="pv-app-name text-xl font-bold">{{ config('app.name', 'Dixlase') }}</span>
                         <span class="opacity-0 group-hover:opacity-100 text-xs text-blue-400 transition-opacity">
                             <i class="fas fa-camera"></i>
                         </span>
@@ -68,22 +110,22 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                     <nav class="flex items-center space-x-4">
                         <template x-if="headerMenuId && allMenusData[headerMenuId]">
                             <template x-for="item in allMenusData[headerMenuId]" :key="item.title">
-                                <span class="px-3 py-1 text-sm text-gray-500 dark:text-gray-400" x-text="item.title"></span>
+                                <span class="pv-nav-item px-3 py-1 text-sm" x-text="item.title"></span>
                             </template>
                         </template>
                         <template x-if="!headerMenuId || !allMenusData[headerMenuId]">
-                            <span class="px-3 py-1 text-xs text-gray-400 italic">{{ __('themes::admin.settings.plugins.menu.none') }}</span>
+                            <span class="pv-nav-item px-3 py-1 text-xs italic">{{ __('themes::admin.settings.plugins.menu.none') }}</span>
                         </template>
                     </nav>
                 </div>
             </header>
 
             {{-- ===== HERO PREVIEW ===== --}}
-            <section class="relative min-h-[600px] flex flex-col justify-center overflow-hidden bg-gray-100 dark:bg-gray-950">
+            <section class="pv-hero relative min-h-[600px] flex flex-col justify-center overflow-hidden">
                 {{-- Background glow --}}
                 <div class="absolute inset-0 overflow-hidden z-0">
-                    <div class="absolute top-1/4 left-10 w-72 h-72 bg-purple-300/30 dark:bg-gray-500/30 rounded-full filter blur-3xl"></div>
-                    <div class="absolute bottom-2/4 right-20 w-96 h-96 bg-blue-300/30 dark:bg-gray-400/30 rounded-full filter blur-3xl"></div>
+                    <div class="pv-glow-1 absolute top-1/4 left-10 w-72 h-72 rounded-full filter blur-3xl"></div>
+                    <div class="pv-glow-2 absolute bottom-2/4 right-20 w-96 h-96 rounded-full filter blur-3xl"></div>
                 </div>
 
                 {{-- Hero background image --}}
@@ -98,8 +140,8 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                     <div class="lg:w-1/2">
                         {{-- Main Title --}}
                         <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
-                            <h1 class="text-5xl lg:text-6xl font-bold leading-tight" x-show="editing !== 'heroMainTitle'">
-                                <span class="bg-gradient-to-r from-gray-700 via-gray-700 to-gray-900 dark:from-gray-400 dark:via-gray-400 dark:to-white bg-clip-text text-transparent" x-text="heroMainTitle"></span>
+                            <h1 class="pv-title text-5xl lg:text-6xl font-bold leading-tight" x-show="editing !== 'heroMainTitle'">
+                                <span x-text="heroMainTitle"></span>
                             </h1>
                             <input
                                 x-show="editing === 'heroMainTitle'"
@@ -118,7 +160,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
                         {{-- Sub Title --}}
                         <div class="relative group cursor-pointer mb-8" @click.stop="startEdit('heroSubTitle')">
-                            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-lg" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
+                            <p class="pv-subtitle text-lg max-w-lg" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
                             <textarea
                                 x-show="editing === 'heroSubTitle'"
                                 x-model="heroSubTitle"
@@ -153,7 +195,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
                             {{-- Secondary button --}}
                             <div class="relative group cursor-pointer" @click.stop="startEdit('heroButtonSecondary')">
-                                <div class="inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white py-6" x-show="editing !== 'heroButtonSecondary'">
+                                <div class="pv-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border py-6" x-show="editing !== 'heroButtonSecondary'">
                                     <span x-text="heroButtonSecondaryText || '{{ __('themes::admin.settings.hero.button_secondary_text') }}'"></span>
                                 </div>
                                 <div x-show="editing === 'heroButtonSecondary'" class="flex gap-2" @click.away="stopEdit()">
@@ -172,14 +214,14 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
             {{-- ===== CONTACT FORM PREVIEW ===== --}}
             <section x-show="showInquiryForm === '1'" x-transition
-                class="bg-gray-50 dark:bg-gray-900 py-16 border-t border-gray-200 dark:border-gray-800">
+                class="pv-contact py-16 border-t">
                 <div class="container mx-auto px-8 text-center">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">{{ __('themes::admin.settings.plugins.inquiry.title') }}</h2>
-                    <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
+                    <h2 class="pv-contact-title text-3xl font-bold mb-3">{{ __('themes::admin.settings.plugins.inquiry.title') }}</h2>
+                    <p class="pv-contact-desc mb-8 max-w-lg mx-auto">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
                     <div class="max-w-md mx-auto space-y-4">
-                        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
-                        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
-                        <div class="h-24 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
+                        <div class="pv-contact-field h-10 rounded-md"></div>
+                        <div class="pv-contact-field h-10 rounded-md"></div>
+                        <div class="pv-contact-field h-24 rounded-md"></div>
                         <div class="h-10 bg-purple-600 rounded-md flex items-center justify-center">
                             <span class="text-white text-sm font-medium">Send</span>
                         </div>
@@ -188,13 +230,13 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             </section>
 
             {{-- ===== FOOTER PREVIEW ===== --}}
-            <footer class="bg-gray-100 dark:bg-[#12141C] pt-12 pb-6">
+            <footer class="pv-footer pt-12 pb-6">
                 <div class="container mx-auto px-8">
                     <div class="pb-6">
-                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{{ config('app.name', 'Dixlase') }}</h2>
+                        <h2 class="pv-footer-title text-2xl font-bold mb-3">{{ config('app.name', 'Dixlase') }}</h2>
                         {{-- Footer description --}}
                         <div class="relative group cursor-pointer" @click.stop="startEdit('footerDescription')">
-                            <p class="text-gray-600 dark:text-gray-400 max-w-xs" x-show="editing !== 'footerDescription'" x-text="footerDescription"></p>
+                            <p class="pv-footer-text max-w-xs" x-show="editing !== 'footerDescription'" x-text="footerDescription"></p>
                             <input
                                 x-show="editing === 'footerDescription'"
                                 x-model="footerDescription"
@@ -211,8 +253,8 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         </div>
                     </div>
                     {{-- Copyright --}}
-                    <div class="border-t border-gray-300 dark:border-white/10 pt-6 flex justify-center">
-                        <p class="text-gray-600 dark:text-gray-400 text-sm" x-text="footerCopyright"></p>
+                    <div class="pv-footer-border border-t pt-6 flex justify-center">
+                        <p class="pv-footer-text text-sm" x-text="footerCopyright"></p>
                     </div>
                 </div>
             </footer>

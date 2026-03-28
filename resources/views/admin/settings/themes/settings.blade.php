@@ -83,9 +83,6 @@ function themeSettingsEditor() {
         previewDevice: 'desktop',
         previewDeviceWidth: 1440,
 
-        // Appearance mode: 0=Auto, 1=Light, 2=Dark
-        appearanceMode: @json(old('appearance_mode', $settings->appearance_mode ?? '0')),
-
         // Plugin preview data
         headerMenuId: @json(old('header_menu_id', $settings->header_menu_id ?? '')),
         allMenusData: @json($allMenusData ?? []),
@@ -99,16 +96,15 @@ function themeSettingsEditor() {
 
             // Recalculate preview scale whenever container size changes
             this.$nextTick(() => {
-                const resizeHandler = () => this.updatePreviewScale();
                 const outer = document.getElementById('preview-outer');
-                if (outer) {
-                    new ResizeObserver(resizeHandler).observe(outer);
-                }
-                // Recalculate after sidebar margin transitions complete
-                const main = document.getElementById('admin-main-content');
-                if (main) {
-                    main.addEventListener('transitionend', resizeHandler);
-                }
+                // Poll for container width changes (handles all sidebar toggles reliably)
+                let lastWidth = outer ? outer.offsetWidth : 0;
+                setInterval(() => {
+                    if (outer && outer.offsetWidth !== lastWidth) {
+                        lastWidth = outer.offsetWidth;
+                        this.updatePreviewScale();
+                    }
+                }, 200);
                 this.updatePreviewScale();
             });
         },

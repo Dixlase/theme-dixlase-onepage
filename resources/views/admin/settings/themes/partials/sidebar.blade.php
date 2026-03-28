@@ -37,11 +37,12 @@ Theme settings right sidebar - non-visual settings
             <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
         </button>
         <div x-show="open" x-collapse>
-            <select name="appearance_mode" x-model="appearanceMode"
+            <select name="appearance_mode"
+                @change="$dispatch('appearance-changed', { mode: $event.target.value })"
                 class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
-                <option value="0">{{ __('themes::admin.settings.appearance.mode_auto') }}</option>
-                <option value="1">{{ __('themes::admin.settings.appearance.mode_light') }}</option>
-                <option value="2">{{ __('themes::admin.settings.appearance.mode_dark') }}</option>
+                <option value="0" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '0' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_auto') }}</option>
+                <option value="1" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '1' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_light') }}</option>
+                <option value="2" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '2' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_dark') }}</option>
             </select>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
         </div>
