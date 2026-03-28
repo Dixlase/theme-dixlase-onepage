@@ -37,16 +37,12 @@ Theme settings right sidebar - non-visual settings
             <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
         </button>
         <div x-show="open" x-collapse>
-            <x-form-select
-                name="appearance_mode"
-                :options="[
-                    '0' => __('themes::admin.settings.appearance.mode_auto'),
-                    '1' => __('themes::admin.settings.appearance.mode_light'),
-                    '2' => __('themes::admin.settings.appearance.mode_dark')
-                ]"
-                :value="old('appearance_mode', $settings->appearance_mode ?? '0')"
-                xModel="appearanceMode"
-            />
+            <select name="appearance_mode" x-model="appearanceMode"
+                class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+                <option value="0">{{ __('themes::admin.settings.appearance.mode_auto') }}</option>
+                <option value="1">{{ __('themes::admin.settings.appearance.mode_light') }}</option>
+                <option value="2">{{ __('themes::admin.settings.appearance.mode_dark') }}</option>
+            </select>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
         </div>
     </div>
@@ -102,11 +98,12 @@ Theme settings right sidebar - non-visual settings
             <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
         </button>
         <div x-show="open" x-collapse>
-            <x-form-select
-                name="header_menu_id"
-                :options="$menuOptions"
-                :value="old('header_menu_id', $settings->header_menu_id ?? '')"
-            />
+            <select name="header_menu_id" x-model="headerMenuId"
+                class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+                @foreach($menuOptions as $val => $label)
+                    <option value="{{ $val }}">{{ $label }}</option>
+                @endforeach
+            </select>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.menu.help') }}</p>
         </div>
     </div>
@@ -143,10 +140,10 @@ Theme settings right sidebar - non-visual settings
             <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
         </button>
         <div x-show="open" x-collapse>
-            <input type="hidden" name="show_inquiry_form" value="0">
+            <input type="hidden" name="show_inquiry_form" :value="showInquiryForm">
             <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="show_inquiry_form" value="1"
-                    {{ old('show_inquiry_form', $settings->show_inquiry_form ?? '0') === '1' ? 'checked' : '' }}
+                <input type="checkbox" @change="showInquiryForm = $el.checked ? '1' : '0'"
+                    :checked="showInquiryForm === '1'"
                     class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
                 <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.plugins.inquiry.enable') }}</span>
             </label>

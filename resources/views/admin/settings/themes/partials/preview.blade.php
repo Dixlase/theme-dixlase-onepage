@@ -64,11 +64,16 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         </span>
                     </div>
 
-                    {{-- Navigation placeholder --}}
+                    {{-- Navigation - dynamic from selected menu --}}
                     <nav class="flex items-center space-x-4">
-                        <span class="px-3 py-1 text-sm text-gray-500">Home</span>
-                        <span class="px-3 py-1 text-sm text-gray-500">About</span>
-                        <span class="px-3 py-1 text-sm text-gray-500">Contact</span>
+                        <template x-if="headerMenuId && allMenusData[headerMenuId]">
+                            <template x-for="item in allMenusData[headerMenuId]" :key="item.title">
+                                <span class="px-3 py-1 text-sm text-gray-500 dark:text-gray-400" x-text="item.title"></span>
+                            </template>
+                        </template>
+                        <template x-if="!headerMenuId || !allMenusData[headerMenuId]">
+                            <span class="px-3 py-1 text-xs text-gray-400 italic">{{ __('themes::admin.settings.plugins.menu.none') }}</span>
+                        </template>
                     </nav>
                 </div>
             </header>
@@ -160,6 +165,23 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                     <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- ===== CONTACT FORM PREVIEW ===== --}}
+            <section x-show="showInquiryForm === '1'" x-transition
+                class="bg-gray-50 dark:bg-gray-900 py-16 border-t border-gray-200 dark:border-gray-800">
+                <div class="container mx-auto px-8 text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">{{ __('themes::admin.settings.plugins.inquiry.title') }}</h2>
+                    <p class="text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
+                    <div class="max-w-md mx-auto space-y-4">
+                        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
+                        <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
+                        <div class="h-24 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
+                        <div class="h-10 bg-purple-600 rounded-md flex items-center justify-center">
+                            <span class="text-white text-sm font-medium">Send</span>
                         </div>
                     </div>
                 </div>

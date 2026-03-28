@@ -131,18 +131,35 @@ class AdminThemeSettingsController extends AdminLoggedInController
         $this->viewParams['menuPluginEnabled'] = $menuPluginEnabled;
         $this->viewParams['inquiryPluginEnabled'] = $inquiryPluginEnabled;
 
-        // Build menu options for select
+        // Build menu options and load selected menu items for preview
         $menuOptions = ['' => __('themes::admin.settings.plugins.menu.none')];
+        $headerMenuItems = [];
+        $allMenusData = [];
         if ($menuPluginEnabled) {
             $menus = \Plugins\DixlaseMenus\App\Models\Menu::query()
                 ->active()
                 ->ordered()
+                ->with(['activeItems' => fn ($q) => $q->whereNull('parent_id')->orderBy('display_order')])
                 ->get();
             foreach ($menus as $menu) {
                 $menuOptions[$menu->id] = $menu->name;
+                $allMenusData[$menu->id] = $menu->activeItems->map(fn ($item) => [
+                    'title' => $item->title,
+                    'url' => $item->url,
+                ])->toArray();
+            }
+            // Load selected menu items for initial preview
+            $selectedMenuId = $settings->header_menu_id ?? null;
+            if ($selectedMenuId && isset($allMenusData[$selectedMenuId])) {
+                $headerMenuItems = $allMenusData[$selectedMenuId];
             }
         }
         $this->viewParams['menuOptions'] = $menuOptions;
+        $this->viewParams['headerMenuItems'] = $headerMenuItems;
+        $this->viewParams['allMenusData'] = $allMenusData;
+
+        // Check if inquiry form should show in preview
+        $this->viewParams['showInquiryForm'] = $settings->show_inquiry_form ?? '0';
 
         return view('themes::admin.settings.themes.settings', $this->viewParams);
     }
