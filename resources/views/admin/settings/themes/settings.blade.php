@@ -86,6 +86,11 @@ function themeSettingsEditor() {
         // Appearance mode: 0=Auto, 1=Light, 2=Dark
         appearanceMode: @json(old('appearance_mode', $settings->appearance_mode ?? '0')),
 
+        // Plugin preview data
+        headerMenuId: @json(old('header_menu_id', $settings->header_menu_id ?? '')),
+        allMenusData: @json($allMenusData ?? []),
+        showInquiryForm: @json(old('show_inquiry_form', $settings->show_inquiry_form ?? '0')),
+
         // Editing state
         editing: null,
 
@@ -99,10 +104,10 @@ function themeSettingsEditor() {
                 if (outer) {
                     new ResizeObserver(resizeHandler).observe(outer);
                 }
-                // Also observe main content area for left sidebar toggle
+                // Recalculate after sidebar margin transitions complete
                 const main = document.getElementById('admin-main-content');
                 if (main) {
-                    new ResizeObserver(resizeHandler).observe(main);
+                    main.addEventListener('transitionend', resizeHandler);
                 }
                 this.updatePreviewScale();
             });
