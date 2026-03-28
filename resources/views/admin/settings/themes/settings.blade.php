@@ -94,6 +94,14 @@ function themeSettingsEditor() {
         init() {
             this.$dispatch('right-sidebar-active');
 
+            // Remove FOUC prevention style tag so sidebar margin toggle works via classes
+            // Safe: Alpine has already initialized, so md:ml-* classes are applied
+            document.querySelectorAll('style').forEach(s => {
+                if (s.textContent.includes('#admin-main-content')) {
+                    s.textContent = '';
+                }
+            });
+
             // Recalculate preview scale whenever container size changes
             this.$nextTick(() => {
                 const outer = document.getElementById('preview-outer');
