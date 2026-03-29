@@ -18,6 +18,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 [data-preview-theme="dark"] .pv-title span { background-image: linear-gradient(to right, #9ca3af, #9ca3af, #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 [data-preview-theme="dark"] .pv-subtitle { color: #d1d5db; }
 [data-preview-theme="dark"] .pv-btn-secondary { border-color: #374151; color: #fff; }
+[data-preview-theme="dark"] .pv-edit-input { background: rgba(255,255,255,0.1); color: #fff; }
 [data-preview-theme="dark"] .pv-nav-item { color: #9ca3af; }
 [data-preview-theme="dark"] .pv-contact { background: #111827; border-color: #1f2937; }
 [data-preview-theme="dark"] .pv-contact-title { color: #fff; }
@@ -37,6 +38,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 [data-preview-theme="light"] .pv-title span { background-image: linear-gradient(to right, #374151, #374151, #111827); -webkit-background-clip: text; background-clip: text; color: transparent; }
 [data-preview-theme="light"] .pv-subtitle { color: #4b5563; }
 [data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db; color: #111827; }
+[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05); color: #111827; }
 [data-preview-theme="light"] .pv-nav-item { color: #6b7280; }
 [data-preview-theme="light"] .pv-contact { background: #f9fafb; border-color: #e5e7eb; }
 [data-preview-theme="light"] .pv-contact-title { color: #111827; }
@@ -151,7 +153,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                 x-ref="editHeroMainTitle"
                                 x-effect="if (editing === 'heroMainTitle') $nextTick(() => $refs.editHeroMainTitle?.focus())"
                                 type="text"
-                                class="w-full text-5xl lg:text-6xl font-bold bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="pv-edit-input w-full text-5xl lg:text-6xl font-bold border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                             <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroMainTitle'">
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
@@ -168,7 +170,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                 x-ref="editHeroSubTitle"
                                 x-effect="if (editing === 'heroSubTitle') $nextTick(() => $refs.editHeroSubTitle?.focus())"
                                 rows="2"
-                                class="w-full max-w-lg text-lg bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                class="pv-edit-input w-full max-w-lg text-lg border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                             ></textarea>
                             <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroSubTitle'">
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
@@ -184,9 +186,9 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 h-5 w-5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                 </div>
                                 <div x-show="editing === 'heroButton'" class="flex gap-2" @click.away="stopEdit()">
-                                    <input x-model="heroButtonText" type="text" placeholder="{{ __('themes::admin.settings.hero.button_text') }}" class="text-sm bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-40"
+                                    <input x-model="heroButtonText" type="text" placeholder="{{ __('themes::admin.settings.hero.button_text') }}" class="pv-edit-input text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40"
                                         x-ref="editHeroButton" x-effect="if (editing === 'heroButton') $nextTick(() => $refs.editHeroButton?.focus())">
-                                    <input x-model="heroButtonLink" type="text" placeholder="{{ __('themes::admin.settings.hero.button_link') }}" class="text-sm bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
+                                    <input x-model="heroButtonLink" type="text" placeholder="{{ __('themes::admin.settings.hero.button_link') }}" class="pv-edit-input text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
                                 </div>
                                 <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroButton'">
                                     <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
@@ -199,9 +201,9 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                     <span x-text="heroButtonSecondaryText || '{{ __('themes::admin.settings.hero.button_secondary_text') }}'"></span>
                                 </div>
                                 <div x-show="editing === 'heroButtonSecondary'" class="flex gap-2" @click.away="stopEdit()">
-                                    <input x-model="heroButtonSecondaryText" type="text" placeholder="{{ __('themes::admin.settings.hero.button_secondary_text') }}" class="text-sm bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-40"
+                                    <input x-model="heroButtonSecondaryText" type="text" placeholder="{{ __('themes::admin.settings.hero.button_secondary_text') }}" class="pv-edit-input text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40"
                                         x-ref="editHeroSecondary" x-effect="if (editing === 'heroButtonSecondary') $nextTick(() => $refs.editHeroSecondary?.focus())">
-                                    <input x-model="heroButtonSecondaryLink" type="text" placeholder="{{ __('themes::admin.settings.hero.button_secondary_link') }}" class="text-sm bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
+                                    <input x-model="heroButtonSecondaryLink" type="text" placeholder="{{ __('themes::admin.settings.hero.button_secondary_link') }}" class="pv-edit-input text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
                                 </div>
                                 <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroButtonSecondary'">
                                     <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
@@ -245,7 +247,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                 x-ref="editFooterDescription"
                                 x-effect="if (editing === 'footerDescription') $nextTick(() => $refs.editFooterDescription?.focus())"
                                 type="text"
-                                class="w-full max-w-xs text-sm bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="pv-edit-input w-full max-w-xs text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                             <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'footerDescription'">
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
@@ -260,6 +262,20 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                             </template>
                         </div>
                     </div>
+                    {{-- SNS Links --}}
+                    <div class="py-4 flex flex-wrap gap-3"
+                         x-show="snsLinks.instagram || snsLinks.x || snsLinks.facebook || snsLinks.tiktok || snsLinks.bluesky || snsLinks.threads || snsLinks.linkedin || snsLinks.youtube || snsLinks.pinterest || snsLinks.discord">
+                        <template x-if="snsLinks.instagram"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-instagram"></i></a></template>
+                        <template x-if="snsLinks.x"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-x-twitter"></i></a></template>
+                        <template x-if="snsLinks.facebook"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-facebook"></i></a></template>
+                        <template x-if="snsLinks.tiktok"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-tiktok"></i></a></template>
+                        <template x-if="snsLinks.bluesky"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-bluesky"></i></a></template>
+                        <template x-if="snsLinks.threads"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-threads"></i></a></template>
+                        <template x-if="snsLinks.linkedin"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-linkedin"></i></a></template>
+                        <template x-if="snsLinks.youtube"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-youtube"></i></a></template>
+                        <template x-if="snsLinks.pinterest"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-pinterest"></i></a></template>
+                        <template x-if="snsLinks.discord"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-discord"></i></a></template>
+                    </div>
                     {{-- Copyright --}}
                     <div class="pv-footer-border border-t pt-6 flex justify-center">
                         <div class="relative group cursor-pointer" @click.stop="startEdit('footerCopyright')">
@@ -272,7 +288,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                 x-ref="editFooterCopyright"
                                 x-effect="if (editing === 'footerCopyright') $nextTick(() => $refs.editFooterCopyright?.focus())"
                                 type="text"
-                                class="w-full text-sm bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="pv-edit-input w-full text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                             <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'footerCopyright'">
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
