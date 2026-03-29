@@ -9,45 +9,45 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
 {{-- Preview theme styles (isolated from admin dark mode) --}}
 <style @cspNonce>
-[data-preview-theme="dark"] { background: #030712; }
-[data-preview-theme="dark"] .pv-header { background: rgba(17,24,39,0.8); }
-[data-preview-theme="dark"] .pv-app-name { color: #fff; }
-[data-preview-theme="dark"] .pv-hero { background: #030712; }
-[data-preview-theme="dark"] .pv-glow-1 { background: rgba(107,114,128,0.3); }
-[data-preview-theme="dark"] .pv-glow-2 { background: rgba(156,163,175,0.3); }
-[data-preview-theme="dark"] .pv-title span { background-image: linear-gradient(to right, #9ca3af, #9ca3af, #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-[data-preview-theme="dark"] .pv-subtitle { color: #d1d5db; }
-[data-preview-theme="dark"] .pv-btn-secondary { border-color: #374151; color: #fff; }
-[data-preview-theme="dark"] .pv-edit-input { background: rgba(255,255,255,0.1); color: #fff; }
-[data-preview-theme="dark"] .pv-nav-item { color: #9ca3af; }
-[data-preview-theme="dark"] .pv-contact { background: #111827; border-color: #1f2937; }
-[data-preview-theme="dark"] .pv-contact-title { color: #fff; }
-[data-preview-theme="dark"] .pv-contact-desc { color: #9ca3af; }
-[data-preview-theme="dark"] .pv-contact-field { background: #374151; }
-[data-preview-theme="dark"] .pv-footer { background: #12141C; }
-[data-preview-theme="dark"] .pv-footer-title { color: #fff; }
-[data-preview-theme="dark"] .pv-footer-text { color: #9ca3af; }
-[data-preview-theme="dark"] .pv-footer-border { border-color: rgba(255,255,255,0.1); }
+#preview-inner[data-preview-theme="dark"] { background: #030712 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-header { background: rgba(17,24,39,0.8) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-app-name { color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-hero { background: #030712 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-glow-1 { background: rgba(107,114,128,0.3) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-glow-2 { background: rgba(156,163,175,0.3) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-title span { background-image: linear-gradient(to right, #9ca3af, #9ca3af, #fff) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+#preview-inner[data-preview-theme="dark"] .pv-subtitle { color: #d1d5db !important; }
+#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { border-color: #374151 !important; color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-edit-input { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-nav-item { color: #9ca3af !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact { background: #111827 !important; border-color: #1f2937 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact-title { color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact-desc { color: #9ca3af !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact-field { background: #374151 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-footer { background: #12141C !important; }
+#preview-inner[data-preview-theme="dark"] .pv-footer-title { color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-footer-text { color: #9ca3af !important; }
+#preview-inner[data-preview-theme="dark"] .pv-footer-border { border-color: rgba(255,255,255,0.1) !important; }
 
-[data-preview-theme="light"] { background: #fff; }
-[data-preview-theme="light"] .pv-header { background: rgba(255,255,255,0.8); }
-[data-preview-theme="light"] .pv-app-name { color: #111827; }
-[data-preview-theme="light"] .pv-hero { background: #f3f4f6; }
-[data-preview-theme="light"] .pv-glow-1 { background: rgba(216,180,254,0.3); }
-[data-preview-theme="light"] .pv-glow-2 { background: rgba(147,197,253,0.3); }
-[data-preview-theme="light"] .pv-title span { background-image: linear-gradient(to right, #374151, #374151, #111827); -webkit-background-clip: text; background-clip: text; color: transparent; }
-[data-preview-theme="light"] .pv-subtitle { color: #4b5563; }
-[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db; color: #111827; }
-[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05); color: #111827; }
-[data-preview-theme="light"] .pv-nav-item { color: #6b7280; }
-[data-preview-theme="light"] .pv-contact { background: #f9fafb; border-color: #e5e7eb; }
-[data-preview-theme="light"] .pv-contact-title { color: #111827; }
-[data-preview-theme="light"] .pv-contact-desc { color: #6b7280; }
-[data-preview-theme="light"] .pv-contact-field { background: #e5e7eb; }
-[data-preview-theme="light"] .pv-footer { background: #f3f4f6; }
-[data-preview-theme="light"] .pv-footer-title { color: #111827; }
-[data-preview-theme="light"] .pv-footer-text { color: #4b5563; }
-[data-preview-theme="light"] .pv-footer-border { border-color: #d1d5db; }
+#preview-inner[data-preview-theme="light"] { background: #fff !important; }
+#preview-inner[data-preview-theme="light"] .pv-header { background: rgba(255,255,255,0.9) !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important; }
+#preview-inner[data-preview-theme="light"] .pv-app-name { color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-hero { background: #f3f4f6 !important; }
+#preview-inner[data-preview-theme="light"] .pv-glow-1 { background: rgba(216,180,254,0.3) !important; }
+#preview-inner[data-preview-theme="light"] .pv-glow-2 { background: rgba(147,197,253,0.3) !important; }
+#preview-inner[data-preview-theme="light"] .pv-title span { background-image: linear-gradient(to right, #374151, #374151, #111827) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+#preview-inner[data-preview-theme="light"] .pv-subtitle { color: #4b5563 !important; }
+#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db !important; color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05) !important; color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-nav-item { color: #6b7280 !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact { background: #f9fafb !important; border-color: #e5e7eb !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-title { color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-desc { color: #6b7280 !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-field { background: #e5e7eb !important; }
+#preview-inner[data-preview-theme="light"] .pv-footer { background: #f3f4f6 !important; }
+#preview-inner[data-preview-theme="light"] .pv-footer-title { color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
+#preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: #d1d5db !important; }
 </style>
 
 <div class="relative">
@@ -92,7 +92,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
                 <div class="flex items-center justify-between w-full">
                     {{-- Logo --}}
-                    <div class="flex items-center space-x-3 cursor-pointer group" @click="$refs.headerLogoPickerTrigger && $refs.headerLogoPickerTrigger.click()">
+                    <div class="flex items-center space-x-3">
                         <template x-if="headerLogoPreviewUrl">
                             <img :src="headerLogoPreviewUrl" alt="Logo" class="h-8 w-auto">
                         </template>
@@ -103,9 +103,6 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                             </svg>
                         </template>
                         <span class="pv-app-name text-xl font-bold">{{ config('app.name', 'Dixlase') }}</span>
-                        <span class="opacity-0 group-hover:opacity-100 text-xs text-blue-400 transition-opacity">
-                            <i class="fas fa-camera"></i>
-                        </span>
                     </div>
 
                     {{-- Navigation - dynamic from selected menu --}}
@@ -114,9 +111,6 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                             <template x-for="item in allMenusData[headerMenuId]" :key="item.title">
                                 <span class="pv-nav-item px-3 py-1 text-sm" x-text="item.title"></span>
                             </template>
-                        </template>
-                        <template x-if="!headerMenuId || !allMenusData[headerMenuId]">
-                            <span class="pv-nav-item px-3 py-1 text-xs italic">{{ __('themes::admin.settings.plugins.menu.none') }}</span>
                         </template>
                     </nav>
                 </div>
