@@ -252,9 +252,32 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                             </div>
                         </div>
                     </div>
+                    {{-- Footer menu links --}}
+                    <div class="py-4" x-show="footerMenuId && allMenusData[footerMenuId]">
+                        <div class="flex flex-wrap gap-4">
+                            <template x-for="item in (footerMenuId && allMenusData[footerMenuId]) ? allMenusData[footerMenuId] : []" :key="item.title">
+                                <span class="pv-footer-text text-sm hover:underline cursor-default" x-text="item.title"></span>
+                            </template>
+                        </div>
+                    </div>
                     {{-- Copyright --}}
                     <div class="pv-footer-border border-t pt-6 flex justify-center">
-                        <p class="pv-footer-text text-sm" x-text="footerCopyright"></p>
+                        <div class="relative group cursor-pointer" @click.stop="startEdit('footerCopyright')">
+                            <p class="pv-footer-text text-sm" x-show="editing !== 'footerCopyright'" x-text="footerCopyright"></p>
+                            <input
+                                x-show="editing === 'footerCopyright'"
+                                x-model="footerCopyright"
+                                @click.away="stopEdit()"
+                                @keydown.enter="stopEdit()"
+                                x-ref="editFooterCopyright"
+                                x-effect="if (editing === 'footerCopyright') $nextTick(() => $refs.editFooterCopyright?.focus())"
+                                type="text"
+                                class="w-full text-sm bg-white/10 border border-blue-400 rounded-lg px-3 py-2 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                            <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'footerCopyright'">
+                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </footer>

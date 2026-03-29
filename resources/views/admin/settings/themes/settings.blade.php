@@ -34,6 +34,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <input type="hidden" name="hero_button_secondary_link" :value="heroButtonSecondaryLink">
         <input type="hidden" name="footer_description" :value="footerDescription">
         <input type="hidden" name="footer_copyright" :value="footerCopyright">
+        <input type="hidden" name="footer_menu_id" :value="footerMenuId">
 
         {{-- Preview Area (center content) --}}
         <div class="mt-2">
@@ -73,7 +74,6 @@ function themeSettingsEditor() {
         // Footer settings
         footerDescription: @json(old('footer_description', $settings->footer_description ?? '')),
         footerCopyright: @json(old('footer_copyright', $settings->footer_copyright ?? '')),
-        footerLinks: @json(old('footer_links', $settings->footer_links ?? [])),
 
         // Media preview URLs
         headerLogoPreviewUrl: @json($headerLogo ? asset(config('admin.mediaPath', 'media') . '/' . $headerLogo->path) : null),
@@ -85,6 +85,7 @@ function themeSettingsEditor() {
 
         // Plugin preview data
         headerMenuId: @json(old('header_menu_id', $settings->header_menu_id ?? '')),
+        footerMenuId: @json(old('footer_menu_id', $settings->footer_menu_id ?? '')),
         allMenusData: @json($allMenusData ?? []),
         showInquiryForm: @json(old('show_inquiry_form', $settings->show_inquiry_form ?? '0')),
 
@@ -122,7 +123,9 @@ function themeSettingsEditor() {
             if (outer && inner) {
                 const containerWidth = outer.offsetWidth;
                 const deviceWidth = this.previewDeviceWidth;
-                const scale = Math.min(containerWidth / deviceWidth, 1);
+                const scale = this.previewDevice === 'desktop'
+                    ? containerWidth / deviceWidth
+                    : Math.min(containerWidth / deviceWidth, 1);
                 inner.style.transform = 'scale(' + scale + ')';
                 // Set container height to match scaled content
                 const contentHeight = inner.scrollHeight || 900;
@@ -140,14 +143,6 @@ function themeSettingsEditor() {
 
         stopEdit() {
             this.editing = null;
-        },
-
-        addFooterLink() {
-            this.footerLinks.push({ title: '', url: '' });
-        },
-
-        removeFooterLink(index) {
-            this.footerLinks.splice(index, 1);
         },
     }
 }

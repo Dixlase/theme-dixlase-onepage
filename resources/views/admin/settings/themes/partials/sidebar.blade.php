@@ -108,9 +108,19 @@ Theme settings right sidebar - non-visual settings
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.menu.help') }}</p>
         </div>
     </div>
+    @else
+    <div x-data="{ open: false }">
+        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <span><i class="fas fa-bars mr-1.5"></i>{{ __('themes::admin.settings.plugins.menu.title') }}</span>
+            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
+        </button>
+        <div x-show="open" x-collapse>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.footer_menu.plugin_required') }}</p>
+        </div>
+    </div>
+    @endif
 
     <hr class="border-gray-200 dark:border-gray-700">
-    @endif
 
     {{-- ===== Hero Background Image ===== --}}
     <div x-data="{ open: true }">
@@ -155,35 +165,34 @@ Theme settings right sidebar - non-visual settings
     <hr class="border-gray-200 dark:border-gray-700">
     @endif
 
-    {{-- ===== Footer Links ===== --}}
+    {{-- ===== Footer Menu ===== --}}
+    @if($menuPluginEnabled)
     <div x-data="{ open: false }">
         <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-link mr-1.5"></i>{{ __('themes::admin.settings.footer.links') }}</span>
+            <span><i class="fas fa-link mr-1.5"></i>{{ __('themes::admin.settings.plugins.footer_menu.title') }}</span>
             <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
         </button>
         <div x-show="open" x-collapse>
-            <div class="space-y-3">
-                <template x-for="(link, index) in footerLinks" :key="index">
-                    <div class="flex flex-col gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <input type="text" :name="'footer_links[' + index + '][title]'" x-model="link.title"
-                               :placeholder="'{{ __('themes::admin.settings.footer.link_title') }}'"
-                               class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                        <div class="flex gap-2">
-                            <input type="text" :name="'footer_links[' + index + '][url]'" x-model="link.url"
-                                   :placeholder="'{{ __('themes::admin.settings.footer.link_url') }}'"
-                                   class="flex-1 text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                            <button type="button" @click="removeFooterLink(index)" class="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-xs">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </template>
-                <button type="button" @click="addFooterLink()" class="w-full px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 text-sm">
-                    <i class="fas fa-plus mr-1"></i>{{ __('themes::admin.settings.footer.add_link') }}
-                </button>
-            </div>
+            <select name="footer_menu_id" x-model="footerMenuId"
+                class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+                @foreach($menuOptions as $val => $label)
+                    <option value="{{ $val }}">{{ $label }}</option>
+                @endforeach
+            </select>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.footer_menu.help') }}</p>
         </div>
     </div>
+    @else
+    <div x-data="{ open: false }">
+        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <span><i class="fas fa-link mr-1.5"></i>{{ __('themes::admin.settings.plugins.footer_menu.title') }}</span>
+            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
+        </button>
+        <div x-show="open" x-collapse>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.footer_menu.plugin_required') }}</p>
+        </div>
+    </div>
+    @endif
 
     <hr class="border-gray-200 dark:border-gray-700">
 
