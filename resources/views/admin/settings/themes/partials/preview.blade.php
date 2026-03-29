@@ -37,7 +37,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="light"] .pv-glow-2 { background: rgba(147,197,253,0.3) !important; }
 #preview-inner[data-preview-theme="light"] .pv-title span { background-image: linear-gradient(to right, #374151, #374151, #111827) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
 #preview-inner[data-preview-theme="light"] .pv-subtitle { color: #4b5563 !important; }
-#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db !important; color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db !important; color: #bfbfbf !important; }
 #preview-inner[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05) !important; color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-nav-item { color: #6b7280 !important; }
 #preview-inner[data-preview-theme="light"] .pv-contact { background: #f9fafb !important; border-color: #e5e7eb !important; }
@@ -48,6 +48,11 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="light"] .pv-footer-title { color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: #d1d5db !important; }
+
+/* Reset admin global section styles leaking into preview */
+#preview-inner section { border-color: transparent !important; }
+#preview-inner[data-preview-theme="light"] section { background-color: transparent !important; border-color: transparent !important; }
+#preview-inner[data-preview-theme="dark"] section { background-color: transparent !important; border-color: transparent !important; }
 </style>
 
 <div class="relative">
@@ -82,7 +87,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
     </div>
 
     {{-- Scaled Preview Container --}}
-    <div class="rounded-xl overflow-hidden shadow-2xl relative w-full border border-gray-200 dark:border-gray-700" id="preview-outer" style="min-height: 400px;">
+    <div class="overflow-hidden shadow-2xl relative w-full border border-gray-100 dark:border-gray-700" id="preview-outer" style="min-height: 400px;">
         <div class="absolute top-0 left-0 transition-[width] duration-300" id="preview-inner"
              data-preview-theme="{{ ($settings->appearance_mode ?? '0') === '1' ? 'light' : 'dark' }}"
              @appearance-changed.window="$el.dataset.previewTheme = $event.detail.mode === '1' ? 'light' : 'dark'"
@@ -92,7 +97,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
                 <div class="flex items-center justify-between w-full">
                     {{-- Logo --}}
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3 relative group">
                         <template x-if="headerLogoPreviewUrl">
                             <img :src="headerLogoPreviewUrl" alt="Logo" class="h-8 w-auto">
                         </template>
@@ -103,14 +108,22 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                             </svg>
                         </template>
                         <span class="pv-app-name text-xl font-bold">{{ config('app.name', 'Dixlase') }}</span>
+                        <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-image"></i></span>
+                        </div>
                     </div>
 
                     {{-- Navigation - dynamic from selected menu --}}
-                    <nav class="flex items-center space-x-4">
-                        <template x-if="headerMenuId && allMenusData[headerMenuId]">
-                            <template x-for="item in allMenusData[headerMenuId]" :key="item.title">
+                    <nav class="flex items-center space-x-4" x-show="headerMenuId && allMenusData[headerMenuId]">
+                        {{-- Desktop/Tablet: show menu items --}}
+                        <template x-if="previewDevice !== 'mobile'">
+                            <template x-for="item in allMenusData[headerMenuId] || []" :key="item.title">
                                 <span class="pv-nav-item px-3 py-1 text-sm" x-text="item.title"></span>
                             </template>
+                        </template>
+                        {{-- Mobile: show hamburger icon --}}
+                        <template x-if="previewDevice === 'mobile'">
+                            <span class="pv-nav-item text-xl cursor-pointer"><i class="fas fa-bars"></i></span>
                         </template>
                     </nav>
                 </div>
