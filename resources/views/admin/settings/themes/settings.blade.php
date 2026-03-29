@@ -83,6 +83,20 @@ function themeSettingsEditor() {
         previewDevice: 'desktop',
         previewDeviceWidth: 1440,
 
+        // SNS links
+        snsLinks: {
+            instagram: @json(old('footer_sns_instagram', $settings->footer_sns_instagram ?? '')),
+            x: @json(old('footer_sns_x', $settings->footer_sns_x ?? '')),
+            facebook: @json(old('footer_sns_facebook', $settings->footer_sns_facebook ?? '')),
+            tiktok: @json(old('footer_sns_tiktok', $settings->footer_sns_tiktok ?? '')),
+            bluesky: @json(old('footer_sns_bluesky', $settings->footer_sns_bluesky ?? '')),
+            threads: @json(old('footer_sns_threads', $settings->footer_sns_threads ?? '')),
+            linkedin: @json(old('footer_sns_linkedin', $settings->footer_sns_linkedin ?? '')),
+            youtube: @json(old('footer_sns_youtube', $settings->footer_sns_youtube ?? '')),
+            pinterest: @json(old('footer_sns_pinterest', $settings->footer_sns_pinterest ?? '')),
+            discord: @json(old('footer_sns_discord', $settings->footer_sns_discord ?? '')),
+        },
+
         // Plugin preview data
         headerMenuId: @json(old('header_menu_id', $settings->header_menu_id ?? '')),
         footerMenuId: @json(old('footer_menu_id', $settings->footer_menu_id ?? '')),
@@ -98,11 +112,16 @@ function themeSettingsEditor() {
             // Recalculate preview scale whenever container size changes
             this.$nextTick(() => {
                 const outer = document.getElementById('preview-outer');
-                // Poll for container width changes (handles all sidebar toggles reliably)
+                const inner = document.getElementById('preview-inner');
+                // Poll for container width and content height changes
                 let lastWidth = outer ? outer.offsetWidth : 0;
+                let lastHeight = inner ? inner.scrollHeight : 0;
                 setInterval(() => {
-                    if (outer && outer.offsetWidth !== lastWidth) {
-                        lastWidth = outer.offsetWidth;
+                    const w = outer ? outer.offsetWidth : 0;
+                    const h = inner ? inner.scrollHeight : 0;
+                    if (w !== lastWidth || h !== lastHeight) {
+                        lastWidth = w;
+                        lastHeight = h;
                         this.updatePreviewScale();
                     }
                 }, 200);

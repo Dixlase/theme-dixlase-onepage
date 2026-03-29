@@ -234,12 +234,13 @@ Theme settings right sidebar - non-visual settings
                     ];
                 @endphp
                 @foreach($snsFields as $sns)
+                    @php $snsKey = str_replace('footer_sns_', '', $sns['name']); @endphp
                     <div>
                         <label class="block text-xs font-medium mb-1 text-gray-600 dark:text-gray-400">{{ $sns['label'] }}</label>
                         <div class="flex items-stretch">
                             <span class="inline-flex items-center text-xs text-gray-500 dark:text-gray-400 mr-1 whitespace-nowrap">{{ $sns['prefix'] }}</span>
                             <input type="text" name="{{ $sns['name'] }}"
-                                   value="{{ old($sns['name'], $settings->{$sns['name']} ?? '') }}"
+                                   x-model="snsLinks.{{ $snsKey }}"
                                    class="flex-1 min-w-0 block w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                    placeholder="{{ __('themes::admin.settings.footer.sns_username') }}">
                         </div>
