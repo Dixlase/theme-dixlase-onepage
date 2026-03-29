@@ -56,9 +56,6 @@ class UpdateThemeSettingsRequest extends FormRequest
 
             // Footer
             'footer_description' => 'nullable|string|max:1000',
-            'footer_links' => 'nullable|array',
-            'footer_links.*.title' => 'required|string|max:100',
-            'footer_links.*.url' => 'required|string|max:500',
             'footer_copyright' => 'nullable|string|max:500',
 
             // SNS Links
@@ -78,6 +75,7 @@ class UpdateThemeSettingsRequest extends FormRequest
 
             // Plugin Integration
             'header_menu_id' => 'nullable|integer',
+            'footer_menu_id' => 'nullable|integer',
             'show_inquiry_form' => 'nullable|in:0,1',
         ];
     }
@@ -116,18 +114,5 @@ class UpdateThemeSettingsRequest extends FormRequest
             'footer_copyright' => __('themes::admin.settings.footer.copyright'),
             'appearance_mode' => __('common.appearance_mode'),
         ];
-    }
-
-    /**
-     * バリデーション成功後の処理
-     * footer_linksをJSON文字列に変換
-     */
-    protected function passedValidation(): void
-    {
-        if ($this->has('footer_links') && is_array($this->footer_links)) {
-            $this->merge([
-                'footer_links' => json_encode($this->footer_links),
-            ]);
-        }
     }
 }

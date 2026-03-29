@@ -95,6 +95,11 @@ return [
                 'none' => 'No menu',
                 'help' => 'Select a menu to display in the header navigation.',
             ],
+            'footer_menu' => [
+                'title' => 'Footer Menu',
+                'help' => 'Select a menu to display in the footer.',
+                'plugin_required' => 'Install and enable the DixlaseMenus plugin to select a footer menu.',
+            ],
             'inquiry' => [
                 'title' => 'Contact Form',
                 'enable' => 'Display contact form above footer',
