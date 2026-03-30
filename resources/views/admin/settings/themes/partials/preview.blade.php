@@ -49,6 +49,18 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: #d1d5db !important; }
 
+/* Front page content preview */
+#preview-inner[data-preview-theme="dark"] .pv-content { background: #111827 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-content-text { color: #d1d5db !important; }
+#preview-inner[data-preview-theme="dark"] .pv-content-text h1,
+#preview-inner[data-preview-theme="dark"] .pv-content-text h2,
+#preview-inner[data-preview-theme="dark"] .pv-content-text h3 { color: #f3f4f6 !important; }
+#preview-inner[data-preview-theme="light"] .pv-content { background: #fff !important; }
+#preview-inner[data-preview-theme="light"] .pv-content-text { color: #374151 !important; }
+#preview-inner[data-preview-theme="light"] .pv-content-text h1,
+#preview-inner[data-preview-theme="light"] .pv-content-text h2,
+#preview-inner[data-preview-theme="light"] .pv-content-text h3 { color: #111827 !important; }
+
 /* Reset admin global section styles leaking into preview */
 #preview-inner section { border-color: transparent !important; }
 #preview-inner[data-preview-theme="light"] section { background-color: transparent !important; border-color: transparent !important; }
@@ -228,6 +240,17 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 </div>
             </section>
 
+            {{-- ===== FRONT PAGE CONTENT PREVIEW ===== --}}
+            @if(!empty($frontContentPreview))
+            <section class="pv-content py-12">
+                <div class="container mx-auto px-8">
+                    <div class="prose max-w-none pv-content-text">
+                        {!! $frontContentPreview !!}
+                    </div>
+                </div>
+            </section>
+            @endif
+
             {{-- ===== CONTACT FORM PREVIEW ===== --}}
             <section x-show="showInquiryForm === '1'" x-transition
                 class="pv-contact py-16 border-t">
@@ -270,6 +293,11 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                                 </div>
                                             @endforeach
                                         </div>
+                                    </div>
+                                @elseif($field->type === 'checkbox')
+                                    <div class="flex items-start gap-2 mt-2">
+                                        <div class="pv-contact-field w-4 h-4 rounded border flex-shrink-0 mt-0.5"></div>
+                                        <span class="pv-contact-desc text-xs leading-relaxed">{!! $field->label !!}@if($field->required) <span class="text-red-500">*</span>@endif</span>
                                     </div>
                                 @else
                                     <div>

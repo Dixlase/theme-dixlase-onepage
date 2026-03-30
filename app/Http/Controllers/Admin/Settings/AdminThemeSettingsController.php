@@ -165,6 +165,28 @@ class AdminThemeSettingsController extends AdminLoggedInController
         }
         $this->viewParams['inquiryPreview'] = $inquiryPreview;
 
+        // フロントページコンテンツをプレビュー用に取得
+        $frontContentPreview = null;
+        $frontPage = \App\Models\FrontPage::findByTypeAndLang('main_content', app()->getLocale());
+        if ($frontPage && $frontPage->isPublished()) {
+            $contentService = app(\App\Services\FrontPageContentService::class);
+            $rawContent = $contentService->getContent($frontPage, app()->getLocale());
+            if ($rawContent) {
+                $editorType = $frontPage->editor_type;
+                if ($editorType === \App\Enums\ContentEditorType::GUI) {
+                    $renderedHtml = app(\App\Services\Editor\EditorManager::class)->renderContent('gui', $rawContent);
+                } elseif ($editorType === \App\Enums\ContentEditorType::MARKDOWN) {
+                    $renderedHtml = \Illuminate\Support\Str::markdown($rawContent);
+                } elseif ($editorType === \App\Enums\ContentEditorType::BLADE) {
+                    $renderedHtml = \Illuminate\Support\Facades\Blade::render($rawContent);
+                } else {
+                    $renderedHtml = $rawContent;
+                }
+                $frontContentPreview = shortcode_parse($renderedHtml);
+            }
+        }
+        $this->viewParams['frontContentPreview'] = $frontContentPreview;
+
         return view('themes::admin.settings.themes.settings', $this->viewParams);
     }
 
