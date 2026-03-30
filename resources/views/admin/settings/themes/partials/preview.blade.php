@@ -87,7 +87,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
     </div>
 
     {{-- Scaled Preview Container --}}
-    <div class="overflow-hidden shadow-2xl relative w-full border border-gray-100 dark:border-gray-700" id="preview-outer" style="min-height: 400px;">
+    <div class="rounded-xl overflow-hidden shadow-2xl relative w-full border border-gray-100 dark:border-gray-700" id="preview-outer" style="min-height: 400px;">
         <div class="absolute top-0 left-0 transition-[width] duration-300" id="preview-inner"
              data-preview-theme="{{ ($settings->appearance_mode ?? '0') === '1' ? 'light' : 'dark' }}"
              @appearance-changed.window="$el.dataset.previewTheme = $event.detail.mode === '1' ? 'light' : 'dark'"
@@ -97,20 +97,22 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
                 <div class="flex items-center justify-between w-full">
                     {{-- Logo --}}
-                    <div class="flex items-center space-x-3 relative group">
-                        <template x-if="headerLogoPreviewUrl">
-                            <img :src="headerLogoPreviewUrl" alt="Logo" class="h-8 w-auto">
-                        </template>
-                        <template x-if="!headerLogoPreviewUrl">
-                            <svg class="h-8 w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="40" height="40" rx="8" class="fill-blue-600"/>
-                                <text x="20" y="28" class="fill-white font-bold text-2xl" font-family="system-ui, sans-serif" text-anchor="middle">D</text>
-                            </svg>
-                        </template>
-                        <span class="pv-app-name text-xl font-bold">{{ config('app.name', 'Dixlase') }}</span>
-                        <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-image"></i></span>
+                    <div class="flex items-center space-x-3">
+                        <div class="relative group cursor-pointer" @click="openMediaSelector('header_logo_id_selector', 'header_logo_id', 'header_logo_id_preview', false, 'original')">
+                            <template x-if="headerLogoPreviewUrl">
+                                <img :src="headerLogoPreviewUrl" alt="Logo" class="h-8 w-auto">
+                            </template>
+                            <template x-if="!headerLogoPreviewUrl">
+                                <svg class="h-8 w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="40" height="40" rx="8" class="fill-blue-600"/>
+                                    <text x="20" y="28" class="fill-white font-bold text-2xl" font-family="system-ui, sans-serif" text-anchor="middle">D</text>
+                                </svg>
+                            </template>
+                            <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-image"></i></span>
+                            </div>
                         </div>
+                        <span class="pv-app-name text-xl font-bold">{{ config('app.name', 'Dixlase') }}</span>
                     </div>
 
                     {{-- Navigation - dynamic from selected menu --}}
@@ -130,7 +132,12 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             </header>
 
             {{-- ===== HERO PREVIEW ===== --}}
-            <section class="pv-hero relative min-h-[600px] flex flex-col justify-center overflow-hidden">
+            <section class="pv-hero relative min-h-[600px] flex flex-col justify-center overflow-hidden cursor-pointer group/hero"
+                @click="openMediaSelector('hero_background_image_id_selector', 'hero_background_image_id', 'hero_background_image_id_preview', false, 'hero')">
+                {{-- Background edit indicator --}}
+                <div class="absolute top-4 right-4 z-20 opacity-0 group-hover/hero:opacity-100 transition-opacity">
+                    <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-image mr-1"></i>{{ __('themes::admin.settings.hero.select_background_image') }}</span>
+                </div>
                 {{-- Background glow --}}
                 <div class="absolute inset-0 overflow-hidden z-0">
                     <div class="pv-glow-1 absolute top-1/4 left-10 w-72 h-72 rounded-full filter blur-3xl"></div>
