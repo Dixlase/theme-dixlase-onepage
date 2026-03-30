@@ -120,6 +120,22 @@ function themeSettingsEditor() {
                 }
             });
 
+            // Update preview URLs when media is removed
+            ['header_logo_id', 'hero_background_image_id'].forEach(name => {
+                const input = document.getElementById(name);
+                if (input) {
+                    input.addEventListener('change', () => {
+                        if (!input.value) {
+                            if (name === 'header_logo_id') {
+                                self.headerLogoPreviewUrl = null;
+                            } else if (name === 'hero_background_image_id') {
+                                self.heroBgPreviewUrl = null;
+                            }
+                        }
+                    });
+                }
+            });
+
             // Recalculate preview scale whenever container size changes
             this.$nextTick(() => {
                 const outer = document.getElementById('preview-outer');
