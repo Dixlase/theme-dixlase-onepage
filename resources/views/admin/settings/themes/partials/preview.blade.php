@@ -240,23 +240,37 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                     @endif
                     <div class="max-w-md mx-auto space-y-3 text-left">
                         @if($inquiryPreview?->isForm())
-                            @php $prevGroup = null; @endphp
+                            @php
+                                $renderedGroups = [];
+                                $fieldsByGroup = $inquiryPreview->getFieldsByGroup();
+                            @endphp
                             @foreach($inquiryPreview->fields as $field)
-                                @if($field->group && $field->group === ($prevGroup ?? null))
-                                    {{-- Skip: already rendered as part of group --}}
-                                @elseif($field->group)
-                                    {{-- Grouped fields: render side by side --}}
-                                    <div class="flex gap-2">
-                                        @foreach($inquiryPreview->fields as $gf)
-                                            @if($gf->group === $field->group)
-                                                <div class="flex-1">
-                                                    <div class="pv-contact-desc text-xs mb-1">{{ $gf->label }}@if($gf->required) <span class="text-red-500">*</span>@endif</div>
-                                                    <div class="pv-contact-field h-10 rounded-md"></div>
+                                @if($field->group)
+                                    @if(!in_array($field->group, $renderedGroups))
+                                        @php $renderedGroups[] = $field->group; @endphp
+                                        @php $groupFields = $fieldsByGroup[$field->group]; @endphp
+                                        <div>
+                                            <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="text-red-500">*</span>@endif</div>
+                                            <div class="flex gap-2">
+                                                @foreach($groupFields as $gf)
+                                                    <div class="flex-1">
+                                                        <div class="pv-contact-field h-10 rounded-md"></div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                @elseif($field->type === 'radio_card')
+                                    <div>
+                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="text-red-500">*</span>@endif</div>
+                                        <div class="flex gap-2 flex-wrap">
+                                            @foreach($field->options as $val => $optLabel)
+                                                <div class="pv-contact-field h-8 rounded-md px-3 flex items-center text-xs flex-1">
+                                                    <span class="pv-contact-desc">{{ $optLabel }}</span>
                                                 </div>
-                                            @endif
-                                        @endforeach
+                                            @endforeach
+                                        </div>
                                     </div>
-                                    @php $prevGroup = $field->group; @endphp
                                 @else
                                     <div>
                                         <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="text-red-500">*</span>@endif</div>
