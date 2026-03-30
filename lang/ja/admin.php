@@ -27,7 +27,7 @@ return [
             'title' => 'ヒーローセクション設定',
             'basic_settings' => '基本設定',
             'background_section' => '背景設定',
-            'background_image' => '背景画像',
+            'background_image' => 'ヒーロー背景画像',
             'background_image_help' => '全画面ヒーローエリアの背景画像（未設定の場合はグラデーション表示）',
             'select_background_image' => '背景画像を選択',
             'content_section' => 'コンテンツ',

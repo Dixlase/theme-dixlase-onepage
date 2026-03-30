@@ -27,7 +27,7 @@ return [
             'title' => 'Hero Section Settings',
             'basic_settings' => 'Basic Settings',
             'background_section' => 'Background Settings',
-            'background_image' => 'Background Image',
+            'background_image' => 'Hero Background Image',
             'background_image_help' => 'Full-screen hero area background image (gradient will be displayed if not set)',
             'select_background_image' => 'Select Background Image',
             'content_section' => 'Content',
