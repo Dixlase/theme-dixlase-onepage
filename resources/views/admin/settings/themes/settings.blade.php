@@ -76,8 +76,8 @@ function themeSettingsEditor() {
         footerCopyright: @json(old('footer_copyright', $settings->footer_copyright ?? '')),
 
         // Media preview URLs
-        headerLogoPreviewUrl: @json($headerLogo ? asset(config('admin.mediaPath', 'media') . '/' . $headerLogo->path) : null),
-        heroBgPreviewUrl: @json($heroBackgroundImage ? asset(config('admin.mediaPath', 'media') . '/' . $heroBackgroundImage->path) : null),
+        headerLogoPreviewUrl: @json($headerLogo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $headerLogo->path) : null),
+        heroBgPreviewUrl: @json($heroBackgroundImage ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroBackgroundImage->path) : null),
 
         // Device preview
         previewDevice: 'desktop',
@@ -111,21 +111,12 @@ function themeSettingsEditor() {
 
             // Update preview URLs when media is selected via picker
             const self = this;
-            ['header_logo_id', 'hero_background_image_id'].forEach(name => {
-                const input = document.getElementById(name);
-                if (input) {
-                    input.addEventListener('change', () => {
-                        // Wait for DOM update from confirmMediaSelection
-                        setTimeout(() => {
-                            const preview = document.getElementById(name + '_preview');
-                            const img = preview?.querySelector('img');
-                            if (name === 'header_logo_id') {
-                                self.headerLogoPreviewUrl = img ? img.src : null;
-                            } else if (name === 'hero_background_image_id') {
-                                self.heroBgPreviewUrl = img ? img.src : null;
-                            }
-                        }, 100);
-                    });
+            document.addEventListener('media-selected', (e) => {
+                const { inputId, url } = e.detail;
+                if (inputId === 'header_logo_id') {
+                    self.headerLogoPreviewUrl = url || null;
+                } else if (inputId === 'hero_background_image_id') {
+                    self.heroBgPreviewUrl = url || null;
                 }
             });
 
