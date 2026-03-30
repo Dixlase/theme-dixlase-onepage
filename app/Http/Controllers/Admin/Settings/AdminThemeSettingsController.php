@@ -126,38 +126,29 @@ class AdminThemeSettingsController extends AdminLoggedInController
         $this->viewParams['favicon'] = $favicon;
         $this->viewParams['heroBackgroundImage'] = $heroBackgroundImage;
 
-        // Plugin integration
-        $menuPluginEnabled = \App\Helpers\PluginHelper::isEnabled('dixlase-menus');
+        // Plugin integration via Contract+DTO (no direct plugin references)
+        $resolver = app(\App\Services\Plugin\PluginServiceResolver::class);
+
+        $menuResult = $resolver->resolve(\App\Contracts\PluginIntegration\MenuProviderInterface::class, 'dixlase-menus');
+        $menuPluginEnabled = $menuResult->resolved;
         $inquiryPluginEnabled = \App\Helpers\PluginHelper::isEnabled('dixlase-inquiry');
 
         $this->viewParams['menuPluginEnabled'] = $menuPluginEnabled;
         $this->viewParams['inquiryPluginEnabled'] = $inquiryPluginEnabled;
 
-        // Build menu options and load selected menu items for preview
+        // Build menu options and items via MenuProviderInterface
         $menuOptions = ['' => __('themes::admin.settings.plugins.menu.none')];
-        $headerMenuItems = [];
         $allMenusData = [];
-        if ($menuPluginEnabled) {
-            $menus = \Plugins\DixlaseMenus\App\Models\Menu::query()
-                ->active()
-                ->ordered()
-                ->with(['activeItems' => fn ($q) => $q->whereNull('parent_id')->orderBy('display_order')])
-                ->get();
-            foreach ($menus as $menu) {
-                $menuOptions[$menu->id] = $menu->name;
-                $allMenusData[$menu->id] = $menu->activeItems->map(fn ($item) => [
-                    'title' => $item->title,
+        if ($menuPluginEnabled && $menuResult->instance) {
+            $menuOptions += $menuResult->instance->getMenuOptions();
+            foreach ($menuResult->instance->getMenus() as $menuDTO) {
+                $allMenusData[$menuDTO->id] = array_map(fn ($item) => [
+                    'title' => $item->label,
                     'url' => $item->url,
-                ])->toArray();
-            }
-            // Load selected menu items for initial preview
-            $selectedMenuId = $settings->header_menu_id ?? null;
-            if ($selectedMenuId && isset($allMenusData[$selectedMenuId])) {
-                $headerMenuItems = $allMenusData[$selectedMenuId];
+                ], $menuDTO->items);
             }
         }
         $this->viewParams['menuOptions'] = $menuOptions;
-        $this->viewParams['headerMenuItems'] = $headerMenuItems;
         $this->viewParams['allMenusData'] = $allMenusData;
 
         // Check if inquiry form should show in preview
