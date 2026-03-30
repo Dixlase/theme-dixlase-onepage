@@ -109,6 +109,26 @@ function themeSettingsEditor() {
         init() {
             this.$dispatch('right-sidebar-active');
 
+            // Update preview URLs when media is selected via picker
+            const self = this;
+            ['header_logo_id', 'hero_background_image_id'].forEach(name => {
+                const input = document.getElementById(name);
+                if (input) {
+                    input.addEventListener('change', () => {
+                        // Wait for DOM update from confirmMediaSelection
+                        setTimeout(() => {
+                            const preview = document.getElementById(name + '_preview');
+                            const img = preview?.querySelector('img');
+                            if (name === 'header_logo_id') {
+                                self.headerLogoPreviewUrl = img ? img.src : null;
+                            } else if (name === 'hero_background_image_id') {
+                                self.heroBgPreviewUrl = img ? img.src : null;
+                            }
+                        }, 100);
+                    });
+                }
+            });
+
             // Recalculate preview scale whenever container size changes
             this.$nextTick(() => {
                 const outer = document.getElementById('preview-outer');
