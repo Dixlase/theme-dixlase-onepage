@@ -232,14 +232,49 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             <section x-show="showInquiryForm === '1'" x-transition
                 class="pv-contact py-16 border-t">
                 <div class="container mx-auto px-8 text-center">
-                    <h2 class="pv-contact-title text-3xl font-bold mb-3">{{ __('themes::admin.settings.plugins.inquiry.title') }}</h2>
-                    <p class="pv-contact-desc mb-8 max-w-lg mx-auto">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
-                    <div class="max-w-md mx-auto space-y-4">
-                        <div class="pv-contact-field h-10 rounded-md"></div>
-                        <div class="pv-contact-field h-10 rounded-md"></div>
-                        <div class="pv-contact-field h-24 rounded-md"></div>
+                    <h2 class="pv-contact-title text-3xl font-bold mb-3">
+                        {{ $inquiryPreview?->title ?? __('themes::admin.settings.plugins.inquiry.title') }}
+                    </h2>
+                    @if($inquiryPreview?->description)
+                        <p class="pv-contact-desc mb-8 max-w-lg mx-auto">{{ $inquiryPreview->description }}</p>
+                    @endif
+                    <div class="max-w-md mx-auto space-y-3 text-left">
+                        @if($inquiryPreview?->isForm())
+                            @php $prevGroup = null; @endphp
+                            @foreach($inquiryPreview->fields as $field)
+                                @if($field->group && $field->group === ($prevGroup ?? null))
+                                    {{-- Skip: already rendered as part of group --}}
+                                @elseif($field->group)
+                                    {{-- Grouped fields: render side by side --}}
+                                    <div class="flex gap-2">
+                                        @foreach($inquiryPreview->fields as $gf)
+                                            @if($gf->group === $field->group)
+                                                <div class="flex-1">
+                                                    <div class="pv-contact-desc text-xs mb-1">{{ $gf->label }}@if($gf->required) <span class="text-red-500">*</span>@endif</div>
+                                                    <div class="pv-contact-field h-10 rounded-md"></div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                    @php $prevGroup = $field->group; @endphp
+                                @else
+                                    <div>
+                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="text-red-500">*</span>@endif</div>
+                                        <div class="pv-contact-field {{ $field->type === 'textarea' ? 'h-24' : 'h-10' }} rounded-md"></div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @else
+                            {{-- Fallback: static placeholders --}}
+                            <div class="pv-contact-field h-10 rounded-md"></div>
+                            <div class="pv-contact-field h-10 rounded-md"></div>
+                            <div class="pv-contact-field h-24 rounded-md"></div>
+                        @endif
                         <div class="h-10 bg-purple-600 rounded-md flex items-center justify-center">
-                            <span class="text-white text-sm font-medium">Send</span>
+                            <span class="text-white text-sm font-medium">
+                                @if($inquiryPreview?->submitIcon)<i class="{{ $inquiryPreview->submitIcon }} mr-1"></i>@endif
+                                {{ $inquiryPreview?->submitLabel ?? 'Send' }}
+                            </span>
                         </div>
                     </div>
                 </div>

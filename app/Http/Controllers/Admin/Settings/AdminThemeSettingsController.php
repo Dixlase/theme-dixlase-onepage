@@ -163,6 +163,17 @@ class AdminThemeSettingsController extends AdminLoggedInController
         // Check if inquiry form should show in preview
         $this->viewParams['showInquiryForm'] = $settings->show_inquiry_form ?? '0';
 
+        // Resolve inquiry preview via Contract+DTO (no direct plugin reference)
+        $inquiryPreview = null;
+        if ($inquiryPluginEnabled) {
+            $resolver = app(\App\Services\Plugin\PluginServiceResolver::class);
+            $result = $resolver->resolve(\App\Contracts\PluginIntegration\PreviewProviderInterface::class, 'dixlase-inquiry');
+            if ($result->resolved && $result->instance) {
+                $inquiryPreview = $result->instance->getPreview('inquiry_form');
+            }
+        }
+        $this->viewParams['inquiryPreview'] = $inquiryPreview;
+
         return view('themes::admin.settings.themes.settings', $this->viewParams);
     }
 
