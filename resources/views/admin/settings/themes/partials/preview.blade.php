@@ -61,6 +61,12 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="light"] .pv-content-text h2,
 #preview-inner[data-preview-theme="light"] .pv-content-text h3 { color: #111827 !important; }
 
+/* Hover badges for clickable preview sections */
+.pv-hero .pv-edit-badge,
+.pv-content .pv-edit-badge { opacity: 0; transition: opacity 0.2s ease; }
+.pv-hero:hover .pv-edit-badge,
+.pv-content:hover .pv-edit-badge { opacity: 1; }
+
 /* Reset admin global section styles leaking into preview */
 #preview-inner section { border-color: transparent !important; }
 #preview-inner[data-preview-theme="light"] section { background-color: transparent !important; border-color: transparent !important; }
@@ -144,10 +150,10 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             </header>
 
             {{-- ===== HERO PREVIEW ===== --}}
-            <section class="pv-hero relative min-h-[600px] flex flex-col justify-center overflow-hidden cursor-pointer group/hero"
+            <section class="pv-hero relative min-h-[600px] flex flex-col justify-center overflow-hidden cursor-pointer"
                 @click="openMediaSelector('hero_background_image_id_selector', 'hero_background_image_id', 'hero_background_image_id_preview', false, 'hero')">
                 {{-- Background edit indicator --}}
-                <div class="absolute top-4 right-4 z-20 opacity-0 group-hover/hero:opacity-100 transition-opacity">
+                <div class="pv-edit-badge absolute top-4 right-4 z-20">
                     <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-image mr-1"></i>{{ __('themes::admin.settings.hero.select_background_image') }}</span>
                 </div>
                 {{-- Background glow --}}
@@ -242,10 +248,10 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
             {{-- ===== FRONT PAGE CONTENT PREVIEW ===== --}}
             @if(!empty($frontContentPreview))
-            <section class="pv-content py-12 relative group/front cursor-pointer"
+            <section class="pv-content py-12 relative cursor-pointer"
                 @click.stop="openModal('editFrontPageModal')">
                 {{-- Edit badge --}}
-                <div class="absolute top-4 right-4 z-20 opacity-0 group-hover/front:opacity-100 transition-opacity">
+                <div class="pv-edit-badge absolute top-4 right-4 z-20">
                     <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-pencil-alt mr-1"></i>{{ __('themes::admin.settings.front_content.edit_badge') }}</span>
                 </div>
                 <div class="container mx-auto px-8">
@@ -258,7 +264,12 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
             {{-- ===== CONTACT FORM PREVIEW ===== --}}
             <section x-show="showInquiryForm === '1'" x-transition
-                class="pv-contact py-16 border-t">
+                class="pv-contact py-16 border-t relative group/inquiry cursor-pointer"
+                @click.stop="openModal('editInquiryFormModal')">
+                {{-- Edit badge --}}
+                <div class="absolute top-4 right-4 z-20 opacity-0 group-hover/inquiry:opacity-100 transition-opacity">
+                    <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-pencil-alt mr-1"></i>{{ __('themes::admin.settings.inquiry_form.edit_badge') }}</span>
+                </div>
                 <div class="container mx-auto px-8 text-center">
                     <h2 class="pv-contact-title text-3xl font-bold mb-3">
                         {{ $inquiryPreview?->title ?? __('themes::admin.settings.plugins.inquiry.title') }}
@@ -425,6 +436,38 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 :href="route('admin.front.edit')"
                 class="mx-2"
             >{{ __('themes::admin.settings.front_content.confirm_ok') }}</x-form-button>
+        @endslot
+    </x-ui-modal>
+@endpush
+@endif
+
+{{-- お問い合わせフォーム編集確認モーダル --}}
+@if($inquiryPreview)
+@push('modals')
+    <x-ui-modal id="editInquiryFormModal"
+        :title="__('themes::admin.settings.inquiry_form.confirm_title')"
+        :message="__('themes::admin.settings.inquiry_form.confirm_message')"
+        :confirm-label="__('themes::admin.settings.inquiry_form.confirm_ok')"
+        :cancel-label="__('common.cancel')"
+        icon-type="warning"
+        confirm-color="blue"
+        :form="null"
+    >
+        @slot('footer')
+            <x-form-button
+                type="button"
+                variant="secondary"
+                icon="fas fa-times"
+                @click="close()"
+                class="mx-2"
+            >{{ __('common.cancel') }}</x-form-button>
+            <x-form-button
+                type="link"
+                variant="primary"
+                icon="fas fa-pencil-alt"
+                :href="route('dixlase-inquiry::admin.inquiry.settings.form-basic.index')"
+                class="mx-2"
+            >{{ __('themes::admin.settings.inquiry_form.confirm_ok') }}</x-form-button>
         @endslot
     </x-ui-modal>
 @endpush
