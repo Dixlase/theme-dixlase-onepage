@@ -136,7 +136,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                     {{-- Navigation - dynamic from selected menu --}}
                     <nav class="pv-menu-area relative group/headernav flex items-center space-x-4 cursor-pointer"
                          x-show="headerMenuId && allMenusData[headerMenuId]"
-                         @click.stop="openModal('editHeaderMenuModal')">
+                         @click.stop="window.__menuEditUrl = headerMenuEditUrl; openModal('editHeaderMenuModal')">
                         {{-- Desktop/Tablet: show menu items --}}
                         <template x-if="previewDevice !== 'mobile'">
                             <template x-for="item in allMenusData[headerMenuId] || []" :key="item.title">
@@ -351,7 +351,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         {{-- Footer menu links --}}
                         <div class="pv-menu-area relative group/footernav cursor-pointer"
                              x-show="footerMenuId && allMenusData[footerMenuId]"
-                             @click.stop="openModal('editFooterMenuModal')">
+                             @click.stop="window.__menuEditUrl = footerMenuEditUrl; openModal('editFooterMenuModal')">
                             <div class="flex flex-wrap justify-center gap-4">
                                 <template x-for="item in (footerMenuId && allMenusData[footerMenuId]) ? allMenusData[footerMenuId] : []" :key="item.title">
                                     <span class="pv-footer-text text-sm hover:underline cursor-default" x-text="item.title"></span>
@@ -463,7 +463,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 type="button"
                 variant="primary"
                 icon="fas fa-pencil-alt"
-                @click="window.location.href = headerMenuEditUrl"
+                @click="window.location.href = window.__menuEditUrl"
                 class="mx-2"
             >{{ __('themes::admin.settings.header_menu.confirm_ok') }}</x-form-button>
         @endslot
@@ -495,7 +495,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 type="button"
                 variant="primary"
                 icon="fas fa-pencil-alt"
-                @click="window.location.href = footerMenuEditUrl"
+                @click="window.location.href = window.__menuEditUrl"
                 class="mx-2"
             >{{ __('themes::admin.settings.footer_menu.confirm_ok') }}</x-form-button>
         @endslot
