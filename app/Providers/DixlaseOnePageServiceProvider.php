@@ -175,7 +175,6 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'hero_button_link' => '#',
             'hero_button_secondary_text' => 'Learn More',
             'hero_button_secondary_link' => '#features',
-            'footer_description' => 'Powered by Dixlase CMS',
             'footer_links' => '[]',
             'footer_copyright' => '© '.date('Y').' '.config('app.name', 'Dixlase').'. All rights reserved.',
             'footer_sns_instagram' => null,

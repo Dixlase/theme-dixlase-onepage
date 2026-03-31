@@ -32,7 +32,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <input type="hidden" name="hero_button_link" :value="heroButtonLink">
         <input type="hidden" name="hero_button_secondary_text" :value="heroButtonSecondaryText">
         <input type="hidden" name="hero_button_secondary_link" :value="heroButtonSecondaryLink">
-        <input type="hidden" name="footer_description" :value="footerDescription">
         <input type="hidden" name="footer_copyright" :value="footerCopyright">
         <input type="hidden" name="footer_menu_id" :value="footerMenuId">
 
@@ -72,7 +71,6 @@ function themeSettingsEditor() {
         heroButtonSecondaryLink: @json(old('hero_button_secondary_link', $settings->hero_button_secondary_link ?? '')),
 
         // Footer settings
-        footerDescription: @json(old('footer_description', $settings->footer_description ?? '')),
         footerCopyright: @json(old('footer_copyright', $settings->footer_copyright ?? '')),
 
         // Media preview URLs
