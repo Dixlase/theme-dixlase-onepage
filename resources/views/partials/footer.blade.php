@@ -23,16 +23,6 @@
                 </nav>
             @endif
 
-            {{-- Site Name --}}
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-                {{ config('app.name', 'Dixlase') }}
-            </h2>
-
-            {{-- Description --}}
-            <p class="text-gray-600 dark:text-gray-400">
-                Powered by Dixlase
-            </p>
-
             {{-- SNS Links --}}
             @if(array_filter($snsLinks))
                 <div class="flex space-x-4">
@@ -88,6 +78,16 @@
                     @endif
                 </div>
             @endif
+
+            {{-- Site Name --}}
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ config('app.name', 'Dixlase') }}
+            </h2>
+
+            {{-- Description --}}
+            <p class="text-gray-600 dark:text-gray-400">
+                Powered by Dixlase
+            </p>
         </div>
 
         {{-- Copyright --}}

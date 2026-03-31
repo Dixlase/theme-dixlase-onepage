@@ -362,10 +362,6 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-lg"><i class="fas fa-pencil-alt"></i></span>
                             </div>
                         </div>
-                        {{-- Site Name --}}
-                        <h2 class="pv-footer-title text-2xl font-bold">{{ config('app.name', 'Dixlase') }}</h2>
-                        {{-- Description (fixed) --}}
-                        <p class="pv-footer-text">Powered by Dixlase</p>
                         {{-- SNS Links --}}
                         <div class="flex flex-wrap justify-center gap-3"
                              x-show="snsLinks.instagram || snsLinks.x || snsLinks.facebook || snsLinks.tiktok || snsLinks.bluesky || snsLinks.threads || snsLinks.linkedin || snsLinks.youtube || snsLinks.pinterest || snsLinks.discord">
@@ -380,6 +376,10 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                             <template x-if="snsLinks.pinterest"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-pinterest"></i></a></template>
                             <template x-if="snsLinks.discord"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-discord"></i></a></template>
                         </div>
+                        {{-- Site Name --}}
+                        <h2 class="pv-footer-title text-2xl font-bold">{{ config('app.name', 'Dixlase') }}</h2>
+                        {{-- Description (fixed) --}}
+                        <p class="pv-footer-text">Powered by Dixlase</p>
                     </div>
                     {{-- Copyright --}}
                     <div class="pv-footer-border border-t pt-6 flex justify-center">
