@@ -107,6 +107,14 @@ return [
             ],
         ],
 
+        // Front Page Content
+        'front_content' => [
+            'edit_badge' => 'Edit Front Page',
+            'confirm_title' => 'Edit Front Page?',
+            'confirm_message' => 'You will be redirected to the front page editor.<br>Unsaved changes will be lost.',
+            'confirm_ok' => 'OK',
+        ],
+
         // Editor UI
         'editor' => [
             'preview_title' => 'Theme Preview',
