@@ -8,8 +8,8 @@
 {!! $seoHeadMeta ?? '' !!}
 
 {{-- Favicon --}}
-@if(isset($themeSettings->favicon_id) && $themeSettings->favicon_id)
-    <link rel="icon" href="{{ asset('storage/' . $themeSettings->favicon_id) }}">
+@if(!empty($themeSettings->faviconPath))
+    <link rel="icon" href="{{ asset('storage/' . $themeSettings->faviconPath) }}">
 @endif
 
 {{-- Fonts --}}

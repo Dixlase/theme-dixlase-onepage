@@ -79,8 +79,23 @@
                 @endif
             </div>
 
-            {{-- Links Sections --}}
-            @if(!empty($footerLinks))
+            {{-- Footer Menu (メニュープラグインから) --}}
+            @if(!empty($footerMenuItems))
+                <div class="lg:col-span-3">
+                    <nav>
+                        <ul class="flex flex-wrap gap-x-6 gap-y-2">
+                            @foreach($footerMenuItems as $item)
+                                <li>
+                                    <a href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors">
+                                        {{ $item['label'] ?? '' }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </nav>
+                </div>
+            @elseif(!empty($footerLinks))
+                {{-- フォールバック: 静的リンク --}}
                 @php
                     $linkChunks = array_chunk($footerLinks, ceil(count($footerLinks) / 3));
                 @endphp
