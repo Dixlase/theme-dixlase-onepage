@@ -65,6 +65,7 @@ Theme settings right sidebar - non-visual settings
                 :error="$errors->first('favicon_id')"
                 aspectRatio="square"
                 :buttonText="__('themes::admin.settings.select_favicon_image')"
+                :confirmUploadNavigation="true"
             />
         </div>
     </div>
@@ -85,6 +86,7 @@ Theme settings right sidebar - non-visual settings
                 :help="__('themes::admin.settings.header.header_logo_help')"
                 :error="$errors->first('header_logo_id')"
                 :buttonText="__('themes::admin.settings.select_logo_image')"
+                :confirmUploadNavigation="true"
             />
         </div>
     </div>
@@ -137,6 +139,7 @@ Theme settings right sidebar - non-visual settings
                 :error="$errors->first('hero_background_image_id')"
                 aspectRatio="hero"
                 :buttonText="__('themes::admin.settings.hero.select_background_image')"
+                :confirmUploadNavigation="true"
             />
         </div>
     </div>
