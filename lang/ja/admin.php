@@ -107,6 +107,14 @@ return [
             ],
         ],
 
+        // Front Page Content
+        'front_content' => [
+            'edit_badge' => 'フロントページを編集',
+            'confirm_title' => 'フロントページを編集しますか？',
+            'confirm_message' => 'OKでフロントページ編集に移動します。<br>保存していない内容は失われます。',
+            'confirm_ok' => 'OK',
+        ],
+
         // Editor UI
         'editor' => [
             'preview_title' => 'テーマプレビュー',

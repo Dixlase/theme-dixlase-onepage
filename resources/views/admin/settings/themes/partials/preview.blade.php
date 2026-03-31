@@ -242,7 +242,12 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 
             {{-- ===== FRONT PAGE CONTENT PREVIEW ===== --}}
             @if(!empty($frontContentPreview))
-            <section class="pv-content py-12">
+            <section class="pv-content py-12 relative group/front cursor-pointer"
+                @click.stop="openModal('editFrontPageModal')">
+                {{-- Edit badge --}}
+                <div class="absolute top-4 right-4 z-20 opacity-0 group-hover/front:opacity-100 transition-opacity">
+                    <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-pencil-alt mr-1"></i>{{ __('themes::admin.settings.front_content.edit_badge') }}</span>
+                </div>
                 <div class="container mx-auto px-8">
                     <div class="prose max-w-none pv-content-text">
                         {!! $frontContentPreview !!}
@@ -392,3 +397,35 @@ Theme settings preview - Scaled container rendering of header + hero + footer
         </div>
     </div>
 </div>
+
+{{-- フロントページ編集確認モーダル --}}
+@if(!empty($frontContentPreview))
+@push('modals')
+    <x-ui-modal id="editFrontPageModal"
+        :title="__('themes::admin.settings.front_content.confirm_title')"
+        :message="__('themes::admin.settings.front_content.confirm_message')"
+        :confirm-label="__('themes::admin.settings.front_content.confirm_ok')"
+        :cancel-label="__('common.cancel')"
+        icon-type="warning"
+        confirm-color="blue"
+        :form="null"
+    >
+        @slot('footer')
+            <x-form-button
+                type="button"
+                variant="secondary"
+                icon="fas fa-times"
+                @click="close()"
+                class="mx-2"
+            >{{ __('common.cancel') }}</x-form-button>
+            <x-form-button
+                type="link"
+                variant="primary"
+                icon="fas fa-pencil-alt"
+                :href="route('admin.front.edit')"
+                class="mx-2"
+            >{{ __('themes::admin.settings.front_content.confirm_ok') }}</x-form-button>
+        @endslot
+    </x-ui-modal>
+@endpush
+@endif
