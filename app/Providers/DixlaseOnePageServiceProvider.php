@@ -43,16 +43,8 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Load routes
-        $this->loadRoutesFrom(__DIR__.'/../../routes/admin.php');
-
-        // Load views
-        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'themes');
-
-        // Load translations
-        $this->loadTranslationsFrom(__DIR__.'/../../lang', 'themes');
-
-        // Load migrations
+        // ビュー・翻訳・ルートはコアのThemeServiceProviderが読み込み済み
+        // マイグレーションのみテーマ側で登録
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
         // Auto-seed theme settings if table exists but is empty

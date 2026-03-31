@@ -13,6 +13,9 @@
     "license": "GPL-3.0",
     "license_template": "license-gpl.txt",
     "namespace": "Themes\\DixlaseOnePage",
+    "providers": [
+        "Themes\\DixlaseOnePage\\App\\Providers\\DixlaseOnePageServiceProvider"
+    ],
     "type": "dixlase-theme",
     "screenshot": "screenshot.png",
     "tags": [
@@ -51,30 +54,29 @@
     "permissions": {
         "database": {
             "own_tables": true,
-            "core_tables": [
-                "media:read"
-            ]
+            "core_tables_read": ["media"],
+            "core_tables_write": []
         },
         "storage": {
-            "own_directory": true,
+            "own_directory": false,
             "public_uploads": false,
             "temp_files": false
         },
         "settings": {
             "read_core": true,
-            "write_own": true
+            "write_own": false
         },
         "assets": {
             "custom_css": true,
             "custom_js": true,
-            "external_resources": false
+            "external_resources": true
         },
         "system": {
             "register_shortcodes": false,
             "register_middleware": false,
             "register_commands": false,
             "register_blade_directives": false,
-            "modify_routes": true
+            "modify_routes": false
         }
     },
     "csp": {
