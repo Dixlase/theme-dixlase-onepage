@@ -55,7 +55,6 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_button_secondary_link' => 'nullable|string|max:500',
 
             // Footer
-            'footer_description' => 'nullable|string|max:1000',
             'footer_copyright' => 'nullable|string|max:500',
 
             // SNS Links
@@ -110,7 +109,6 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_button_link' => __('themes::admin.settings.hero.button_link'),
             'hero_button_secondary_text' => __('themes::admin.settings.hero.button_secondary_text'),
             'hero_button_secondary_link' => __('themes::admin.settings.hero.button_secondary_link'),
-            'footer_description' => __('themes::admin.settings.footer.description'),
             'footer_copyright' => __('themes::admin.settings.footer.copyright'),
             'appearance_mode' => __('common.appearance_mode'),
         ];

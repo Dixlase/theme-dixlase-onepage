@@ -341,47 +341,33 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             {{-- ===== FOOTER PREVIEW ===== --}}
             <footer class="pv-footer pt-12 pb-6">
                 <div class="container mx-auto px-8">
-                    <div class="pb-6">
-                        <h2 class="pv-footer-title text-2xl font-bold mb-3">{{ config('app.name', 'Dixlase') }}</h2>
-                        {{-- Footer description --}}
-                        <div class="relative group cursor-pointer" @click.stop="startEdit('footerDescription')">
-                            <p class="pv-footer-text max-w-xs" x-show="editing !== 'footerDescription'" x-text="footerDescription"></p>
-                            <input
-                                x-show="editing === 'footerDescription'"
-                                x-model="footerDescription"
-                                @click.away="stopEdit()"
-                                @keydown.enter="stopEdit()"
-                                x-ref="editFooterDescription"
-                                x-effect="if (editing === 'footerDescription') $nextTick(() => $refs.editFooterDescription?.focus())"
-                                type="text"
-                                class="pv-edit-input w-full max-w-xs text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                            <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'footerDescription'">
-                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
+                    <div class="flex flex-col items-center text-center pb-6 space-y-4">
+                        {{-- Footer menu links --}}
+                        <div x-show="footerMenuId && allMenusData[footerMenuId]">
+                            <div class="flex flex-wrap justify-center gap-4">
+                                <template x-for="item in (footerMenuId && allMenusData[footerMenuId]) ? allMenusData[footerMenuId] : []" :key="item.title">
+                                    <span class="pv-footer-text text-sm hover:underline cursor-default" x-text="item.title"></span>
+                                </template>
                             </div>
                         </div>
-                    </div>
-                    {{-- Footer menu links --}}
-                    <div class="py-4" x-show="footerMenuId && allMenusData[footerMenuId]">
-                        <div class="flex flex-wrap gap-4">
-                            <template x-for="item in (footerMenuId && allMenusData[footerMenuId]) ? allMenusData[footerMenuId] : []" :key="item.title">
-                                <span class="pv-footer-text text-sm hover:underline cursor-default" x-text="item.title"></span>
-                            </template>
+                        {{-- Site Name --}}
+                        <h2 class="pv-footer-title text-2xl font-bold">{{ config('app.name', 'Dixlase') }}</h2>
+                        {{-- Description (fixed) --}}
+                        <p class="pv-footer-text">Powered by Dixlase</p>
+                        {{-- SNS Links --}}
+                        <div class="flex flex-wrap justify-center gap-3"
+                             x-show="snsLinks.instagram || snsLinks.x || snsLinks.facebook || snsLinks.tiktok || snsLinks.bluesky || snsLinks.threads || snsLinks.linkedin || snsLinks.youtube || snsLinks.pinterest || snsLinks.discord">
+                            <template x-if="snsLinks.instagram"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-instagram"></i></a></template>
+                            <template x-if="snsLinks.x"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-x-twitter"></i></a></template>
+                            <template x-if="snsLinks.facebook"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-facebook"></i></a></template>
+                            <template x-if="snsLinks.tiktok"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-tiktok"></i></a></template>
+                            <template x-if="snsLinks.bluesky"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-bluesky"></i></a></template>
+                            <template x-if="snsLinks.threads"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-threads"></i></a></template>
+                            <template x-if="snsLinks.linkedin"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-linkedin"></i></a></template>
+                            <template x-if="snsLinks.youtube"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-youtube"></i></a></template>
+                            <template x-if="snsLinks.pinterest"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-pinterest"></i></a></template>
+                            <template x-if="snsLinks.discord"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-discord"></i></a></template>
                         </div>
-                    </div>
-                    {{-- SNS Links --}}
-                    <div class="py-4 flex flex-wrap gap-3"
-                         x-show="snsLinks.instagram || snsLinks.x || snsLinks.facebook || snsLinks.tiktok || snsLinks.bluesky || snsLinks.threads || snsLinks.linkedin || snsLinks.youtube || snsLinks.pinterest || snsLinks.discord">
-                        <template x-if="snsLinks.instagram"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-instagram"></i></a></template>
-                        <template x-if="snsLinks.x"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-x-twitter"></i></a></template>
-                        <template x-if="snsLinks.facebook"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-facebook"></i></a></template>
-                        <template x-if="snsLinks.tiktok"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-tiktok"></i></a></template>
-                        <template x-if="snsLinks.bluesky"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-bluesky"></i></a></template>
-                        <template x-if="snsLinks.threads"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-threads"></i></a></template>
-                        <template x-if="snsLinks.linkedin"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-linkedin"></i></a></template>
-                        <template x-if="snsLinks.youtube"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-youtube"></i></a></template>
-                        <template x-if="snsLinks.pinterest"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-pinterest"></i></a></template>
-                        <template x-if="snsLinks.discord"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-discord"></i></a></template>
                     </div>
                     {{-- Copyright --}}
                     <div class="pv-footer-border border-t pt-6 flex justify-center">
@@ -465,7 +451,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 type="link"
                 variant="primary"
                 icon="fas fa-pencil-alt"
-                :href="route('dixlase-inquiry::admin.inquiry.settings.form-basic.index')"
+                :href="route('dixlase-inquiry::admin.inquiry.settings.form-basic')"
                 class="mx-2"
             >{{ __('themes::admin.settings.inquiry_form.confirm_ok') }}</x-form-button>
         @endslot

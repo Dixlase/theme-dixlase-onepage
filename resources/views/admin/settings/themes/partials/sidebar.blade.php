@@ -196,21 +196,6 @@ Theme settings right sidebar - non-visual settings
 
     <hr class="border-gray-200 dark:border-gray-700">
 
-    {{-- ===== Footer Description ===== --}}
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-align-left mr-1.5"></i>{{ __('themes::admin.settings.footer.description') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <x-form-textarea name="footer_description" :label="__('themes::admin.settings.footer.description')"
-                             x-model="footerDescription" rows="3"
-                             :help="__('themes::admin.settings.footer.description_help')" />
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
-
     {{-- ===== SNS Links ===== --}}
     <div x-data="{ open: false }">
         <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">

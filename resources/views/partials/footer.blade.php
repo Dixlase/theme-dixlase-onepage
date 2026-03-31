@@ -1,10 +1,5 @@
 @php
     // テーマ設定はServiceProviderから自動的に渡される
-    $footerDescription = $themeSettings->footer_description ?? 'Powered by Dixlase CMS';
-    $footerLinks = $themeSettings->footer_links ?? '[]';
-    if (is_string($footerLinks)) {
-        $footerLinks = json_decode($footerLinks, true) ?? [];
-    }
     $footerCopyright = $themeSettings->footer_copyright ?? '© ' . date('Y') . ' ' . config('app.name', 'Dixlase') . '. All rights reserved.';
     // SNSリンクはServiceProviderで自動生成される
     $snsLinks = $themeSettings->snsLinks ?? [];
@@ -12,106 +7,86 @@
 
 <footer class="bg-gray-100 dark:bg-[#12141C] pt-16 pb-8">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-8">
-            {{-- About Section --}}
-            <div class="lg:col-span-2">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {{ config('app.name', 'Dixlase') }}
-                </h2>
-                <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-xs">
-                    {{ $footerDescription }}
-                </p>
-                
-                {{-- SNS Links --}}
-                @if(array_filter($snsLinks))
-                    <div class="flex space-x-4">
-                        @if($snsLinks['facebook'])
-                            <a href="{{ $snsLinks['facebook'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Facebook">
-                                <i class="fa-brands fa-facebook text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['x'])
-                            <a href="{{ $snsLinks['x'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="X (Twitter)">
-                                <i class="fa-brands fa-x-twitter text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['instagram'])
-                            <a href="{{ $snsLinks['instagram'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Instagram">
-                                <i class="fa-brands fa-instagram text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['tiktok'])
-                            <a href="{{ $snsLinks['tiktok'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="TikTok">
-                                <i class="fa-brands fa-tiktok text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['bluesky'])
-                            <a href="{{ $snsLinks['bluesky'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Bluesky">
-                                <i class="fa-brands fa-bluesky text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['threads'])
-                            <a href="{{ $snsLinks['threads'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Threads">
-                                <i class="fa-brands fa-threads text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['linkedin'])
-                            <a href="{{ $snsLinks['linkedin'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="LinkedIn">
-                                <i class="fa-brands fa-linkedin text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['youtube'])
-                            <a href="{{ $snsLinks['youtube'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="YouTube">
-                                <i class="fa-brands fa-youtube text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['pinterest'])
-                            <a href="{{ $snsLinks['pinterest'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Pinterest">
-                                <i class="fa-brands fa-pinterest text-xl"></i>
-                            </a>
-                        @endif
-                        @if($snsLinks['discord'])
-                            <a href="{{ $snsLinks['discord'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Discord">
-                                <i class="fa-brands fa-discord text-xl"></i>
-                            </a>
-                        @endif
-                    </div>
-                @endif
-            </div>
-
+        <div class="flex flex-col items-center text-center pb-8 space-y-6">
             {{-- Footer Menu (メニュープラグインから) --}}
             @if(!empty($footerMenuItems))
-                <div class="lg:col-span-3">
-                    <nav>
-                        <ul class="flex flex-wrap gap-x-6 gap-y-2">
-                            @foreach($footerMenuItems as $item)
-                                <li>
-                                    <a href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors">
-                                        {{ $item['label'] ?? '' }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </nav>
+                <nav>
+                    <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+                        @foreach($footerMenuItems as $item)
+                            <li>
+                                <a href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors text-sm">
+                                    {{ $item['label'] ?? '' }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
+            @endif
+
+            {{-- Site Name --}}
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                {{ config('app.name', 'Dixlase') }}
+            </h2>
+
+            {{-- Description --}}
+            <p class="text-gray-600 dark:text-gray-400">
+                Powered by Dixlase
+            </p>
+
+            {{-- SNS Links --}}
+            @if(array_filter($snsLinks))
+                <div class="flex space-x-4">
+                    @if($snsLinks['facebook'])
+                        <a href="{{ $snsLinks['facebook'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Facebook">
+                            <i class="fa-brands fa-facebook text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['x'])
+                        <a href="{{ $snsLinks['x'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="X (Twitter)">
+                            <i class="fa-brands fa-x-twitter text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['instagram'])
+                        <a href="{{ $snsLinks['instagram'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['tiktok'])
+                        <a href="{{ $snsLinks['tiktok'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="TikTok">
+                            <i class="fa-brands fa-tiktok text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['bluesky'])
+                        <a href="{{ $snsLinks['bluesky'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Bluesky">
+                            <i class="fa-brands fa-bluesky text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['threads'])
+                        <a href="{{ $snsLinks['threads'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Threads">
+                            <i class="fa-brands fa-threads text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['linkedin'])
+                        <a href="{{ $snsLinks['linkedin'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="LinkedIn">
+                            <i class="fa-brands fa-linkedin text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['youtube'])
+                        <a href="{{ $snsLinks['youtube'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="YouTube">
+                            <i class="fa-brands fa-youtube text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['pinterest'])
+                        <a href="{{ $snsLinks['pinterest'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Pinterest">
+                            <i class="fa-brands fa-pinterest text-xl"></i>
+                        </a>
+                    @endif
+                    @if($snsLinks['discord'])
+                        <a href="{{ $snsLinks['discord'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Discord">
+                            <i class="fa-brands fa-discord text-xl"></i>
+                        </a>
+                    @endif
                 </div>
-            @elseif(!empty($footerLinks))
-                {{-- フォールバック: 静的リンク --}}
-                @php
-                    $linkChunks = array_chunk($footerLinks, ceil(count($footerLinks) / 3));
-                @endphp
-                @foreach($linkChunks as $index => $chunk)
-                    <div>
-                        <ul class="space-y-2">
-                            @foreach($chunk as $link)
-                                <li>
-                                    <a href="{{ $link['url'] ?? '#' }}" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors">
-                                        {{ $link['title'] ?? '' }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endforeach
             @endif
         </div>
 
