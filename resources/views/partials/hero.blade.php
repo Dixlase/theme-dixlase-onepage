@@ -6,14 +6,14 @@
     $heroButtonLink = $themeSettings->hero_button_link ?? '#';
     $heroButtonSecondaryText = $themeSettings->hero_button_secondary_text ?? null;
     $heroButtonSecondaryLink = $themeSettings->hero_button_secondary_link ?? null;
-    $heroBackgroundImageId = $themeSettings->hero_background_image_id ?? null;
+    $heroBackgroundPath = $themeSettings->heroBackgroundPath ?? null;
 @endphp
 
 <section class="relative min-h-screen flex flex-col justify-center overflow-hidden">
     {{-- Background Image --}}
-    @if($heroBackgroundImageId)
+    @if($heroBackgroundPath)
         <div class="absolute inset-0 z-0">
-            <img src="{{ asset('storage/' . $heroBackgroundImageId) }}" alt="Hero Background" class="w-full h-full object-cover">
+            <img src="{{ asset('storage/' . $heroBackgroundPath) }}" alt="Hero Background" class="w-full h-full object-cover">
             <div class="absolute inset-0 "></div>
         </div>
     @endif

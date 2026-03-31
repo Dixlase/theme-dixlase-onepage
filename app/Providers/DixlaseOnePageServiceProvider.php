@@ -22,10 +22,10 @@
 
 namespace Themes\DixlaseOnePage\App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 use Themes\DixlaseOnePage\App\Models\ThemeSetting;
 
 class DixlaseOnePageServiceProvider extends ServiceProvider
@@ -44,24 +44,24 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load routes
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/admin.php');
-        
+        $this->loadRoutesFrom(__DIR__.'/../../routes/admin.php');
+
         // Load views
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'themes');
-        
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'themes');
+
         // Load translations
-        $this->loadTranslationsFrom(__DIR__ . '/../../lang', 'themes');
-        
+        $this->loadTranslationsFrom(__DIR__.'/../../lang', 'themes');
+
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
-        
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+
         // Auto-seed theme settings if table exists but is empty
         $this->autoSeedThemeSettings();
-        
+
         // Share theme settings with all views
         $this->shareThemeSettings();
     }
-    
+
     /**
      * テーマ設定を自動的にシード
      */
@@ -73,9 +73,9 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             try {
                 // テーブルが存在し、かつデータが存在しない場合のみシード
                 if (DB::getSchemaBuilder()->hasTable('thm_dixlase_one_page_settings')) {
-                    if (!DB::table('thm_dixlase_one_page_settings')->exists()) {
+                    if (! DB::table('thm_dixlase_one_page_settings')->exists()) {
                         Artisan::call('db:seed', [
-                            '--class' => 'Themes\\DixlaseOnePage\\Database\\Seeders\\DixlaseOnePageSettingsSeeder'
+                            '--class' => 'Themes\\DixlaseOnePage\\Database\\Seeders\\DixlaseOnePageSettingsSeeder',
                         ]);
                     }
                 }
@@ -84,7 +84,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             }
         }
     }
-    
+
     /**
      * テーマ設定を全ビューに共有
      */
@@ -96,62 +96,78 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             try {
                 // ThemeSettingモデルで全設定を取得
                 $themeSettings = ThemeSetting::getAllAsObject();
-                
+
                 // 設定が空の場合はデフォルト値を使用
-                if (!isset($themeSettings->hero_main_title)) {
+                if (! isset($themeSettings->hero_main_title)) {
                     $themeSettings = $this->getDefaultThemeSettings();
                 }
-                
+
                 // メディアオブジェクトとパスを取得して追加
                 $this->loadMediaForThemeSettings($themeSettings);
-                
+
                 $view->with('themeSettings', $themeSettings);
-                
-                // ナビゲーションアイテムを取得（メニュープラグインから）
-                $navigationItems = $this->getNavigationItems();
+
+                // メニュープロバイダーを解決
+                $menuProvider = $this->resolveMenuProvider();
+
+                // ヘッダーナビゲーションアイテムを取得
+                $navigationItems = $this->getMenuItems($menuProvider, $themeSettings->header_menu_id ?? null);
                 $view->with('navigationItems', $navigationItems);
+
+                // フッターメニューアイテムを取得
+                $footerMenuItems = $this->getMenuItems($menuProvider, $themeSettings->footer_menu_id ?? null);
+                $view->with('footerMenuItems', $footerMenuItems);
             } catch (\Exception $e) {
                 // エラー時はデフォルト値を使用
                 $view->with('themeSettings', $this->getDefaultThemeSettings());
                 $view->with('navigationItems', []);
+                $view->with('footerMenuItems', []);
             }
         });
     }
-    
+
     /**
-     * ナビゲーションアイテムを取得
-     * メニュープラグインが有効な場合はそこから取得、なければデフォルト
-     * 
-     * @return array
+     * メニュープロバイダーを解決
      */
-    protected function getNavigationItems(): array
+    protected function resolveMenuProvider(): ?\App\Contracts\PluginIntegration\MenuProviderInterface
     {
-        // メニュープラグインのヘルパー関数が存在するか確認
-        if (function_exists('dls_menu_items')) {
-            // ヘッダーロケーションまたはデフォルトメニューからアイテムを取得
-            $items = dls_menu_items(true);
-            
-            if (!empty($items)) {
-                return $items;
+        try {
+            $resolver = app(\App\Services\Plugin\PluginServiceResolver::class);
+            $result = $resolver->resolve(\App\Contracts\PluginIntegration\MenuProviderInterface::class, 'dixlase-menus');
+
+            if ($result->resolved && $result->instance) {
+                return $result->instance;
             }
+        } catch (\Exception $e) {
+            // プラグイン未インストール時は無視
         }
-        
-        // メニュープラグインがない場合やメニューが空の場合はデフォルト
-        return $this->getDefaultNavigationItems();
+
+        return null;
     }
-    
+
     /**
-     * デフォルトのナビゲーションアイテムを取得
-     * 
-     * @return array
+     * 指定メニューIDからメニューアイテムを配列として取得
      */
-    protected function getDefaultNavigationItems(): array
+    protected function getMenuItems(?\App\Contracts\PluginIntegration\MenuProviderInterface $menuProvider, int|string|null $menuId): array
     {
-        return [
-            ['label' => 'Home', 'url' => url('/')],
-        ];
+        if (! $menuProvider || empty($menuId)) {
+            return [];
+        }
+
+        $menuDTO = $menuProvider->getMenu($menuId);
+
+        if (! $menuDTO) {
+            return [];
+        }
+
+        return array_map(fn ($item) => [
+            'label' => $item->label,
+            'url' => $item->url,
+            'target' => $item->target,
+            'children' => [],
+        ], $menuDTO->items);
     }
-    
+
     /**
      * デフォルトのテーマ設定を取得
      */
@@ -161,7 +177,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'header_logo_id' => null,
             'favicon_id' => null,
             'hero_background_image_id' => null,
-            'hero_main_title' => 'Welcome to ' . config('app.name', 'Dixlase'),
+            'hero_main_title' => 'Welcome to '.config('app.name', 'Dixlase'),
             'hero_sub_title' => 'Modern CMS Platform for Building Amazing Websites',
             'hero_button_text' => 'Get Started',
             'hero_button_link' => '#',
@@ -169,7 +185,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'hero_button_secondary_link' => '#features',
             'footer_description' => 'Powered by Dixlase CMS',
             'footer_links' => '[]',
-            'footer_copyright' => '© ' . date('Y') . ' ' . config('app.name', 'Dixlase') . '. All rights reserved.',
+            'footer_copyright' => '© '.date('Y').' '.config('app.name', 'Dixlase').'. All rights reserved.',
             'footer_sns_instagram' => null,
             'footer_sns_x' => null,
             'footer_sns_facebook' => null,
@@ -190,57 +206,51 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'heroBackgroundPath' => null,
         ];
     }
-    
+
     /**
      * テーマ設定にメディアオブジェクトとパスを追加
-     * 
-     * @param object $themeSettings
-     * @return void
      */
     protected function loadMediaForThemeSettings(object $themeSettings): void
     {
         $mediaPath = config('admin.mediaPath', 'media');
-        
+
         // ヘッダーロゴ
-        if (!empty($themeSettings->header_logo_id)) {
+        if (! empty($themeSettings->header_logo_id)) {
             $headerLogo = \App\Models\Media::find($themeSettings->header_logo_id);
             $themeSettings->headerLogo = $headerLogo;
-            $themeSettings->headerLogoPath = $headerLogo ? $mediaPath . '/' . $headerLogo->path : null;
+            $themeSettings->headerLogoPath = $headerLogo ? $mediaPath.'/'.$headerLogo->path : null;
         } else {
             $themeSettings->headerLogo = null;
             $themeSettings->headerLogoPath = null;
         }
-        
+
         // ファビコン
-        if (!empty($themeSettings->favicon_id)) {
+        if (! empty($themeSettings->favicon_id)) {
             $favicon = \App\Models\Media::find($themeSettings->favicon_id);
             $themeSettings->favicon = $favicon;
-            $themeSettings->faviconPath = $favicon ? $mediaPath . '/' . $favicon->path : null;
+            $themeSettings->faviconPath = $favicon ? $mediaPath.'/'.$favicon->path : null;
         } else {
             $themeSettings->favicon = null;
             $themeSettings->faviconPath = null;
         }
-        
+
         // ヒーロー背景画像
-        if (!empty($themeSettings->hero_background_image_id)) {
+        if (! empty($themeSettings->hero_background_image_id)) {
             $heroBackground = \App\Models\Media::find($themeSettings->hero_background_image_id);
             $themeSettings->heroBackground = $heroBackground;
-            $themeSettings->heroBackgroundPath = $heroBackground ? $mediaPath . '/' . $heroBackground->path : null;
+            $themeSettings->heroBackgroundPath = $heroBackground ? $mediaPath.'/'.$heroBackground->path : null;
         } else {
             $themeSettings->heroBackground = null;
             $themeSettings->heroBackgroundPath = null;
         }
-        
+
         // SNSリンクのURL生成
         $themeSettings->snsLinks = $this->generateSnsLinks($themeSettings);
     }
-    
+
     /**
      * SNSリンクのURLを生成
      * アカウント名やIDから完全なURLを生成する
-     * 
-     * @param object $themeSettings
-     * @return array
      */
     protected function generateSnsLinks(object $themeSettings): array
     {
@@ -257,40 +267,36 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'discord' => $this->generateSnsUrl('discord', $themeSettings->footer_sns_discord ?? null),
         ];
     }
-    
+
     /**
      * 各SNSの完全なURLを生成
-     * 
-     * @param string $platform
-     * @param string|null $value
-     * @return string|null
      */
     protected function generateSnsUrl(string $platform, ?string $value): ?string
     {
         if (empty($value)) {
             return null;
         }
-        
+
         // 既に完全なURLの場合はそのまま返す
         if (filter_var($value, FILTER_VALIDATE_URL)) {
             return $value;
         }
-        
+
         // プラットフォームごとのURL生成
-        return match($platform) {
-            'instagram' => 'https://www.instagram.com/' . ltrim($value, '@') . '/',
-            'x' => 'https://twitter.com/' . ltrim($value, '@'),
-            'facebook' => 'https://www.facebook.com/' . ltrim($value, '@'),
-            'tiktok' => 'https://www.tiktok.com/@' . ltrim($value, '@'),
-            'bluesky' => 'https://bsky.app/profile/' . ltrim($value, '@'),
-            'threads' => 'https://www.threads.net/@' . ltrim($value, '@'),
-            'linkedin' => str_starts_with($value, 'company/') 
-                ? 'https://www.linkedin.com/' . $value 
-                : 'https://www.linkedin.com/in/' . $value,
-            'youtube' => str_starts_with($value, '@') 
-                ? 'https://www.youtube.com/' . $value 
-                : 'https://www.youtube.com/@' . $value,
-            'pinterest' => 'https://www.pinterest.com/' . ltrim($value, '@') . '/',
+        return match ($platform) {
+            'instagram' => 'https://www.instagram.com/'.ltrim($value, '@').'/',
+            'x' => 'https://twitter.com/'.ltrim($value, '@'),
+            'facebook' => 'https://www.facebook.com/'.ltrim($value, '@'),
+            'tiktok' => 'https://www.tiktok.com/@'.ltrim($value, '@'),
+            'bluesky' => 'https://bsky.app/profile/'.ltrim($value, '@'),
+            'threads' => 'https://www.threads.net/@'.ltrim($value, '@'),
+            'linkedin' => str_starts_with($value, 'company/')
+                ? 'https://www.linkedin.com/'.$value
+                : 'https://www.linkedin.com/in/'.$value,
+            'youtube' => str_starts_with($value, '@')
+                ? 'https://www.youtube.com/'.$value
+                : 'https://www.youtube.com/@'.$value,
+            'pinterest' => 'https://www.pinterest.com/'.ltrim($value, '@').'/',
             'discord' => $value, // Discordは招待リンクなのでそのまま
             default => $value,
         };

@@ -25,11 +25,11 @@
             {{-- Site Logo --}}
             <div class="flex-shrink-0">
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group" aria-label="Home">
-                    @if(isset($themeSettings->header_logo_id) && $themeSettings->header_logo_id)
+                    @if(!empty($themeSettings->headerLogoPath))
                         {{-- テーマ設定のロゴ画像 --}}
-                        <img 
-                            src="{{ asset('storage/' . $themeSettings->header_logo_id) }}" 
-                            alt="{{ $logoText }}" 
+                        <img
+                            src="{{ asset('storage/' . $themeSettings->headerLogoPath) }}"
+                            alt="{{ $logoText }}"
                             class="{{ $heightClass }} w-auto"
                         >
                         {{-- サイト名 --}}
