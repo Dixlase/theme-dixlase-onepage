@@ -295,7 +295,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                         @php $renderedGroups[] = $field->group; @endphp
                                         @php $groupFields = $fieldsByGroup[$field->group]; @endphp
                                         <div>
-                                            <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="text-red-500">*</span>@endif</div>
+                                            <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded bg-red-100 text-red-800">{{ __('common.required') }}</span>@endif</div>
                                             <div class="flex gap-2">
                                                 @foreach($groupFields as $gf)
                                                     <div class="flex-1">
@@ -307,7 +307,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                     @endif
                                 @elseif($field->type === 'radio_card')
                                     <div>
-                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="text-red-500">*</span>@endif</div>
+                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded bg-red-100 text-red-800">{{ __('common.required') }}</span>@endif</div>
                                         <div class="flex gap-2 flex-wrap">
                                             @foreach($field->options as $val => $optLabel)
                                                 <div class="pv-contact-field h-8 rounded-md px-3 flex items-center text-xs flex-1">
@@ -319,11 +319,11 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                 @elseif($field->type === 'checkbox')
                                     <div class="flex items-start gap-2 mt-2">
                                         <div class="pv-contact-field w-4 h-4 rounded border flex-shrink-0 mt-0.5"></div>
-                                        <span class="pv-contact-desc text-xs leading-relaxed">{!! $field->label !!}@if($field->required) <span class="text-red-500">*</span>@endif</span>
+                                        <span class="pv-contact-desc text-xs leading-relaxed">{!! $field->label !!}@if($field->required) <span class="inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded bg-red-100 text-red-800">{{ __('common.required') }}</span>@endif</span>
                                     </div>
                                 @else
                                     <div>
-                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="text-red-500">*</span>@endif</div>
+                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded bg-red-100 text-red-800">{{ __('common.required') }}</span>@endif</div>
                                         <div class="pv-contact-field {{ $field->type === 'textarea' ? 'h-24' : 'h-10' }} rounded-md"></div>
                                     </div>
                                 @endif
