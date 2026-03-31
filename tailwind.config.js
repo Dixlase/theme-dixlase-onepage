@@ -4,6 +4,7 @@ export default {
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.vue",
+    "../../plugins/*/resources/views/front/**/*.blade.php",
   ],
   darkMode: 'class', // クラスベースのダークモード
   theme: {
