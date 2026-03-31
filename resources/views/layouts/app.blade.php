@@ -1,14 +1,27 @@
 <!DOCTYPE html>
-<html 
-    lang="{{ str_replace('_', '-', app()->getLocale()) }}" 
+<html
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     class="scroll-smooth"
     x-data="appearanceTheme('{{ $themeSettings->appearance_mode ?? '0' }}')"
     x-init="init()"
     :class="{ 'dark': isDark, 'light': !isDark }"
 >
 <head>
+    {{-- FOUC防止: Alpine.js初期化前にダークモードクラスを即時適用 --}}
+    <script @cspNonce>
+    (function(){
+        var m = '{{ $themeSettings->appearance_mode ?? '0' }}';
+        if (m === '2' || (m === '0' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+        } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+        }
+    })();
+    </script>
     @include('themes::partials.head')
-    
+
     {{-- Font Awesome for SNS Icons --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
