@@ -107,11 +107,35 @@ return [
             ],
         ],
 
+        // Header Menu
+        'header_menu' => [
+            'edit_badge' => 'Edit Menu',
+            'confirm_title' => 'Edit Header Menu?',
+            'confirm_message' => 'You will be redirected to the menu editor.<br>Unsaved changes will be lost.',
+            'confirm_ok' => 'OK',
+        ],
+
+        // Footer Menu
+        'footer_menu' => [
+            'edit_badge' => 'Edit Menu',
+            'confirm_title' => 'Edit Footer Menu?',
+            'confirm_message' => 'You will be redirected to the menu editor.<br>Unsaved changes will be lost.',
+            'confirm_ok' => 'OK',
+        ],
+
         // Front Page Content
         'front_content' => [
             'edit_badge' => 'Edit Front Page',
             'confirm_title' => 'Edit Front Page?',
             'confirm_message' => 'You will be redirected to the front page editor.<br>Unsaved changes will be lost.',
+            'confirm_ok' => 'OK',
+        ],
+
+        // Inquiry Form
+        'inquiry_form' => [
+            'edit_badge' => 'Edit Inquiry Form',
+            'confirm_title' => 'Edit Inquiry Form?',
+            'confirm_message' => 'You will be redirected to the inquiry form settings.<br>Unsaved changes will be lost.',
             'confirm_ok' => 'OK',
         ],
 

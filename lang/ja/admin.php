@@ -107,11 +107,35 @@ return [
             ],
         ],
 
+        // Header Menu
+        'header_menu' => [
+            'edit_badge' => 'メニューを編集',
+            'confirm_title' => 'ヘッダーメニューを編集しますか？',
+            'confirm_message' => 'OKでメニュー編集に移動します。<br>保存していない内容は失われます。',
+            'confirm_ok' => 'OK',
+        ],
+
+        // Footer Menu
+        'footer_menu' => [
+            'edit_badge' => 'メニューを編集',
+            'confirm_title' => 'フッターメニューを編集しますか？',
+            'confirm_message' => 'OKでメニュー編集に移動します。<br>保存していない内容は失われます。',
+            'confirm_ok' => 'OK',
+        ],
+
         // Front Page Content
         'front_content' => [
             'edit_badge' => 'フロントページを編集',
             'confirm_title' => 'フロントページを編集しますか？',
             'confirm_message' => 'OKでフロントページ編集に移動します。<br>保存していない内容は失われます。',
+            'confirm_ok' => 'OK',
+        ],
+
+        // Inquiry Form
+        'inquiry_form' => [
+            'edit_badge' => 'お問い合わせフォームを編集',
+            'confirm_title' => 'お問い合わせフォームを編集しますか？',
+            'confirm_message' => 'OKでお問い合わせフォーム設定に移動します。<br>保存していない内容は失われます。',
             'confirm_ok' => 'OK',
         ],
 

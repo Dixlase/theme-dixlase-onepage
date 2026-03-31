@@ -100,6 +100,9 @@ function themeSettingsEditor() {
         footerMenuId: @json(old('footer_menu_id', $settings->footer_menu_id ?? '')),
         allMenusData: @json($allMenusData ?? []),
         showInquiryForm: @json(old('show_inquiry_form', $settings->show_inquiry_form ?? '0')),
+        menuEditBaseUrl: @json($menuPluginEnabled ? route('dixlase-menus::admin.menus.items.index', ['menuId' => '__ID__']) : ''),
+        get headerMenuEditUrl() { return this.menuEditBaseUrl.replace('__ID__', this.headerMenuId); },
+        get footerMenuEditUrl() { return this.menuEditBaseUrl.replace('__ID__', this.footerMenuId); },
 
         // Editing state
         editing: null,

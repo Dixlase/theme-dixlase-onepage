@@ -134,7 +134,9 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                     </div>
 
                     {{-- Navigation - dynamic from selected menu --}}
-                    <nav class="flex items-center space-x-4" x-show="headerMenuId && allMenusData[headerMenuId]">
+                    <nav class="pv-menu-area relative group/headernav flex items-center space-x-4 cursor-pointer"
+                         x-show="headerMenuId && allMenusData[headerMenuId]"
+                         @click.stop="openModal('editHeaderMenuModal')">
                         {{-- Desktop/Tablet: show menu items --}}
                         <template x-if="previewDevice !== 'mobile'">
                             <template x-for="item in allMenusData[headerMenuId] || []" :key="item.title">
@@ -145,6 +147,10 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         <template x-if="previewDevice === 'mobile'">
                             <span class="pv-nav-item text-xl cursor-pointer"><i class="fas fa-bars"></i></span>
                         </template>
+                        {{-- Edit badge --}}
+                        <div class="absolute -top-2 -right-2 opacity-0 group-hover/headernav:opacity-100 transition-opacity z-20">
+                            <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-lg"><i class="fas fa-pencil-alt"></i></span>
+                        </div>
                     </nav>
                 </div>
             </header>
@@ -343,11 +349,17 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 <div class="container mx-auto px-8">
                     <div class="flex flex-col items-center text-center pb-6 space-y-4">
                         {{-- Footer menu links --}}
-                        <div x-show="footerMenuId && allMenusData[footerMenuId]">
+                        <div class="pv-menu-area relative group/footernav cursor-pointer"
+                             x-show="footerMenuId && allMenusData[footerMenuId]"
+                             @click.stop="openModal('editFooterMenuModal')">
                             <div class="flex flex-wrap justify-center gap-4">
                                 <template x-for="item in (footerMenuId && allMenusData[footerMenuId]) ? allMenusData[footerMenuId] : []" :key="item.title">
                                     <span class="pv-footer-text text-sm hover:underline cursor-default" x-text="item.title"></span>
                                 </template>
+                            </div>
+                            {{-- Edit badge --}}
+                            <div class="absolute -top-2 -right-2 opacity-0 group-hover/footernav:opacity-100 transition-opacity z-20">
+                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-lg"><i class="fas fa-pencil-alt"></i></span>
                             </div>
                         </div>
                         {{-- Site Name --}}
@@ -422,6 +434,70 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 :href="route('admin.front.edit')"
                 class="mx-2"
             >{{ __('themes::admin.settings.front_content.confirm_ok') }}</x-form-button>
+        @endslot
+    </x-ui-modal>
+@endpush
+@endif
+
+{{-- ヘッダーメニュー編集確認モーダル --}}
+@if($menuPluginEnabled)
+@push('modals')
+    <x-ui-modal id="editHeaderMenuModal"
+        :title="__('themes::admin.settings.header_menu.confirm_title')"
+        :message="__('themes::admin.settings.header_menu.confirm_message')"
+        :confirm-label="__('themes::admin.settings.header_menu.confirm_ok')"
+        :cancel-label="__('common.cancel')"
+        icon-type="warning"
+        confirm-color="blue"
+        :form="null"
+    >
+        @slot('footer')
+            <x-form-button
+                type="button"
+                variant="secondary"
+                icon="fas fa-times"
+                @click="close()"
+                class="mx-2"
+            >{{ __('common.cancel') }}</x-form-button>
+            <x-form-button
+                type="button"
+                variant="primary"
+                icon="fas fa-pencil-alt"
+                @click="window.location.href = headerMenuEditUrl"
+                class="mx-2"
+            >{{ __('themes::admin.settings.header_menu.confirm_ok') }}</x-form-button>
+        @endslot
+    </x-ui-modal>
+@endpush
+@endif
+
+{{-- フッターメニュー編集確認モーダル --}}
+@if($menuPluginEnabled)
+@push('modals')
+    <x-ui-modal id="editFooterMenuModal"
+        :title="__('themes::admin.settings.footer_menu.confirm_title')"
+        :message="__('themes::admin.settings.footer_menu.confirm_message')"
+        :confirm-label="__('themes::admin.settings.footer_menu.confirm_ok')"
+        :cancel-label="__('common.cancel')"
+        icon-type="warning"
+        confirm-color="blue"
+        :form="null"
+    >
+        @slot('footer')
+            <x-form-button
+                type="button"
+                variant="secondary"
+                icon="fas fa-times"
+                @click="close()"
+                class="mx-2"
+            >{{ __('common.cancel') }}</x-form-button>
+            <x-form-button
+                type="button"
+                variant="primary"
+                icon="fas fa-pencil-alt"
+                @click="window.location.href = footerMenuEditUrl"
+                class="mx-2"
+            >{{ __('themes::admin.settings.footer_menu.confirm_ok') }}</x-form-button>
         @endslot
     </x-ui-modal>
 @endpush
