@@ -73,7 +73,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="dark"] section { background-color: transparent !important; border-color: transparent !important; }
 </style>
 
-<x-admin.preview-container
+<x-admin.theme-preview-container
     :title="__('themes::admin.settings.editor.preview_title')"
     :appearanceMode="$settings->appearance_mode ?? '0'"
 >
@@ -370,7 +370,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 </div>
             </footer>
 
-</x-admin.preview-container>
+</x-admin.theme-preview-container>
 
 {{-- フロントページ編集確認モーダル --}}
 @if(!empty($frontContentPreview))

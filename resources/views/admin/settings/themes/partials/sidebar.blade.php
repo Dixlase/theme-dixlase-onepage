@@ -7,12 +7,12 @@ https://exc-d.com
 Theme settings right sidebar - non-visual settings
 --}}
 
-<x-admin.preview-sidebar
+<x-admin.theme-preview-sidebar
     :openLabel="__('themes::admin.settings.editor.sidebar_open')"
     :closeLabel="__('themes::admin.settings.editor.sidebar_close')"
 >
     {{-- ===== Appearance Mode ===== --}}
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.appearance.title')" icon="fas fa-palette" :open="true">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.appearance.title')" icon="fas fa-palette" :open="true">
         <select name="appearance_mode"
             @change="$dispatch('appearance-changed', { mode: $event.target.value })"
             class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
@@ -21,10 +21,10 @@ Theme settings right sidebar - non-visual settings
             <option value="2" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '2' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_dark') }}</option>
         </select>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Favicon ===== --}}
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.header.favicon')" icon="fas fa-globe">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.header.favicon')" icon="fas fa-globe">
         <x-media.picker
             name="favicon_id"
             :value="$settings->favicon_id ?? null"
@@ -35,10 +35,10 @@ Theme settings right sidebar - non-visual settings
             :buttonText="__('themes::admin.settings.select_favicon_image')"
             :confirmUploadNavigation="true"
         />
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Header Logo ===== --}}
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.header.header_logo')" icon="fas fa-heading">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.header.header_logo')" icon="fas fa-heading">
         <x-media.picker
             name="header_logo_id"
             :value="$settings->header_logo_id ?? null"
@@ -48,11 +48,11 @@ Theme settings right sidebar - non-visual settings
             :buttonText="__('themes::admin.settings.select_logo_image')"
             :confirmUploadNavigation="true"
         />
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Header Menu (Plugin: DixlaseMenus) ===== --}}
     @if($menuPluginEnabled)
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.menu.title')" icon="fas fa-bars">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.menu.title')" icon="fas fa-bars">
         <select name="header_menu_id" x-model="headerMenuId"
             class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
             @foreach($menuOptions as $val => $label)
@@ -60,15 +60,15 @@ Theme settings right sidebar - non-visual settings
             @endforeach
         </select>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.menu.help') }}</p>
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
     @else
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.menu.title')" icon="fas fa-bars">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.menu.title')" icon="fas fa-bars">
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.footer_menu.plugin_required') }}</p>
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
     @endif
 
     {{-- ===== Hero Background Image ===== --}}
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.hero.background_image')" icon="fas fa-image" :open="true">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.background_image')" icon="fas fa-image" :open="true">
         <x-media.picker
             name="hero_background_image_id"
             :value="$settings->hero_background_image_id ?? null"
@@ -79,11 +79,11 @@ Theme settings right sidebar - non-visual settings
             :buttonText="__('themes::admin.settings.hero.select_background_image')"
             :confirmUploadNavigation="true"
         />
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Contact Form (Plugin: DixlaseInquiry) ===== --}}
     @if($inquiryPluginEnabled)
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.inquiry.title')" icon="fas fa-envelope">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.inquiry.title')" icon="fas fa-envelope">
         <input type="hidden" name="show_inquiry_form" :value="showInquiryForm">
         <label class="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" @change="showInquiryForm = $el.checked ? '1' : '0'"
@@ -92,12 +92,12 @@ Theme settings right sidebar - non-visual settings
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.plugins.inquiry.enable') }}</span>
         </label>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
     @endif
 
     {{-- ===== Footer Menu ===== --}}
     @if($menuPluginEnabled)
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.footer_menu.title')" icon="fas fa-link">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.footer_menu.title')" icon="fas fa-link">
         <select name="footer_menu_id" x-model="footerMenuId"
             class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
             @foreach($menuOptions as $val => $label)
@@ -105,15 +105,15 @@ Theme settings right sidebar - non-visual settings
             @endforeach
         </select>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.footer_menu.help') }}</p>
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
     @else
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.footer_menu.title')" icon="fas fa-link">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.footer_menu.title')" icon="fas fa-link">
         <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.footer_menu.plugin_required') }}</p>
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
     @endif
 
     {{-- ===== SNS Links ===== --}}
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.footer.sns_title')" icon="fas fa-share-alt">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.footer.sns_title')" icon="fas fa-share-alt">
         <div class="space-y-3">
             @php
                 $snsFields = [
@@ -143,12 +143,12 @@ Theme settings right sidebar - non-visual settings
                 </div>
             @endforeach
         </div>
-    </x-admin.preview-sidebar-section>
+    </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Copyright ===== --}}
-    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.footer.copyright_section')" icon="fas fa-copyright" :divider="false">
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.footer.copyright_section')" icon="fas fa-copyright" :divider="false">
         <x-form-text name="footer_copyright" :label="__('themes::admin.settings.footer.copyright')"
                      x-model="footerCopyright"
                      :help="__('themes::admin.settings.footer.copyright_help')" />
-    </x-admin.preview-sidebar-section>
-</x-admin.preview-sidebar>
+    </x-admin.theme-preview-sidebar-section>
+</x-admin.theme-preview-sidebar>
