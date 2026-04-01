@@ -10,7 +10,7 @@
 
 @if(!empty($hasCustomJs))
 @push('scripts')
-<script src="{{ route('front.custom-script') }}?v={{ $customAssetVersion }}"></script>
+<script @cspNonce src="{{ route('front.custom-script') }}?v={{ $customAssetVersion }}"></script>
 @endpush
 @endif
 
@@ -40,9 +40,14 @@
 <section class="inquiry-section py-16 bg-gray-100 dark:bg-gray-800">
     <div class="container mx-auto px-4">
         <div class="max-w-2xl mx-auto">
-            <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
-                {{ __('dixlase-inquiry::front.form.heading') }}
+            @php $inquirySettings = function_exists('dls_inquiry_settings') ? dls_inquiry_settings() : null; @endphp
+            <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-3">
+                {{ !empty($inquirySettings->form_heading) ? $inquirySettings->form_heading : __('dixlase-inquiry::front.form.heading') }}
             </h2>
+            @php $inquiryDesc = !empty($inquirySettings->form_description) ? $inquirySettings->form_description : __('dixlase-inquiry::front.form.default_description'); @endphp
+            @if($inquiryDesc)
+                <p class="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-lg mx-auto">{{ $inquiryDesc }}</p>
+            @endif
             {!! dls_inquiry_form() !!}
         </div>
     </div>

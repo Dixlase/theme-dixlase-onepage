@@ -26,7 +26,7 @@
             <x-front.button variant="primary" href="{{ url('/') }}">
                 ホームに戻る
             </x-front.button>
-            <x-front.button variant="outline" onclick="history.back()">
+            <x-front.button variant="outline" @click="history.back()">
                 前のページに戻る
             </x-front.button>
         </div>

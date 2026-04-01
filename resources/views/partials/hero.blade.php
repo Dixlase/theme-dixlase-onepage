@@ -21,7 +21,7 @@
     {{-- Background Glow Effects --}}
     <div class="absolute inset-0 overflow-hidden z-0">
         <div class="absolute top-1/4 left-10 w-72 h-72 bg-gray-500/100 rounded-full filter blur-3xl animate-pulse-slow"></div>
-        <div class="absolute bottom-2/4 right-20 w-96 h-96 bg-gray-400/100 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-2/4 right-20 w-96 h-96 bg-gray-400/100 rounded-full filter blur-3xl animate-pulse-slow animate-delay-1s"></div>
     </div>
 
     {{-- Content --}}
@@ -79,5 +79,8 @@
     }
     .animate-pulse-slow {
         animation: pulse-slow 4s ease-in-out infinite;
+    }
+    .animate-delay-1s {
+        animation-delay: 1s;
     }
 </style>
