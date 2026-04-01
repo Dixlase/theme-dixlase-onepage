@@ -27,7 +27,7 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
     {{-- 管理バー・メンテナンスバナー（管理者ログイン時のみ表示） --}}
-    <div class="sticky top-0" style="z-index: 9999;">
+    <div class="sticky top-0 z-[9999]">
         {{-- メンテナンスバナー（メンテナンス中のみ表示） --}}
         <x-ui-maintenance-banner />
         {{-- 管理バー --}}
