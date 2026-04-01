@@ -7,252 +7,148 @@ https://exc-d.com
 Theme settings right sidebar - non-visual settings
 --}}
 
-{{-- Toggle Button --}}
-<button type="button"
-        @click="toggleRightSidebar()"
-        class="flex fixed top-14 right-0 z-50 items-center backdrop-blur-sm dark:bg-gray-900/75 bg-white/75 text-blue-400 dark:text-white px-1.5 py-4 rounded-l-lg shadow-md border border-r-0 border-gray-300 dark:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
-        :class="{
-            'translate-x-0': rightSidebarCollapsed,
-            '-translate-x-80': !rightSidebarCollapsed
-        }"
-        :style="rightSidebarReady ? 'transition: transform 200ms ease-in-out' : ''"
-        :aria-label="rightSidebarCollapsed
-            ? '{{ __('themes::admin.settings.editor.sidebar_open') }}'
-            : '{{ __('themes::admin.settings.editor.sidebar_close') }}'">
-    <i class="fas text-sm" :class="rightSidebarCollapsed ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
-</button>
-
-{{-- Right Sidebar --}}
-<div class="space-y-5 fixed top-12 right-0 bottom-0 w-80 z-50 overflow-y-auto bg-white/75 dark:bg-gray-900/75 backdrop-blur-sm border-l border-gray-200 dark:border-gray-600 shadow-md px-5 py-5"
-     :class="{
-         'translate-x-80': rightSidebarCollapsed,
-         'translate-x-0': !rightSidebarCollapsed
-     }"
-     :style="rightSidebarReady ? 'transition: transform 300ms ease-in-out' : ''">
-
+<x-admin.preview-sidebar
+    :openLabel="__('themes::admin.settings.editor.sidebar_open')"
+    :closeLabel="__('themes::admin.settings.editor.sidebar_close')"
+>
     {{-- ===== Appearance Mode ===== --}}
-    <div x-data="{ open: true }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-palette mr-1.5"></i>{{ __('themes::admin.settings.appearance.title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <select name="appearance_mode"
-                @change="$dispatch('appearance-changed', { mode: $event.target.value })"
-                class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
-                <option value="0" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '0' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_auto') }}</option>
-                <option value="1" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '1' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_light') }}</option>
-                <option value="2" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '2' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_dark') }}</option>
-            </select>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.appearance.title')" icon="fas fa-palette" :open="true">
+        <select name="appearance_mode"
+            @change="$dispatch('appearance-changed', { mode: $event.target.value })"
+            class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+            <option value="0" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '0' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_auto') }}</option>
+            <option value="1" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '1' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_light') }}</option>
+            <option value="2" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '2' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_dark') }}</option>
+        </select>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
+    </x-admin.preview-sidebar-section>
 
     {{-- ===== Favicon ===== --}}
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-globe mr-1.5"></i>{{ __('themes::admin.settings.header.favicon') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <x-media.picker
-                name="favicon_id"
-                :value="$settings->favicon_id ?? null"
-                :media="$favicon ?? null"
-                :help="__('themes::admin.settings.header.favicon_help')"
-                :error="$errors->first('favicon_id')"
-                aspectRatio="square"
-                :buttonText="__('themes::admin.settings.select_favicon_image')"
-                :confirmUploadNavigation="true"
-            />
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.header.favicon')" icon="fas fa-globe">
+        <x-media.picker
+            name="favicon_id"
+            :value="$settings->favicon_id ?? null"
+            :media="$favicon ?? null"
+            :help="__('themes::admin.settings.header.favicon_help')"
+            :error="$errors->first('favicon_id')"
+            aspectRatio="square"
+            :buttonText="__('themes::admin.settings.select_favicon_image')"
+            :confirmUploadNavigation="true"
+        />
+    </x-admin.preview-sidebar-section>
 
     {{-- ===== Header Logo ===== --}}
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-heading mr-1.5"></i>{{ __('themes::admin.settings.header.header_logo') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <x-media.picker
-                name="header_logo_id"
-                :value="$settings->header_logo_id ?? null"
-                :media="$headerLogo ?? null"
-                :help="__('themes::admin.settings.header.header_logo_help')"
-                :error="$errors->first('header_logo_id')"
-                :buttonText="__('themes::admin.settings.select_logo_image')"
-                :confirmUploadNavigation="true"
-            />
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.header.header_logo')" icon="fas fa-heading">
+        <x-media.picker
+            name="header_logo_id"
+            :value="$settings->header_logo_id ?? null"
+            :media="$headerLogo ?? null"
+            :help="__('themes::admin.settings.header.header_logo_help')"
+            :error="$errors->first('header_logo_id')"
+            :buttonText="__('themes::admin.settings.select_logo_image')"
+            :confirmUploadNavigation="true"
+        />
+    </x-admin.preview-sidebar-section>
 
     {{-- ===== Header Menu (Plugin: DixlaseMenus) ===== --}}
     @if($menuPluginEnabled)
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-bars mr-1.5"></i>{{ __('themes::admin.settings.plugins.menu.title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <select name="header_menu_id" x-model="headerMenuId"
-                class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
-                @foreach($menuOptions as $val => $label)
-                    <option value="{{ $val }}">{{ $label }}</option>
-                @endforeach
-            </select>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.menu.help') }}</p>
-        </div>
-    </div>
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.menu.title')" icon="fas fa-bars">
+        <select name="header_menu_id" x-model="headerMenuId"
+            class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+            @foreach($menuOptions as $val => $label)
+                <option value="{{ $val }}">{{ $label }}</option>
+            @endforeach
+        </select>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.menu.help') }}</p>
+    </x-admin.preview-sidebar-section>
     @else
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-bars mr-1.5"></i>{{ __('themes::admin.settings.plugins.menu.title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.footer_menu.plugin_required') }}</p>
-        </div>
-    </div>
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.menu.title')" icon="fas fa-bars">
+        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.footer_menu.plugin_required') }}</p>
+    </x-admin.preview-sidebar-section>
     @endif
 
-    <hr class="border-gray-200 dark:border-gray-700">
-
     {{-- ===== Hero Background Image ===== --}}
-    <div x-data="{ open: true }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-image mr-1.5"></i>{{ __('themes::admin.settings.hero.background_image') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <x-media.picker
-                name="hero_background_image_id"
-                :value="$settings->hero_background_image_id ?? null"
-                :media="$heroBackgroundImage ?? null"
-                :help="__('themes::admin.settings.hero.background_image_help')"
-                :error="$errors->first('hero_background_image_id')"
-                aspectRatio="hero"
-                :buttonText="__('themes::admin.settings.hero.select_background_image')"
-                :confirmUploadNavigation="true"
-            />
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.hero.background_image')" icon="fas fa-image" :open="true">
+        <x-media.picker
+            name="hero_background_image_id"
+            :value="$settings->hero_background_image_id ?? null"
+            :media="$heroBackgroundImage ?? null"
+            :help="__('themes::admin.settings.hero.background_image_help')"
+            :error="$errors->first('hero_background_image_id')"
+            aspectRatio="hero"
+            :buttonText="__('themes::admin.settings.hero.select_background_image')"
+            :confirmUploadNavigation="true"
+        />
+    </x-admin.preview-sidebar-section>
 
     {{-- ===== Contact Form (Plugin: DixlaseInquiry) ===== --}}
     @if($inquiryPluginEnabled)
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-envelope mr-1.5"></i>{{ __('themes::admin.settings.plugins.inquiry.title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <input type="hidden" name="show_inquiry_form" :value="showInquiryForm">
-            <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" @change="showInquiryForm = $el.checked ? '1' : '0'"
-                    :checked="showInquiryForm === '1'"
-                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
-                <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.plugins.inquiry.enable') }}</span>
-            </label>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
-        </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.inquiry.title')" icon="fas fa-envelope">
+        <input type="hidden" name="show_inquiry_form" :value="showInquiryForm">
+        <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" @change="showInquiryForm = $el.checked ? '1' : '0'"
+                :checked="showInquiryForm === '1'"
+                class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
+            <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.plugins.inquiry.enable') }}</span>
+        </label>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
+    </x-admin.preview-sidebar-section>
     @endif
 
     {{-- ===== Footer Menu ===== --}}
     @if($menuPluginEnabled)
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-link mr-1.5"></i>{{ __('themes::admin.settings.plugins.footer_menu.title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <select name="footer_menu_id" x-model="footerMenuId"
-                class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
-                @foreach($menuOptions as $val => $label)
-                    <option value="{{ $val }}">{{ $label }}</option>
-                @endforeach
-            </select>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.footer_menu.help') }}</p>
-        </div>
-    </div>
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.footer_menu.title')" icon="fas fa-link">
+        <select name="footer_menu_id" x-model="footerMenuId"
+            class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+            @foreach($menuOptions as $val => $label)
+                <option value="{{ $val }}">{{ $label }}</option>
+            @endforeach
+        </select>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.footer_menu.help') }}</p>
+    </x-admin.preview-sidebar-section>
     @else
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-link mr-1.5"></i>{{ __('themes::admin.settings.plugins.footer_menu.title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.footer_menu.plugin_required') }}</p>
-        </div>
-    </div>
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.plugins.footer_menu.title')" icon="fas fa-link">
+        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.footer_menu.plugin_required') }}</p>
+    </x-admin.preview-sidebar-section>
     @endif
 
-    <hr class="border-gray-200 dark:border-gray-700">
-
     {{-- ===== SNS Links ===== --}}
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-share-alt mr-1.5"></i>{{ __('themes::admin.settings.footer.sns_title') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <div class="space-y-3">
-                @php
-                    $snsFields = [
-                        ['name' => 'footer_sns_instagram', 'label' => 'Instagram', 'prefix' => 'instagram.com/'],
-                        ['name' => 'footer_sns_x', 'label' => 'X (Twitter)', 'prefix' => 'x.com/'],
-                        ['name' => 'footer_sns_facebook', 'label' => 'Facebook', 'prefix' => 'facebook.com/'],
-                        ['name' => 'footer_sns_tiktok', 'label' => 'TikTok', 'prefix' => 'tiktok.com/@'],
-                        ['name' => 'footer_sns_bluesky', 'label' => 'Bluesky', 'prefix' => 'bsky.app/profile/'],
-                        ['name' => 'footer_sns_threads', 'label' => 'Threads', 'prefix' => 'threads.net/@'],
-                        ['name' => 'footer_sns_linkedin', 'label' => 'LinkedIn', 'prefix' => 'linkedin.com/in/'],
-                        ['name' => 'footer_sns_youtube', 'label' => 'YouTube', 'prefix' => 'youtube.com/@'],
-                        ['name' => 'footer_sns_pinterest', 'label' => 'Pinterest', 'prefix' => 'pinterest.com/'],
-                        ['name' => 'footer_sns_discord', 'label' => 'Discord', 'prefix' => 'discord.gg/'],
-                    ];
-                @endphp
-                @foreach($snsFields as $sns)
-                    @php $snsKey = str_replace('footer_sns_', '', $sns['name']); @endphp
-                    <div>
-                        <label class="block text-xs font-medium mb-1 text-gray-600 dark:text-gray-400">{{ $sns['label'] }}</label>
-                        <div class="flex items-stretch">
-                            <span class="inline-flex items-center text-xs text-gray-500 dark:text-gray-400 mr-1 whitespace-nowrap">{{ $sns['prefix'] }}</span>
-                            <input type="text" name="{{ $sns['name'] }}"
-                                   x-model="snsLinks.{{ $snsKey }}"
-                                   class="flex-1 min-w-0 block w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
-                                   placeholder="{{ __('themes::admin.settings.footer.sns_username') }}">
-                        </div>
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.footer.sns_title')" icon="fas fa-share-alt">
+        <div class="space-y-3">
+            @php
+                $snsFields = [
+                    ['name' => 'footer_sns_instagram', 'label' => 'Instagram', 'prefix' => 'instagram.com/'],
+                    ['name' => 'footer_sns_x', 'label' => 'X (Twitter)', 'prefix' => 'x.com/'],
+                    ['name' => 'footer_sns_facebook', 'label' => 'Facebook', 'prefix' => 'facebook.com/'],
+                    ['name' => 'footer_sns_tiktok', 'label' => 'TikTok', 'prefix' => 'tiktok.com/@'],
+                    ['name' => 'footer_sns_bluesky', 'label' => 'Bluesky', 'prefix' => 'bsky.app/profile/'],
+                    ['name' => 'footer_sns_threads', 'label' => 'Threads', 'prefix' => 'threads.net/@'],
+                    ['name' => 'footer_sns_linkedin', 'label' => 'LinkedIn', 'prefix' => 'linkedin.com/in/'],
+                    ['name' => 'footer_sns_youtube', 'label' => 'YouTube', 'prefix' => 'youtube.com/@'],
+                    ['name' => 'footer_sns_pinterest', 'label' => 'Pinterest', 'prefix' => 'pinterest.com/'],
+                    ['name' => 'footer_sns_discord', 'label' => 'Discord', 'prefix' => 'discord.gg/'],
+                ];
+            @endphp
+            @foreach($snsFields as $sns)
+                @php $snsKey = str_replace('footer_sns_', '', $sns['name']); @endphp
+                <div>
+                    <label class="block text-xs font-medium mb-1 text-gray-600 dark:text-gray-400">{{ $sns['label'] }}</label>
+                    <div class="flex items-stretch">
+                        <span class="inline-flex items-center text-xs text-gray-500 dark:text-gray-400 mr-1 whitespace-nowrap">{{ $sns['prefix'] }}</span>
+                        <input type="text" name="{{ $sns['name'] }}"
+                               x-model="snsLinks.{{ $snsKey }}"
+                               class="flex-1 min-w-0 block w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
+                               placeholder="{{ __('themes::admin.settings.footer.sns_username') }}">
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
-    </div>
-
-    <hr class="border-gray-200 dark:border-gray-700">
+    </x-admin.preview-sidebar-section>
 
     {{-- ===== Copyright ===== --}}
-    <div x-data="{ open: false }">
-        <button type="button" @click="open = !open" class="w-full flex items-center justify-between text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            <span><i class="fas fa-copyright mr-1.5"></i>{{ __('themes::admin.settings.footer.copyright_section') }}</span>
-            <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': open }"></i>
-        </button>
-        <div x-show="open" x-collapse>
-            <x-form-text name="footer_copyright" :label="__('themes::admin.settings.footer.copyright')"
-                         x-model="footerCopyright"
-                         :help="__('themes::admin.settings.footer.copyright_help')" />
-        </div>
-    </div>
-
-    {{-- Bottom spacing for save button --}}
-    <div class="h-20"></div>
-</div>
+    <x-admin.preview-sidebar-section :title="__('themes::admin.settings.footer.copyright_section')" icon="fas fa-copyright" :divider="false">
+        <x-form-text name="footer_copyright" :label="__('themes::admin.settings.footer.copyright')"
+                     x-model="footerCopyright"
+                     :help="__('themes::admin.settings.footer.copyright_help')" />
+    </x-admin.preview-sidebar-section>
+</x-admin.preview-sidebar>

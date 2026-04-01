@@ -77,9 +77,8 @@ function themeSettingsEditor() {
         headerLogoPreviewUrl: @json($headerLogo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $headerLogo->path) : null),
         heroBgPreviewUrl: @json($heroBackgroundImage ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroBackgroundImage->path) : null),
 
-        // Device preview
-        previewDevice: 'desktop',
-        previewDeviceWidth: 1440,
+        // Device preview (from previewContainerMixin)
+        ...previewContainerMixin(),
 
         // SNS links
         snsLinks: {
@@ -137,51 +136,8 @@ function themeSettingsEditor() {
                 }
             });
 
-            // Recalculate preview scale whenever container size changes
-            this.$nextTick(() => {
-                const outer = document.getElementById('preview-outer');
-                const inner = document.getElementById('preview-inner');
-                // Poll for container width and content height changes
-                let lastWidth = outer ? outer.offsetWidth : 0;
-                let lastHeight = inner ? inner.scrollHeight : 0;
-                setInterval(() => {
-                    const w = outer ? outer.offsetWidth : 0;
-                    const h = inner ? inner.scrollHeight : 0;
-                    if (w !== lastWidth || h !== lastHeight) {
-                        lastWidth = w;
-                        lastHeight = h;
-                        this.updatePreviewScale();
-                    }
-                }, 200);
-                this.updatePreviewScale();
-            });
-        },
-
-        setPreviewDevice(device) {
-            const widths = { mobile: 375, tablet: 768, desktop: 1440 };
-            this.previewDevice = device;
-            this.previewDeviceWidth = widths[device];
-            this.$nextTick(() => this.updatePreviewScale());
-        },
-
-        updatePreviewScale() {
-            const outer = document.getElementById('preview-outer');
-            const inner = document.getElementById('preview-inner');
-            if (outer && inner) {
-                const containerWidth = outer.offsetWidth;
-                const deviceWidth = this.previewDeviceWidth;
-                const scale = this.previewDevice === 'desktop'
-                    ? containerWidth / deviceWidth
-                    : Math.min(containerWidth / deviceWidth, 1);
-                inner.style.transform = 'scale(' + scale + ')';
-                // Set container height to match scaled content
-                const contentHeight = inner.scrollHeight || 900;
-                outer.style.height = Math.max(contentHeight * scale, 300) + 'px';
-                // Center horizontally when device is narrower than container
-                const scaledWidth = deviceWidth * scale;
-                const offsetX = (containerWidth - scaledWidth) / 2;
-                inner.style.left = Math.max(offsetX, 0) + 'px';
-            }
+            // Initialize preview container (scaling, polling, device toggle)
+            this.initPreviewContainer();
         },
 
         startEdit(field) {
