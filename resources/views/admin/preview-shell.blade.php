@@ -5,7 +5,7 @@ Copyright (C) 2025 exc-D inc.
 https://exc-d.com
 
 Read-only theme preview shell for use by core admin pages (front page master, etc.)
-Provides header + content slot + footer structure with theme-aware styling.
+Provides header + hero + content slot + inquiry + footer structure with theme-aware styling.
 --}}
 
 {{-- Preview theme styles (isolated from admin dark mode) --}}
@@ -13,12 +13,22 @@ Provides header + content slot + footer structure with theme-aware styling.
 #preview-inner[data-preview-theme="dark"] { background: #030712 !important; }
 #preview-inner[data-preview-theme="dark"] .pv-header { background: rgba(17,24,39,0.8) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-app-name { color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-hero { background: #030712 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-glow-1 { background: rgba(107,114,128,0.3) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-glow-2 { background: rgba(156,163,175,0.3) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-title span { background-image: linear-gradient(to right, #9ca3af, #9ca3af, #fff) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+#preview-inner[data-preview-theme="dark"] .pv-subtitle { color: #d1d5db !important; }
+#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { border-color: #374151 !important; color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-nav-item { color: #9ca3af !important; }
 #preview-inner[data-preview-theme="dark"] .pv-content { background: #111827 !important; }
 #preview-inner[data-preview-theme="dark"] .pv-content-text { color: #d1d5db !important; }
 #preview-inner[data-preview-theme="dark"] .pv-content-text h1,
 #preview-inner[data-preview-theme="dark"] .pv-content-text h2,
 #preview-inner[data-preview-theme="dark"] .pv-content-text h3 { color: #f3f4f6 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact { background: #111827 !important; border-color: #1f2937 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact-title { color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact-desc { color: #9ca3af !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact-field { background: #374151 !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer { background: #12141C !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer-title { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer-text { color: #9ca3af !important; }
@@ -27,12 +37,22 @@ Provides header + content slot + footer structure with theme-aware styling.
 #preview-inner[data-preview-theme="light"] { background: #fff !important; }
 #preview-inner[data-preview-theme="light"] .pv-header { background: rgba(255,255,255,0.9) !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important; }
 #preview-inner[data-preview-theme="light"] .pv-app-name { color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-hero { background: #f3f4f6 !important; }
+#preview-inner[data-preview-theme="light"] .pv-glow-1 { background: rgba(216,180,254,0.3) !important; }
+#preview-inner[data-preview-theme="light"] .pv-glow-2 { background: rgba(147,197,253,0.3) !important; }
+#preview-inner[data-preview-theme="light"] .pv-title span { background-image: linear-gradient(to right, #374151, #374151, #111827) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+#preview-inner[data-preview-theme="light"] .pv-subtitle { color: #4b5563 !important; }
+#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db !important; color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-nav-item { color: #6b7280 !important; }
 #preview-inner[data-preview-theme="light"] .pv-content { background: #fff !important; }
 #preview-inner[data-preview-theme="light"] .pv-content-text { color: #374151 !important; }
 #preview-inner[data-preview-theme="light"] .pv-content-text h1,
 #preview-inner[data-preview-theme="light"] .pv-content-text h2,
 #preview-inner[data-preview-theme="light"] .pv-content-text h3 { color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact { background: #f9fafb !important; border-color: #e5e7eb !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-title { color: #111827 !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-desc { color: #6b7280 !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-field { background: #e5e7eb !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer { background: #f3f4f6 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-title { color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
@@ -46,6 +66,8 @@ Provides header + content slot + footer structure with theme-aware styling.
 @php
     $shellSettings = $themeSettings ?? null;
     $shellAppearanceMode = $shellSettings->appearance_mode ?? '0';
+
+    // ロゴ
     $shellLogoPath = null;
     if (!empty($shellSettings->header_logo_id)) {
         $shellLogo = \App\Models\Media::find($shellSettings->header_logo_id);
@@ -53,10 +75,38 @@ Provides header + content slot + footer structure with theme-aware styling.
             $shellLogoPath = asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $shellLogo->path);
         }
     }
+
+    // ヒーロー背景画像
+    $shellHeroBgPath = null;
+    if (!empty($shellSettings->hero_background_image_id)) {
+        $shellHeroBg = \App\Models\Media::find($shellSettings->hero_background_image_id);
+        if ($shellHeroBg) {
+            $shellHeroBgPath = asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $shellHeroBg->path);
+        }
+    }
+
+    // ヒーロー設定
+    $shellHeroTitle = $shellSettings->hero_main_title ?? 'Welcome to ' . config('app.name');
+    $shellHeroSubTitle = $shellSettings->hero_sub_title ?? '';
+    $shellHeroButtonText = $shellSettings->hero_button_text ?? '';
+    $shellHeroButtonSecondaryText = $shellSettings->hero_button_secondary_text ?? '';
+
+    // メニュー・フッター
     $shellNavigationItems = $navigationItems ?? [];
     $shellFooterMenuItems = $footerMenuItems ?? [];
     $shellSnsLinks = $snsLinks ?? [];
     $shellCopyright = $shellSettings->footer_copyright ?? '© ' . date('Y') . ' ' . config('app.name') . '. All rights reserved.';
+
+    // お問い合わせ
+    $shellShowInquiry = ($shellSettings->show_inquiry_form ?? '0') === '1';
+    $shellInquiryPreview = null;
+    if ($shellShowInquiry && \App\Helpers\PluginHelper::isEnabled('dixlase-inquiry')) {
+        $resolver = app(\App\Services\Plugin\PluginServiceResolver::class);
+        $result = $resolver->resolve(\App\Contracts\PluginIntegration\PreviewProviderInterface::class, 'dixlase-inquiry');
+        if ($result->resolved && $result->instance) {
+            $shellInquiryPreview = $result->instance->getPreview('inquiry_form');
+        }
+    }
 @endphp
 
 <div x-data="{ ...previewContainerMixin(), previewDevice: 'desktop', previewDeviceWidth: 1440 }" x-init="initPreviewContainer()">
@@ -64,7 +114,7 @@ Provides header + content slot + footer structure with theme-aware styling.
         :title="__('common.preview')"
         :appearanceMode="$shellAppearanceMode"
     >
-        {{-- Header --}}
+        {{-- ===== HEADER ===== --}}
         <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
             <div class="flex items-center justify-between w-full">
                 <div class="flex items-center space-x-3">
@@ -88,16 +138,97 @@ Provides header + content slot + footer structure with theme-aware styling.
             </div>
         </header>
 
-        {{-- Content slot --}}
-        <section class="pv-content py-12">
-            <div class="container mx-auto px-8">
-                <div class="prose max-w-none pv-content-text">
-                    {!! $previewContent ?? '' !!}
+        {{-- ===== HERO ===== --}}
+        <section class="pv-hero relative min-h-[400px] flex flex-col justify-center overflow-hidden">
+            <div class="absolute inset-0 overflow-hidden z-0">
+                <div class="pv-glow-1 absolute top-1/4 left-10 w-72 h-72 rounded-full filter blur-3xl"></div>
+                <div class="pv-glow-2 absolute bottom-2/4 right-20 w-96 h-96 rounded-full filter blur-3xl"></div>
+            </div>
+            @if($shellHeroBgPath)
+            <div class="absolute inset-0 z-0">
+                <img src="{{ $shellHeroBgPath }}" alt="" class="w-full h-full object-cover opacity-40">
+            </div>
+            @endif
+            <div class="container mx-auto px-8 py-16 relative z-10">
+                <div class="lg:w-1/2">
+                    <h1 class="pv-title text-5xl lg:text-6xl font-bold leading-tight mb-4">
+                        <span>{{ $shellHeroTitle }}</span>
+                    </h1>
+                    @if($shellHeroSubTitle)
+                    <p class="pv-subtitle text-lg max-w-lg mb-6">{{ $shellHeroSubTitle }}</p>
+                    @endif
+                    <div class="flex gap-4">
+                        @if($shellHeroButtonText)
+                        <span class="inline-flex items-center gap-2 h-11 rounded-xl bg-purple-600 text-white px-8 py-6">
+                            {{ $shellHeroButtonText }}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                        </span>
+                        @endif
+                        @if($shellHeroButtonSecondaryText)
+                        <span class="pv-btn-secondary inline-flex items-center gap-2 h-11 rounded-xl px-8 border py-6">
+                            {{ $shellHeroButtonSecondaryText }}
+                        </span>
+                        @endif
+                    </div>
                 </div>
             </div>
         </section>
 
-        {{-- Footer --}}
+        {{-- ===== CONTENT ===== --}}
+        @if(!empty($previewContent))
+        <section class="pv-content py-12">
+            <div class="container mx-auto px-8">
+                <div class="prose max-w-none pv-content-text">
+                    {!! $previewContent !!}
+                </div>
+            </div>
+        </section>
+        @endif
+
+        {{-- ===== INQUIRY FORM ===== --}}
+        @if($shellShowInquiry && $shellInquiryPreview)
+        <section class="pv-contact py-16 border-t">
+            <div class="container mx-auto px-8 text-center">
+                <h2 class="pv-contact-title text-3xl font-bold mb-3">{{ $shellInquiryPreview->title }}</h2>
+                @if($shellInquiryPreview->description)
+                <p class="pv-contact-desc mb-8 max-w-lg mx-auto">{{ $shellInquiryPreview->description }}</p>
+                @endif
+                <div class="max-w-md mx-auto space-y-3 text-left">
+                    @if($shellInquiryPreview->isForm())
+                        @php $renderedGroups = []; $fieldsByGroup = $shellInquiryPreview->getFieldsByGroup(); @endphp
+                        @foreach($shellInquiryPreview->fields as $field)
+                            @if($field->group)
+                                @if(!in_array($field->group, $renderedGroups))
+                                    @php $renderedGroups[] = $field->group; $groupFields = $fieldsByGroup[$field->group]; @endphp
+                                    <div>
+                                        <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="text-red-500">*</span>@endif</div>
+                                        <div class="flex gap-2">
+                                            @foreach($groupFields as $gf)
+                                                <div class="flex-1"><div class="pv-contact-field h-10 rounded-md"></div></div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                            @else
+                                <div>
+                                    <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="text-red-500">*</span>@endif</div>
+                                    <div class="pv-contact-field {{ $field->type === 'textarea' ? 'h-24' : 'h-10' }} rounded-md"></div>
+                                </div>
+                            @endif
+                        @endforeach
+                    @endif
+                    <div class="text-center mt-2">
+                        <span class="inline-flex items-center h-10 px-6 bg-blue-600 rounded-md text-white text-sm font-medium">
+                            @if($shellInquiryPreview->submitIcon)<i class="{{ $shellInquiryPreview->submitIcon }} mr-1"></i>@endif
+                            {{ $shellInquiryPreview->submitLabel ?? 'Send' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        @endif
+
+        {{-- ===== FOOTER ===== --}}
         <footer class="pv-footer pt-12 pb-6">
             <div class="container mx-auto px-8">
                 <div class="flex flex-col items-center text-center pb-6 space-y-4">
@@ -110,7 +241,7 @@ Provides header + content slot + footer structure with theme-aware styling.
                     @endif
                     @if(!empty(array_filter($shellSnsLinks)))
                     <div class="flex flex-wrap justify-center gap-3">
-                        @foreach(['instagram' => 'fa-instagram', 'x' => 'fa-x-twitter', 'facebook' => 'fa-facebook', 'tiktok' => 'fa-tiktok', 'youtube' => 'fa-youtube'] as $platform => $icon)
+                        @foreach(['instagram' => 'fa-instagram', 'x' => 'fa-x-twitter', 'facebook' => 'fa-facebook', 'tiktok' => 'fa-tiktok', 'bluesky' => 'fa-bluesky', 'threads' => 'fa-threads', 'linkedin' => 'fa-linkedin', 'youtube' => 'fa-youtube', 'pinterest' => 'fa-pinterest', 'discord' => 'fa-discord'] as $platform => $icon)
                             @if(!empty($shellSnsLinks[$platform]))
                                 <span class="pv-footer-text text-lg"><i class="fab {{ $icon }}"></i></span>
                             @endif
