@@ -29,6 +29,7 @@ Provides header + hero + content slot + inquiry + footer structure with theme-aw
 #preview-inner[data-preview-theme="dark"] .pv-contact-title { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-contact-desc { color: #9ca3af !important; }
 #preview-inner[data-preview-theme="dark"] .pv-contact-field { background: #374151 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-required-badge { background: rgba(127,29,29,0.8) !important; color: #fecaca !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer { background: #12141C !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer-title { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer-text { color: #9ca3af !important; }
@@ -53,6 +54,7 @@ Provides header + hero + content slot + inquiry + footer structure with theme-aw
 #preview-inner[data-preview-theme="light"] .pv-contact-title { color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-contact-desc { color: #6b7280 !important; }
 #preview-inner[data-preview-theme="light"] .pv-contact-field { background: #e5e7eb !important; }
+#preview-inner[data-preview-theme="light"] .pv-required-badge { background: #fee2e2 !important; color: #991b1b !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer { background: #f3f4f6 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-title { color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
@@ -94,7 +96,7 @@ Provides header + hero + content slot + inquiry + footer structure with theme-aw
     // メニュー・フッター
     $shellNavigationItems = $navigationItems ?? [];
     $shellFooterMenuItems = $footerMenuItems ?? [];
-    $shellSnsLinks = $snsLinks ?? [];
+    $shellSnsLinks = $snsLinks ?? $shellSettings->snsLinks ?? [];
     $shellCopyright = $shellSettings->footer_copyright ?? '© ' . date('Y') . ' ' . config('app.name') . '. All rights reserved.';
 
     // お問い合わせ
@@ -201,7 +203,7 @@ Provides header + hero + content slot + inquiry + footer structure with theme-aw
                                 @if(!in_array($field->group, $renderedGroups))
                                     @php $renderedGroups[] = $field->group; $groupFields = $fieldsByGroup[$field->group]; @endphp
                                     <div>
-                                        <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="text-red-500">*</span>@endif</div>
+                                        <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
                                         <div class="flex gap-2">
                                             @foreach($groupFields as $gf)
                                                 <div class="flex-1"><div class="pv-contact-field h-10 rounded-md"></div></div>
@@ -209,9 +211,25 @@ Provides header + hero + content slot + inquiry + footer structure with theme-aw
                                         </div>
                                     </div>
                                 @endif
+                            @elseif($field->type === 'radio_card')
+                                <div>
+                                    <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
+                                    <div class="flex gap-2 flex-wrap">
+                                        @foreach($field->options as $val => $optLabel)
+                                            <div class="pv-contact-field h-8 rounded-md px-3 flex items-center text-xs flex-1">
+                                                <span class="pv-contact-desc">{{ $optLabel }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif($field->type === 'checkbox')
+                                <div class="flex items-start gap-2 mt-2">
+                                    <div class="pv-contact-field w-4 h-4 rounded border flex-shrink-0 mt-0.5"></div>
+                                    <span class="pv-contact-desc text-xs leading-relaxed">{!! $field->label !!}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</span>
+                                </div>
                             @else
                                 <div>
-                                    <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="text-red-500">*</span>@endif</div>
+                                    <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
                                     <div class="pv-contact-field {{ $field->type === 'textarea' ? 'h-24' : 'h-10' }} rounded-md"></div>
                                 </div>
                             @endif
