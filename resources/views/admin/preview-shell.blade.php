@@ -60,9 +60,9 @@ Provides header + hero + content slot + inquiry + footer structure with theme-aw
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: #d1d5db !important; }
 
-#preview-inner section { border-color: transparent !important; }
-#preview-inner[data-preview-theme="light"] section { background-color: transparent !important; border-color: transparent !important; }
-#preview-inner[data-preview-theme="dark"] section { background-color: transparent !important; border-color: transparent !important; }
+#preview-inner section { border-color: transparent !important; border-radius: 0 !important; padding: 0 !important; margin-bottom: 0 !important; box-shadow: none !important; border-width: 0 !important; }
+#preview-inner[data-preview-theme="light"] section { background-color: transparent !important; }
+#preview-inner[data-preview-theme="dark"] section { background-color: transparent !important; }
 </style>
 
 @php
@@ -117,7 +117,7 @@ Provides header + hero + content slot + inquiry + footer structure with theme-aw
         :appearanceMode="$shellAppearanceMode"
     >
         {{-- ===== HEADER ===== --}}
-        <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
+        <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-4">
             <div class="flex items-center justify-between w-full">
                 <div class="flex items-center space-x-3">
                     @if($shellLogoPath)
