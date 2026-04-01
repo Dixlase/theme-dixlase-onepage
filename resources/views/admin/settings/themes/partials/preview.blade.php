@@ -24,6 +24,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="dark"] .pv-contact-title { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-contact-desc { color: #9ca3af !important; }
 #preview-inner[data-preview-theme="dark"] .pv-contact-field { background: #374151 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-required-badge { background: rgba(127,29,29,0.8) !important; color: #fecaca !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer { background: #12141C !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer-title { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer-text { color: #9ca3af !important; }
@@ -44,6 +45,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="light"] .pv-contact-title { color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-contact-desc { color: #6b7280 !important; }
 #preview-inner[data-preview-theme="light"] .pv-contact-field { background: #e5e7eb !important; }
+#preview-inner[data-preview-theme="light"] .pv-required-badge { background: #fee2e2 !important; color: #991b1b !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer { background: #f3f4f6 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-title { color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
@@ -262,7 +264,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                         @php $renderedGroups[] = $field->group; @endphp
                                         @php $groupFields = $fieldsByGroup[$field->group]; @endphp
                                         <div>
-                                            <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded bg-red-100 text-red-800">{{ __('common.required') }}</span>@endif</div>
+                                            <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
                                             <div class="flex gap-2">
                                                 @foreach($groupFields as $gf)
                                                     <div class="flex-1">
@@ -274,7 +276,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                     @endif
                                 @elseif($field->type === 'radio_card')
                                     <div>
-                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded bg-red-100 text-red-800">{{ __('common.required') }}</span>@endif</div>
+                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
                                         <div class="flex gap-2 flex-wrap">
                                             @foreach($field->options as $val => $optLabel)
                                                 <div class="pv-contact-field h-8 rounded-md px-3 flex items-center text-xs flex-1">
@@ -286,11 +288,11 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                                 @elseif($field->type === 'checkbox')
                                     <div class="flex items-start gap-2 mt-2">
                                         <div class="pv-contact-field w-4 h-4 rounded border flex-shrink-0 mt-0.5"></div>
-                                        <span class="pv-contact-desc text-xs leading-relaxed">{!! $field->label !!}@if($field->required) <span class="inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded bg-red-100 text-red-800">{{ __('common.required') }}</span>@endif</span>
+                                        <span class="pv-contact-desc text-xs leading-relaxed">{!! $field->label !!}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</span>
                                     </div>
                                 @else
                                     <div>
-                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded bg-red-100 text-red-800">{{ __('common.required') }}</span>@endif</div>
+                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
                                         <div class="pv-contact-field {{ $field->type === 'textarea' ? 'h-24' : 'h-10' }} rounded-md"></div>
                                     </div>
                                 @endif
@@ -301,8 +303,8 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                             <div class="pv-contact-field h-10 rounded-md"></div>
                             <div class="pv-contact-field h-24 rounded-md"></div>
                         @endif
-                        <div class="h-10 bg-purple-600 rounded-md flex items-center justify-center">
-                            <span class="text-white text-sm font-medium">
+                        <div class="text-center mt-2">
+                            <span class="inline-flex items-center h-10 px-6 bg-blue-600 rounded-md text-white text-sm font-medium">
                                 @if($inquiryPreview?->submitIcon)<i class="{{ $inquiryPreview->submitIcon }} mr-1"></i>@endif
                                 {{ $inquiryPreview?->submitLabel ?? 'Send' }}
                             </span>
