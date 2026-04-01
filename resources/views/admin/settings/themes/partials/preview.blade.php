@@ -73,43 +73,10 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="dark"] section { background-color: transparent !important; border-color: transparent !important; }
 </style>
 
-<div class="relative">
-    {{-- Preview Header --}}
-    <div class="flex items-center justify-between mb-4">
-        <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">
-            <i class="fas fa-eye mr-1.5"></i>{{ __('themes::admin.settings.editor.preview_title') }}
-        </h3>
-
-        <div class="flex items-center gap-3">
-            {{-- Device Toggle Buttons --}}
-            <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 gap-0.5">
-                <button type="button" @click="setPreviewDevice('mobile')"
-                    :class="previewDevice === 'mobile' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 dark:text-blue-400' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'"
-                    class="px-2.5 py-1.5 rounded-md transition-all text-xs" title="Mobile (375px)">
-                    <i class="fas fa-mobile-alt"></i>
-                </button>
-                <button type="button" @click="setPreviewDevice('tablet')"
-                    :class="previewDevice === 'tablet' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 dark:text-blue-400' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'"
-                    class="px-2.5 py-1.5 rounded-md transition-all text-xs" title="Tablet (768px)">
-                    <i class="fas fa-tablet-alt"></i>
-                </button>
-                <button type="button" @click="setPreviewDevice('desktop')"
-                    :class="previewDevice === 'desktop' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 dark:text-blue-400' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'"
-                    class="px-2.5 py-1.5 rounded-md transition-all text-xs" title="Desktop (1440px)">
-                    <i class="fas fa-desktop"></i>
-                </button>
-            </div>
-
-            <span class="text-xs text-gray-400 dark:text-gray-500" x-text="previewDeviceWidth + 'px'"></span>
-        </div>
-    </div>
-
-    {{-- Scaled Preview Container --}}
-    <div class="rounded-xl overflow-hidden shadow-2xl relative w-full border border-gray-100 dark:border-gray-700" id="preview-outer" style="min-height: 400px;">
-        <div class="absolute top-0 left-0 transition-[width] duration-300" id="preview-inner"
-             data-preview-theme="{{ ($settings->appearance_mode ?? '0') === '1' ? 'light' : 'dark' }}"
-             @appearance-changed.window="$el.dataset.previewTheme = $event.detail.mode === '1' ? 'light' : 'dark'"
-             :style="'width: ' + previewDeviceWidth + 'px; transform-origin: top left;'">
+<x-admin.preview-container
+    :title="__('themes::admin.settings.editor.preview_title')"
+    :appearanceMode="$settings->appearance_mode ?? '0'"
+>
 
             {{-- ===== HEADER PREVIEW ===== --}}
             <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
@@ -403,9 +370,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                 </div>
             </footer>
 
-        </div>
-    </div>
-</div>
+</x-admin.preview-container>
 
 {{-- フロントページ編集確認モーダル --}}
 @if(!empty($frontContentPreview))
