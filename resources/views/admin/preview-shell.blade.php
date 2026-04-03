@@ -60,9 +60,11 @@ Provides header + hero + content slot + inquiry + footer structure with theme-aw
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: #d1d5db !important; }
 
-#preview-inner section { border-color: transparent !important; border-radius: 0 !important; padding: 0 !important; margin-bottom: 0 !important; box-shadow: none !important; border-width: 0 !important; }
-#preview-inner[data-preview-theme="light"] section { background-color: transparent !important; }
-#preview-inner[data-preview-theme="dark"] section { background-color: transparent !important; }
+#preview-inner section { border: none !important; border-radius: 0 !important; margin-bottom: 0 !important; box-shadow: none !important; padding: 0 !important; background-color: transparent !important; }
+#preview-inner .pv-hero { min-height: 400px !important; padding: 0 !important; }
+#preview-inner .pv-content { padding: 3rem 0 !important; }
+#preview-inner .pv-contact { padding: 4rem 0 !important; }
+#preview-inner .pv-footer { padding: 3rem 0 1.5rem !important; }
 </style>
 
 @php
