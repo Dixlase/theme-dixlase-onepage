@@ -10,17 +10,67 @@
         <div class="flex flex-col items-center text-center pb-8 space-y-6">
             {{-- Footer Menu (メニュープラグインから) --}}
             @if(!empty($footerMenuItems))
-                <nav>
-                    <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2">
-                        @foreach($footerMenuItems as $item)
-                            <li>
-                                <a href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors text-sm">
-                                    {{ $item['label'] ?? '' }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </nav>
+                @php
+                    $hasHierarchy = collect($footerMenuItems)->contains(fn ($item) => !empty($item['children']));
+                @endphp
+
+                @if($hasHierarchy)
+                    {{-- カラムグループ型: 階層メニューがある場合 --}}
+                    <nav class="w-full">
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 text-left">
+                            @foreach($footerMenuItems as $item)
+                                @if(!empty($item['children']))
+                                    <div class="space-y-3">
+                                        {{-- グループ見出し --}}
+                                        @if(($item['source_type'] ?? '') === 'menu_group')
+                                            <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">
+                                                {{ $item['label'] ?? '' }}
+                                            </h3>
+                                        @else
+                                            <h3 class="text-sm font-semibold uppercase tracking-wider">
+                                                <a href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}" class="text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-500 transition-colors">
+                                                    {{ $item['label'] ?? '' }}
+                                                </a>
+                                            </h3>
+                                        @endif
+                                        {{-- 子リンク --}}
+                                        <ul class="space-y-2">
+                                            @foreach($item['children'] as $child)
+                                                <li>
+                                                    <a href="{{ $child['url'] ?? '#' }}" target="{{ $child['target'] ?? '_self' }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors">
+                                                        {{ $child['label'] ?? '' }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @else
+                                    {{-- 単体リンク --}}
+                                    <div class="space-y-3">
+                                        <h3 class="text-sm font-semibold uppercase tracking-wider">
+                                            <a href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}" class="text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-500 transition-colors">
+                                                {{ $item['label'] ?? '' }}
+                                            </a>
+                                        </h3>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </nav>
+                @else
+                    {{-- フラット型: 階層なしの場合は横並び --}}
+                    <nav>
+                        <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+                            @foreach($footerMenuItems as $item)
+                                <li>
+                                    <a href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors text-sm">
+                                        {{ $item['label'] ?? '' }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </nav>
+                @endif
             @endif
 
             {{-- SNS Links --}}
