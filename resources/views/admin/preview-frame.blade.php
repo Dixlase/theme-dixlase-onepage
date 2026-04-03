@@ -8,9 +8,10 @@ iframe用プレビューフレーム。
 管理画面のフロントページ編集画面でiframeとして読み込まれ、
 テーマの実際のレイアウトでコンテンツをリアルタイムプレビューする。
 postMessage でコンテンツ・カスタムCSSの更新を受け取る。
+軽量プレビューレイアウト（layouts.preview）を使用し、JSバンドルを読み込まない。
 --}}
 
-@extends('themes::layouts.app')
+@extends('themes::layouts.preview')
 
 @section('title', ' - ' . __('Preview'))
 
@@ -47,10 +48,6 @@ postMessage でコンテンツ・カスタムCSSの更新を受け取る。
 @endsection
 
 @push('scripts')
-<style @cspNonce>
-/* プレビューフレーム内では管理バーとメンテナンスバナーを非表示 */
-.sticky.top-0 { display: none !important; }
-</style>
 <script @cspNonce>
 /**
  * プレビューフレーム postMessage リスナー
