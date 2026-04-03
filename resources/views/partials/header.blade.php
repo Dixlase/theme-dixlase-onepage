@@ -237,37 +237,40 @@
         </div>
     </div>
 
-    {{-- Mobile Drawer Overlay --}}
-    <div
-        x-show="mobileMenuOpen"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-40 bg-black/50"
-        :class="{ 'lg:hidden': !forceHamburger }"
-        x-cloak
-        @click="mobileMenuOpen = false"
-    ></div>
+    {{-- Mobile Drawer: x-teleport で body 直下に転送し stacking context を脱出 --}}
+    <template x-teleport="body">
+        {{-- Mobile Drawer Overlay --}}
+        <div
+            x-show="mobileMenuOpen"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 z-[60] bg-black/50"
+            :class="{ 'lg:hidden': !forceHamburger }"
+            x-cloak
+            @click="mobileMenuOpen = false"
+        ></div>
+    </template>
 
-    {{-- Mobile Drawer Panel (右からスライド) --}}
-    <div
-        x-show="mobileMenuOpen"
-        x-transition:enter="transition ease-out duration-300 transform"
-        x-transition:enter-start="translate-x-full"
-        x-transition:enter-end="translate-x-0"
-        x-transition:leave="transition ease-in duration-200 transform"
-        x-transition:leave-start="translate-x-0"
-        x-transition:leave-end="translate-x-full"
-        class="fixed top-0 right-0 z-50 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
-        :class="{ 'lg:hidden': !forceHamburger }"
-        x-cloak
-    >
+    <template x-teleport="body">
+        {{-- Mobile Drawer Panel (右からスライド) --}}
+        <div
+            x-show="mobileMenuOpen"
+            x-transition:enter="transition ease-out duration-300 transform"
+            x-transition:enter-start="translate-x-full"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-200 transform"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full"
+            class="fixed top-0 right-0 z-[70] h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
+            :class="{ 'lg:hidden': !forceHamburger }"
+            x-cloak
+        >
         {{-- ドロワーヘッダー --}}
-        <div class="flex items-center justify-between px-5 h-14 border-b border-gray-200 dark:border-gray-700">
-            <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('Menu') }}</span>
+        <div class="flex items-center justify-end px-5 h-14 border-b border-gray-200 dark:border-gray-700">
             <button
                 @click="mobileMenuOpen = false"
                 class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
@@ -370,5 +373,6 @@
             </div>
             @endif
         </nav>
-    </div>
+        </div>
+    </template>
 </header>
