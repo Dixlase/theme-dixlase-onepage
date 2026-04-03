@@ -248,7 +248,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-[60] bg-black/50"
+            class="fixed inset-0 z-[60] bg-black/50 {{ $hasAdminBar ? 'top-12' : '' }}"
             :class="{ 'lg:hidden': !forceHamburger }"
             x-cloak
             @click="mobileMenuOpen = false"
@@ -265,7 +265,7 @@
             x-transition:leave="transition ease-in duration-200 transform"
             x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="fixed top-0 right-0 z-[70] h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
+            class="fixed {{ $hasAdminBar ? 'top-12' : 'top-0' }} right-0 z-[70] {{ $hasAdminBar ? 'h-[calc(100%-3rem)]' : 'h-full' }} w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
             :class="{ 'lg:hidden': !forceHamburger }"
             x-cloak
         >
