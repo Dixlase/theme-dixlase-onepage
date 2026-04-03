@@ -17,7 +17,51 @@
 @endphp
 
 <header
-    x-data="navigationMenu()"
+    x-data="{
+        mobileMenuOpen: false,
+        forceHamburger: false,
+        _resizeObserver: null,
+        _debounceTimer: null,
+        initObserver() {
+            this.$nextTick(() => {
+                const nav = this.$refs.desktopNav;
+                const container = this.$refs.navContainer;
+                if (!nav || !container) return;
+                this.checkOverflow(nav, container);
+                this._resizeObserver = new ResizeObserver(() => {
+                    clearTimeout(this._debounceTimer);
+                    this._debounceTimer = setTimeout(() => {
+                        this.checkOverflow(nav, container);
+                    }, 100);
+                });
+                this._resizeObserver.observe(container);
+            });
+        },
+        checkOverflow(nav, container) {
+            const wasHidden = nav.offsetParent === null;
+            if (wasHidden) {
+                nav.style.position = 'absolute';
+                nav.style.visibility = 'hidden';
+                nav.style.display = 'flex';
+            }
+            const logo = this.$refs.logo;
+            const extras = this.$refs.navExtras;
+            const logoWidth = logo ? logo.offsetWidth : 0;
+            const extrasWidth = extras ? extras.offsetWidth : 0;
+            const padding = 64;
+            const available = container.offsetWidth - logoWidth - extrasWidth - padding;
+            this.forceHamburger = nav.scrollWidth > available;
+            if (wasHidden) {
+                nav.style.position = '';
+                nav.style.visibility = '';
+                nav.style.display = '';
+            }
+        },
+        destroy() {
+            if (this._resizeObserver) this._resizeObserver.disconnect();
+            clearTimeout(this._debounceTimer);
+        }
+    }"
     x-init="initObserver()"
     class="fixed h-14 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $headerTopClass }}"
 >
@@ -55,7 +99,7 @@
             {{-- Desktop Navigation --}}
             <nav
                 x-ref="desktopNav"
-                class="hidden lg:flex items-center space-x-1"
+                class="hidden lg:flex items-center space-x-1 ml-auto"
                 :class="{ '!hidden': forceHamburger }"
             >
                 @forelse($navigationItems ?? [] as $item)
@@ -115,7 +159,7 @@
                                 x-transition:leave="transition ease-in duration-100"
                                 x-transition:leave-start="opacity-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 translate-y-1"
-                                class="absolute left-0 mt-1 {{ $minWidthClass }} bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black/5 dark:ring-white/10 z-50"
+                                class="absolute right-0 mt-1 {{ $minWidthClass }} bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black/5 dark:ring-white/10 z-50"
                                 role="menu"
                                 x-cloak
                                 @click.outside="open = false"
