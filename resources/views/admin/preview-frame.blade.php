@@ -49,14 +49,6 @@ postMessage でコンテンツ・カスタムCSSの更新を受け取る。
 
 @push('styles')
 <style @cspNonce>
-/* お問い合わせフォーム: プレビューでは入力・送信を無効化 */
-.inquiry-section form,
-.inquiry-section input,
-.inquiry-section textarea,
-.inquiry-section select,
-.inquiry-section button[type="submit"] {
-    pointer-events: none !important;
-}
 /* CAPTCHAウィジェットを非表示 */
 .captcha-container,
 .g-recaptcha,
