@@ -237,21 +237,51 @@
         </div>
     </div>
 
-    {{-- Mobile Menu --}}
+    {{-- Mobile Drawer Overlay --}}
     <div
         x-show="mobileMenuOpen"
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 -translate-y-2"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 -translate-y-2"
-        class="absolute top-14 left-0 right-0 bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-40 bg-black/50"
         :class="{ 'lg:hidden': !forceHamburger }"
         x-cloak
-        @click.away="mobileMenuOpen = false"
+        @click="mobileMenuOpen = false"
+    ></div>
+
+    {{-- Mobile Drawer Panel (右からスライド) --}}
+    <div
+        x-show="mobileMenuOpen"
+        x-transition:enter="transition ease-out duration-300 transform"
+        x-transition:enter-start="translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in duration-200 transform"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="translate-x-full"
+        class="fixed top-0 right-0 z-50 h-full w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
+        :class="{ 'lg:hidden': !forceHamburger }"
+        x-cloak
     >
-        <nav class="container mx-auto px-4 py-4 space-y-1">
+        {{-- ドロワーヘッダー --}}
+        <div class="flex items-center justify-between px-5 h-14 border-b border-gray-200 dark:border-gray-700">
+            <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('Menu') }}</span>
+            <button
+                @click="mobileMenuOpen = false"
+                class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                aria-label="Close menu"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        {{-- ドロワーコンテンツ（スクロール可能） --}}
+        <nav class="overflow-y-auto h-[calc(100%-3.5rem)] px-3 py-4 space-y-1">
             @forelse($navigationItems ?? [] as $item)
                 @if(!empty($item['children']))
                     {{-- アコーディオンメニュー --}}
