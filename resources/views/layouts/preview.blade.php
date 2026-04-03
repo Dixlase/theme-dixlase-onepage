@@ -59,8 +59,9 @@ Alpine.jsディレクティブ（x-cloak, x-show等）は不活性のまま残�
     <style @cspNonce>
         [x-cloak] { display: none !important; }
         header.fixed { top: 0 !important; }
-        /* プレビュー専用: 全リンク・ボタンのナビゲーション・操作を無効化 */
-        a, button, [role="button"], input[type="submit"] {
+        /* プレビュー専用: 全インタラクティブ要素を無効化 */
+        a, button, [role="button"],
+        input, textarea, select {
             pointer-events: none !important;
             cursor: default !important;
         }
