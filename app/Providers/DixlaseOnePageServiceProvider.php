@@ -102,17 +102,20 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
                 // メニュープロバイダーを解決
                 $menuProvider = $this->resolveMenuProvider();
 
-                // ヘッダーナビゲーションアイテムを取得
-                $navigationItems = $this->getMenuItems($menuProvider, $themeSettings->header_menu_id ?? null);
-                $view->with('navigationItems', $navigationItems);
+                // ヘッダーナビゲーションメニューを取得
+                $headerMenuId = $themeSettings->header_menu_id ?? null;
+                $headerMenuDTO = $this->getMenuDTO($menuProvider, $headerMenuId);
+                $view->with('navigationItems', $headerMenuDTO ? array_map(fn ($item) => $this->mapMenuItem($item), $headerMenuDTO->items) : []);
+                $view->with('navigationMenuName', $headerMenuDTO?->name);
 
                 // フッターメニューアイテムを取得
-                $footerMenuItems = $this->getMenuItems($menuProvider, $themeSettings->footer_menu_id ?? null);
-                $view->with('footerMenuItems', $footerMenuItems);
+                $footerMenuDTO = $this->getMenuDTO($menuProvider, $themeSettings->footer_menu_id ?? null);
+                $view->with('footerMenuItems', $footerMenuDTO ? array_map(fn ($item) => $this->mapMenuItem($item), $footerMenuDTO->items) : []);
             } catch (\Exception $e) {
                 // エラー時はデフォルト値を使用
                 $view->with('themeSettings', $this->getDefaultThemeSettings());
                 $view->with('navigationItems', []);
+                $view->with('navigationMenuName', null);
                 $view->with('footerMenuItems', []);
             }
         });
@@ -138,23 +141,15 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
     }
 
     /**
-     * 指定メニューIDからメニューアイテムを配列として取得
-     *
-     * @return array<int, array{label: string, url: string, target: string, source_type: string|null, icon_class: string|null, css_class: string|null, children: array}>
+     * 指定メニューIDからMenuDTOを取得
      */
-    protected function getMenuItems(?\App\Contracts\PluginIntegration\MenuProviderInterface $menuProvider, int|string|null $menuId): array
+    protected function getMenuDTO(?\App\Contracts\PluginIntegration\MenuProviderInterface $menuProvider, int|string|null $menuId): ?\App\DTO\PluginIntegration\MenuDTO
     {
         if (! $menuProvider || empty($menuId)) {
-            return [];
+            return null;
         }
 
-        $menuDTO = $menuProvider->getMenu($menuId);
-
-        if (! $menuDTO) {
-            return [];
-        }
-
-        return array_map(fn ($item) => $this->mapMenuItem($item), $menuDTO->items);
+        return $menuProvider->getMenu($menuId);
     }
 
     /**

@@ -270,7 +270,12 @@
             x-cloak
         >
         {{-- ドロワーヘッダー --}}
-        <div class="flex items-center justify-end px-5 h-14 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between px-5 h-14 border-b border-gray-200 dark:border-gray-700">
+            @if(!empty($navigationMenuName))
+                <span class="text-base font-semibold text-gray-900 dark:text-white">{{ $navigationMenuName }}</span>
+            @else
+                <span></span>
+            @endif
             <button
                 @click="mobileMenuOpen = false"
                 class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
