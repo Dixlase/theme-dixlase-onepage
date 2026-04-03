@@ -47,6 +47,29 @@ postMessage でコンテンツ・カスタムCSSの更新を受け取る。
 @endif
 @endsection
 
+@push('styles')
+<style @cspNonce>
+/* お問い合わせフォーム: プレビューでは入力・送信を無効化 */
+.inquiry-section form,
+.inquiry-section input,
+.inquiry-section textarea,
+.inquiry-section select,
+.inquiry-section button[type="submit"] {
+    pointer-events: none !important;
+}
+/* CAPTCHAウィジェットを非表示 */
+.captcha-container,
+.g-recaptcha,
+.grecaptcha-badge,
+.cf-turnstile,
+#recaptcha-container,
+iframe[src*="recaptcha"],
+iframe[src*="turnstile"] {
+    display: none !important;
+}
+</style>
+@endpush
+
 @push('scripts')
 <script @cspNonce>
 /**
