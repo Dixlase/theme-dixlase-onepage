@@ -139,6 +139,8 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
 
     /**
      * 指定メニューIDからメニューアイテムを配列として取得
+     *
+     * @return array<int, array{label: string, url: string, target: string, source_type: string|null, icon_class: string|null, css_class: string|null, children: array}>
      */
     protected function getMenuItems(?\App\Contracts\PluginIntegration\MenuProviderInterface $menuProvider, int|string|null $menuId): array
     {
@@ -152,12 +154,25 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             return [];
         }
 
-        return array_map(fn ($item) => [
+        return array_map(fn ($item) => $this->mapMenuItem($item), $menuDTO->items);
+    }
+
+    /**
+     * MenuItemDTOをビュー用配列に再帰的に変換
+     *
+     * @return array{label: string, url: string, target: string, source_type: string|null, icon_class: string|null, css_class: string|null, children: array}
+     */
+    protected function mapMenuItem(\App\DTO\PluginIntegration\MenuItemDTO $item): array
+    {
+        return [
             'label' => $item->label,
             'url' => $item->url,
             'target' => $item->target,
-            'children' => [],
-        ], $menuDTO->items);
+            'source_type' => $item->sourceType,
+            'icon_class' => $item->iconClass,
+            'css_class' => $item->cssClass,
+            'children' => array_map(fn ($child) => $this->mapMenuItem($child), $item->children),
+        ];
     }
 
     /**
