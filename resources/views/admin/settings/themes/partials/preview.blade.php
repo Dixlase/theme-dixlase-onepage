@@ -12,12 +12,11 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="dark"] { background: #030712 !important; }
 #preview-inner[data-preview-theme="dark"] .pv-header { background: rgba(17,24,39,0.8) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-app-name { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-hero { background: #030712 !important; }
-#preview-inner[data-preview-theme="dark"] .pv-glow-1 { background: rgba(107,114,128,0.3) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-glow-2 { background: rgba(156,163,175,0.3) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-title span { background-image: linear-gradient(to right, #9ca3af, #9ca3af, #fff) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+#preview-inner[data-preview-theme="dark"] .pv-hero { background: #111827 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-title { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-subtitle { color: #d1d5db !important; }
-#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { border-color: #374151 !important; color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { border-color: #4b5563 !important; color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-hero-overlay { background: rgba(17,24,39,0.7) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-edit-input { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-nav-item { color: #9ca3af !important; }
 #preview-inner[data-preview-theme="dark"] .pv-contact { background: #111827 !important; border-color: #1f2937 !important; }
@@ -34,11 +33,10 @@ Theme settings preview - Scaled container rendering of header + hero + footer
 #preview-inner[data-preview-theme="light"] .pv-header { background: rgba(255,255,255,0.9) !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important; }
 #preview-inner[data-preview-theme="light"] .pv-app-name { color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-hero { background: #f3f4f6 !important; }
-#preview-inner[data-preview-theme="light"] .pv-glow-1 { background: rgba(216,180,254,0.3) !important; }
-#preview-inner[data-preview-theme="light"] .pv-glow-2 { background: rgba(147,197,253,0.3) !important; }
-#preview-inner[data-preview-theme="light"] .pv-title span { background-image: linear-gradient(to right, #374151, #374151, #111827) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+#preview-inner[data-preview-theme="light"] .pv-title { color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-subtitle { color: #4b5563 !important; }
-#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db !important; color: #bfbfbf !important; }
+#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db !important; color: #374151 !important; }
+#preview-inner[data-preview-theme="light"] .pv-hero-overlay { background: rgba(255,255,255,0.6) !important; }
 #preview-inner[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05) !important; color: #111827 !important; }
 #preview-inner[data-preview-theme="light"] .pv-nav-item { color: #6b7280 !important; }
 #preview-inner[data-preview-theme="light"] .pv-contact { background: #f9fafb !important; border-color: #e5e7eb !important; }
@@ -127,30 +125,25 @@ Theme settings preview - Scaled container rendering of header + hero + footer
             {{-- ===== HERO PREVIEW ===== --}}
             <section class="pv-hero relative min-h-[600px] flex flex-col justify-center overflow-hidden cursor-pointer"
                 @click="openMediaSelector('hero_background_image_id_selector', 'hero_background_image_id', 'hero_background_image_id_preview', false, 'hero')">
-                {{-- Background edit indicator --}}
+                {{-- 背景画像編集インジケーター --}}
                 <div class="pv-edit-badge absolute top-4 right-4 z-20">
                     <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-image mr-1"></i>{{ __('themes::admin.settings.hero.select_background_image') }}</span>
                 </div>
-                {{-- Background glow --}}
-                <div class="absolute inset-0 overflow-hidden z-0">
-                    <div class="pv-glow-1 absolute top-1/4 left-10 w-72 h-72 rounded-full filter blur-3xl"></div>
-                    <div class="pv-glow-2 absolute bottom-2/4 right-20 w-96 h-96 rounded-full filter blur-3xl"></div>
-                </div>
 
-                {{-- Hero background image --}}
+                {{-- 背景画像 --}}
                 <template x-if="heroBgPreviewUrl">
                     <div class="absolute inset-0 z-0">
-                        <img :src="heroBgPreviewUrl" alt="" class="w-full h-full object-cover opacity-40">
+                        <img :src="heroBgPreviewUrl" alt="" class="w-full h-full object-cover">
+                        <div class="pv-hero-overlay absolute inset-0"></div>
                     </div>
                 </template>
 
-                {{-- Content --}}
+                {{-- コンテンツ --}}
                 <div class="container mx-auto px-8 py-20 relative z-10">
-                    <div class="lg:w-1/2">
+                    <div class="max-w-2xl mx-auto text-center">
                         {{-- Main Title --}}
                         <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
-                            <h1 class="pv-title text-5xl lg:text-6xl font-bold leading-tight" x-show="editing !== 'heroMainTitle'">
-                                <span x-text="heroMainTitle"></span>
+                            <h1 class="pv-title text-5xl lg:text-6xl font-bold leading-tight" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
                             </h1>
                             <input
                                 x-show="editing === 'heroMainTitle'"
@@ -188,7 +181,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         <div class="flex flex-col sm:flex-row gap-4">
                             {{-- Primary button --}}
                             <div class="relative group cursor-pointer" @click.stop="startEdit('heroButton')">
-                                <div class="inline-flex items-center justify-center gap-2 h-11 rounded-xl bg-purple-600 text-white px-8 py-6" x-show="editing !== 'heroButton'">
+                                <div class="inline-flex items-center justify-center gap-2 h-11 rounded-xl text-white px-8 py-6" x-show="editing !== 'heroButton'" :style="'background-color: ' + primaryColor">
                                     <span x-text="heroButtonText"></span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 h-5 w-5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                 </div>

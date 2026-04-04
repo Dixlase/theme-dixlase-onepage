@@ -77,6 +77,20 @@ return [
             'sns_discord' => 'Discord URL',
         ],
 
+        // Primary Color
+        'primary_color' => [
+            'title' => 'Primary Color',
+            'help' => 'Select the accent color used for buttons and links.',
+            'blue' => 'Blue',
+            'purple' => 'Purple',
+            'green' => 'Green',
+            'red' => 'Red',
+            'orange' => 'Orange',
+            'pink' => 'Pink',
+            'indigo' => 'Indigo',
+            'teal' => 'Teal',
+        ],
+
         // Appearance Section
         'appearance' => [
             'title' => 'Appearance Mode',

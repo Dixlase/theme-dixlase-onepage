@@ -34,6 +34,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <input type="hidden" name="hero_button_secondary_link" :value="heroButtonSecondaryLink">
         <input type="hidden" name="footer_copyright" :value="footerCopyright">
         <input type="hidden" name="footer_menu_id" :value="footerMenuId">
+        <input type="hidden" name="primary_color" :value="primaryColor">
 
         {{-- Preview Area (center content) --}}
         <div class="mt-2">
@@ -62,6 +63,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 <script @cspNonce>
 function themeSettingsEditor() {
     return {
+        // プライマリカラー
+        primaryColor: @json(old('primary_color', $settings->primary_color ?? '#3b82f6')),
+
         // Hero settings
         heroMainTitle: @json(old('hero_main_title', $settings->hero_main_title ?? '')),
         heroSubTitle: @json(old('hero_sub_title', $settings->hero_sub_title ?? '')),

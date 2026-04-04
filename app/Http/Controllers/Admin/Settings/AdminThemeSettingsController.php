@@ -61,6 +61,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'header_menu_id',
             'footer_menu_id',
             'show_inquiry_form',
+            'primary_color',
         ]);
 
         // デフォルト値を設定
@@ -90,6 +91,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'header_menu_id' => null,
             'footer_menu_id' => null,
             'show_inquiry_form' => '0',
+            'primary_color' => '#3b82f6',
         ];
 
         // デフォルト値とマージ
