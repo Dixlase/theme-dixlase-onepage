@@ -140,8 +140,14 @@ function themeSettingsEditor() {
                 }
             });
 
-            // Initialize preview container (scaling, polling, device toggle)
+            // Initialize preview container (scaling, device toggle)
             this.initPreviewContainer();
+            this.$watch('freeWidth', () => {
+                if (this.previewDevice === 'free') {
+                    this.previewDeviceWidth = this.freeWidth;
+                    this.$nextTick(() => this.updatePreviewScale());
+                }
+            });
         },
 
         startEdit(field) {
