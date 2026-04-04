@@ -59,6 +59,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     />
 @endsection
 
+@push('styles')
+<style @cspNonce>
+#admin-main-content { min-width: 0; }
+</style>
+@endpush
+
 @push('scripts')
 <script @cspNonce>
 function themeSettingsEditor() {
