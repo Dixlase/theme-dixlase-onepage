@@ -45,16 +45,17 @@
     {{-- Scripts --}}
     @if(app()->environment('local') && file_exists(public_path('hot')))
         @vite([
-            'resources/src/common/js/app.js',
-            'themes/DixlaseOnePage/resources/src/js/app.js'
+            'themes/DixlaseOnePage/resources/src/js/app.js',
+            'resources/src/common/js/app.js'
         ])
     @else
-        {{-- コア共通JS（Alpine.js等）を読み込み --}}
-        {!! load_core_assets(['js/app.js'], 'common') !!}
-        {{-- テーマJS + x-cloak --}}
+        {{-- テーマJS（Alpine.start()前にappearanceTheme等を定義する必要がある） --}}
         {!! load_front_assets([], ['js/app.js']) !!}
+        {{-- コア共通JS（Alpine.js + Alpine.start()） --}}
+        {!! load_core_assets(['js/app.js'], 'common') !!}
     @endif
-    
+
+    {{-- プラグインJS（alpine:initイベントで自動登録） --}}
     @stack('scripts')
 
 </body>
