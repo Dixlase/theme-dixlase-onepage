@@ -77,6 +77,20 @@ return [
             'sns_discord' => 'Discord URL',
         ],
 
+        // Primary Color
+        'primary_color' => [
+            'title' => 'プライマリカラー',
+            'help' => 'ボタンやリンクに使用するアクセントカラーを選択します。',
+            'blue' => 'ブルー',
+            'purple' => 'パープル',
+            'green' => 'グリーン',
+            'red' => 'レッド',
+            'orange' => 'オレンジ',
+            'pink' => 'ピンク',
+            'indigo' => 'インディゴ',
+            'teal' => 'ティール',
+        ],
+
         // Appearance Section
         'appearance' => [
             'title' => '外観モード',

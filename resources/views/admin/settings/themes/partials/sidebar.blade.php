@@ -23,6 +23,35 @@ Theme settings right sidebar - non-visual settings
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Primary Color ===== --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.primary_color.title')" icon="fas fa-swatchbook">
+        <div class="grid grid-cols-4 gap-2">
+            @php
+                $colorOptions = [
+                    '#3b82f6' => __('themes::admin.settings.primary_color.blue'),
+                    '#8b5cf6' => __('themes::admin.settings.primary_color.purple'),
+                    '#10b981' => __('themes::admin.settings.primary_color.green'),
+                    '#ef4444' => __('themes::admin.settings.primary_color.red'),
+                    '#f97316' => __('themes::admin.settings.primary_color.orange'),
+                    '#ec4899' => __('themes::admin.settings.primary_color.pink'),
+                    '#6366f1' => __('themes::admin.settings.primary_color.indigo'),
+                    '#14b8a6' => __('themes::admin.settings.primary_color.teal'),
+                ];
+            @endphp
+            @foreach($colorOptions as $hex => $label)
+                <button type="button"
+                    @click="primaryColor = '{{ $hex }}'"
+                    :class="primaryColor === '{{ $hex }}' ? 'ring-2 ring-offset-2 ring-gray-900 dark:ring-white dark:ring-offset-gray-800 scale-110' : 'hover:scale-105'"
+                    class="flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-150"
+                    :title="'{{ $label }}'">
+                    <span class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm" style="background-color: {{ $hex }}"></span>
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">{{ $label }}</span>
+                </button>
+            @endforeach
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.primary_color.help') }}</p>
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Favicon ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.header.favicon')" icon="fas fa-globe">
         <x-media.picker
