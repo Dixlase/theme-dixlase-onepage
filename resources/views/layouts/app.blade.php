@@ -49,6 +49,9 @@
             'themes/DixlaseOnePage/resources/src/js/app.js'
         ])
     @else
+        {{-- コア共通JS（Alpine.js等）を読み込み --}}
+        {!! load_core_assets(['js/app.js'], 'common') !!}
+        {{-- テーマJS + x-cloak --}}
         {!! load_front_assets([], ['js/app.js']) !!}
     @endif
     
