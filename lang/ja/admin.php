@@ -89,6 +89,8 @@ return [
             'pink' => 'ピンク',
             'indigo' => 'インディゴ',
             'teal' => 'ティール',
+            'black' => 'ブラック',
+            'gray' => 'グレー',
         ],
 
         // Appearance Section

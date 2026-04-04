@@ -89,6 +89,8 @@ return [
             'pink' => 'Pink',
             'indigo' => 'Indigo',
             'teal' => 'Teal',
+            'black' => 'Black',
+            'gray' => 'Gray',
         ],
 
         // Appearance Section
