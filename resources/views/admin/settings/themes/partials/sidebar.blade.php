@@ -25,7 +25,7 @@ Theme settings right sidebar - non-visual settings
 
     {{-- ===== Primary Color ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.primary_color.title')" icon="fas fa-swatchbook">
-        <div class="grid grid-cols-4 gap-2">
+        <div class="grid grid-cols-4 gap-1">
             @php
                 $colorOptions = [
                     '#3b82f6' => __('themes::admin.settings.primary_color.blue'),
@@ -36,13 +36,15 @@ Theme settings right sidebar - non-visual settings
                     '#ec4899' => __('themes::admin.settings.primary_color.pink'),
                     '#6366f1' => __('themes::admin.settings.primary_color.indigo'),
                     '#14b8a6' => __('themes::admin.settings.primary_color.teal'),
+                    '#1f2937' => __('themes::admin.settings.primary_color.black'),
+                    '#6b7280' => __('themes::admin.settings.primary_color.gray'),
                 ];
             @endphp
             @foreach($colorOptions as $hex => $label)
                 <button type="button"
                     @click="primaryColor = '{{ $hex }}'"
                     :class="primaryColor === '{{ $hex }}' ? 'ring-2 ring-offset-2 ring-gray-900 dark:ring-white dark:ring-offset-gray-800 scale-110' : 'hover:scale-105'"
-                    class="flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-150"
+                    class="flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-150 w-full"
                     :title="'{{ $label }}'">
                     <span class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-600 shadow-sm" style="background-color: {{ $hex }}"></span>
                     <span class="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">{{ $label }}</span>
