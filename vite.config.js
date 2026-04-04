@@ -4,8 +4,8 @@ import { resolve } from 'path';
 export default defineConfig({
     build: {
         // ビルド出力先
-        outDir: '../../public/assets/themes/dixlase-one-page',
-        emptyOutDir: true,
+        outDir: '../../public/assets/themes/DixlaseOnePage',
+        emptyOutDir: false,
 
         // ソースマップ
         sourcemap: process.env.NODE_ENV === 'development',
@@ -14,7 +14,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 // SCSS (開発時)
-                'theme-style': resolve(__dirname, 'resources/src/front/scss/style.scss'),
+                'style': resolve(__dirname, 'resources/src/front/scss/style.scss'),
 
                 // JavaScript (Alpine.js含む)
                 'app': resolve(__dirname, 'resources/src/js/app.js'),
