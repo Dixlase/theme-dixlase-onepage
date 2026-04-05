@@ -64,9 +64,12 @@ jobs:
             BASE="${{ steps.target.outputs.base_dir }}"
             THEME_DIR="DixlaseOnePage"
 
-            for SITE in brand docs demo keys; do
+            for SITE in brand docs keys; do
               DEST="$BASE/$SITE/themes/$THEME_DIR"
               echo "=== Deploying theme $THEME_DIR to $SITE (${{ steps.target.outputs.env }}) ==="
+
+              # themes ディレクトリがなければ作成
+              mkdir -p "$BASE/$SITE/themes"
 
               if [ ! -d "$DEST" ]; then
                 git clone --branch main git@github.com:${{ github.repository }}.git "$DEST"
