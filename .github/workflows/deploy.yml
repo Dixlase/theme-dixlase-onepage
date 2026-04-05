@@ -32,9 +32,8 @@ jobs:
 
       - name: Build frontend assets
         run: |
-          mkdir -p ../../public/assets/themes/DixlaseOnePage
           npm ci --no-audit --no-fund
-          NODE_ENV=production npm run build
+          NODE_ENV=production npx vite build --outDir dist
 
       - name: Create shared build directory on server
         uses: appleboy/ssh-action@v1
@@ -48,7 +47,7 @@ jobs:
         uses: burnett01/rsync-deployments@7.0.1
         with:
           switches: -avz --delete
-          path: ../../public/assets/themes/DixlaseOnePage/
+          path: dist/
           remote_path: ${{ steps.target.outputs.base_dir }}/_shared/themes/DixlaseOnePage/
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_user: ${{ secrets.SERVER_USER }}
