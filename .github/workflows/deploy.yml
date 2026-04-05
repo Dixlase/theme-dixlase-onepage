@@ -34,9 +34,7 @@ jobs:
         run: |
           mkdir -p ../../public/assets/themes/DixlaseOnePage
           npm ci --no-audit --no-fund
-          npm run build
-        env:
-          NODE_ENV: production
+          NODE_ENV=production npm run build
 
       - name: Create shared build directory on server
         uses: appleboy/ssh-action@v1
