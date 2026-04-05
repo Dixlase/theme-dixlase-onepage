@@ -23,6 +23,7 @@
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.0",
         "autoprefixer": "^10.4.27",
+        "sass-embedded": "^1.99.0",
         "tailwindcss": "^4.2.2",
         "vite": "^5.0.0"
     },
