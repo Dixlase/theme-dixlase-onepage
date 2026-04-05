@@ -17,11 +17,13 @@
     "author": "exc-D inc. <info@exc-d.com>",
     "license": "GPL-3.0",
     "dependencies": {
-        "alpinejs": "^3.13.0",
-        "@alpinejs/collapse": "^3.13.0"
+        "@alpinejs/collapse": "^3.13.0",
+        "alpinejs": "^3.13.0"
     },
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.0",
+        "autoprefixer": "^10.4.27",
+        "tailwindcss": "^4.2.2",
         "vite": "^5.0.0"
     },
     "engines": {
