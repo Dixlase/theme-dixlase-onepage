@@ -20,6 +20,7 @@
 @if(app()->environment('local') && file_exists(public_path('hot')))
     {{-- Vite開発サーバーが起動している場合 --}}
     @vite([
+        'themes/DixlaseOnePage/resources/src/front/css/tailwind.css',
         'resources/src/front/scss/style.scss',
         'themes/DixlaseOnePage/resources/src/front/scss/style.scss',
         'themes/DixlaseOnePage/resources/assets/js/app.js'
@@ -28,7 +29,7 @@
     {{-- 本番/ステージング環境: シンボリックリンク経由でアセットを読み込む --}}
     {!! load_front_assets(
         ['scss/style.scss'],
-        ['css/variables.css', 'css/style.css']
+        ['css/tailwind.css', 'css/variables.css', 'css/style.css']
     ) !!}
 @endif
 

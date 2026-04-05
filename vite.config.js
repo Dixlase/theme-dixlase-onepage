@@ -13,6 +13,9 @@ export default defineConfig({
         // ロールアップオプション
         rollupOptions: {
             input: {
+                // Tailwind CSS v4
+                'tailwind': resolve(__dirname, 'resources/src/front/css/tailwind.css'),
+
                 // SCSS (開発時)
                 'style': resolve(__dirname, 'resources/src/front/scss/style.scss'),
 

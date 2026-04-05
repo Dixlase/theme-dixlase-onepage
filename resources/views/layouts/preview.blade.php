@@ -44,13 +44,14 @@ Alpine.jsディレクティブ（x-cloak, x-show等）は不活性のまま残�
     {{-- CSSのみ読み込み（JSバンドルは一切含めない） --}}
     @if(app()->environment('local') && file_exists(public_path('hot')))
         @vite([
+            'themes/DixlaseOnePage/resources/src/front/css/tailwind.css',
             'resources/src/front/scss/style.scss',
             'themes/DixlaseOnePage/resources/src/front/scss/style.scss'
         ])
     @else
         {!! load_front_assets(
             ['scss/style.scss'],
-            ['css/variables.css', 'css/style.css']
+            ['css/tailwind.css', 'css/variables.css', 'css/style.css']
         ) !!}
     @endif
 
