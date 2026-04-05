@@ -23,7 +23,6 @@ yarn-error.log
 /.zed
 
 /resources/assets
-package-lock.json
 
 # Claude Code / AI assistant configs
 CLAUDE.md
