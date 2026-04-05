@@ -85,9 +85,8 @@ jobs:
               mkdir -p "$BASE/$SITE/public/assets/themes/$THEME_DIR"
               rsync -a "$BASE/_shared/themes/$THEME_DIR/" "$BASE/$SITE/public/assets/themes/$THEME_DIR/"
 
-              # キャッシュクリア（コンテナ内で実行）
+              # ビューキャッシュクリア（コンテナ内で実行）
               docker exec compose-php-1 php /var/www/apps/$SITE/artisan view:clear
-              docker exec compose-php-1 php /var/www/apps/$SITE/artisan cache:clear
             done
 
             echo "=== Theme deploy complete ==="
