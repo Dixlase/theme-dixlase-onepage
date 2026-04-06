@@ -51,7 +51,7 @@ Alpine.jsディレクティブ（x-cloak, x-show等）は不活性のまま残�
     @else
         {!! load_front_assets(
             ['scss/style.scss'],
-            ['css/tailwind.css', 'css/variables.css', 'css/style.css']
+            ['css/tailwind.css', 'scss/style.scss']
         ) !!}
     @endif
 

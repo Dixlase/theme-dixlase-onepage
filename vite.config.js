@@ -20,7 +20,7 @@ export default defineConfig({
                 'style': resolve(__dirname, 'resources/src/front/scss/style.scss'),
 
                 // JavaScript (Alpine.js含む)
-                'app': resolve(__dirname, 'resources/src/js/app.js'),
+                'app': resolve(__dirname, 'resources/src/front/js/app.js'),
             },
             output: {
                 // 出力ファイル名のパターン
@@ -45,8 +45,8 @@ export default defineConfig({
             },
         },
 
-        // マニフェストファイル生成
-        manifest: true,
+        // マニフェストファイル生成（AssetHelperが manifest.json を参照するため明示指定）
+        manifest: 'manifest.json',
 
         // 最小化
         minify: process.env.NODE_ENV === 'production' ? 'terser' : false,
