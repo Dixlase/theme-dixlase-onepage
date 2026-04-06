@@ -36,7 +36,7 @@
 @endif
 
 {{-- Contact Form Section --}}
-@if(function_exists('dls_inquiry_enabled') && dls_inquiry_enabled())
+@if(($themeSettings->show_inquiry_form ?? '0') === '1' && function_exists('dls_inquiry_enabled') && dls_inquiry_enabled())
 <section class="inquiry-section py-16 bg-gray-100 dark:bg-gray-800">
     <div class="container mx-auto px-4">
         <div class="max-w-2xl mx-auto">
