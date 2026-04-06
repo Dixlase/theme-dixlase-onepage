@@ -45,7 +45,7 @@
     {{-- Scripts --}}
     @if(app()->environment('local') && file_exists(public_path('hot')))
         @vite([
-            'themes/DixlaseOnePage/resources/src/js/app.js',
+            'themes/DixlaseOnePage/resources/src/front/js/app.js',
             'resources/src/common/js/app.js'
         ])
     @else
