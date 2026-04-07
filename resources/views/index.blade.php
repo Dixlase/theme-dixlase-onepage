@@ -47,7 +47,17 @@
             @if(!empty($inquirySettings->form_description))
                 <p class="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-lg mx-auto">{{ $inquirySettings->form_description }}</p>
             @endif
-            {!! dls_inquiry_form() !!}
+            @if($inquirySettings->use_single_page ?? true)
+                {!! dls_inquiry_form() !!}
+            @else
+                <div class="text-center">
+                    <a href="{{ url('/' . ($inquirySettings->inquiry_url_slug ?? 'inquiry')) }}"
+                        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        {{ __('dixlase-inquiry::front.form.go_to_form') }}
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 </section>
