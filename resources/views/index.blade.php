@@ -45,7 +45,7 @@
                 <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-3">{{ $inquirySettings->form_heading }}</h2>
             @endif
             @if(!empty($inquirySettings->form_description))
-                <p class="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-lg mx-auto">{{ $inquirySettings->form_description }}</p>
+                <p class="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-lg mx-auto">{!! nl2br(e($inquirySettings->form_description)) !!}</p>
             @endif
             @if($inquirySettings->use_single_page ?? true)
                 {!! dls_inquiry_form() !!}

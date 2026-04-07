@@ -243,8 +243,17 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                         {{ $inquiryPreview?->title ?? __('themes::admin.settings.plugins.inquiry.title') }}
                     </h2>
                     @if($inquiryPreview?->description)
-                        <p class="pv-contact-desc mb-8 max-w-lg mx-auto">{{ $inquiryPreview->description }}</p>
+                        <p class="pv-contact-desc mb-8 max-w-lg mx-auto">{!! nl2br(e($inquiryPreview->description)) !!}</p>
                     @endif
+                    @if(!($inquiryPreview?->meta['use_single_page'] ?? true))
+                        {{-- 別ページモード: リンクボタンのみ --}}
+                        <div class="text-center mt-4">
+                            <span class="inline-flex items-center h-10 px-6 bg-blue-600 rounded-md text-white text-sm font-medium">
+                                <i class="fas fa-paper-plane mr-1"></i>
+                                {{ __('dixlase-inquiry::front.form.go_to_form') }}
+                            </span>
+                        </div>
+                    @else
                     <div class="max-w-md mx-auto space-y-3 text-left">
                         @if($inquiryPreview?->isForm())
                             @php
@@ -303,6 +312,7 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                             </span>
                         </div>
                     </div>
+                    @endif
                 </div>
             </section>
 
