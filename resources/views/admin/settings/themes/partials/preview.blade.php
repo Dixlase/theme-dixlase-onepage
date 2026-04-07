@@ -239,10 +239,10 @@ Theme settings preview - Scaled container rendering of header + hero + footer
                     <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-pencil-alt mr-1"></i>{{ __('themes::admin.settings.inquiry_form.edit_badge') }}</span>
                 </div>
                 <div class="container mx-auto px-8 text-center">
-                    <h2 class="pv-contact-title text-3xl font-bold mb-3">
-                        {{ $inquiryPreview?->title ?? __('themes::admin.settings.plugins.inquiry.title') }}
-                    </h2>
-                    @if($inquiryPreview?->description)
+                    @if(!empty($inquiryPreview?->title))
+                        <h2 class="pv-contact-title text-3xl font-bold mb-3">{{ $inquiryPreview->title }}</h2>
+                    @endif
+                    @if(!empty($inquiryPreview?->description))
                         <p class="pv-contact-desc mb-8 max-w-lg mx-auto">{!! nl2br(e($inquiryPreview->description)) !!}</p>
                     @endif
                     @if(!($inquiryPreview?->meta['use_single_page'] ?? true))
