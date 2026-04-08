@@ -36,31 +36,8 @@
 @endif
 
 {{-- Contact Form Section --}}
-@if(($themeSettings->show_inquiry_form ?? '0') === '1' && function_exists('dls_inquiry_enabled') && dls_inquiry_enabled())
-<section class="inquiry-section py-16 bg-gray-100 dark:bg-gray-800">
-    <div class="container mx-auto px-4">
-        <div class="max-w-2xl mx-auto">
-            @php $inquirySettings = function_exists('dls_inquiry_settings') ? dls_inquiry_settings() : null; @endphp
-            @if(!empty($inquirySettings->form_heading))
-                <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-3">{{ $inquirySettings->form_heading }}</h2>
-            @endif
-            @if(!empty($inquirySettings->form_description))
-                <p class="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-lg mx-auto">{!! nl2br(e($inquirySettings->form_description)) !!}</p>
-            @endif
-            @if($inquirySettings->use_single_page ?? true)
-                {!! dls_inquiry_form() !!}
-            @else
-                <div class="text-center">
-                    <a href="{{ url('/' . ($inquirySettings->inquiry_url_slug ?? 'inquiry')) }}"
-                        class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200">
-                        <i class="fas fa-paper-plane mr-2"></i>
-                        {{ __('dixlase-inquiry::front.form.go_to_form') }}
-                    </a>
-                </div>
-            @endif
-        </div>
-    </div>
-</section>
+@if(($themeSettings->show_inquiry_form ?? '0') === '1' && function_exists('dls_inquiry_section'))
+    {!! dls_inquiry_section() !!}
 @endif
 
 {{-- 
