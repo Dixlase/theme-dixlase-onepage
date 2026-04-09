@@ -140,6 +140,7 @@ return [
                 'title' => 'Contact Form',
                 'enable' => 'Display contact form above footer',
                 'help' => 'Display the inquiry form section above the footer.',
+                'plugin_required' => 'Install and enable the DixlaseInquiry plugin to use the contact form.',
             ],
         ],
 

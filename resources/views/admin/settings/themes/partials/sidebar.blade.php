@@ -135,6 +135,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </label>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
     </x-admin.theme-preview-sidebar-section>
+    @else
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.inquiry.title')" icon="fas fa-envelope">
+        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.plugins.inquiry.plugin_required') }}</p>
+    </x-admin.theme-preview-sidebar-section>
     @endif
 
     {{-- ===== Footer Menu ===== --}}
