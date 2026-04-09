@@ -245,6 +245,16 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             $themeSettings->heroBackgroundPath = null;
         }
 
+        // ヒーロー背景動画
+        if (! empty($themeSettings->hero_background_video_id)) {
+            $heroVideo = \App\Models\Media::find($themeSettings->hero_background_video_id);
+            $themeSettings->heroBackgroundVideo = $heroVideo;
+            $themeSettings->heroBackgroundVideoPath = $heroVideo ? $mediaPath.'/'.$heroVideo->path : null;
+        } else {
+            $themeSettings->heroBackgroundVideo = null;
+            $themeSettings->heroBackgroundVideoPath = null;
+        }
+
         // SNSリンクのURL生成
         $themeSettings->snsLinks = $this->generateSnsLinks($themeSettings);
     }

@@ -141,6 +141,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-image mr-1"></i>{{ __('themes::admin.settings.hero.select_background_image') }}</span>
                 </div>
 
+                {{-- 動画設定インジケーター --}}
+                <template x-if="heroVideoPreviewUrl">
+                    <div class="absolute top-4 left-4 z-20">
+                        <span class="bg-purple-600 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-video mr-1"></i>{{ __('themes::admin.settings.hero.background_video') }}</span>
+                    </div>
+                </template>
+
                 {{-- 背景画像 --}}
                 <template x-if="heroBgPreviewUrl">
                     <div class="absolute inset-0 z-0">

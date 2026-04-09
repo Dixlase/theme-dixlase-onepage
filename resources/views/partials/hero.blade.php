@@ -27,13 +27,35 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $heroButtonSecondaryText = $themeSettings->hero_button_secondary_text ?? null;
     $heroButtonSecondaryLink = $themeSettings->hero_button_secondary_link ?? null;
     $heroBackgroundPath = $themeSettings->heroBackgroundPath ?? null;
+    $heroVideoPath = $themeSettings->heroBackgroundVideoPath ?? null;
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
 @endphp
 
-<section class="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gray-100 dark:bg-gray-900">
-    {{-- 背景画像 --}}
+<section class="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gray-100 dark:bg-gray-900"
+    @if($heroVideoPath)
+        x-data="{ videoPlaying: false }"
+    @endif
+>
+    {{-- 背景動画（設定時のみ） --}}
+    @if($heroVideoPath)
+        <div class="absolute inset-0 z-0" x-show="videoPlaying" x-cloak>
+            <video
+                class="w-full h-full object-cover"
+                autoplay muted loop playsinline
+                x-ref="heroVideo"
+                x-init="$refs.heroVideo.play().then(() => { videoPlaying = true }).catch(() => {})"
+            >
+                <source src="{{ asset('storage/' . $heroVideoPath) }}" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-white/60 dark:bg-gray-900/70"></div>
+        </div>
+    @endif
+
+    {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}
     @if($heroBackgroundPath)
-        <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 z-0"
+            @if($heroVideoPath) x-show="!videoPlaying" @endif
+        >
             <img src="{{ asset('storage/' . $heroBackgroundPath) }}" alt="" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-white/60 dark:bg-gray-900/70"></div>
         </div>

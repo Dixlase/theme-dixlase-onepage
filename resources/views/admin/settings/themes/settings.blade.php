@@ -86,6 +86,7 @@ function themeSettingsEditor() {
         // Media preview URLs
         headerLogoPreviewUrl: @json($headerLogo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $headerLogo->path) : null),
         heroBgPreviewUrl: @json($heroBackgroundImage ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroBackgroundImage->path) : null),
+        heroVideoPreviewUrl: @json($heroBackgroundVideo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroBackgroundVideo->path) : null),
 
         // Device preview (from previewContainerMixin)
         ...previewContainerMixin(),
@@ -127,11 +128,13 @@ function themeSettingsEditor() {
                     self.headerLogoPreviewUrl = url || null;
                 } else if (inputId === 'hero_background_image_id') {
                     self.heroBgPreviewUrl = url || null;
+                } else if (inputId === 'hero_background_video_id') {
+                    self.heroVideoPreviewUrl = url || null;
                 }
             });
 
             // Update preview URLs when media is removed
-            ['header_logo_id', 'hero_background_image_id'].forEach(name => {
+            ['header_logo_id', 'hero_background_image_id', 'hero_background_video_id'].forEach(name => {
                 const input = document.getElementById(name);
                 if (input) {
                     input.addEventListener('change', () => {
@@ -140,6 +143,8 @@ function themeSettingsEditor() {
                                 self.headerLogoPreviewUrl = null;
                             } else if (name === 'hero_background_image_id') {
                                 self.heroBgPreviewUrl = null;
+                            } else if (name === 'hero_background_video_id') {
+                                self.heroVideoPreviewUrl = null;
                             }
                         }
                     });

@@ -123,6 +123,21 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         />
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Hero Background Video ===== --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.background_video')" icon="fas fa-video">
+        <x-media.picker
+            name="hero_background_video_id"
+            :value="$settings->hero_background_video_id ?? null"
+            :media="$heroBackgroundVideo ?? null"
+            :help="__('themes::admin.settings.hero.background_video_help')"
+            :error="$errors->first('hero_background_video_id')"
+            aspectRatio="hero"
+            :buttonText="__('themes::admin.settings.hero.select_background_video')"
+            :confirmUploadNavigation="true"
+            :allowedTypes="['video/mp4', 'video/webm', 'video/quicktime']"
+        />
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Contact Form (Plugin: DixlaseInquiry) ===== --}}
     @if($inquiryPluginEnabled)
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.inquiry.title')" icon="fas fa-envelope">
