@@ -25,6 +25,8 @@
 @source "../../../resources/**/*.blade.php";
 @source "../../../resources/**/*.js";
 @source "../../../resources/**/*.vue";
+@source "../../../../../../resources/views/components/**/*.blade.php";
+@source "../../../../../../resources/src/components/**/*.js";
 @source "../../../../../plugins/*/resources/views/front/**/*.blade.php";
 
 /*
