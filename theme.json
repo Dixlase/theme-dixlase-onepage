@@ -30,9 +30,9 @@
         "php": ">=8.2"
     },
     "assets": {
-        "common": ["js/app.js"],
+        "common": [],
         "admin": [],
-        "front": ["front/scss/style.scss"]
+        "front": ["front/js/app.js", "front/scss/style.scss"]
     },
     "supports": {
         "dark_mode": true,
