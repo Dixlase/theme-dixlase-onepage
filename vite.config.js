@@ -3,8 +3,8 @@ import { resolve } from 'path';
 
 export default defineConfig({
     build: {
-        // ビルド出力先
-        outDir: '../../public/assets/themes/DixlaseOnePage',
+        // ビルド出力先（コア側がシンボリックリンクで public/assets/themes/DixlaseOnePage として公開する）
+        outDir: resolve(__dirname, 'resources/assets'),
         emptyOutDir: false,
 
         // ソースマップ
