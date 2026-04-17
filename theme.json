@@ -1,5 +1,7 @@
 {
     "name": "Dixlase OnePage",
+    "package": "DixlaseOnePage",
+    "repository": "Dixlase/theme-dixlase-onepage",
     "package_name": "dixlase/dixlase-one-page",
     "slug": "dixlase-one-page",
     "version": "1.0.0",

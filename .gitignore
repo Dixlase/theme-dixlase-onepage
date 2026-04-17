@@ -22,8 +22,6 @@ yarn-error.log
 /.vscode
 /.zed
 
-/resources/assets
-
 # Claude Code / AI assistant configs
 CLAUDE.md
 /.claude/

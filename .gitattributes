@@ -1,0 +1,3 @@
+# CIが自動ビルドするアセットはGitHubのdiff表示で折りたたむ
+resources/assets/** linguist-generated=true
+resources/assets/** -diff
