@@ -5,7 +5,8 @@ export default defineConfig({
     build: {
         // ビルド出力先（コア側がシンボリックリンクで public/assets/themes/DixlaseOnePage として公開する）
         outDir: resolve(__dirname, 'resources/assets'),
-        emptyOutDir: false,
+        // ビルドごとに出力先をクリアして残骸ファイルを排除する
+        emptyOutDir: true,
 
         // ソースマップ
         sourcemap: process.env.NODE_ENV === 'development',
