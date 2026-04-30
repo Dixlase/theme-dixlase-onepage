@@ -36,7 +36,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 </section>
 
 {{-- Contact Form Section --}}
-@if(function_exists('dls_inquiry_section'))
+@if(($themeSettings->show_inquiry_form ?? '0') === '1' && function_exists('dls_inquiry_section'))
     {!! dls_inquiry_section() !!}
 @endif
 @endsection
