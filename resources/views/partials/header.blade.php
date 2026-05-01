@@ -128,15 +128,43 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         @php
                             $childCount = count($item['children']);
                             $isMenuGroup = ($item['source_type'] ?? '') === 'menu_group';
-                            $colClass = $childCount <= 4 ? 'sm:grid-cols-1' : ($childCount <= 8 ? 'sm:grid-cols-2' : 'sm:grid-cols-3');
+                            $columnsClass = $childCount <= 4 ? 'sm:columns-1' : ($childCount <= 8 ? 'sm:columns-2' : 'sm:columns-3');
                             $minWidthClass = $childCount <= 4 ? 'min-w-[20rem]' : ($childCount <= 8 ? 'min-w-[36rem]' : 'min-w-[52rem]');
                         @endphp
                         <div
                             class="relative"
-                            x-data="{ open: false, timer: null }"
+                            x-data="{
+                                open: false,
+                                timer: null,
+                                init() {
+                                    this.$watch('open', (val) => {
+                                        if (val) this.$nextTick(() => this.fitPanel());
+                                    });
+                                },
+                                fitPanel() {
+                                    const panel = this.$refs.panel;
+                                    if (!panel) return;
+                                    // 既定: 右揃え
+                                    panel.style.right = '0';
+                                    panel.style.left = 'auto';
+                                    const rect = panel.getBoundingClientRect();
+                                    const vw = window.innerWidth;
+                                    const m = 8;
+                                    if (rect.left < m) {
+                                        // 左にはみ出している → 右オフセットを負にして右へずらす
+                                        const shift = m - rect.left;
+                                        panel.style.right = `${-shift}px`;
+                                    } else if (rect.right > vw - m) {
+                                        // 右にはみ出している → 右オフセットを正にして左へずらす
+                                        const shift = rect.right - (vw - m);
+                                        panel.style.right = `${shift}px`;
+                                    }
+                                }
+                            }"
                             @mouseenter="clearTimeout(timer); open = true"
                             @mouseleave="timer = setTimeout(() => open = false, 150)"
                             @keydown.escape.prevent="open = false"
+                            @resize.window.debounce.150ms="if (open) fitPanel()"
                         >
                             @if($isMenuGroup)
                                 {{-- メニューグループ: URLなし、ボタンとして表示 --}}
@@ -172,6 +200,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
                             {{-- メガメニューパネル --}}
                             <div
+                                x-ref="panel"
                                 x-show="open"
                                 x-transition:enter="transition ease-out duration-150"
                                 x-transition:enter-start="opacity-0 translate-y-1"
@@ -179,25 +208,55 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                 x-transition:leave="transition ease-in duration-100"
                                 x-transition:leave-start="opacity-100 translate-y-0"
                                 x-transition:leave-end="opacity-0 translate-y-1"
-                                class="absolute right-0 mt-1 {{ $minWidthClass }} bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black/5 dark:ring-white/10 z-50"
+                                class="absolute right-0 mt-1 {{ $minWidthClass }} max-w-[calc(100vw-1rem)] bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black/5 dark:ring-white/10 z-50"
                                 role="menu"
                                 x-cloak
                                 @click.outside="open = false"
                                 @focusout.debounce.150ms="if (!$el.contains(document.activeElement)) open = false"
                             >
-                                <div class="grid {{ $colClass }} gap-x-6 p-4">
+                                <div class="columns-1 {{ $columnsClass }} gap-x-6 p-4">
                                     @foreach($item['children'] as $child)
-                                        <a
-                                            href="{{ $child['url'] ?? '#' }}"
-                                            target="{{ $child['target'] ?? '_self' }}"
-                                            role="menuitem"
-                                            class="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors"
-                                        >
-                                            @if(!empty($child['icon_class']))
-                                                <i class="{{ $child['icon_class'] }} w-5 h-5 text-gray-400 dark:text-gray-500"></i>
-                                            @endif
-                                            <span>{{ $child['label'] ?? '' }}</span>
-                                        </a>
+                                        @php
+                                            $childIsGroup = ($child['source_type'] ?? '') === 'menu_group';
+                                            $hasGrandchildren = ! empty($child['children']);
+                                        @endphp
+                                        @if($childIsGroup && $hasGrandchildren)
+                                            {{-- カテゴリー列: 2層目メニューグループ + 3層目アイテム --}}
+                                            <div class="break-inside-avoid mb-4 last:mb-0 space-y-1">
+                                                <div class="px-3 pt-1 pb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-gray-700/60">
+                                                    @if(! empty($child['icon_class']))
+                                                        <i class="{{ $child['icon_class'] }} mr-1.5"></i>
+                                                    @endif
+                                                    {{ $child['label'] ?? '' }}
+                                                </div>
+                                                @foreach($child['children'] as $grandchild)
+                                                    <a
+                                                        href="{{ $grandchild['url'] ?? '#' }}"
+                                                        target="{{ $grandchild['target'] ?? '_self' }}"
+                                                        role="menuitem"
+                                                        class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors"
+                                                    >
+                                                        @if(! empty($grandchild['icon_class']))
+                                                            <i class="{{ $grandchild['icon_class'] }} w-5 h-5 text-gray-400 dark:text-gray-500"></i>
+                                                        @endif
+                                                        <span>{{ $grandchild['label'] ?? '' }}</span>
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            {{-- 単独リンク（2層目で子を持たないアイテム） --}}
+                                            <a
+                                                href="{{ $child['url'] ?? '#' }}"
+                                                target="{{ $child['target'] ?? '_self' }}"
+                                                role="menuitem"
+                                                class="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors break-inside-avoid mb-1 last:mb-0"
+                                            >
+                                                @if(! empty($child['icon_class']))
+                                                    <i class="{{ $child['icon_class'] }} w-5 h-5 text-gray-400 dark:text-gray-500"></i>
+                                                @endif
+                                                <span>{{ $child['label'] ?? '' }}</span>
+                                            </a>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>
@@ -344,17 +403,58 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                 </a>
                             @endif
                             @foreach($item['children'] as $child)
-                                <a
-                                    href="{{ $child['url'] ?? '#' }}"
-                                    target="{{ $child['target'] ?? '_self' }}"
-                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-md"
-                                    @click="mobileMenuOpen = false"
-                                >
-                                    @if(!empty($child['icon_class']))
-                                        <i class="{{ $child['icon_class'] }} w-4 h-4"></i>
-                                    @endif
-                                    {{ $child['label'] ?? '' }}
-                                </a>
+                                @php
+                                    $childIsGroup = ($child['source_type'] ?? '') === 'menu_group';
+                                    $hasGrandchildren = ! empty($child['children']);
+                                @endphp
+                                @if($childIsGroup && $hasGrandchildren)
+                                    {{-- 2層目メニューグループ: ネストアコーディオン --}}
+                                    <div x-data="{ subExpanded: false }">
+                                        <button
+                                            @click="subExpanded = !subExpanded"
+                                            class="w-full flex items-center justify-between px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                                            :aria-expanded="subExpanded"
+                                        >
+                                            <span class="flex items-center gap-2">
+                                                @if(! empty($child['icon_class']))
+                                                    <i class="{{ $child['icon_class'] }} w-4 h-4"></i>
+                                                @endif
+                                                {{ $child['label'] ?? '' }}
+                                            </span>
+                                            <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': subExpanded }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </button>
+                                        <div x-show="subExpanded" x-collapse class="pl-4 space-y-1">
+                                            @foreach($child['children'] as $grandchild)
+                                                <a
+                                                    href="{{ $grandchild['url'] ?? '#' }}"
+                                                    target="{{ $grandchild['target'] ?? '_self' }}"
+                                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-md"
+                                                    @click="mobileMenuOpen = false"
+                                                >
+                                                    @if(! empty($grandchild['icon_class']))
+                                                        <i class="{{ $grandchild['icon_class'] }} w-4 h-4"></i>
+                                                    @endif
+                                                    {{ $grandchild['label'] ?? '' }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    {{-- 単独リンク --}}
+                                    <a
+                                        href="{{ $child['url'] ?? '#' }}"
+                                        target="{{ $child['target'] ?? '_self' }}"
+                                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-md"
+                                        @click="mobileMenuOpen = false"
+                                    >
+                                        @if(! empty($child['icon_class']))
+                                            <i class="{{ $child['icon_class'] }} w-4 h-4"></i>
+                                        @endif
+                                        {{ $child['label'] ?? '' }}
+                                    </a>
+                                @endif
                             @endforeach
                         </div>
                     </div>
