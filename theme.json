@@ -1,7 +1,6 @@
 {
     "name": "Dixlase OnePage",
     "package": "DixlaseOnePage",
-    "repository": "Dixlase/theme-dixlase-onepage",
     "package_name": "dixlase/dixlase-one-page",
     "slug": "dixlase-one-page",
     "version": "1.0.0",
@@ -10,16 +9,29 @@
         "en": "Dixlase OnePage theme. Plugin-driven single page / landing page theme."
     },
     "author": "exc-D inc.",
-    "email": "info@exc-d.com",
+    "email": "office@exc-d.com",
     "url": "https://exc-d.com",
-    "license": "GPL-3.0",
-    "license_template": "license-gpl.txt",
+    "license": "GPL-3.0-or-later",
+    "license_template": "license-dual-gpl.txt",
+    "commercial_license": {
+        "available": true,
+        "file": "LICENSE.commercial",
+        "contact": "office@exc-d.com"
+    },
+    "assets": {
+        "common": [],
+        "admin": [],
+        "front": [
+            "front/js/app.js",
+            "front/scss/style.scss"
+        ]
+    },
+    "screenshot": "screenshot.png",
     "namespace": "Themes\\DixlaseOnePage",
     "providers": [
         "Themes\\DixlaseOnePage\\App\\Providers\\DixlaseOnePageServiceProvider"
     ],
     "type": "dixlase-theme",
-    "screenshot": "screenshot.png",
     "tags": [
         "onepage",
         "landing",
@@ -30,11 +42,6 @@
     "requires": {
         "dixlase": ">=1.0.0",
         "php": ">=8.2"
-    },
-    "assets": {
-        "common": [],
-        "admin": [],
-        "front": ["front/js/app.js", "front/scss/style.scss"]
     },
     "supports": {
         "dark_mode": true,
@@ -56,7 +63,9 @@
     "permissions": {
         "database": {
             "own_tables": true,
-            "core_tables_read": ["media"],
+            "core_tables_read": [
+                "media"
+            ],
             "core_tables_write": []
         },
         "storage": {
@@ -81,6 +90,7 @@
             "modify_routes": false
         }
     },
+    "repository": "Dixlase/theme-dixlase-onepage",
     "csp": {
         "external_domains": {
             "fonts": [
