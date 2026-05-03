@@ -5,7 +5,7 @@ Dixlase OnePage テーマ。プラグイン連動型のシングルページ/LP�
 ## 概要
 
 - **バージョン**: 1.0.0
-- **ライセンス**: AGPL-3.0-or-later
+- **ライセンス**: GPL-3.0-or-later (デュアルライセンス)
 - **作者**: exc-D inc.
 - **必要環境**: PHP 8.2+, Dixlase 1.0.0+
 
@@ -44,10 +44,15 @@ npm run build
 
 ## ライセンス
 
-このテーマはAGPL-3.0-or-laterライセンスの下で配布されています。
+Dixlase OnePage は**デュアルライセンス**で配布されています:
 
-詳細は [LICENSE](https://www.gnu.org/licenses/agpl-3.0.html) をご覧ください。
+- **オープンソースライセンス**: [GNU General Public License v3](./LICENSE)
+- **商用ライセンス**: GPL v3 の条件に準拠できない用途のため、別途商用ライセンスをご用意しています — 詳細は [LICENSE.commercial](./LICENSE.commercial)(現在ドラフト)、または **office@exc-d.com** までお問い合わせください。
+
+ファイル全体の構成は [NOTICE.ja](./NOTICE.ja) にまとめています([English](./NOTICE))。
+
+本テーマリポジトリへのコントリビューションは、[Dixlase コピーライトポリシー](https://github.com/Dixlase/dixlase-core/blob/main/COPYRIGHT-POLICY.ja.md) および Dixlase コントリビューターライセンス契約 (CLA) の対象となります。
 
 ---
 
-Copyright (C) 2025 exc-D inc.
+Copyright (C) 2026 exc-D inc.
