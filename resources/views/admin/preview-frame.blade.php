@@ -51,9 +51,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 @endunless
 
 {{-- Front Page Content --}}
-<section class="front-content {{ ($bareContent ?? false) ? '' : 'py-16' }}" id="preview-content-section">
-    <div class="{{ ($bareContent ?? false) ? '' : 'container mx-auto px-4' }}">
-        <div class="{{ ($bareContent ?? false) ? '' : 'max-w-4xl mx-auto' }} prose prose-lg dark:prose-invert" id="preview-content-area">
+{{-- Bare mode keeps the same wrapping classes as the live front so the
+     embedding iframe shows the content centered at the same width. --}}
+<section class="front-content {{ ($bareContent ?? false) ? 'py-0' : 'py-16' }}" id="preview-content-section">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto prose prose-lg dark:prose-invert" id="preview-content-area">
             {!! $initialRenderedContent ?? '' !!}
         </div>
     </div>
@@ -132,15 +134,29 @@ iframe[src*="turnstile"] {
     // Notify parent of content height so embeddings (e.g., theme settings preview)
     // can size the iframe without scroll. Front-page-master uses fixed device
     // heights and simply ignores these messages.
+    // Use '*' as targetOrigin: the parent verifies event.origin on receive,
+    // and matching origins explicitly here is fragile inside sandboxed iframes.
+    var lastReportedHeight = -1;
     function postHeight() {
         if (window.parent === window) return;
-        var h = document.documentElement.scrollHeight || document.body.scrollHeight || 0;
-        window.parent.postMessage({ type: 'dixlase-preview-height', height: h }, window.location.origin);
+        var h = Math.max(
+            document.documentElement.scrollHeight || 0,
+            document.body ? document.body.scrollHeight : 0,
+            document.body ? document.body.offsetHeight : 0
+        );
+        if (h === lastReportedHeight) return;
+        lastReportedHeight = h;
+        window.parent.postMessage({ type: 'dixlase-preview-height', height: h }, '*');
     }
-    if (typeof ResizeObserver !== 'undefined') {
+    if (typeof ResizeObserver !== 'undefined' && document.body) {
         new ResizeObserver(postHeight).observe(document.body);
     }
     window.addEventListener('load', postHeight);
+    document.addEventListener('DOMContentLoaded', postHeight);
+    // Also re-measure after web fonts / images that load late.
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(postHeight);
+    }
     postHeight();
 })();
 </script>

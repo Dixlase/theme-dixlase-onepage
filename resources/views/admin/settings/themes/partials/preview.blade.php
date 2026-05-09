@@ -206,9 +206,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         </div>
 
                         {{-- Buttons --}}
-                        <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="flex flex-col sm:flex-row justify-center gap-4">
                             {{-- Primary button --}}
-                            <div class="relative group cursor-pointer" @click.stop="startEdit('heroButton')">
+                            <div x-show="heroButtonEnabled === '1'" class="relative group cursor-pointer" @click.stop="startEdit('heroButton')">
                                 <div class="inline-flex items-center justify-center gap-2 h-11 rounded-xl text-white px-8 py-6" x-show="editing !== 'heroButton'" :style="'background-color: ' + primaryColor">
                                     <span x-text="heroButtonText"></span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 h-5 w-5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
@@ -224,7 +224,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                             </div>
 
                             {{-- Secondary button --}}
-                            <div class="relative group cursor-pointer" @click.stop="startEdit('heroButtonSecondary')">
+                            <div x-show="heroButtonSecondaryEnabled === '1'" class="relative group cursor-pointer" @click.stop="startEdit('heroButtonSecondary')">
                                 <div class="pv-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border py-6" x-show="editing !== 'heroButtonSecondary'">
                                     <span x-text="heroButtonSecondaryText || '{{ __('themes::admin.settings.hero.button_secondary_text') }}'"></span>
                                 </div>

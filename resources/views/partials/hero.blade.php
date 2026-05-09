@@ -34,8 +34,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $heroSubTitle = $themeSettings->hero_sub_title ?? 'Modern CMS Platform for Building Amazing Websites';
     $heroButtonText = $themeSettings->hero_button_text ?? 'Get Started';
     $heroButtonLink = $themeSettings->hero_button_link ?? '#';
+    $heroButtonEnabled = ($themeSettings->hero_button_enabled ?? '1') === '1';
     $heroButtonSecondaryText = $themeSettings->hero_button_secondary_text ?? null;
     $heroButtonSecondaryLink = $themeSettings->hero_button_secondary_link ?? null;
+    $heroButtonSecondaryEnabled = ($themeSettings->hero_button_secondary_enabled ?? '1') === '1';
     $heroBackgroundPath = $themeSettings->heroBackgroundPath ?? null;
     $heroVideoPath = $themeSettings->heroBackgroundVideoPath ?? null;
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
@@ -85,7 +87,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             @endif
 
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                @if($heroButtonText)
+                @if($heroButtonEnabled && $heroButtonText)
                     <a href="{{ $heroButtonLink }}"
                        class="inline-flex items-center justify-center gap-2 h-11 rounded-xl text-white px-8 py-6 transition-opacity hover:opacity-90"
                        style="background-color: {{ $primaryColor }}">
@@ -97,7 +99,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     </a>
                 @endif
 
-                @if($heroButtonSecondaryText)
+                @if($heroButtonSecondaryEnabled && $heroButtonSecondaryText)
                     <a href="{{ $heroButtonSecondaryLink }}"
                        class="inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 py-6 transition-colors">
                         {{ $heroButtonSecondaryText }}

@@ -148,6 +148,25 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         />
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Hero Buttons (visibility) ===== --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.buttons.title')" icon="fas fa-mouse-pointer">
+        <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox"
+                @change="heroButtonEnabled = $el.checked ? '1' : '0'"
+                :checked="heroButtonEnabled === '1'"
+                class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
+            <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.hero.buttons.primary_enable') }}</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer mt-2">
+            <input type="checkbox"
+                @change="heroButtonSecondaryEnabled = $el.checked ? '1' : '0'"
+                :checked="heroButtonSecondaryEnabled === '1'"
+                class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
+            <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.hero.buttons.secondary_enable') }}</span>
+        </label>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.hero.buttons.help') }}</p>
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Contact Form (Plugin: DixlaseInquiry) ===== --}}
     @if($inquiryPluginEnabled)
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.inquiry.title')" icon="fas fa-envelope">

@@ -62,8 +62,10 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_sub_title' => 'nullable|string|max:1000',
             'hero_button_text' => 'nullable|string|max:100',
             'hero_button_link' => 'nullable|string|max:500',
+            'hero_button_enabled' => 'nullable|in:0,1',
             'hero_button_secondary_text' => 'nullable|string|max:100',
             'hero_button_secondary_link' => 'nullable|string|max:500',
+            'hero_button_secondary_enabled' => 'nullable|in:0,1',
 
             // Footer
             'footer_copyright' => 'nullable|string|max:500',

@@ -76,6 +76,12 @@ return [
             'secondary_button' => 'セカンダリーボタン',
             'button_secondary_text' => 'ボタンテキスト',
             'button_secondary_link' => 'ボタンリンク',
+            'buttons' => [
+                'title' => 'ヒーローボタン',
+                'primary_enable' => 'プライマリボタンを表示する',
+                'secondary_enable' => 'セカンダリボタンを表示する',
+                'help' => 'OFFにするとボタンが非表示になります。テキストとリンクの設定は保持され、ONに戻すと復活します。',
+            ],
         ],
 
         // Footer Section
