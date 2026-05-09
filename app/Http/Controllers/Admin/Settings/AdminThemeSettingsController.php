@@ -183,6 +183,15 @@ class AdminThemeSettingsController extends AdminLoggedInController
         }
         $this->viewParams['inquiryPreview'] = $inquiryPreview;
 
+        // Detect whether the inquiry plugin is fully configured.
+        // dls_inquiry_section() silently returns null when admin_email is empty
+        // or accepting_inquiries is off, so we surface that to the editor.
+        $inquiryReady = false;
+        if ($inquiryPluginEnabled && function_exists('dls_inquiry_enabled')) {
+            $inquiryReady = (bool) dls_inquiry_enabled();
+        }
+        $this->viewParams['inquiryReady'] = $inquiryReady;
+
         // フロントページコンテンツをプレビュー用に取得
         $frontContentPreview = null;
         $frontPage = \App\Models\FrontPage::findByTypeAndLang('main_content', app()->getLocale());
