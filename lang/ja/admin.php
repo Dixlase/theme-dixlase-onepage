@@ -142,6 +142,15 @@ return [
             'mode_help' => '自動: ユーザーのシステム設定に従います / ライト: 明るいテーマ / ダーク: 暗いテーマ',
         ],
 
+        // Multilingual switcher (DixlaseMultilingual integration)
+        'multilingual' => [
+            'title' => '多言語スイッチャー',
+            'switcher_label' => 'ヘッダー / フッターに言語切替を表示',
+            'help' => '有効な言語が複数あるとき、ヘッダーとフッターに言語切替コンポーネントを表示します。既定の言語を選ぶと locale プレフィックス無しのルート URL へ、それ以外を選ぶと /{locale}/... に遷移します。',
+            'requires_plugin' => 'スイッチャーを表示するには DixlaseMultilingual プラグインをインストール・有効化してください。',
+            'requires_enabled' => 'スイッチャーを表示するにはプラグインの設定で多言語を有効化してください。',
+        ],
+
         // Plugin Integration
         'plugins' => [
             'menu' => [

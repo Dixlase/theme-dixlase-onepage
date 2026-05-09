@@ -170,6 +170,18 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </p>
         </div>
 
+        {{-- Footer Language Switcher (provided by DixlaseMultilingual plugin) --}}
+        @php
+            $multilingualReady = view()->exists('dixlase-multilingual::components.language-switcher')
+                && (bool) config('dixlase_multilingual.locale_url_routing_enabled')
+                && (string) ($themeSettings->multilingual_switcher_enabled ?? '0') === '1';
+        @endphp
+        @if ($multilingualReady)
+            <div class="border-t border-gray-300 dark:border-white/10 pt-8 flex justify-center mb-6">
+                <x-dixlase-multilingual::language-switcher variant="links" />
+            </div>
+        @endif
+
         {{-- Copyright --}}
         <div class="border-t border-gray-300 dark:border-white/10 pt-8 flex justify-center">
             <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 md:mb-0">
