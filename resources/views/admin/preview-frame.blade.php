@@ -32,23 +32,39 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @section('title', ' - ' . __('Preview'))
 
+@if(!empty($hasCustomCss))
+@push('styles')
+<link rel="stylesheet" id="preview-custom-css-link" href="{{ route('front.custom-style') }}?v={{ $customAssetVersion }}">
+@endpush
+@endif
+
+@if(!empty($hasCustomJs))
+@push('scripts')
+<script @cspNonce src="{{ route('front.custom-script') }}?v={{ $customAssetVersion }}"></script>
+@endpush
+@endif
+
 @section('content')
+@unless($bareContent ?? false)
 {{-- Hero Section --}}
 @include('themes::partials.hero')
+@endunless
 
 {{-- Front Page Content --}}
-<section class="front-content py-16" id="preview-content-section">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto prose prose-lg dark:prose-invert" id="preview-content-area">
+<section class="front-content {{ ($bareContent ?? false) ? '' : 'py-16' }}" id="preview-content-section">
+    <div class="{{ ($bareContent ?? false) ? '' : 'container mx-auto px-4' }}">
+        <div class="{{ ($bareContent ?? false) ? '' : 'max-w-4xl mx-auto' }} prose prose-lg dark:prose-invert" id="preview-content-area">
             {!! $initialRenderedContent ?? '' !!}
         </div>
     </div>
 </section>
 
+@unless($bareContent ?? false)
 {{-- Contact Form Section --}}
 @if(($themeSettings->show_inquiry_form ?? '0') === '1' && function_exists('dls_inquiry_section'))
     {!! dls_inquiry_section() !!}
 @endif
+@endunless
 @endsection
 
 @push('styles')
@@ -91,6 +107,12 @@ iframe[src*="turnstile"] {
                 break;
 
             case 'updateCustomCss':
+                // Disable the saved-state <link> so live edits fully replace it;
+                // otherwise rules removed by the editor would still apply.
+                var linkEl = document.getElementById('preview-custom-css-link');
+                if (linkEl) {
+                    linkEl.disabled = true;
+                }
                 var styleEl = document.getElementById('preview-custom-css');
                 if (!styleEl) {
                     styleEl = document.createElement('style');
@@ -106,6 +128,20 @@ iframe[src*="turnstile"] {
     if (window.parent !== window) {
         window.parent.postMessage({ type: 'dixlase-preview-ready' }, window.location.origin);
     }
+
+    // Notify parent of content height so embeddings (e.g., theme settings preview)
+    // can size the iframe without scroll. Front-page-master uses fixed device
+    // heights and simply ignores these messages.
+    function postHeight() {
+        if (window.parent === window) return;
+        var h = document.documentElement.scrollHeight || document.body.scrollHeight || 0;
+        window.parent.postMessage({ type: 'dixlase-preview-height', height: h }, window.location.origin);
+    }
+    if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(postHeight).observe(document.body);
+    }
+    window.addEventListener('load', postHeight);
+    postHeight();
 })();
 </script>
 @endpush

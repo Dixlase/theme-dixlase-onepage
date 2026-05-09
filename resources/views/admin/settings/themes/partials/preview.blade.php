@@ -242,19 +242,23 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 </div>
             </section>
 
-            {{-- ===== FRONT PAGE CONTENT PREVIEW ===== --}}
+            {{-- ===== FRONT PAGE CONTENT PREVIEW (iframe with custom CSS/JS) ===== --}}
             @if(!empty($frontContentPreview))
-            <section class="pv-content py-12 relative cursor-pointer"
-                @click.stop="openModal('editFrontPageModal')">
-                {{-- Edit badge --}}
-                <div class="pv-edit-badge absolute top-4 right-4 z-20">
-                    <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-pencil-alt mr-1"></i>{{ __('themes::admin.settings.front_content.edit_badge') }}</span>
-                </div>
-                <div class="container mx-auto px-8">
-                    <div class="prose max-w-none pv-content-text">
-                        {!! $frontContentPreview !!}
-                    </div>
-                </div>
+            <section class="pv-content-iframe relative bg-white"
+                @message.window="
+                    if ($event.origin === window.location.origin
+                        && $event.data && $event.data.type === 'dixlase-preview-height'
+                        && typeof $event.data.height === 'number') {
+                        $refs.frontPreviewIframe.style.height = Math.max(200, $event.data.height) + 'px';
+                        $nextTick(() => updatePreviewScale());
+                    }
+                ">
+                <iframe x-ref="frontPreviewIframe"
+                        src="{{ route('admin.front.preview-frame', ['bare' => 1]) }}"
+                        class="w-full block bg-white border-0"
+                        style="height: 600px;"
+                        sandbox="allow-scripts allow-same-origin"
+                        title="{{ __('themes::admin.settings.editor.preview_title') }}"></iframe>
             </section>
             @endif
 
@@ -404,38 +408,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </footer>
 
 </x-admin.theme-preview-container>
-
-{{-- フロントページ編集確認モーダル --}}
-@if(!empty($frontContentPreview))
-@push('modals')
-    <x-ui-modal id="editFrontPageModal"
-        :title="__('themes::admin.settings.front_content.confirm_title')"
-        :message="__('themes::admin.settings.front_content.confirm_message')"
-        :confirm-label="__('themes::admin.settings.front_content.confirm_ok')"
-        :cancel-label="__('common.cancel')"
-        icon-type="warning"
-        confirm-color="blue"
-        :form="null"
-    >
-        @slot('footer')
-            <x-form-button
-                type="button"
-                variant="secondary"
-                icon="fas fa-times"
-                @click="close()"
-                class="mx-2"
-            >{{ __('common.cancel') }}</x-form-button>
-            <x-form-button
-                type="link"
-                variant="primary"
-                icon="fas fa-pencil-alt"
-                :href="route('admin.front.edit')"
-                class="mx-2"
-            >{{ __('themes::admin.settings.front_content.confirm_ok') }}</x-form-button>
-        @endslot
-    </x-ui-modal>
-@endpush
-@endif
 
 {{-- ヘッダーメニュー編集確認モーダル --}}
 @if($menuPluginEnabled)
