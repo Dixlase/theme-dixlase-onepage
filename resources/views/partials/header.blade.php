@@ -186,6 +186,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                     @click="open = !open"
                                     @focusin="clearTimeout(timer); open = true"
                                 >
+                                    @if(! empty($item['icon_class']))
+                                        <i class="{{ $item['icon_class'] }} mr-2"></i>
+                                    @endif
                                     {{ $item['label'] ?? '' }}
                                     <svg class="ml-1 w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -201,6 +204,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                     aria-haspopup="true"
                                     @focusin="clearTimeout(timer); open = true"
                                 >
+                                    @if(! empty($item['icon_class']))
+                                        <i class="{{ $item['icon_class'] }} mr-2"></i>
+                                    @endif
                                     {{ $item['label'] ?? '' }}
                                     <svg class="ml-1 w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -278,6 +284,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                             target="{{ $item['target'] ?? '_self' }}"
                             class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
                         >
+                            @if(! empty($item['icon_class']))
+                                <i class="{{ $item['icon_class'] }} mr-2"></i>
+                            @endif
                             {{ $item['label'] ?? '' }}
                         </a>
                     @endif
@@ -392,7 +401,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                             class="w-full flex items-center justify-between px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                             :aria-expanded="expanded"
                         >
-                            {{ $item['label'] ?? '' }}
+                            <span class="flex items-center gap-2">
+                                @if(! empty($item['icon_class']))
+                                    <i class="{{ $item['icon_class'] }} w-4 h-4"></i>
+                                @endif
+                                {{ $item['label'] ?? '' }}
+                            </span>
                             <svg class="w-5 h-5 transition-transform duration-200" :class="{ 'rotate-180': expanded }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -473,9 +487,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     <a
                         href="{{ $item['url'] ?? '#' }}"
                         target="{{ $item['target'] ?? '_self' }}"
-                        class="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-md"
+                        class="flex items-center gap-2 px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 rounded-md"
                         @click="mobileMenuOpen = false"
                     >
+                        @if(! empty($item['icon_class']))
+                            <i class="{{ $item['icon_class'] }} w-4 h-4"></i>
+                        @endif
                         {{ $item['label'] ?? '' }}
                     </a>
                 @endif
