@@ -253,7 +253,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                                         class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors"
                                                     >
                                                         @if(! empty($grandchild['icon_class']))
-                                                            <i class="{{ $grandchild['icon_class'] }} w-5 h-5 text-gray-400 dark:text-gray-500"></i>
+                                                            <i class="{{ $grandchild['icon_class'] }} inline-flex items-center justify-center shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500"></i>
                                                         @endif
                                                         <span>{{ $grandchild['label'] ?? '' }}</span>
                                                     </a>
@@ -268,7 +268,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                                 class="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-blue-600 dark:hover:text-blue-400 rounded-md transition-colors break-inside-avoid mb-1 last:mb-0"
                                             >
                                                 @if(! empty($child['icon_class']))
-                                                    <i class="{{ $child['icon_class'] }} w-5 h-5 text-gray-400 dark:text-gray-500"></i>
+                                                    <i class="{{ $child['icon_class'] }} inline-flex items-center justify-center shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500"></i>
                                                 @endif
                                                 <span>{{ $child['label'] ?? '' }}</span>
                                             </a>
@@ -403,7 +403,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         >
                             <span class="flex items-center gap-2">
                                 @if(! empty($item['icon_class']))
-                                    <i class="{{ $item['icon_class'] }} w-4 h-4"></i>
+                                    <i class="{{ $item['icon_class'] }} inline-flex items-center justify-center shrink-0 w-4 h-4"></i>
                                 @endif
                                 {{ $item['label'] ?? '' }}
                             </span>
@@ -441,7 +441,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                         >
                                             <span class="flex items-center gap-2">
                                                 @if(! empty($child['icon_class']))
-                                                    <i class="{{ $child['icon_class'] }} w-4 h-4"></i>
+                                                    <i class="{{ $child['icon_class'] }} inline-flex items-center justify-center shrink-0 w-4 h-4"></i>
                                                 @endif
                                                 {{ $child['label'] ?? '' }}
                                             </span>
@@ -458,7 +458,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                                     @click="mobileMenuOpen = false"
                                                 >
                                                     @if(! empty($grandchild['icon_class']))
-                                                        <i class="{{ $grandchild['icon_class'] }} w-4 h-4"></i>
+                                                        <i class="{{ $grandchild['icon_class'] }} inline-flex items-center justify-center shrink-0 w-4 h-4"></i>
                                                     @endif
                                                     {{ $grandchild['label'] ?? '' }}
                                                 </a>
@@ -474,7 +474,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                         @click="mobileMenuOpen = false"
                                     >
                                         @if(! empty($child['icon_class']))
-                                            <i class="{{ $child['icon_class'] }} w-4 h-4"></i>
+                                            <i class="{{ $child['icon_class'] }} inline-flex items-center justify-center shrink-0 w-4 h-4"></i>
                                         @endif
                                         {{ $child['label'] ?? '' }}
                                     </a>
@@ -491,7 +491,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         @click="mobileMenuOpen = false"
                     >
                         @if(! empty($item['icon_class']))
-                            <i class="{{ $item['icon_class'] }} w-4 h-4"></i>
+                            <i class="{{ $item['icon_class'] }} inline-flex items-center justify-center shrink-0 w-4 h-4"></i>
                         @endif
                         {{ $item['label'] ?? '' }}
                     </a>
