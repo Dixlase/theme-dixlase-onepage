@@ -315,7 +315,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 @endphp
                 @if ($multilingualReady)
                 <div class="flex items-center ml-4">
-                    <x-dixlase-multilingual::language-switcher variant="select" />
+                    <x-dixlase-multilingual::language-switcher variant="dropdown" />
                 </div>
                 @endif
             </div>
