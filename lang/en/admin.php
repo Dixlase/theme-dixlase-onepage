@@ -76,6 +76,12 @@ return [
             'secondary_button' => 'Secondary Button',
             'button_secondary_text' => 'Button Text',
             'button_secondary_link' => 'Button Link',
+            'buttons' => [
+                'title' => 'Hero Buttons',
+                'primary_enable' => 'Display primary button',
+                'secondary_enable' => 'Display secondary button',
+                'help' => 'Toggle off to hide a button. The button text and link are kept and can be restored by toggling back on.',
+            ],
         ],
 
         // Footer Section

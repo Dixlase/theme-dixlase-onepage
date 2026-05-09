@@ -40,8 +40,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <input type="hidden" name="hero_sub_title" :value="heroSubTitle">
         <input type="hidden" name="hero_button_text" :value="heroButtonText">
         <input type="hidden" name="hero_button_link" :value="heroButtonLink">
+        <input type="hidden" name="hero_button_enabled" :value="heroButtonEnabled">
         <input type="hidden" name="hero_button_secondary_text" :value="heroButtonSecondaryText">
         <input type="hidden" name="hero_button_secondary_link" :value="heroButtonSecondaryLink">
+        <input type="hidden" name="hero_button_secondary_enabled" :value="heroButtonSecondaryEnabled">
         <input type="hidden" name="footer_copyright" :value="footerCopyright">
         <input type="hidden" name="footer_menu_id" :value="footerMenuId">
         <input type="hidden" name="primary_color" :value="primaryColor">
@@ -87,8 +89,10 @@ function themeSettingsEditor() {
         heroSubTitle: @json(old('hero_sub_title', $settings->hero_sub_title ?? '')),
         heroButtonText: @json(old('hero_button_text', $settings->hero_button_text ?? '')),
         heroButtonLink: @json(old('hero_button_link', $settings->hero_button_link ?? '')),
+        heroButtonEnabled: @json(old('hero_button_enabled', $settings->hero_button_enabled ?? '1')),
         heroButtonSecondaryText: @json(old('hero_button_secondary_text', $settings->hero_button_secondary_text ?? '')),
         heroButtonSecondaryLink: @json(old('hero_button_secondary_link', $settings->hero_button_secondary_link ?? '')),
+        heroButtonSecondaryEnabled: @json(old('hero_button_secondary_enabled', $settings->hero_button_secondary_enabled ?? '1')),
 
         // Footer settings
         footerCopyright: @json(old('footer_copyright', $settings->footer_copyright ?? '')),

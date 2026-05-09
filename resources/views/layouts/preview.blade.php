@@ -89,12 +89,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     @stack('styles')
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 {{ ($bareContent ?? false) ? '' : 'flex flex-col min-h-screen' }}">
     @unless($bareContent ?? false)
         @include('themes::partials.header')
     @endunless
 
-    <main class="flex-grow">
+    <main class="{{ ($bareContent ?? false) ? '' : 'flex-grow' }}">
         @yield('content')
     </main>
 
