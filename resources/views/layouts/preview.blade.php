@@ -90,13 +90,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     @stack('styles')
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
-    @include('themes::partials.header')
+    @unless($bareContent ?? false)
+        @include('themes::partials.header')
+    @endunless
 
     <main class="flex-grow">
         @yield('content')
     </main>
 
-    @include('themes::partials.footer')
+    @unless($bareContent ?? false)
+        @include('themes::partials.footer')
+    @endunless
 
     @stack('scripts')
 </body>
