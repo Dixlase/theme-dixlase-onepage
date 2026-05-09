@@ -159,6 +159,20 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.plugins.inquiry.enable') }}</span>
         </label>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.plugins.inquiry.help') }}</p>
+        @unless($inquiryReady)
+        <div x-show="showInquiryForm === '1'" x-cloak
+            class="mt-3 p-3 rounded-md border border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/30">
+            <p class="text-xs text-amber-800 dark:text-amber-200 flex items-start gap-2">
+                <i class="fas fa-exclamation-triangle mt-0.5"></i>
+                <span>{{ __('themes::admin.settings.plugins.inquiry.not_configured') }}</span>
+            </p>
+            <a href="{{ route('dixlase-inquiry::admin.inquiry.settings.admin-notification') }}"
+                class="inline-flex items-center gap-1 mt-2 text-xs font-medium text-amber-900 dark:text-amber-100 underline hover:no-underline">
+                <i class="fas fa-arrow-right"></i>
+                {{ __('themes::admin.settings.plugins.inquiry.configure_link') }}
+            </a>
+        </div>
+        @endunless
     </x-admin.theme-preview-sidebar-section>
     @else
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.inquiry.title')" icon="fas fa-envelope">

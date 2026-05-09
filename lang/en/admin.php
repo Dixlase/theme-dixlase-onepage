@@ -154,6 +154,8 @@ return [
                 'enable' => 'Display contact form above footer',
                 'help' => 'Display the inquiry form section above the footer.',
                 'plugin_required' => 'Install and enable the DixlaseInquiry plugin to use the contact form.',
+                'not_configured' => 'The contact form will not appear on the front page until the inquiry plugin is fully configured. Please set the admin email in the inquiry plugin settings.',
+                'configure_link' => 'Open inquiry plugin settings',
             ],
         ],
 
