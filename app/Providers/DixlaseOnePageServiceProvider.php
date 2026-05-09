@@ -208,6 +208,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
+            'multilingual_switcher_enabled' => '0',
             // メディア関連のプロパティ（loadMediaForThemeSettings()で設定されるが、デフォルトでも必要）
             'headerLogo' => null,
             'headerLogoPath' => null,

@@ -304,10 +304,18 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 </div>
                 @endif
 
-                {{-- Desktop Language Switcher (provided by DixlaseMultilingual plugin) --}}
-                @if(function_exists('dls_multilingual_switcher'))
+                {{-- Desktop Language Switcher (provided by DixlaseMultilingual plugin).
+                     Renders only when (a) the multilingual plugin is enabled,
+                     (b) the plugin's locale_url_routing_enabled toggle is on,
+                     (c) the theme's "multilingual_switcher_enabled" setting is on. --}}
+                @php
+                    $multilingualReady = view()->exists('dixlase-multilingual::components.language-switcher')
+                        && (bool) config('dixlase_multilingual.locale_url_routing_enabled')
+                        && (string) ($themeSettings->multilingual_switcher_enabled ?? '0') === '1';
+                @endphp
+                @if ($multilingualReady)
                 <div class="flex items-center ml-4">
-                    {!! dls_multilingual_switcher('dropdown', ['showLabel' => false]) !!}
+                    <x-dixlase-multilingual::language-switcher variant="select" />
                 </div>
                 @endif
             </div>

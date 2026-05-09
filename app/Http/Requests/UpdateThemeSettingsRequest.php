@@ -92,6 +92,9 @@ class UpdateThemeSettingsRequest extends FormRequest
             'header_menu_id' => 'nullable|integer',
             'footer_menu_id' => 'nullable|integer',
             'show_inquiry_form' => 'nullable|in:0,1',
+
+            // DixlaseMultilingual integration
+            'multilingual_switcher_enabled' => 'nullable|in:0,1',
         ];
     }
 
