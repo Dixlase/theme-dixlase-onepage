@@ -35,7 +35,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $snsLinks = $themeSettings->snsLinks ?? [];
 @endphp
 
-<footer class="bg-gray-100 dark:bg-[#12141C] pt-16 pb-8">
+<footer class="bg-gray-100 dark:bg-gray-950 pt-16 pb-8">
     <div class="container mx-auto px-4">
         <div class="flex flex-col items-center text-center pb-8 space-y-6">
             {{-- Footer Menu (メニュープラグインから) --}}
@@ -170,7 +170,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </p>
         </div>
 
-        {{-- Footer Language Switcher (provided by DixlaseMultilingual plugin) --}}
+        {{-- Footer Language Switcher (provided by DixlaseMultilingual plugin).
+
+             IMPORTANT: see the matching block in partials/header.blade.php for
+             why the component is invoked through <x-dynamic-component>. The
+             short version: Blade's compile-time tag resolver would otherwise
+             try to load `dixlase-multilingual::language-switcher` even inside
+             a never-executed @if branch, and fail with a 500 when the plugin
+             is uninstalled. Dynamic-component defers the lookup to runtime. --}}
         @php
             $multilingualReady = view()->exists('dixlase-multilingual::components.language-switcher')
                 && (bool) config('dixlase_multilingual.locale_url_routing_enabled')
@@ -178,7 +185,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         @endphp
         @if ($multilingualReady)
             <div class="border-t border-gray-300 dark:border-white/10 pt-8 flex justify-center mb-6">
-                <x-dixlase-multilingual::language-switcher variant="links" />
+                <x-dynamic-component component="dixlase-multilingual::language-switcher" variant="links" />
             </div>
         @endif
 
