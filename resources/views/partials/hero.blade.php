@@ -43,7 +43,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
 @endphp
 
-<section class="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gray-100 dark:bg-gray-900"
+<section class="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gray-100 dark:bg-gray-950"
     @if($heroVideoPath)
         x-data="{ videoPlaying: false }"
     @endif
@@ -59,7 +59,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             >
                 <source src="{{ asset('storage/' . $heroVideoPath) }}" type="video/mp4">
             </video>
-            <div class="absolute inset-0 bg-white/60 dark:bg-gray-900/70"></div>
+            <div class="absolute inset-0 bg-white/60 dark:bg-gray-950/70"></div>
         </div>
     @endif
 
@@ -69,7 +69,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             @if($heroVideoPath) x-show="!videoPlaying" @endif
         >
             <img src="{{ asset('storage/' . $heroBackgroundPath) }}" alt="" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-white/60 dark:bg-gray-900/70"></div>
+            <div class="absolute inset-0 bg-white/60 dark:bg-gray-950/70"></div>
         </div>
     @endif
 

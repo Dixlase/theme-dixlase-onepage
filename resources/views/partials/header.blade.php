@@ -39,9 +39,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // ロゴサイズ設定（ヘッダー用は sm サイズ）
     $logoSize = 'sm';
     $sizeClasses = [
-        'sm' => 'h-8',
-        'md' => 'h-10',
-        'lg' => 'h-12',
+        'sm' => 'h-6',
+        'md' => 'h-8',
+        'lg' => 'h-10',
     ];
     $heightClass = $sizeClasses[$logoSize] ?? $sizeClasses['sm'];
 @endphp
@@ -93,7 +93,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         }
     }"
     x-init="initObserver()"
-    class="fixed h-14 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $headerTopClass }}"
+    class="fixed h-10 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $headerTopClass }}"
 >
     <div x-ref="navContainer" class="w-full h-full px-4 flex justify-between items-center">
         <div class="flex items-center justify-between w-full">
@@ -384,7 +384,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             x-cloak
         >
         {{-- ドロワーヘッダー --}}
-        <div class="flex items-center justify-between px-5 h-14 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between px-5 h-10 border-b border-gray-200 dark:border-gray-700">
             @if(!empty($navigationMenuName))
                 <span class="text-base font-semibold text-gray-900 dark:text-white">{{ $navigationMenuName }}</span>
             @else
@@ -403,7 +403,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
 
         {{-- ドロワーコンテンツ（スクロール可能） --}}
-        <nav class="overflow-y-auto h-[calc(100%-3.5rem)] px-3 py-4 space-y-1">
+        <nav class="overflow-y-auto h-[calc(100%-2.5rem)] px-3 py-4 space-y-1">
             @forelse($navigationItems ?? [] as $item)
                 @if(!empty($item['children']))
                     {{-- アコーディオンメニュー --}}
