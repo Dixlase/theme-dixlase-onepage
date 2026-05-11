@@ -31,10 +31,11 @@
 
 @use "@fortawesome/fontawesome-free/css/all.min.css";
 
+// Header: height and transition are controlled by Tailwind utility classes
+// (h-10, transition-all duration-300) on the <header> element in
+// partials/header.blade.php. Avoid hardcoding here so the height stays in
+// sync with what the Blade template specifies.
 header {
-    transition: all 0.3s ease;
-    height: 80px;
-
     &.scrolled {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     }

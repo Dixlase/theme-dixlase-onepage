@@ -28,47 +28,50 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 --}}
 
-{{-- Preview theme styles (isolated from admin dark mode) --}}
+{{-- Preview theme styles (isolated from admin dark mode).
+     Colors use Tailwind v4 CSS custom properties (var(--color-*)) so they
+     resolve to the same oklch() values as the surrounding outer container.
+     Mixing hardcoded v3 hex values here would create visible color seams
+     between the inline mocks (header / hero / etc.) and the iframe area
+     that inherits from #preview-outer's bg-gray-* utility. --}}
 <style @cspNonce>
-#preview-inner[data-preview-theme="dark"] { background: #030712 !important; }
-#preview-inner[data-preview-theme="dark"] .pv-header { background: rgba(17,24,39,0.8) !important; }
+#preview-inner[data-preview-theme="dark"] { background: var(--color-gray-950) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-header { background: color-mix(in oklab, var(--color-gray-900) 80%, transparent) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-app-name { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-hero { background: #111827 !important; }
 #preview-inner[data-preview-theme="dark"] .pv-title { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-subtitle { color: #d1d5db !important; }
-#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { border-color: #4b5563 !important; color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-hero-overlay { background: rgba(17,24,39,0.7) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-subtitle { color: var(--color-gray-300) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { border-color: var(--color-gray-600) !important; color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-hero-overlay { background: color-mix(in oklab, var(--color-gray-900) 70%, transparent) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-edit-input { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-nav-item { color: #9ca3af !important; }
-#preview-inner[data-preview-theme="dark"] .pv-contact { background: #111827 !important; border-color: #1f2937 !important; }
+#preview-inner[data-preview-theme="dark"] .pv-nav-item { color: var(--color-gray-400) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact { background: var(--color-gray-800) !important; border-color: var(--color-gray-800) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-contact-title { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-contact-desc { color: #9ca3af !important; }
-#preview-inner[data-preview-theme="dark"] .pv-contact-field { background: #374151 !important; }
-#preview-inner[data-preview-theme="dark"] .pv-required-badge { background: rgba(127,29,29,0.8) !important; color: #fecaca !important; }
-#preview-inner[data-preview-theme="dark"] .pv-footer { background: #12141C !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact-desc { color: var(--color-gray-400) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-contact-field { background: var(--color-gray-700) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-required-badge { background: color-mix(in oklab, var(--color-red-900) 80%, transparent) !important; color: var(--color-red-200) !important; }
+#preview-inner[data-preview-theme="dark"] .pv-footer { background: var(--color-gray-950) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer-title { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-footer-text { color: #9ca3af !important; }
+#preview-inner[data-preview-theme="dark"] .pv-footer-text { color: var(--color-gray-400) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-footer-border { border-color: rgba(255,255,255,0.1) !important; }
 
 #preview-inner[data-preview-theme="light"] { background: #fff !important; }
 #preview-inner[data-preview-theme="light"] .pv-header { background: rgba(255,255,255,0.9) !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important; }
-#preview-inner[data-preview-theme="light"] .pv-app-name { color: #111827 !important; }
-#preview-inner[data-preview-theme="light"] .pv-hero { background: #f3f4f6 !important; }
-#preview-inner[data-preview-theme="light"] .pv-title { color: #111827 !important; }
-#preview-inner[data-preview-theme="light"] .pv-subtitle { color: #4b5563 !important; }
-#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: #d1d5db !important; color: #374151 !important; }
+#preview-inner[data-preview-theme="light"] .pv-app-name { color: var(--color-gray-900) !important; }
+#preview-inner[data-preview-theme="light"] .pv-title { color: var(--color-gray-900) !important; }
+#preview-inner[data-preview-theme="light"] .pv-subtitle { color: var(--color-gray-600) !important; }
+#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: var(--color-gray-300) !important; color: var(--color-gray-700) !important; }
 #preview-inner[data-preview-theme="light"] .pv-hero-overlay { background: rgba(255,255,255,0.6) !important; }
-#preview-inner[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05) !important; color: #111827 !important; }
-#preview-inner[data-preview-theme="light"] .pv-nav-item { color: #6b7280 !important; }
-#preview-inner[data-preview-theme="light"] .pv-contact { background: #f9fafb !important; border-color: #e5e7eb !important; }
-#preview-inner[data-preview-theme="light"] .pv-contact-title { color: #111827 !important; }
-#preview-inner[data-preview-theme="light"] .pv-contact-desc { color: #6b7280 !important; }
-#preview-inner[data-preview-theme="light"] .pv-contact-field { background: #e5e7eb !important; }
-#preview-inner[data-preview-theme="light"] .pv-required-badge { background: #fee2e2 !important; color: #991b1b !important; }
-#preview-inner[data-preview-theme="light"] .pv-footer { background: #f3f4f6 !important; }
-#preview-inner[data-preview-theme="light"] .pv-footer-title { color: #111827 !important; }
-#preview-inner[data-preview-theme="light"] .pv-footer-text { color: #4b5563 !important; }
-#preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: #d1d5db !important; }
+#preview-inner[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05) !important; color: var(--color-gray-900) !important; }
+#preview-inner[data-preview-theme="light"] .pv-nav-item { color: var(--color-gray-500) !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact { background: var(--color-gray-100) !important; border-color: var(--color-gray-200) !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-title { color: var(--color-gray-900) !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-desc { color: var(--color-gray-500) !important; }
+#preview-inner[data-preview-theme="light"] .pv-contact-field { background: var(--color-gray-200) !important; }
+#preview-inner[data-preview-theme="light"] .pv-required-badge { background: var(--color-red-100) !important; color: var(--color-red-800) !important; }
+#preview-inner[data-preview-theme="light"] .pv-footer { background: var(--color-gray-100) !important; }
+#preview-inner[data-preview-theme="light"] .pv-footer-title { color: var(--color-gray-900) !important; }
+#preview-inner[data-preview-theme="light"] .pv-footer-text { color: var(--color-gray-600) !important; }
+#preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: var(--color-gray-300) !important; }
 
 /* Front page content preview */
 #preview-inner[data-preview-theme="dark"] .pv-content { background: #111827 !important; }
@@ -92,24 +95,35 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #preview-inner section { border-color: transparent !important; }
 #preview-inner[data-preview-theme="light"] section { background-color: transparent !important; border-color: transparent !important; }
 #preview-inner[data-preview-theme="dark"] section { background-color: transparent !important; border-color: transparent !important; }
+
+/* Front content iframe must be fully transparent so the surrounding
+   preview bg shows through, blending the section seamlessly into the
+   hero / inquiry / footer mocks above and below. */
+#preview-inner .pv-content-iframe,
+#preview-inner .pv-content-iframe iframe {
+    background: transparent !important;
+    border: 0 !important;
+    color-scheme: normal;
+}
 </style>
 
 <x-admin.theme-preview-container
     :title="__('themes::admin.settings.editor.preview_title')"
     :appearanceMode="$settings->appearance_mode ?? '0'"
+    aspectRatio="16:9"
 >
 
             {{-- ===== HEADER PREVIEW ===== --}}
-            <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
+            <header class="pv-header h-10 w-full flex items-center backdrop-blur-md shadow-lg px-6">
                 <div class="flex items-center justify-between w-full">
                     {{-- Logo --}}
                     <div class="flex items-center space-x-3">
                         <div class="relative group cursor-pointer" @click="openMediaSelector('header_logo_id_selector', 'header_logo_id', 'header_logo_id_preview', false, 'original')">
                             <template x-if="headerLogoPreviewUrl">
-                                <img :src="headerLogoPreviewUrl" alt="Logo" class="h-8 w-auto">
+                                <img :src="headerLogoPreviewUrl" alt="Logo" class="h-6 w-auto">
                             </template>
                             <template x-if="!headerLogoPreviewUrl">
-                                <svg class="h-8 w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="h-6 w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect width="40" height="40" rx="8" class="fill-blue-600"/>
                                     <text x="20" y="28" class="fill-white font-bold text-2xl" font-family="system-ui, sans-serif" text-anchor="middle">D</text>
                                 </svg>
@@ -244,19 +258,45 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
             {{-- ===== FRONT PAGE CONTENT PREVIEW (iframe with custom CSS/JS) ===== --}}
             @if(!empty($frontContentPreview))
-            <section class="pv-content-iframe relative bg-white"
-                @message.window="
-                    if ($event.origin === window.location.origin
-                        && $event.data && $event.data.type === 'dixlase-preview-height'
-                        && typeof $event.data.height === 'number') {
-                        $refs.frontPreviewIframe.style.height = Math.max(200, $event.data.height) + 'px';
-                        $nextTick(() => updatePreviewScale());
-                    }
-                ">
+            <section class="pv-content-iframe relative">
+                {{-- The iframe is same-origin (allow-same-origin), so we read
+                     contentDocument.scrollHeight directly instead of relying on
+                     a postMessage round-trip from the inner page.
+                     Iframe element + body are kept transparent so the
+                     surrounding preview bg shows through and the section
+                     blends with the hero / inquiry / footer mocks instead of
+                     looking like a white card. --}}
                 <iframe x-ref="frontPreviewIframe"
                         src="{{ route('admin.front.preview-frame', ['bare' => 1]) }}"
-                        class="w-full block bg-white border-0"
-                        style="height: 600px;"
+                        @load="
+                            const iframe = $event.target;
+                            const sync = () => {
+                                try {
+                                    const doc = iframe.contentDocument;
+                                    if (!doc) return;
+                                    const h = Math.max(
+                                        doc.documentElement ? doc.documentElement.scrollHeight : 0,
+                                        doc.body ? doc.body.scrollHeight : 0
+                                    );
+                                    if (h > 0 && Math.abs(iframe.clientHeight - h) > 1) {
+                                        iframe.style.height = h + 'px';
+                                        $nextTick(() => updatePreviewScale());
+                                    }
+                                } catch (e) {}
+                            };
+                            sync();
+                            try {
+                                const doc = iframe.contentDocument;
+                                if (doc && doc.body && typeof ResizeObserver !== 'undefined') {
+                                    new ResizeObserver(sync).observe(doc.body);
+                                }
+                                if (doc && doc.fonts && doc.fonts.ready) {
+                                    doc.fonts.ready.then(sync);
+                                }
+                            } catch (e) {}
+                        "
+                        class="w-full block border-0"
+                        style="height: 600px; background: transparent;"
                         sandbox="allow-scripts allow-same-origin"
                         title="{{ __('themes::admin.settings.editor.preview_title') }}"></iframe>
             </section>
