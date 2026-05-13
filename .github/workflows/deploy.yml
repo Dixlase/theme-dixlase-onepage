@@ -85,8 +85,17 @@ jobs:
               fi
 
               # CIでビルド済みのフロントエンドアセットをコピー
-              mkdir -p "$BASE/$SITE/public/assets/themes/$THEME_DIR"
-              rsync -a "$BASE/_shared/themes/$THEME_DIR/" "$BASE/$SITE/public/assets/themes/$THEME_DIR/"
+              # theme installer は dev 用に
+              #   public/assets/themes/DixlaseOnePage → themes/DixlaseOnePage/resources/assets
+              # の symlink を張ることがあり、その場合 `mkdir -p` がパスに非ディレクトリ
+              # (symlink) を見つけて失敗する。symlink や通常ファイルが居座っていれば
+              # 取り除いてから新規ディレクトリを掘り直す。
+              ASSET_DIR="$BASE/$SITE/public/assets/themes/$THEME_DIR"
+              if [ -L "$ASSET_DIR" ] || { [ -e "$ASSET_DIR" ] && [ ! -d "$ASSET_DIR" ]; }; then
+                rm -f "$ASSET_DIR"
+              fi
+              mkdir -p "$ASSET_DIR"
+              rsync -a "$BASE/_shared/themes/$THEME_DIR/" "$ASSET_DIR/"
 
               # ビューキャッシュクリア（コンテナ内で実行）
               docker exec compose-php-1 php /var/www/apps/$SITE/artisan view:clear
