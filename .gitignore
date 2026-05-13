@@ -3,6 +3,11 @@
 /public/build
 /public/hot
 /public/storage
+# Vite build output. Rebuilt fresh by deploy.yml on every release; no
+# need to track it in git. Developers can produce it locally with
+# `npm install && npm run build` whenever a production-mode preview is
+# needed; the Vite dev server (`npm run dev`) doesn't need it at all.
+/resources/assets
 /storage/*.key
 /storage/pail
 /vendor
