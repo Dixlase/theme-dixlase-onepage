@@ -114,16 +114,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 >
 
             {{-- ===== HEADER PREVIEW ===== --}}
-            <header class="pv-header h-10 w-full flex items-center backdrop-blur-md shadow-lg px-6">
+            <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
                 <div class="flex items-center justify-between w-full">
                     {{-- Logo --}}
                     <div class="flex items-center space-x-3">
                         <div class="relative group cursor-pointer" @click="openMediaSelector('header_logo_id_selector', 'header_logo_id', 'header_logo_id_preview', false, 'original')">
                             <template x-if="headerLogoPreviewUrl">
-                                <img :src="headerLogoPreviewUrl" alt="Logo" class="h-6 w-auto">
+                                <img :src="headerLogoPreviewUrl" alt="Logo" class="h-8 w-auto">
                             </template>
                             <template x-if="!headerLogoPreviewUrl">
-                                <svg class="h-6 w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg class="h-8 w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect width="40" height="40" rx="8" class="fill-blue-600"/>
                                     <text x="20" y="28" class="fill-white font-bold text-2xl" font-family="system-ui, sans-serif" text-anchor="middle">D</text>
                                 </svg>
