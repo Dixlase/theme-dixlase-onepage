@@ -20,14 +20,20 @@
 }
 
 /*
- * Source detection for Tailwind class scanning
+ * Source detection for Tailwind class scanning.
+ *
+ * Paths are resolved relative to this CSS file's directory
+ * (themes/DixlaseOnePage/resources/src/front/css/). Six `../` segments
+ * are needed to reach the Dixlase root (.../html/); plugin scans use
+ * six, theme-internal scans use three.
  */
 @source "../../../resources/**/*.blade.php";
 @source "../../../resources/**/*.js";
 @source "../../../resources/**/*.vue";
 @source "../../../../../../resources/views/components/**/*.blade.php";
 @source "../../../../../../resources/src/components/**/*.js";
-@source "../../../../../plugins/*/resources/views/front/**/*.blade.php";
+@source "../../../../../../plugins/*/resources/views/front/**/*.blade.php";
+@source "../../../../../../plugins/*/resources/views/components/**/*.blade.php";
 
 /*
  * Dark mode: class-based strategy
