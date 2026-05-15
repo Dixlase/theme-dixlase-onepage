@@ -69,4 +69,4 @@ Future governance of Dixlase OnePage is tied to the future governance of the Dix
 
 ---
 
-**Contact:** office@exc-d.com
+**Contact:** info@dixlase.org

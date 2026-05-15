@@ -69,4 +69,4 @@ Dixlase OnePage の将来の運営体制は、Dixlase プロジェクト全体�
 
 ---
 
-**お問い合わせ:** office@exc-d.com
+**お問い合わせ:** info@dixlase.org
