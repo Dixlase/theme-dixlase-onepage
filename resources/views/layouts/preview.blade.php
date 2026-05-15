@@ -76,9 +76,26 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     {{-- Alpine.js x-cloak: Alpine未読込のため常時非表示を維持 --}}
     {{-- ヘッダー位置: 管理バーがないため top-0 に固定 --}}
+    @php
+        // テーマプライマリカラー + ダークモード可読フォールバック。
+        // layouts/app.blade.php と同じ明度計算。
+        $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
+        $pcHex = ltrim($primaryColor, '#');
+        $pcBrightness = strlen($pcHex) === 6
+            ? (hexdec(substr($pcHex, 0, 2)) * 299
+                + hexdec(substr($pcHex, 2, 2)) * 587
+                + hexdec(substr($pcHex, 4, 2)) * 114) / 1000
+            : 255;
+        $primaryColorDarkSafe = $pcBrightness < 90 ? '#ffffff' : $primaryColor;
+    @endphp
     <style @cspNonce>
         [x-cloak] { display: none !important; }
         header.fixed { top: 0 !important; }
+        /* テーマプライマリカラー (preview-frame でも有効に) */
+        :root {
+            --color-primary: {{ $primaryColor }};
+            --color-primary-dark-safe: {{ $primaryColorDarkSafe }};
+        }
         /* プレビュー専用: 全インタラクティブ要素を無効化 */
         a, button, [role="button"],
         input, textarea, select {

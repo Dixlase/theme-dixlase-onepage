@@ -52,6 +52,28 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     </script>
     @include('themes::partials.head')
 
+    {{-- テーマプライマリカラーを CSS 変数化。SCSS 側 (var(--color-primary))
+         からヘッダー / フッターのメニュー hover 色などで参照する。
+         暗いプライマリカラー (例: #1f2937) はダークモードのメニュー
+         hover 背景上で文字が同化して読めなくなるため、明度を計算して
+         暗すぎる場合は dark-safe 変数を白にフォールバックする。 --}}
+    @php
+        $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
+        $pcHex = ltrim($primaryColor, '#');
+        $pcBrightness = strlen($pcHex) === 6
+            ? (hexdec(substr($pcHex, 0, 2)) * 299
+                + hexdec(substr($pcHex, 2, 2)) * 587
+                + hexdec(substr($pcHex, 4, 2)) * 114) / 1000
+            : 255;
+        $primaryColorDarkSafe = $pcBrightness < 90 ? '#ffffff' : $primaryColor;
+    @endphp
+    <style @cspNonce>
+        :root {
+            --color-primary: {{ $primaryColor }};
+            --color-primary-dark-safe: {{ $primaryColorDarkSafe }};
+        }
+    </style>
+
     {{-- Font Awesome for SNS Icons --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>

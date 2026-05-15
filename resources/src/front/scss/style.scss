@@ -41,6 +41,31 @@ header {
     }
 }
 
+// Header / footer menu link hover color follows the theme primary
+// color (set as `--color-primary` by the layout from
+// `$themeSettings->primary_color`). The hero secondary ("Learn More")
+// button shares the same hover color treatment.
+//
+// `--color-primary-dark-safe` is `--color-primary` unless that color is
+// too dark to read on the dark-mode menu hover background (e.g. the
+// near-black #1f2937 palette option), in which case the layout sets it
+// to white. We use the dark-safe value only under `.dark`.
+//
+// `!important` is required because the Blade markup ships with Tailwind
+// `hover:text-blue-600` / `hover:text-purple-600` utility classes whose
+// specificity ties with these selectors and would otherwise win on
+// source order.
+header a:hover,
+footer a:hover,
+.hero-btn-secondary:hover {
+    color: var(--color-primary, #3b82f6) !important;
+}
+.dark header a:hover,
+.dark footer a:hover,
+.dark .hero-btn-secondary:hover {
+    color: var(--color-primary-dark-safe, #3b82f6) !important;
+}
+
 // ナビゲーションスタイル
 .navigation {
     a {
