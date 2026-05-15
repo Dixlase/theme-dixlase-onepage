@@ -30,7 +30,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @php
     // テーマ設定はServiceProviderから自動的に渡される
-    $footerCopyright = $themeSettings->footer_copyright ?? '© ' . date('Y') . ' ' . config('app.name', 'Dixlase') . '. All rights reserved.';
+    // Copyright の `© <year>` は描画時に毎回現在の年で前置するので、
+    // 保存値はそれ以降の編集可能サフィックスだけを期待する。古い
+    // 保存値に `© 2026 ` 形式の prefix が残っていても二重表示にならない
+    // よう、念のためここで剥がしてから前置し直す。
+    $copyrightSuffix = $themeSettings->footer_copyright ?? config('app.name', 'Dixlase') . '. All rights reserved.';
+    $copyrightSuffix = preg_replace('/^\s*©\s*\d{4}\s+/u', '', $copyrightSuffix);
+    $footerCopyright = '© ' . date('Y') . ' ' . $copyrightSuffix;
     // SNSリンクはServiceProviderで自動生成される
     $snsLinks = $themeSettings->snsLinks ?? [];
 @endphp

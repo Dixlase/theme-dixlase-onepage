@@ -61,7 +61,9 @@ class ThemeSettingsSeeder extends Seeder
             // Footer
             'footer_description' => 'Powered by Dixlase CMS',
             'footer_links' => json_encode([]),
-            'footer_copyright' => '© ' . date('Y') . ' ' . config('app.name', 'Dixlase') . '. All rights reserved.',
+            // `© <year>` is rendered automatically by the front (current
+            // year); persist only the editable suffix.
+            'footer_copyright' => config('app.name', 'Dixlase') . '. All rights reserved.',
             
             // SNS Links
             'footer_sns_instagram' => null,

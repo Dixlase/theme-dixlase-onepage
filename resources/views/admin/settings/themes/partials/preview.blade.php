@@ -425,20 +425,32 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         {{-- Description (fixed) --}}
                         <p class="pv-footer-text">Powered by Dixlase</p>
                     </div>
-                    {{-- Copyright --}}
+                    {{-- Copyright: `© <year>` is auto-rendered (and stays
+                         current across year boundaries); only the suffix
+                         after the year is user-editable. --}}
                     <div class="pv-footer-border border-t pt-6 flex justify-center">
                         <div class="relative group cursor-pointer" @click.stop="startEdit('footerCopyright')">
-                            <p class="pv-footer-text text-sm" x-show="editing !== 'footerCopyright'" x-text="footerCopyright"></p>
-                            <input
-                                x-show="editing === 'footerCopyright'"
-                                x-model="footerCopyright"
-                                @click.away="stopEdit()"
-                                @keydown.enter="stopEdit()"
-                                x-ref="editFooterCopyright"
-                                x-effect="if (editing === 'footerCopyright') $nextTick(() => $refs.editFooterCopyright?.focus())"
-                                type="text"
-                                class="pv-edit-input w-full text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
+                            <p class="pv-footer-text text-sm" x-show="editing !== 'footerCopyright'">
+                                © <span x-text="copyrightYear"></span> <span x-text="footerCopyright"></span>
+                            </p>
+                            <div x-show="editing === 'footerCopyright'"
+                                 class="flex flex-col gap-1"
+                                 @click.away="stopEdit()">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="pv-footer-text text-sm whitespace-nowrap">© <span x-text="copyrightYear"></span></span>
+                                    <input
+                                        x-model="footerCopyright"
+                                        @keydown.enter="stopEdit()"
+                                        x-ref="editFooterCopyright"
+                                        x-effect="if (editing === 'footerCopyright') $nextTick(() => $refs.editFooterCopyright?.focus())"
+                                        type="text"
+                                        class="pv-edit-input flex-1 min-w-0 text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                </div>
+                                <p class="pv-footer-text text-[11px] opacity-70 text-left">
+                                    {{ __('themes::admin.settings.footer.copyright_help') }}
+                                </p>
+                            </div>
                             <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'footerCopyright'">
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
                             </div>

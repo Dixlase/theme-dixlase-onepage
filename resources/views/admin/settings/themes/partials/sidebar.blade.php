@@ -249,11 +249,26 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
     </x-admin.theme-preview-sidebar-section>
 
-    {{-- ===== Copyright ===== --}}
+    {{-- ===== Copyright =====
+         The front renders `© <current year>` + this suffix; the prefix
+         is auto-rendered at request time and not editable. We show the
+         same `© <year>` as a non-editable label to the left of the
+         input so the user can see exactly what gets prepended. --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.footer.copyright_section')" icon="fas fa-copyright">
-        <x-form-text name="footer_copyright" :label="__('themes::admin.settings.footer.copyright')"
-                     x-model="footerCopyright"
-                     :help="__('themes::admin.settings.footer.copyright_help')" />
+        <div class="flex items-center gap-2 my-2">
+            <span class="text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap shrink-0">
+                © <span x-text="copyrightYear"></span>
+            </span>
+            <input type="text"
+                   id="footer_copyright"
+                   name="footer_copyright"
+                   x-model="footerCopyright"
+                   value="{{ old('footer_copyright', $footerCopyrightSuffix ?? '') }}"
+                   class="input-common input-full flex-1 min-w-0">
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            {{ __('themes::admin.settings.footer.copyright_help') }}
+        </p>
     </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Multilingual Switcher ===== --}}

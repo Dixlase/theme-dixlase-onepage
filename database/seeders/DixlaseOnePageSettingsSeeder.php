@@ -63,7 +63,9 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             // Footer
             ['name' => 'footer_description', 'value' => 'Powered by Dixlase CMS'],
             ['name' => 'footer_links', 'value' => json_encode([])],
-            ['name' => 'footer_copyright', 'value' => '© ' . date('Y') . ' ' . config('app.name', 'Dixlase') . '. All rights reserved.'],
+            // `© <year>` is rendered automatically by the front (current
+            // year); persist only the editable suffix.
+            ['name' => 'footer_copyright', 'value' => config('app.name', 'Dixlase') . '. All rights reserved.'],
             
             // SNS Links
             ['name' => 'footer_sns_instagram', 'value' => null],
