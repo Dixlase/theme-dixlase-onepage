@@ -34,6 +34,25 @@
 @source "../../../../../../resources/src/components/**/*.js";
 @source "../../../../../../plugins/*/resources/views/front/**/*.blade.php";
 @source "../../../../../../plugins/*/resources/views/components/**/*.blade.php";
+/*
+ * The front page's editable HTML lives at storage/app/private/core/front/.
+ * That tree is outside the @source paths above and the storage directory
+ * carries a "*" gitignore entry. Tailwind v4 respects .gitignore for glob
+ * patterns, but treats an explicit *directory* @source path the same way
+ * it treats an external library (e.g. node_modules) — it scans even when
+ * gitignored. (Pointing at the storage parent doesn't recurse here:
+ * storage/app/private/.gitignore is an in-source "*" that Tailwind
+ * applies to that directory's listing, so children must be named
+ * individually.)
+ *
+ * Front-page content is a core feature and is always present, so its
+ * directory is named directly here. Content-storing plugins (e.g.
+ * DixlasePages) instead declare their directories in plugin.json under
+ * `declares.tailwind_content`; core aggregates those declarations into
+ * the partial imported just below, so this theme stays plugin-agnostic.
+ */
+@source "../../../../../../storage/app/private/core/front";
+@import "../../../../../../resources/css/dixlase-tailwind-plugin-sources.css";
 
 /*
  * Dark mode: class-based strategy
