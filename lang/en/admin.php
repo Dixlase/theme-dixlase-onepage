@@ -97,7 +97,7 @@ return [
             'remove_link' => 'Remove Link',
             'copyright_section' => 'Copyright',
             'copyright' => 'Copyright',
-            'copyright_help' => 'Copyright text displayed in footer',
+            'copyright_help' => 'Copyright text displayed in footer. `©` and the current year are inserted automatically (auto-updates across year boundaries); edit only the text that follows.',
             'sns_title' => 'SNS Links',
             'sns_social_media' => 'Social Media',
             'sns_professional' => 'Professional',

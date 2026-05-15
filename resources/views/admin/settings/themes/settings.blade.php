@@ -30,6 +30,20 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @extends('layouts.admin')
 
+@php
+    // Strip any legacy `© YYYY ` prefix from the saved footer copyright
+    // so the inline editor and the sidebar input only handle the
+    // suffix. Computed once here so both the sidebar template and the
+    // Alpine state at the bottom of this file can reuse it. Done in
+    // PHP (rather than inline in @json) because Blade tokenises `{4}`
+    // inside its directives.
+    $footerCopyrightSuffix = preg_replace(
+        '/^\s*©\s*\d{4}\s+/u',
+        '',
+        old('footer_copyright', $settings->footer_copyright ?? '')
+    );
+@endphp
+
 @section('content')
 <div x-data="themeSettingsEditor()" x-init="init()">
     <form id="theme-settings-form" action="{{ route('admin.settings.themes.settings.update') }}" method="POST">
@@ -95,7 +109,11 @@ function themeSettingsEditor() {
         heroButtonSecondaryEnabled: @json(old('hero_button_secondary_enabled', $settings->hero_button_secondary_enabled ?? '1')),
 
         // Footer settings
-        footerCopyright: @json(old('footer_copyright', $settings->footer_copyright ?? '')),
+        // The `© <year>` prefix is rendered automatically at display time
+        // (always current year), so the input only edits the suffix.
+        // $footerCopyrightSuffix has any legacy `© YYYY ` stripped above.
+        copyrightYear: @json(date('Y')),
+        footerCopyright: @json($footerCopyrightSuffix),
 
         // Media preview URLs
         headerLogoPreviewUrl: @json($headerLogo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $headerLogo->path) : null),

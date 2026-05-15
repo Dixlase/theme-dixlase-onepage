@@ -93,7 +93,9 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_button_secondary_link' => '#features',
             'hero_button_secondary_enabled' => '1',
             'footer_links' => '[]',
-            'footer_copyright' => '© '.date('Y').' '.config('app.name', 'Dixlase').'. All rights reserved.',
+            // `© <year>` is auto-rendered (current year) at display time;
+            // only the editable suffix is persisted.
+            'footer_copyright' => config('app.name', 'Dixlase').'. All rights reserved.',
             'footer_sns_instagram' => null,
             'footer_sns_x' => null,
             'footer_sns_facebook' => null,
@@ -229,6 +231,18 @@ class AdminThemeSettingsController extends AdminLoggedInController
     public function update(UpdateThemeSettingsRequest $request)
     {
         $validated = $request->validated();
+
+        // The footer's `© <year>` prefix is rendered automatically from
+        // the current year on every request, so the DB only stores the
+        // editable suffix. Strip any prefix the user may have typed in
+        // (or that came through from legacy data) before persisting.
+        if (isset($validated['footer_copyright'])) {
+            $validated['footer_copyright'] = preg_replace(
+                '/^\s*©\s*\d{4}\s+/u',
+                '',
+                $validated['footer_copyright']
+            );
+        }
 
         // キーバリュー形式で保存
         ThemeSetting::setValues($validated);

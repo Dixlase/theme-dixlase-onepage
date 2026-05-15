@@ -97,7 +97,7 @@ return [
             'remove_link' => 'リンクを削除',
             'copyright_section' => 'コピーライト',
             'copyright' => 'コピーライト',
-            'copyright_help' => 'フッターに表示するコピーライト文',
+            'copyright_help' => 'フッターに表示するコピーライト文。`©` と現在の年は自動で前置されます(年をまたぐと自動更新)。その後の文字だけを編集してください。',
             'sns_title' => 'SNSリンク',
             'sns_social_media' => 'ソーシャルメディア',
             'sns_professional' => 'プロフェッショナル',
