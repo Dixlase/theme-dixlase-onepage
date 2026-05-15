@@ -47,7 +47,7 @@ npm run build
 Dixlase OnePage は**デュアルライセンス**で配布されています:
 
 - **オープンソースライセンス**: [GNU General Public License v3](./LICENSE)
-- **商用ライセンス**: GPL v3 の条件に準拠できない用途のため、別途商用ライセンスをご用意しています — 詳細は [LICENSE.commercial](./LICENSE.commercial)(現在ドラフト)、または **office@exc-d.com** までお問い合わせください。
+- **商用ライセンス**: GPL v3 の条件に準拠できない用途のため、別途商用ライセンスをご用意しています — 詳細は [LICENSE.commercial](./LICENSE.commercial)(現在ドラフト)、または **info@dixlase.org** までお問い合わせください。
 
 ファイル全体の構成は [NOTICE.ja](./NOTICE.ja) にまとめています([English](./NOTICE))。
 
