@@ -14,7 +14,7 @@
         "theme",
         "cms"
     ],
-    "author": "exc-D inc. <info@exc-d.com>",
+    "author": "exc-D inc. <info@dixlase.org>",
     "license": "GPL-3.0",
     "dependencies": {
         "@alpinejs/collapse": "^3.13.0",

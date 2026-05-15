@@ -9,14 +9,14 @@
         "en": "Dixlase OnePage theme. Plugin-driven single page / landing page theme."
     },
     "author": "exc-D inc.",
-    "email": "office@exc-d.com",
+    "email": "info@dixlase.org",
     "url": "https://exc-d.com",
     "license": "GPL-3.0-or-later",
     "license_template": "license-dual-gpl.txt",
     "commercial_license": {
         "available": true,
         "file": "LICENSE.commercial",
-        "contact": "office@exc-d.com"
+        "contact": "info@dixlase.org"
     },
     "assets": {
         "common": [],
