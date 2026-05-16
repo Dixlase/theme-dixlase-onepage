@@ -1,8 +1,8 @@
 {
     "name": "Dixlase OnePage",
     "package": "DixlaseOnePage",
-    "package_name": "dixlase/dixlase-one-page",
-    "slug": "dixlase-one-page",
+    "package_name": "dixlase/dixlase-onepage",
+    "slug": "dixlase-onepage",
     "version": "1.0.0",
     "description": {
         "ja": "Dixlase OnePage テーマ。プラグイン連動型のシングルページ/LP用テーマ。",
