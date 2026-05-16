@@ -1,5 +1,5 @@
 {
-    "name": "dixlase/dixlase-one-page",
+    "name": "dixlase/dixlase-onepage",
     "description": "Dixlase OnePage theme - Plugin-driven single page / landing page theme",
     "type": "dixlase-theme",
     "license": "GPL-3.0",
@@ -22,7 +22,7 @@
     "extra": {
         "dixlase": {
             "type": "theme",
-            "slug": "dixlase-one-page",
+            "slug": "dixlase-onepage",
             "version": "1.0.0"
         }
     },
