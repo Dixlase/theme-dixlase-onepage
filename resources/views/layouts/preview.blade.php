@@ -78,15 +78,26 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     {{-- ヘッダー位置: 管理バーがないため top-0 に固定 --}}
     @php
         // テーマプライマリカラー + ダークモード可読フォールバック。
-        // layouts/app.blade.php と同じ明度計算。
+        // layouts/app.blade.php と同じロジック(無彩色は白、有彩色は
+        // 30% 白寄せで明度アップ)。詳細は app.blade.php のコメント参照。
         $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
         $pcHex = ltrim($primaryColor, '#');
-        $pcBrightness = strlen($pcHex) === 6
-            ? (hexdec(substr($pcHex, 0, 2)) * 299
-                + hexdec(substr($pcHex, 2, 2)) * 587
-                + hexdec(substr($pcHex, 4, 2)) * 114) / 1000
-            : 255;
-        $primaryColorDarkSafe = $pcBrightness < 90 ? '#ffffff' : $primaryColor;
+        if (strlen($pcHex) === 6) {
+            $pcR = hexdec(substr($pcHex, 0, 2));
+            $pcG = hexdec(substr($pcHex, 2, 2));
+            $pcB = hexdec(substr($pcHex, 4, 2));
+            if (max($pcR, $pcG, $pcB) - min($pcR, $pcG, $pcB) < 30) {
+                $primaryColorDarkSafe = '#ffffff';
+            } else {
+                $primaryColorDarkSafe = sprintf('#%02x%02x%02x',
+                    (int) round($pcR + (255 - $pcR) * 0.30),
+                    (int) round($pcG + (255 - $pcG) * 0.30),
+                    (int) round($pcB + (255 - $pcB) * 0.30)
+                );
+            }
+        } else {
+            $primaryColorDarkSafe = $primaryColor;
+        }
     @endphp
     <style @cspNonce>
         [x-cloak] { display: none !important; }

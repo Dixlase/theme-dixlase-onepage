@@ -54,18 +54,33 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     {{-- テーマプライマリカラーを CSS 変数化。SCSS 側 (var(--color-primary))
          からヘッダー / フッターのメニュー hover 色などで参照する。
-         暗いプライマリカラー (例: #1f2937) はダークモードのメニュー
-         hover 背景上で文字が同化して読めなくなるため、明度を計算して
-         暗すぎる場合は dark-safe 変数を白にフォールバックする。 --}}
+         ダークモードのホバー色は別計算で `--color-primary-dark-safe` を
+         算出する:
+           1. 無彩色 (グレー / ブラック: R≈G≈B) は明度に関わらず暗い
+              hover 背景上で読めないので白にフォールバック。
+           2. それ以外の有彩色は 30% だけ白に寄せて明度を上げる。
+              色相は保ったまま、ダーク背景でも視認しやすい明るさにする。 --}}
     @php
         $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
         $pcHex = ltrim($primaryColor, '#');
-        $pcBrightness = strlen($pcHex) === 6
-            ? (hexdec(substr($pcHex, 0, 2)) * 299
-                + hexdec(substr($pcHex, 2, 2)) * 587
-                + hexdec(substr($pcHex, 4, 2)) * 114) / 1000
-            : 255;
-        $primaryColorDarkSafe = $pcBrightness < 90 ? '#ffffff' : $primaryColor;
+        if (strlen($pcHex) === 6) {
+            $pcR = hexdec(substr($pcHex, 0, 2));
+            $pcG = hexdec(substr($pcHex, 2, 2));
+            $pcB = hexdec(substr($pcHex, 4, 2));
+            if (max($pcR, $pcG, $pcB) - min($pcR, $pcG, $pcB) < 30) {
+                // 無彩色は白
+                $primaryColorDarkSafe = '#ffffff';
+            } else {
+                // 30% 白寄せで明度を上げる
+                $primaryColorDarkSafe = sprintf('#%02x%02x%02x',
+                    (int) round($pcR + (255 - $pcR) * 0.30),
+                    (int) round($pcG + (255 - $pcG) * 0.30),
+                    (int) round($pcB + (255 - $pcB) * 0.30)
+                );
+            }
+        } else {
+            $primaryColorDarkSafe = $primaryColor;
+        }
     @endphp
     <style @cspNonce>
         :root {
