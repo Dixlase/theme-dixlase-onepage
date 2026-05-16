@@ -1,4 +1,13 @@
+/*
+ * All @import statements must come before any other at-rule (including
+ * @plugin, @theme, @source, @variant) per the CSS spec; otherwise Vite
+ * warns ("@import must precede all other statements") and may silently
+ * drop the import. The plugin-source aggregator is bundled here so that
+ * its @source declarations participate in scanning.
+ */
 @import "tailwindcss";
+@import "../../../../../../resources/css/dixlase-tailwind-plugin-sources.css";
+
 @plugin "@tailwindcss/typography";
 
 /*
@@ -52,7 +61,6 @@
  * the partial imported just below, so this theme stays plugin-agnostic.
  */
 @source "../../../../../../storage/app/private/core/front";
-@import "../../../../../../resources/css/dixlase-tailwind-plugin-sources.css";
 
 /*
  * Dark mode: class-based strategy

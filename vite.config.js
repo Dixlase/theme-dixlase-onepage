@@ -83,5 +83,13 @@ export default defineConfig({
     // CSS設定
     css: {
         devSourcemap: true,
+        preprocessorOptions: {
+            scss: {
+                // Use the modern Sass JS API so Vite stops printing the
+                // "legacy-js-api" deprecation warning. The legacy API will be
+                // removed in Dart Sass 2.0.
+                api: 'modern-compiler',
+            },
+        },
     },
 });
