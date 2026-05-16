@@ -86,7 +86,7 @@ class UpdateThemeSettingsRequest extends FormRequest
             'appearance_mode' => 'required|in:0,1,2',
 
             // Primary Color
-            'primary_color' => 'nullable|string|in:#3b82f6,#8b5cf6,#10b981,#ef4444,#f97316,#ec4899,#6366f1,#14b8a6,#1f2937,#6b7280',
+            'primary_color' => 'nullable|string|in:#3b82f6,#8b5cf6,#10b981,#ef4444,#f97316,#eab308,#92400e,#ec4899,#6366f1,#1f2937,#6b7280',
 
             // Plugin Integration
             'header_menu_id' => 'nullable|integer',

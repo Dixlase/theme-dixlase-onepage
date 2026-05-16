@@ -54,9 +54,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     '#10b981' => __('themes::admin.settings.primary_color.green'),
                     '#ef4444' => __('themes::admin.settings.primary_color.red'),
                     '#f97316' => __('themes::admin.settings.primary_color.orange'),
+                    '#eab308' => __('themes::admin.settings.primary_color.yellow'),
+                    '#92400e' => __('themes::admin.settings.primary_color.brown'),
                     '#ec4899' => __('themes::admin.settings.primary_color.pink'),
                     '#6366f1' => __('themes::admin.settings.primary_color.indigo'),
-                    '#14b8a6' => __('themes::admin.settings.primary_color.teal'),
                     '#1f2937' => __('themes::admin.settings.primary_color.black'),
                     '#6b7280' => __('themes::admin.settings.primary_color.gray'),
                 ];
