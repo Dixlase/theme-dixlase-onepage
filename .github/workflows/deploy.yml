@@ -63,6 +63,7 @@ jobs:
             set -e
             BASE="${{ steps.target.outputs.base_dir }}"
             THEME_DIR="DixlaseOnePage"
+            EXPECTED_URL="git@github.com:${{ github.repository }}.git"
 
             for SITE in brand docs keys; do
               DEST="$BASE/$SITE/themes/$THEME_DIR"
@@ -71,12 +72,55 @@ jobs:
               # themes ディレクトリがなければ作成
               mkdir -p "$BASE/$SITE/themes"
 
-              if [ ! -d "$DEST" ]; then
-                git clone --branch main git@github.com:${{ github.repository }}.git "$DEST"
-              else
+              # ------------------------------------------------------------------
+              # Resolve $DEST into one of three shapes and act accordingly:
+              #
+              #   (a) Proper nested clone of this theme
+              #       -> fetch + reset to origin/main
+              #
+              #   (b) Directory exists but with no nested .git
+              #       -> likely the outer parent repo was re-cloned over it and
+              #          the theme's git metadata was lost. Without this guard
+              #          the next branch would silently fetch+reset against
+              #          WHICHEVER repo the parent .git tracks (Core, usually),
+              #          leaving theme files frozen forever -- same silent
+              #          regression that hid in DixlaseInquiry from
+              #          2026-05-13 to 2026-05-17.
+              #          Move the stale tree aside (recoverable as .stale.<ts>)
+              #          and re-clone from $EXPECTED_URL.
+              #
+              #   (c) Directory does not exist at all
+              #       -> first-time deploy, clone fresh.
+              #
+              # Any other anomaly (.git exists but its origin URL points at a
+              # different repo) is treated as operator intent we shouldn't
+              # second-guess: fail loud so manual recovery is forced.
+              # ------------------------------------------------------------------
+              if [ -d "$DEST/.git" ]; then
+                ACTUAL_URL=$(cd "$DEST" && git config --get remote.origin.url || echo "")
+                if [ "$ACTUAL_URL" != "$EXPECTED_URL" ]; then
+                  echo "ERROR: $DEST/.git origin URL does not match this theme." >&2
+                  echo "       Expected: $EXPECTED_URL" >&2
+                  echo "       Actual:   $ACTUAL_URL" >&2
+                  echo "       Refusing to fetch+reset against an unrelated repo." >&2
+                  echo "       Manual recovery (one-time):" >&2
+                  echo "         sudo mv $DEST ${DEST}.stale.\$(date +%Y%m%d-%H%M%S)" >&2
+                  echo "         git clone --branch main $EXPECTED_URL $DEST" >&2
+                  exit 1
+                fi
+
                 cd "$DEST"
                 git fetch origin
                 git reset --hard origin/main
+
+              elif [ -d "$DEST" ]; then
+                BACKUP="${DEST}.stale.$(date +%Y%m%d-%H%M%S)"
+                echo "WARNING: $DEST exists but has no nested .git; moving aside to $BACKUP and re-cloning fresh."
+                mv "$DEST" "$BACKUP"
+                git clone --branch main "$EXPECTED_URL" "$DEST"
+
+              else
+                git clone --branch main "$EXPECTED_URL" "$DEST"
               fi
 
               if [ -f "$DEST/composer.json" ]; then
@@ -97,8 +141,13 @@ jobs:
               mkdir -p "$ASSET_DIR"
               rsync -a "$BASE/_shared/themes/$THEME_DIR/" "$ASSET_DIR/"
 
-              # ビューキャッシュクリア（コンテナ内で実行）
-              docker exec compose-php-1 php /var/www/apps/$SITE/artisan view:clear
+              # Invalidate Laravel's compiled bootstrap caches (views, config,
+              # routes, events) so any blade / config / route changes shipped
+              # by this push take effect on the next request without waiting
+              # for OPcache revalidation or a PHP-FPM reload. Replaces the
+              # previous view:clear-only call which left config/route caches
+              # potentially stale.
+              docker exec compose-php-1 php /var/www/apps/$SITE/artisan optimize:clear
             done
 
             echo "=== Theme deploy complete ==="
