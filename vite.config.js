@@ -58,6 +58,23 @@ export default defineConfig({
                 drop_console: process.env.NODE_ENV === 'production',
             },
         },
+
+        // CSS の minify は lightningcss を使う。
+        // @tailwindcss/typography 0.5.x は Tailwind v4 配下で空の
+        // :where() を含む CSS を出力することがあり、esbuild
+        // (Vite の CSS minify デフォルト) はこれを valid と認識できず
+        // 毎ビルドで "Unexpected \")\"" の warning を出す。
+        // lightningcss は forgiving-selector-list を許容し、圧縮率も
+        // esbuild より高い (Tailwind v4 公式推奨)。
+        cssMinify: 'lightningcss',
+
+        // lightningcss に対するターゲット指定。明示しないと保守的な
+        // browserslist 既定で動き、Tailwind v4 が出す oklch() / nesting
+        // / `:where()` などのモダン CSS に対して fallback を展開する
+        // 結果、ファイルサイズが大きく膨らむ。Tailwind v4 自身が前提と
+        // するモダンブラウザ (Chrome / Edge / Safari / Firefox 直近) に
+        // 揃え、不要な変換を避けることで出力サイズを抑える。
+        cssTarget: ['chrome111', 'edge111', 'safari16.4', 'firefox128'],
     },
 
     // 開発サーバー設定
