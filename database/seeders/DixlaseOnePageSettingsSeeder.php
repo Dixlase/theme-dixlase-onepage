@@ -43,7 +43,7 @@ class DixlaseOnePageSettingsSeeder extends Seeder
     public function run(): void
     {
         // 既存のデータがあるかチェック
-        if (DB::table('thm_dixlase_one_page_settings')->exists()) {
+        if (DB::table('thm_dixlase_onepage_settings')->exists()) {
             $this->command->info('Dixlase OnePage settings already exist. Skipping...');
             return;
         }
@@ -84,7 +84,7 @@ class DixlaseOnePageSettingsSeeder extends Seeder
         ];
 
         foreach ($settings as $setting) {
-            DB::table('thm_dixlase_one_page_settings')->insert([
+            DB::table('thm_dixlase_onepage_settings')->insert([
                 'name' => $setting['name'],
                 'value' => $setting['value'],
                 'created_at' => now(),

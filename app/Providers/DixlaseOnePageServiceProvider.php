@@ -74,8 +74,8 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             // データベース接続を試みる
             try {
                 // テーブルが存在し、かつデータが存在しない場合のみシード
-                if (DB::getSchemaBuilder()->hasTable('thm_dixlase_one_page_settings')) {
-                    if (! DB::table('thm_dixlase_one_page_settings')->exists()) {
+                if (DB::getSchemaBuilder()->hasTable('thm_dixlase_onepage_settings')) {
+                    if (! DB::table('thm_dixlase_onepage_settings')->exists()) {
                         Artisan::call('db:seed', [
                             '--class' => 'Themes\\DixlaseOnePage\\Database\\Seeders\\DixlaseOnePageSettingsSeeder',
                         ]);

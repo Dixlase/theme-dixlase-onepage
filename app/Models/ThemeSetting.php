@@ -40,7 +40,7 @@ class ThemeSetting extends Model
     /**
      * テーブル名
      */
-    protected $table = 'thm_dixlase_one_page_settings';
+    protected $table = 'thm_dixlase_onepage_settings';
 
     /**
      * 複数代入可能な属性
