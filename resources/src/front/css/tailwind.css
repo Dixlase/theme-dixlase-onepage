@@ -6,7 +6,7 @@
  * its @source declarations participate in scanning.
  */
 @import "tailwindcss";
-@import "../../../../../../resources/css/dixlase-tailwind-plugin-sources.css";
+@import "../../../../../../resources/src/common/css/dixlase-tailwind-plugin-sources.css";
 
 @plugin "@tailwindcss/typography";
 
