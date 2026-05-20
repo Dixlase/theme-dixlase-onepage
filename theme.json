@@ -41,6 +41,7 @@
     ],
     "requires": {
         "dixlase": ">=1.0.0",
+        "dixlase_api": "^0.1",
         "php": ">=8.2"
     },
     "supports": {
