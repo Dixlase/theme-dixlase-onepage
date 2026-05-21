@@ -1,9 +1,0 @@
-Dixlase OnePage — update-flow verification marker
-
-This file was added together with the temporary v0.1.1 version bump to
-confirm that file-content changes (not just the version number)
-propagate through the theme update flow (dls:theme:update).
-
-It is removed again when the temporary bump is reverted to 0.1.0.
-
-marker: sandbox-update-test / v0.1.1
