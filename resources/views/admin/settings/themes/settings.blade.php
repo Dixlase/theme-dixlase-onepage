@@ -135,6 +135,7 @@ function themeSettingsEditor() {
             youtube: @json(old('footer_sns_youtube', $settings->footer_sns_youtube ?? '')),
             pinterest: @json(old('footer_sns_pinterest', $settings->footer_sns_pinterest ?? '')),
             discord: @json(old('footer_sns_discord', $settings->footer_sns_discord ?? '')),
+            github: @json(old('footer_sns_github', $settings->footer_sns_github ?? '')),
         },
 
         // Plugin preview data

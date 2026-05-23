@@ -81,6 +81,7 @@ class UpdateThemeSettingsRequest extends FormRequest
             'footer_sns_youtube' => 'nullable|string|max:500',
             'footer_sns_pinterest' => 'nullable|string|max:500',
             'footer_sns_discord' => 'nullable|string|max:500',
+            'footer_sns_github' => 'nullable|string|max:500',
 
             // Appearance Mode
             'appearance_mode' => 'required|in:0,1,2',

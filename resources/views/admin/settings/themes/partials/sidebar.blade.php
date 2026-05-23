@@ -232,6 +232,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     ['name' => 'footer_sns_youtube', 'label' => 'YouTube', 'prefix' => 'youtube.com/@'],
                     ['name' => 'footer_sns_pinterest', 'label' => 'Pinterest', 'prefix' => 'pinterest.com/'],
                     ['name' => 'footer_sns_discord', 'label' => 'Discord', 'prefix' => 'discord.gg/'],
+                    ['name' => 'footer_sns_github', 'label' => 'GitHub', 'prefix' => 'github.com/'],
                 ];
             @endphp
             @foreach($snsFields as $sns)

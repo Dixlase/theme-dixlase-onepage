@@ -207,6 +207,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'footer_sns_youtube' => null,
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
+            'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
             'multilingual_switcher_enabled' => '0',
             // メディア関連のプロパティ（loadMediaForThemeSettings()で設定されるが、デフォルトでも必要）
@@ -287,6 +288,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'youtube' => $this->generateSnsUrl('youtube', $themeSettings->footer_sns_youtube ?? null),
             'pinterest' => $this->generateSnsUrl('pinterest', $themeSettings->footer_sns_pinterest ?? null),
             'discord' => $this->generateSnsUrl('discord', $themeSettings->footer_sns_discord ?? null),
+            'github' => $this->generateSnsUrl('github', $themeSettings->footer_sns_github ?? null),
         ];
     }
 
@@ -320,6 +322,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
                 : 'https://www.youtube.com/@'.$value,
             'pinterest' => 'https://www.pinterest.com/'.ltrim($value, '@').'/',
             'discord' => $value, // Discordは招待リンクなのでそのまま
+            'github' => 'https://github.com/'.ltrim($value, '@'),
             default => $value,
         };
     }

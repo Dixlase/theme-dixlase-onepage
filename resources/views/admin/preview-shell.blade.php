@@ -281,7 +281,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     @endif
                     @if(!empty(array_filter($shellSnsLinks)))
                     <div class="flex flex-wrap justify-center gap-3">
-                        @foreach(['instagram' => 'fa-instagram', 'x' => 'fa-x-twitter', 'facebook' => 'fa-facebook', 'tiktok' => 'fa-tiktok', 'bluesky' => 'fa-bluesky', 'threads' => 'fa-threads', 'linkedin' => 'fa-linkedin', 'youtube' => 'fa-youtube', 'pinterest' => 'fa-pinterest', 'discord' => 'fa-discord'] as $platform => $icon)
+                        @foreach(['instagram' => 'fa-instagram', 'x' => 'fa-x-twitter', 'facebook' => 'fa-facebook', 'tiktok' => 'fa-tiktok', 'bluesky' => 'fa-bluesky', 'threads' => 'fa-threads', 'linkedin' => 'fa-linkedin', 'youtube' => 'fa-youtube', 'pinterest' => 'fa-pinterest', 'discord' => 'fa-discord', 'github' => 'fa-github'] as $platform => $icon)
                             @if(!empty($shellSnsLinks[$platform]))
                                 <span class="pv-footer-text text-lg"><i class="fab {{ $icon }}"></i></span>
                             @endif

@@ -78,6 +78,7 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             ['name' => 'footer_sns_youtube', 'value' => null],
             ['name' => 'footer_sns_pinterest', 'value' => null],
             ['name' => 'footer_sns_discord', 'value' => null],
+            ['name' => 'footer_sns_github', 'value' => null],
             
             // Appearance Mode
             ['name' => 'appearance_mode', 'value' => '0'], // 0: Auto, 1: Light, 2: Dark

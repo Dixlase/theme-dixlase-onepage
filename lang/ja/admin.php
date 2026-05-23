@@ -114,6 +114,7 @@ return [
             'sns_youtube' => 'YouTube URL',
             'sns_pinterest' => 'Pinterest URL',
             'sns_discord' => 'Discord URL',
+            'sns_github' => 'GitHub URL',
         ],
 
         // Primary Color
