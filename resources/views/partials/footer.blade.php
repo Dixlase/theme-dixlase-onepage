@@ -162,6 +162,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                             <i class="fa-brands fa-discord text-xl"></i>
                         </a>
                     @endif
+                    @if($snsLinks['github'])
+                        <a href="{{ $snsLinks['github'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="GitHub">
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                    @endif
                 </div>
             @endif
 

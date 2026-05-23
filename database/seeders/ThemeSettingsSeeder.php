@@ -76,6 +76,7 @@ class ThemeSettingsSeeder extends Seeder
             'footer_sns_youtube' => null,
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
+            'footer_sns_github' => null,
             
             // Colors
             'primary_color' => '#3b82f6',

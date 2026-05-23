@@ -70,6 +70,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_youtube',
             'footer_sns_pinterest',
             'footer_sns_discord',
+            'footer_sns_github',
             'appearance_mode',
             'header_menu_id',
             'footer_menu_id',
@@ -106,6 +107,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_youtube' => null,
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
+            'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
             'header_menu_id' => null,
             'footer_menu_id' => null,
