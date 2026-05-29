@@ -57,6 +57,9 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
         // マイグレーションのみテーマ側で登録
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
+        // Load helper functions (dls_onepage_localized_setting etc.)
+        require_once __DIR__.'/../Helpers/DixlaseOnePageHelpers.php';
+
         // Auto-seed theme settings if table exists but is empty
         $this->autoSeedThemeSettings();
 
