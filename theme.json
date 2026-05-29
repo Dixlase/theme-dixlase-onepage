@@ -44,6 +44,41 @@
         "dixlase_api": "^0.1",
         "php": ">=8.2"
     },
+    "capabilities": [
+        "multilingual-content"
+    ],
+    "multilingual_content": {
+        "types": [
+            {
+                "key": "dixlase-onepage:settings",
+                "cardinality": "singleton",
+                "provider": "Themes\\DixlaseOnePage\\App\\Multilingual\\DixlaseOnePageSettingsProvider",
+                "label_key": "themes::multilingual_types.settings",
+                "fields": [
+                    {
+                        "name": "hero_main_title",
+                        "type": "text",
+                        "rules": "nullable|string|max:200"
+                    },
+                    {
+                        "name": "hero_sub_title",
+                        "type": "textarea",
+                        "rules": "nullable|string|max:500"
+                    },
+                    {
+                        "name": "hero_button_text",
+                        "type": "text",
+                        "rules": "nullable|string|max:100"
+                    },
+                    {
+                        "name": "hero_button_secondary_text",
+                        "type": "text",
+                        "rules": "nullable|string|max:100"
+                    }
+                ]
+            }
+        ]
+    },
     "supports": {
         "dark_mode": true,
         "responsive": true,

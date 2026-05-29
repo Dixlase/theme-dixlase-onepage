@@ -30,12 +30,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @php
     // テーマ設定はServiceProviderから自動的に渡される
-    $heroMainTitle = $themeSettings->hero_main_title ?? 'Welcome to ' . config('app.name', 'Dixlase');
-    $heroSubTitle = $themeSettings->hero_sub_title ?? 'Modern CMS Platform for Building Amazing Websites';
-    $heroButtonText = $themeSettings->hero_button_text ?? 'Get Started';
+    // The 4 hero text fields go through the multilingual lookup chain
+    // (current locale → site default → primary) via
+    // dls_onepage_localized_setting(). The other fields are
+    // non-translatable (URLs, booleans, media paths, colour) and read
+    // straight from the primary $themeSettings object.
+    $heroMainTitle = dls_onepage_localized_setting('hero_main_title') ?? 'Welcome to ' . config('app.name', 'Dixlase');
+    $heroSubTitle = dls_onepage_localized_setting('hero_sub_title') ?? 'Modern CMS Platform for Building Amazing Websites';
+    $heroButtonText = dls_onepage_localized_setting('hero_button_text') ?? 'Get Started';
     $heroButtonLink = $themeSettings->hero_button_link ?? '#';
     $heroButtonEnabled = ($themeSettings->hero_button_enabled ?? '1') === '1';
-    $heroButtonSecondaryText = $themeSettings->hero_button_secondary_text ?? null;
+    $heroButtonSecondaryText = dls_onepage_localized_setting('hero_button_secondary_text');
     $heroButtonSecondaryLink = $themeSettings->hero_button_secondary_link ?? null;
     $heroButtonSecondaryEnabled = ($themeSettings->hero_button_secondary_enabled ?? '1') === '1';
     $heroBackgroundPath = $themeSettings->heroBackgroundPath ?? null;
