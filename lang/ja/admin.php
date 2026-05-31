@@ -144,6 +144,13 @@ return [
             'mode_help' => '自動: ユーザーのシステム設定に従います / ライト: 明るいテーマ / ダーク: 暗いテーマ',
         ],
 
+        // Default locale (primary language the theme settings are authored in)
+        'default_locale' => [
+            'title' => 'デフォルト言語',
+            'auto' => '自動 (サイトの既定言語を使用)',
+            'help' => 'ヒーロー文言など翻訳対象設定を「どの言語で書いたか」を指定します。翻訳マネージャの言語セレクタからこの言語が除外され、この言語のビュアーに対してはフロントが primary 値を直接表示します。',
+        ],
+
         // Multilingual switcher (DixlaseMultilingual integration)
         'multilingual' => [
             'title' => '多言語スイッチャー',

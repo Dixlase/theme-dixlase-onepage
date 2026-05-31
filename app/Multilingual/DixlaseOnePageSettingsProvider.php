@@ -33,6 +33,7 @@
 namespace Themes\DixlaseOnePage\App\Multilingual;
 
 use App\Contracts\Multilingual\TranslatableContentProvider;
+use App\Helpers\LocaleHelper;
 use Themes\DixlaseOnePage\App\Models\ThemeSetting;
 
 /**
@@ -57,5 +58,38 @@ class DixlaseOnePageSettingsProvider implements TranslatableContentProvider
         $value = ThemeSetting::getValue($field);
 
         return $value === null ? null : (string) $value;
+    }
+
+    /**
+     * The locale the primary-stored theme-settings values are written in.
+     *
+     * Sourced from the operator-configurable `default_locale` theme
+     * setting. An explicit locale (e.g. 'en', 'ja') is returned as-is.
+     * The sentinel value 'auto' (or an unset/empty setting) falls back
+     * to the site's default locale.
+     *
+     * The central translation manager UI excludes this locale from the
+     * locale selector (so the operator cannot accidentally translate
+     * "into" the primary), and `dls_onepage_localized_setting()`
+     * short-circuits the primary locale straight to the primary value
+     * instead of going through the resolver.
+     *
+     * Returns null only when LocaleHelper is unavailable; the helper /
+     * editor treat null as "no primary locale configured" (= pre-Phase-B
+     * behaviour with every enabled locale editable).
+     */
+    public function getPrimaryLocale(): ?string
+    {
+        $locale = ThemeSetting::getValue('default_locale');
+
+        if (is_string($locale) && $locale !== '' && $locale !== 'auto') {
+            return $locale;
+        }
+
+        try {
+            return LocaleHelper::getSiteDefaultLocale();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

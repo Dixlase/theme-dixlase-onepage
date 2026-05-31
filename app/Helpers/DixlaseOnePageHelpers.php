@@ -55,6 +55,24 @@ if (! function_exists('dls_onepage_localized_setting')) {
     function dls_onepage_localized_setting(string $key): ?string
     {
         try {
+            // Step 0: when the current locale equals the provider's
+            // primary locale (derived from the `default_locale` theme
+            // setting, falling back to the site default when 'auto' or
+            // unset), skip the resolver entirely — the primary IS the
+            // value for that locale. This also avoids the empty-row
+            // trap when the operator opens a primary-locale tab in the
+            // central translation manager and saves it blank.
+            try {
+                $primaryLocale = (new \Themes\DixlaseOnePage\App\Multilingual\DixlaseOnePageSettingsProvider())->getPrimaryLocale();
+            } catch (\Throwable) {
+                $primaryLocale = null;
+            }
+            if ($primaryLocale !== null && $primaryLocale === app()->getLocale()) {
+                $primary = ThemeSetting::getValue($key);
+
+                return $primary === null ? null : (string) $primary;
+            }
+
             if (app()->bound(\App\Contracts\Multilingual\SingletonTranslationResolver::class)) {
                 /** @var \App\Contracts\Multilingual\SingletonTranslationResolver $resolver */
                 $resolver = app(\App\Contracts\Multilingual\SingletonTranslationResolver::class);
