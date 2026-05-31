@@ -59,8 +59,15 @@ if (! function_exists('dls_onepage_localized_setting')) {
                 /** @var \App\Contracts\Multilingual\SingletonTranslationResolver $resolver */
                 $resolver = app(\App\Contracts\Multilingual\SingletonTranslationResolver::class);
 
+                // Treat an empty string the same as "no translation". The
+                // central translation manager UI stores every field of a
+                // locale row even when the operator leaves them blank, so
+                // a brand-new locale tab saves `""` for each field on
+                // first save. Without this guard, the helper would return
+                // `""` and the blade would render an empty hero block
+                // instead of falling back to the primary value.
                 $value = $resolver->resolve('dixlase-onepage:settings', $key, app()->getLocale());
-                if ($value !== null) {
+                if ($value !== null && $value !== '') {
                     return (string) $value;
                 }
 
@@ -72,7 +79,7 @@ if (! function_exists('dls_onepage_localized_setting')) {
 
                 if (is_string($siteDefault) && $siteDefault !== app()->getLocale()) {
                     $value = $resolver->resolve('dixlase-onepage:settings', $key, $siteDefault);
-                    if ($value !== null) {
+                    if ($value !== null && $value !== '') {
                         return (string) $value;
                     }
                 }
