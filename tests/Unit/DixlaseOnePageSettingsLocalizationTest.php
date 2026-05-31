@@ -137,6 +137,30 @@ class DixlaseOnePageSettingsLocalizationTest extends TestCase
         $this->assertNull(dls_onepage_localized_setting('hero_main_title'));
     }
 
+    /**
+     * Empty-string translations must be treated as "no translation".
+     *
+     * The central translation manager UI stores every field of a locale
+     * row even when the operator leaves them blank, so a brand-new locale
+     * tab persists `""` for each field on first save. Without the
+     * empty-string guard the helper would return `""` and the blade
+     * would render an empty hero block instead of falling back to the
+     * primary value.
+     */
+    public function test_helper_treats_empty_translation_as_fallthrough(): void
+    {
+        ThemeSetting::setValue('hero_main_title', 'プライマリ見出し');
+
+        // Resolver returns '' for the current locale (en) — exactly what
+        // the multilingual UI stores when the operator opens an EN tab
+        // and saves without filling it in. Helper must NOT return '';
+        // it must fall through to the primary value.
+        $this->bindResolverReturning('hero_main_title', 'en', '');
+        app()->setLocale('en');
+
+        $this->assertSame('プライマリ見出し', dls_onepage_localized_setting('hero_main_title'));
+    }
+
     public function test_theme_json_declares_singleton_with_provider(): void
     {
         $manifest = json_decode(
