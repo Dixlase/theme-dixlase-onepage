@@ -45,13 +45,14 @@ class DixlaseOnePageSettingsSeeder extends Seeder
         // 既存のデータがあるかチェック
         if (DB::table('thm_dixlase_onepage_settings')->exists()) {
             $this->command->info('Dixlase OnePage settings already exist. Skipping...');
+
             return;
         }
 
         $settings = [
             // Hero Section
             ['name' => 'hero_background_image_id', 'value' => null],
-            ['name' => 'hero_main_title', 'value' => 'Welcome to ' . config('app.name', 'Dixlase')],
+            ['name' => 'hero_main_title', 'value' => 'Welcome to '.config('app.name', 'Dixlase')],
             ['name' => 'hero_sub_title', 'value' => 'Modern CMS Platform for Building Amazing Websites'],
             ['name' => 'hero_button_text', 'value' => 'Get Started'],
             ['name' => 'hero_button_link', 'value' => '#'],
@@ -59,14 +60,14 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             ['name' => 'hero_button_secondary_text', 'value' => 'Learn More'],
             ['name' => 'hero_button_secondary_link', 'value' => '#features'],
             ['name' => 'hero_button_secondary_enabled', 'value' => '1'],
-            
+
             // Footer
             ['name' => 'footer_description', 'value' => 'Powered by Dixlase CMS'],
             ['name' => 'footer_links', 'value' => json_encode([])],
             // `© <year>` is rendered automatically by the front (current
             // year); persist only the editable suffix.
-            ['name' => 'footer_copyright', 'value' => config('app.name', 'Dixlase') . '. All rights reserved.'],
-            
+            ['name' => 'footer_copyright', 'value' => config('app.name', 'Dixlase').'. All rights reserved.'],
+
             // SNS Links
             ['name' => 'footer_sns_instagram', 'value' => null],
             ['name' => 'footer_sns_x', 'value' => null],
@@ -79,9 +80,16 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             ['name' => 'footer_sns_pinterest', 'value' => null],
             ['name' => 'footer_sns_discord', 'value' => null],
             ['name' => 'footer_sns_github', 'value' => null],
-            
+
             // Appearance Mode
             ['name' => 'appearance_mode', 'value' => '0'], // 0: Auto, 1: Light, 2: Dark
+
+            // Multilingual
+            // The locale the primary-stored theme-settings values are written
+            // in. 'auto' resolves to the site default at runtime. The central
+            // translation manager UI excludes this locale from its language
+            // selector; the localized helper short-circuits it to the primary.
+            ['name' => 'default_locale', 'value' => 'auto'],
         ];
 
         foreach ($settings as $setting) {

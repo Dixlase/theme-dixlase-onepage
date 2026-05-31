@@ -78,6 +78,17 @@ class DixlaseOnePageSettingsLocalizationTest extends TestCase
         // (no active-theme row, INSTALLED=false, etc.). require_once is
         // idempotent.
         require_once __DIR__.'/../../app/Helpers/DixlaseOnePageHelpers.php';
+
+        // Core's TestCase::migratePluginsUnderTest() runs `migrate` against
+        // plugins/*/database/migrations but does NOT scan theme migrations
+        // (themes have no analogous discovery hook yet). Run the theme's
+        // own migrations here so ThemeSetting reads/writes hit a real
+        // table in the in-memory SQLite RefreshDatabase set up.
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'themes/DixlaseOnePage/database/migrations',
+            '--realpath' => false,
+            '--force' => true,
+        ]);
     }
 
     public function test_provider_returns_primary_value_from_settings_table(): void
@@ -86,13 +97,13 @@ class DixlaseOnePageSettingsLocalizationTest extends TestCase
 
         $this->assertSame(
             'プライマリ見出し',
-            (new DixlaseOnePageSettingsProvider)->getPrimaryValue('hero_main_title'),
+            (new DixlaseOnePageSettingsProvider())->getPrimaryValue('hero_main_title'),
         );
     }
 
     public function test_provider_returns_null_for_missing_setting(): void
     {
-        $this->assertNull((new DixlaseOnePageSettingsProvider)->getPrimaryValue('hero_main_title'));
+        $this->assertNull((new DixlaseOnePageSettingsProvider())->getPrimaryValue('hero_main_title'));
     }
 
     public function test_helper_returns_primary_value_when_no_resolver_bound(): void
@@ -109,6 +120,11 @@ class DixlaseOnePageSettingsLocalizationTest extends TestCase
     public function test_helper_returns_resolver_value_for_current_locale(): void
     {
         ThemeSetting::setValue('hero_main_title', 'プライマリ見出し');
+        // Pin the primary locale to 'en' so the ja-viewer path below is
+        // forced through the resolver — without an explicit default_locale,
+        // the primary-locale short-circuit could match `ja` when the site
+        // default locale is `ja`, and the resolver would be skipped.
+        ThemeSetting::setValue('default_locale', 'en');
 
         $this->bindResolverReturning('hero_main_title', 'ja', '日本語見出し');
         app()->setLocale('ja');
@@ -150,6 +166,11 @@ class DixlaseOnePageSettingsLocalizationTest extends TestCase
     public function test_helper_treats_empty_translation_as_fallthrough(): void
     {
         ThemeSetting::setValue('hero_main_title', 'プライマリ見出し');
+        // Pin the primary locale away from 'en' so the en-viewer path
+        // below is forced through the resolver (where the empty-string
+        // guard is the relevant code path), not the primary-locale
+        // short-circuit.
+        ThemeSetting::setValue('default_locale', 'ja');
 
         // Resolver returns '' for the current locale (en) — exactly what
         // the multilingual UI stores when the operator opens an EN tab
@@ -159,6 +180,43 @@ class DixlaseOnePageSettingsLocalizationTest extends TestCase
         app()->setLocale('en');
 
         $this->assertSame('プライマリ見出し', dls_onepage_localized_setting('hero_main_title'));
+    }
+
+    /**
+     * When the current locale equals the provider's primary locale, the
+     * helper must short-circuit straight to the primary value — no
+     * resolver call. This prevents the resolver UI's empty-locale row
+     * for the primary locale from rendering as blank content.
+     */
+    public function test_helper_short_circuits_primary_locale_to_primary_value(): void
+    {
+        ThemeSetting::setValue('hero_main_title', 'Primary heading');
+        ThemeSetting::setValue('default_locale', 'en');
+
+        // Bind a resolver that would return a different value if called —
+        // if the short-circuit works, it should NOT be called for `en`.
+        $this->bindResolverReturning('hero_main_title', 'en', 'should-not-be-returned');
+        app()->setLocale('en');
+
+        $this->assertSame('Primary heading', dls_onepage_localized_setting('hero_main_title'));
+    }
+
+    public function test_provider_primary_locale_uses_default_locale_setting_when_explicit(): void
+    {
+        ThemeSetting::setValue('default_locale', 'ja');
+
+        $this->assertSame('ja', (new DixlaseOnePageSettingsProvider())->getPrimaryLocale());
+    }
+
+    public function test_provider_primary_locale_falls_back_to_site_default_when_setting_is_auto(): void
+    {
+        ThemeSetting::setValue('default_locale', 'auto');
+
+        $primary = (new DixlaseOnePageSettingsProvider())->getPrimaryLocale();
+
+        $this->assertIsString($primary);
+        $this->assertNotSame('auto', $primary);
+        $this->assertNotSame('', $primary);
     }
 
     public function test_theme_json_declares_singleton_with_provider(): void

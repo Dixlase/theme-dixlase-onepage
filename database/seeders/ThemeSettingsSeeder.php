@@ -46,10 +46,10 @@ class ThemeSettingsSeeder extends Seeder
             // Header & Favicon
             'header_logo_id' => null,
             'favicon_id' => null,
-            
+
             // Hero Section
             'hero_background_image_id' => null,
-            'hero_main_title' => 'Welcome to ' . config('app.name', 'Dixlase'),
+            'hero_main_title' => 'Welcome to '.config('app.name', 'Dixlase'),
             'hero_sub_title' => 'Modern CMS Platform for Building Amazing Websites',
             'hero_button_text' => 'Get Started',
             'hero_button_link' => '#',
@@ -57,14 +57,14 @@ class ThemeSettingsSeeder extends Seeder
             'hero_button_secondary_text' => 'Learn More',
             'hero_button_secondary_link' => '#features',
             'hero_button_secondary_enabled' => '1',
-            
+
             // Footer
             'footer_description' => 'Powered by Dixlase CMS',
             'footer_links' => json_encode([]),
             // `© <year>` is rendered automatically by the front (current
             // year); persist only the editable suffix.
-            'footer_copyright' => config('app.name', 'Dixlase') . '. All rights reserved.',
-            
+            'footer_copyright' => config('app.name', 'Dixlase').'. All rights reserved.',
+
             // SNS Links
             'footer_sns_instagram' => null,
             'footer_sns_x' => null,
@@ -77,20 +77,24 @@ class ThemeSettingsSeeder extends Seeder
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
-            
+
             // Colors
             'primary_color' => '#3b82f6',
             'secondary_color' => '#6b7280',
             'accent_color' => '#10b981',
+
+            // Multilingual: locale the primary settings are authored in.
+            // 'auto' resolves to the site default at runtime.
+            'default_locale' => 'auto',
         ];
-        
+
         foreach ($settings as $name => $value) {
             ThemeSetting::updateOrCreate(
                 ['name' => $name],
                 ['value' => $value]
             );
         }
-        
+
         $this->command->info('テーマ設定のデフォルト値を作成しました。');
     }
 }

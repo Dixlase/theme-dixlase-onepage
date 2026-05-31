@@ -44,6 +44,28 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Default Locale (primary language of theme settings) ===== --}}
+    {{-- Declares the locale the operator authored the hero text and other  --}}
+    {{-- translatable settings in. The central translation manager UI       --}}
+    {{-- (DixlaseMultilingual) excludes this locale from its language       --}}
+    {{-- selector, and dls_onepage_localized_setting() short-circuits it to --}}
+    {{-- the primary value instead of the resolver — matching the pattern  --}}
+    {{-- already used by DixlasePages (per-row `lang`) and DixlaseInquiry.  --}}
+    @php
+        $localeOptions = \App\Helpers\LocaleHelper::supportedLocaleOptions();
+        $currentDefaultLocale = old('default_locale', $settings->default_locale ?? 'auto');
+    @endphp
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.default_locale.title')" icon="fas fa-language">
+        <select name="default_locale"
+            class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+            <option value="auto" {{ $currentDefaultLocale === 'auto' ? 'selected' : '' }}>{{ __('themes::admin.settings.default_locale.auto') }}</option>
+            @foreach($localeOptions as $code => $label)
+                <option value="{{ $code }}" {{ $currentDefaultLocale === $code ? 'selected' : '' }}>{{ $label }}</option>
+            @endforeach
+        </select>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.default_locale.help') }}</p>
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Primary Color ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.primary_color.title')" icon="fas fa-swatchbook">
         <div class="grid grid-cols-4 gap-1">

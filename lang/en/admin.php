@@ -144,6 +144,13 @@ return [
             'mode_help' => 'Auto: Follows user system settings / Light: Bright theme / Dark: Dark theme',
         ],
 
+        // Default locale (primary language the theme settings are authored in)
+        'default_locale' => [
+            'title' => 'Default Language',
+            'auto' => 'Auto (use site default)',
+            'help' => 'The language the hero text and other translatable settings are written in. The translation manager excludes this language from its selector, and the front renders the primary values directly for viewers in this language.',
+        ],
+
         // Multilingual switcher (DixlaseMultilingual integration)
         'multilingual' => [
             'title' => 'Multilingual switcher',

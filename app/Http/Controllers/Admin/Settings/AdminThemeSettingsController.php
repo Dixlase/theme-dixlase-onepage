@@ -72,6 +72,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_discord',
             'footer_sns_github',
             'appearance_mode',
+            'default_locale',
             'header_menu_id',
             'footer_menu_id',
             'show_inquiry_form',
@@ -109,6 +110,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
+            'default_locale' => 'auto', // 'auto' resolves to site default at runtime
             'header_menu_id' => null,
             'footer_menu_id' => null,
             'show_inquiry_form' => '0',

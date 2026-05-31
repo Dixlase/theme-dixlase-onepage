@@ -212,6 +212,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
+            'default_locale' => 'auto', // primary-locale for theme settings; 'auto' = site default
             'multilingual_switcher_enabled' => '0',
             // メディア関連のプロパティ（loadMediaForThemeSettings()で設定されるが、デフォルトでも必要）
             'headerLogo' => null,

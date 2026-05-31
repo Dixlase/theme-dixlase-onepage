@@ -86,6 +86,16 @@ class UpdateThemeSettingsRequest extends FormRequest
             // Appearance Mode
             'appearance_mode' => 'required|in:0,1,2',
 
+            // Multilingual: locale the primary-stored theme-settings values
+            // are authored in. 'auto' resolves to the site default at runtime;
+            // any other value must be a locale code recognised by Core's
+            // LocaleHelper. The narrow rule keeps the request lean — Core's
+            // LocaleHelper::supportedLocales() is the source of truth, but
+            // listing them here would duplicate it; `string|max:10` blocks the
+            // obvious abuse and any genuinely unsupported value is silently
+            // ignored by the provider (falls back to site default).
+            'default_locale' => 'nullable|string|max:10',
+
             // Primary Color
             'primary_color' => 'nullable|string|in:#3b82f6,#8b5cf6,#10b981,#ef4444,#f97316,#eab308,#92400e,#ec4899,#6366f1,#1f2937,#6b7280',
 
