@@ -33,7 +33,6 @@
 namespace Themes\DixlaseOnePage\App\Multilingual;
 
 use App\Contracts\Multilingual\TranslatableContentProvider;
-use App\Helpers\LocaleHelper;
 use Themes\DixlaseOnePage\App\Models\ThemeSetting;
 
 /**
@@ -64,19 +63,20 @@ class DixlaseOnePageSettingsProvider implements TranslatableContentProvider
      * The locale the primary-stored theme-settings values are written in.
      *
      * Sourced from the operator-configurable `default_locale` theme
-     * setting. An explicit locale (e.g. 'en', 'ja') is returned as-is.
-     * The sentinel value 'auto' (or an unset/empty setting) falls back
-     * to the site's default locale.
+     * setting:
      *
-     * The central translation manager UI excludes this locale from the
-     * locale selector (so the operator cannot accidentally translate
-     * "into" the primary), and `dls_onepage_localized_setting()`
-     * short-circuits the primary locale straight to the primary value
-     * instead of going through the resolver.
+     * - An explicit locale code (e.g. 'en', 'ja') is returned as-is.
+     *   The central translation manager UI excludes that locale from
+     *   the locale selector (no "translating into the source"), and
+     *   `dls_onepage_localized_setting()` short-circuits straight to
+     *   the primary value when the current locale equals it.
      *
-     * Returns null only when LocaleHelper is unavailable; the helper /
-     * editor treat null as "no primary locale configured" (= pre-Phase-B
-     * behaviour with every enabled locale editable).
+     * - The sentinel `'auto'` (or an unset/empty setting) returns
+     *   `null` — the theme settings text is treated as a locale-neutral
+     *   default and every enabled locale (including the site default)
+     *   becomes translatable in the central UI. The runtime helper
+     *   walks the full resolver chain for every locale and falls back
+     *   to the primary value only when no translation row exists.
      */
     public function getPrimaryLocale(): ?string
     {
@@ -86,10 +86,6 @@ class DixlaseOnePageSettingsProvider implements TranslatableContentProvider
             return $locale;
         }
 
-        try {
-            return LocaleHelper::getSiteDefaultLocale();
-        } catch (\Throwable) {
-            return null;
-        }
+        return null;
     }
 }
