@@ -52,6 +52,7 @@ class DixlaseOnePageSettingsSeeder extends Seeder
         $settings = [
             // Hero Section
             ['name' => 'hero_background_image_id', 'value' => null],
+            ['name' => 'hero_foreground_image_id', 'value' => null],
             ['name' => 'hero_main_title', 'value' => 'Welcome to '.config('app.name', 'Dixlase')],
             ['name' => 'hero_sub_title', 'value' => 'Modern CMS Platform for Building Amazing Websites'],
             ['name' => 'hero_button_text', 'value' => 'Get Started'],

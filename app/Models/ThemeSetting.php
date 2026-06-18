@@ -63,17 +63,18 @@ class ThemeSetting extends Model
     /**
      * 設定値を取得
      *
-     * @param string $name 設定キー
-     * @param mixed $default デフォルト値
+     * @param  string  $name  設定キー
+     * @param  mixed  $default  デフォルト値
      * @return mixed
      */
     public static function getValue(string $name, $default = null)
     {
         return Cache::remember(
-            self::CACHE_PREFIX . $name,
+            self::CACHE_PREFIX.$name,
             self::CACHE_TTL,
             function () use ($name, $default) {
                 $setting = self::where('name', $name)->first();
+
                 return $setting ? $setting->value : $default;
             }
         );
@@ -82,9 +83,8 @@ class ThemeSetting extends Model
     /**
      * 設定値を保存
      *
-     * @param string $name 設定キー
-     * @param mixed $value 設定値
-     * @return void
+     * @param  string  $name  設定キー
+     * @param  mixed  $value  設定値
      */
     public static function setValue(string $name, $value): void
     {
@@ -94,33 +94,32 @@ class ThemeSetting extends Model
         );
 
         // キャッシュをクリア
-        Cache::forget(self::CACHE_PREFIX . $name);
+        Cache::forget(self::CACHE_PREFIX.$name);
     }
 
     /**
      * 複数の設定値を一括取得
      *
-     * @param array $names 設定キーの配列
+     * @param  array  $names  設定キーの配列
      * @return array キー名をキーとした連想配列
      */
     public static function getValues(array $names): array
     {
         $settings = self::whereIn('name', $names)->get();
-        
+
         $result = [];
         foreach ($names as $name) {
             $setting = $settings->firstWhere('name', $name);
             $result[$name] = $setting ? $setting->value : null;
         }
-        
+
         return $result;
     }
 
     /**
      * 複数の設定値を一括保存
      *
-     * @param array $settings キー名をキー、値をバリューとした連想配列
-     * @return void
+     * @param  array  $settings  キー名をキー、値をバリューとした連想配列
      */
     public static function setValues(array $settings): void
     {
@@ -131,43 +130,38 @@ class ThemeSetting extends Model
 
     /**
      * すべての設定をオブジェクト形式で取得
-     *
-     * @return object
      */
     public static function getAllAsObject(): object
     {
         $settings = self::all();
         $result = new \stdClass();
-        
+
         foreach ($settings as $setting) {
             $result->{$setting->name} = $setting->value;
         }
-        
+
         return $result;
     }
 
     /**
      * 設定値を削除
      *
-     * @param string $name 設定キー
-     * @return void
+     * @param  string  $name  設定キー
      */
     public static function deleteValue(string $name): void
     {
         self::where('name', $name)->delete();
-        Cache::forget(self::CACHE_PREFIX . $name);
+        Cache::forget(self::CACHE_PREFIX.$name);
     }
 
     /**
      * すべてのキャッシュをクリア
-     *
-     * @return void
      */
     public static function clearAllCache(): void
     {
         $settings = self::all();
         foreach ($settings as $setting) {
-            Cache::forget(self::CACHE_PREFIX . $setting->name);
+            Cache::forget(self::CACHE_PREFIX.$setting->name);
         }
     }
 }

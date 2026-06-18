@@ -50,6 +50,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'favicon_id',
             'hero_background_image_id',
             'hero_background_video_id',
+            'hero_foreground_image_id',
             'hero_main_title',
             'hero_sub_title',
             'hero_button_text',
@@ -86,6 +87,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'favicon_id' => null,
             'hero_background_image_id' => null,
             'hero_background_video_id' => null,
+            'hero_foreground_image_id' => null,
             'hero_main_title' => 'Welcome to '.config('app.name', 'Dixlase'),
             'hero_sub_title' => 'Modern CMS Platform for Building Amazing Websites',
             'hero_button_text' => 'Get Started',
@@ -145,6 +147,11 @@ class AdminThemeSettingsController extends AdminLoggedInController
             $heroBackgroundImage = Media::find($settings->hero_background_image_id);
         }
 
+        $heroForegroundImage = null;
+        if (isset($settings->hero_foreground_image_id)) {
+            $heroForegroundImage = Media::find($settings->hero_foreground_image_id);
+        }
+
         $heroBackgroundVideo = null;
         if (isset($settings->hero_background_video_id)) {
             $heroBackgroundVideo = Media::find($settings->hero_background_video_id);
@@ -155,6 +162,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
         $this->viewParams['favicon'] = $favicon;
         $this->viewParams['heroBackgroundImage'] = $heroBackgroundImage;
         $this->viewParams['heroBackgroundVideo'] = $heroBackgroundVideo;
+        $this->viewParams['heroForegroundImage'] = $heroForegroundImage;
 
         // Plugin integration via Contract+DTO (no direct plugin references)
         $resolver = app(\App\Services\Plugin\PluginServiceResolver::class);

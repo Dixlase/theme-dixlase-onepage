@@ -45,10 +45,19 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $heroButtonSecondaryEnabled = ($themeSettings->hero_button_secondary_enabled ?? '1') === '1';
     $heroBackgroundPath = $themeSettings->heroBackgroundPath ?? null;
     $heroVideoPath = $themeSettings->heroBackgroundVideoPath ?? null;
+    $heroForegroundPath = $themeSettings->heroForegroundPath ?? null;
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
+
+    // Without a foreground image the hero is a centered text block —
+    // `justify-center` keeps the existing layout. With a foreground
+    // image we pull the text/buttons toward the top so the image
+    // (rendered below the buttons) has room to breathe.
+    $heroVerticalAlign = $heroForegroundPath
+        ? 'justify-start pt-20 md:pt-28 lg:pt-32 pb-12'
+        : 'justify-center';
 @endphp
 
-<section class="relative min-h-screen flex flex-col justify-center overflow-hidden bg-gray-100 dark:bg-gray-950"
+<section class="relative min-h-screen flex flex-col {{ $heroVerticalAlign }} overflow-hidden bg-gray-100 dark:bg-gray-950"
     @if($heroVideoPath)
         x-data="{ videoPlaying: false }"
     @endif
@@ -116,5 +125,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 @endif
             </div>
         </div>
+
+        {{-- 前景画像（設定時のみ。テキスト/ボタンより広い枠で中央寄せ） --}}
+        @if($heroForegroundPath)
+            <div class="mt-12 md:mt-16 max-w-5xl mx-auto">
+                <img src="{{ asset('storage/' . $heroForegroundPath) }}"
+                     alt=""
+                     class="w-full h-auto rounded-2xl shadow-2xl">
+            </div>
+        @endif
     </div>
 </section>
