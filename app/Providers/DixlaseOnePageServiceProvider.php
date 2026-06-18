@@ -192,6 +192,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'header_logo_id' => null,
             'favicon_id' => null,
             'hero_background_image_id' => null,
+            'hero_foreground_image_id' => null,
             'hero_main_title' => 'Welcome to '.config('app.name', 'Dixlase'),
             'hero_sub_title' => 'Modern CMS Platform for Building Amazing Websites',
             'hero_button_text' => 'Get Started',
@@ -221,6 +222,8 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'faviconPath' => null,
             'heroBackground' => null,
             'heroBackgroundPath' => null,
+            'heroForeground' => null,
+            'heroForegroundPath' => null,
         ];
     }
 
@@ -259,6 +262,16 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
         } else {
             $themeSettings->heroBackground = null;
             $themeSettings->heroBackgroundPath = null;
+        }
+
+        // ヒーロー前景画像（テキスト/ボタンの下に配置するイメージ）
+        if (! empty($themeSettings->hero_foreground_image_id)) {
+            $heroForeground = \App\Models\Media::find($themeSettings->hero_foreground_image_id);
+            $themeSettings->heroForeground = $heroForeground;
+            $themeSettings->heroForegroundPath = $heroForeground ? $mediaPath.'/'.$heroForeground->path : null;
+        } else {
+            $themeSettings->heroForeground = null;
+            $themeSettings->heroForegroundPath = null;
         }
 
         // ヒーロー背景動画

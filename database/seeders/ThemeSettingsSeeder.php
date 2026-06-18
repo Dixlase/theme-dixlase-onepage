@@ -49,6 +49,7 @@ class ThemeSettingsSeeder extends Seeder
 
             // Hero Section
             'hero_background_image_id' => null,
+            'hero_foreground_image_id' => null,
             'hero_main_title' => 'Welcome to '.config('app.name', 'Dixlase'),
             'hero_sub_title' => 'Modern CMS Platform for Building Amazing Websites',
             'hero_button_text' => 'Get Started',

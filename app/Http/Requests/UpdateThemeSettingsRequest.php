@@ -58,6 +58,7 @@ class UpdateThemeSettingsRequest extends FormRequest
             // Hero Section
             'hero_background_image_id' => 'nullable|integer|exists:media,id',
             'hero_background_video_id' => 'nullable|integer|exists:media,id',
+            'hero_foreground_image_id' => 'nullable|integer|exists:media,id',
             'hero_main_title' => 'required|string|max:255',
             'hero_sub_title' => 'nullable|string|max:1000',
             'hero_button_text' => 'nullable|string|max:100',
@@ -134,6 +135,7 @@ class UpdateThemeSettingsRequest extends FormRequest
             'favicon_id' => __('themes::admin.settings.header.favicon'),
             'hero_background_image_id' => __('themes::admin.settings.hero.background_image'),
             'hero_background_video_id' => __('themes::admin.settings.hero.background_video'),
+            'hero_foreground_image_id' => __('themes::admin.settings.hero.foreground_image'),
             'hero_main_title' => __('themes::admin.settings.hero.main_title'),
             'hero_sub_title' => __('themes::admin.settings.hero.sub_title'),
             'hero_button_text' => __('themes::admin.settings.hero.button_text'),

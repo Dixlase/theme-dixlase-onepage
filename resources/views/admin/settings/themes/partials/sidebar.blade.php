@@ -171,6 +171,20 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         />
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Hero Foreground Image ===== --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.foreground_image')" icon="fas fa-image">
+        <x-media.picker
+            name="hero_foreground_image_id"
+            :value="$settings->hero_foreground_image_id ?? null"
+            :media="$heroForegroundImage ?? null"
+            :help="__('themes::admin.settings.hero.foreground_image_help')"
+            :error="$errors->first('hero_foreground_image_id')"
+            aspectRatio="hero"
+            :buttonText="__('themes::admin.settings.hero.select_foreground_image')"
+            :confirmUploadNavigation="true"
+        />
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Hero Buttons (visibility) ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.buttons.title')" icon="fas fa-mouse-pointer">
         <label class="flex items-center gap-2 cursor-pointer">
