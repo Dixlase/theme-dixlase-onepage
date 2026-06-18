@@ -175,6 +175,7 @@
         "package-lock.json": "sha256:f0e4f330584c911afd27fc0799b10819f79e44e9c81c63e977d39e0e1375e126",
         "package.json": "sha256:8e216db3dab2d71606f324f88de32d9448c6f2e865b59ee0eefcb91e685cccc3",
         "postcss.config.js": "sha256:9412b2d758c8d540555415661b58df2124e4e5077664c5fba9edafd6a72d4d51",
+        "resources/assets/thumbnail.png": "sha256:516e9e9438b446c9c6f88120cd0b2427c3c763bfab28b62db29ade97b78de8f0",
         "resources/src/front/css/tailwind.css": "sha256:e83eb5e0bc9929e0d073219f172534db82240f8f68a6e16c507b51b71d090662",
         "resources/src/front/js/app.js": "sha256:2805392ddfd36bd7f2ab036d6c2db7efe5f77270fba6a60e29b21f2b938a2bb6",
         "resources/src/front/scss/style.scss": "sha256:768f0bc1fa77464d40056eb1758709f6e101f807f54ada9d23d0e955b1cee6f9",
@@ -199,6 +200,6 @@
     "signing": {
         "algo": "ed25519",
         "key_id": "dixlase-authority-2026",
-        "signed_at": "2026-06-18T14:51:51+00:00"
+        "signed_at": "2026-06-18T16:28:47+00:00"
     }
 }
