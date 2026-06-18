@@ -7,7 +7,12 @@
 # need to track it in git. Developers can produce it locally with
 # `npm install && npm run build` whenever a production-mode preview is
 # needed; the Vite dev server (`npm run dev`) doesn't need it at all.
-/resources/assets
+#
+# Exception: thumbnail.{webp,png,jpg,jpeg} is hand-authored artwork
+# served as the theme card image via the public asset symlink, so it
+# must be tracked even though it lives next to build output.
+/resources/assets/*
+!/resources/assets/thumbnail.*
 /storage/*.key
 /storage/pail
 /vendor
