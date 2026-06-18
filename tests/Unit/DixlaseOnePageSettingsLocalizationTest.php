@@ -208,15 +208,23 @@ class DixlaseOnePageSettingsLocalizationTest extends TestCase
         $this->assertSame('ja', (new DixlaseOnePageSettingsProvider())->getPrimaryLocale());
     }
 
-    public function test_provider_primary_locale_falls_back_to_site_default_when_setting_is_auto(): void
+    public function test_provider_primary_locale_returns_null_when_setting_is_auto(): void
     {
+        // 'auto' means: the theme settings text is a locale-neutral
+        // default and every enabled locale (including the site default)
+        // is translatable. The UI honors null by NOT excluding any
+        // locale from the selector, and the helper walks the full
+        // resolver chain instead of short-circuiting.
         ThemeSetting::setValue('default_locale', 'auto');
 
-        $primary = (new DixlaseOnePageSettingsProvider())->getPrimaryLocale();
+        $this->assertNull((new DixlaseOnePageSettingsProvider())->getPrimaryLocale());
+    }
 
-        $this->assertIsString($primary);
-        $this->assertNotSame('auto', $primary);
-        $this->assertNotSame('', $primary);
+    public function test_provider_primary_locale_returns_null_when_setting_is_empty(): void
+    {
+        ThemeSetting::setValue('default_locale', '');
+
+        $this->assertNull((new DixlaseOnePageSettingsProvider())->getPrimaryLocale());
     }
 
     public function test_theme_json_declares_singleton_with_provider(): void
