@@ -128,7 +128,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
         {{-- 前景画像（設定時のみ。テキスト/ボタンより広い枠で中央寄せ） --}}
         @if($heroForegroundPath)
-            <div class="mt-12 md:mt-16 max-w-5xl mx-auto">
+            <div class="mt-20 md:mt-28 lg:mt-32 max-w-5xl mx-auto">
                 <img src="{{ asset('storage/' . $heroForegroundPath) }}"
                      alt=""
                      class="w-full h-auto rounded-2xl shadow-2xl">
