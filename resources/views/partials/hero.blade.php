@@ -95,9 +95,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     {{-- 背景画像も動画も無いときの装飾: ヒーロー中央に 1 つの
          オーソドックスな放射グラデーション。形状は `circle` 固定で
-         常に正円。半径は `clamp(500px, 50vw, 1200px)` でビューポート
-         幅に応じてスケール — モバイルでは 500px、PC では 640〜960px
-         前後、超ワイドでは 1200px に頭打ち。
+         常に正円。半径は `clamp(500px, 80vw, 2000px)` でビューポート
+         幅に応じてスケール — モバイルでは 500px、Desktop 1280px で
+         ~1024px、Wide 1920px で ~1536px、超ワイドでは 2000px に頭打ち。
          ユーザ操作対象ではないので `pointer-events-none`。
          8 桁 HEX 末尾 `80` = α 50%。 --}}
     @if(empty($heroBackgroundPath) && empty($heroVideoPath))
