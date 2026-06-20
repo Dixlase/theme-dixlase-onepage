@@ -48,8 +48,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 {{-- Styles --}}
 @if(app()->environment('local') && file_exists(public_path('hot')))
-    {{-- Vite開発サーバーが起動している場合 --}}
+    {{-- Vite開発サーバーが起動している場合。コア共通 Tailwind
+         (`resources/src/common/css/tailwind.css`) を必ず含めること。
+         これが無いと、フロントページがコア由来のユーティリティクラス
+         無しでレンダリングされてレイアウトが崩壊する。
+         non-Vite 経路 (`load_front_assets` → `load_core_assets`) は
+         AssetHelper 側で自動 prepend されるが、こちらの直接 @vite
+         呼び出しでは明示する必要がある。 --}}
     @vite([
+        'resources/src/common/css/tailwind.css',
         'themes/DixlaseOnePage/resources/src/front/css/tailwind.css',
         'resources/src/front/scss/style.scss',
         'themes/DixlaseOnePage/resources/src/front/scss/style.scss',
