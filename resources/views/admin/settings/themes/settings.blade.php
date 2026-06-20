@@ -55,9 +55,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <input type="hidden" name="hero_button_text" :value="heroButtonText">
         <input type="hidden" name="hero_button_link" :value="heroButtonLink">
         <input type="hidden" name="hero_button_enabled" :value="heroButtonEnabled">
+        <input type="hidden" name="hero_button_target" :value="heroButtonTarget">
         <input type="hidden" name="hero_button_secondary_text" :value="heroButtonSecondaryText">
         <input type="hidden" name="hero_button_secondary_link" :value="heroButtonSecondaryLink">
         <input type="hidden" name="hero_button_secondary_enabled" :value="heroButtonSecondaryEnabled">
+        <input type="hidden" name="hero_button_secondary_target" :value="heroButtonSecondaryTarget">
         <input type="hidden" name="footer_copyright" :value="footerCopyright">
         <input type="hidden" name="footer_menu_id" :value="footerMenuId">
         <input type="hidden" name="primary_color" :value="primaryColor">
@@ -104,9 +106,11 @@ function themeSettingsEditor() {
         heroButtonText: @json(old('hero_button_text', $settings->hero_button_text ?? '')),
         heroButtonLink: @json(old('hero_button_link', $settings->hero_button_link ?? '')),
         heroButtonEnabled: @json(old('hero_button_enabled', $settings->hero_button_enabled ?? '1')),
+        heroButtonTarget: @json(old('hero_button_target', $settings->hero_button_target ?? '_self')),
         heroButtonSecondaryText: @json(old('hero_button_secondary_text', $settings->hero_button_secondary_text ?? '')),
         heroButtonSecondaryLink: @json(old('hero_button_secondary_link', $settings->hero_button_secondary_link ?? '')),
         heroButtonSecondaryEnabled: @json(old('hero_button_secondary_enabled', $settings->hero_button_secondary_enabled ?? '1')),
+        heroButtonSecondaryTarget: @json(old('hero_button_secondary_target', $settings->hero_button_secondary_target ?? '_self')),
 
         // Footer settings
         // The `© <year>` prefix is rendered automatically at display time
@@ -119,6 +123,7 @@ function themeSettingsEditor() {
         headerLogoPreviewUrl: @json($headerLogo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $headerLogo->path) : null),
         heroBgPreviewUrl: @json($heroBackgroundImage ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroBackgroundImage->path) : null),
         heroVideoPreviewUrl: @json($heroBackgroundVideo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroBackgroundVideo->path) : null),
+        heroForegroundPreviewUrl: @json($heroForegroundImage ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroForegroundImage->path) : null),
 
         // Device preview (from previewContainerMixin)
         ...previewContainerMixin(),
@@ -163,6 +168,8 @@ function themeSettingsEditor() {
                     self.heroBgPreviewUrl = url || null;
                 } else if (inputId === 'hero_background_video_id') {
                     self.heroVideoPreviewUrl = url || null;
+                } else if (inputId === 'hero_foreground_image_id') {
+                    self.heroForegroundPreviewUrl = url || null;
                 }
             });
 

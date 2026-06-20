@@ -158,13 +158,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </header>
 
             {{-- ===== HERO PREVIEW ===== --}}
-            <section class="pv-hero relative min-h-[600px] flex flex-col justify-center overflow-hidden cursor-pointer"
-                @click="openMediaSelector('hero_background_image_id_selector', 'hero_background_image_id', 'hero_background_image_id_preview', false, 'hero')">
-                {{-- 背景画像編集インジケーター --}}
-                <div class="pv-edit-badge absolute top-4 right-4 z-20">
-                    <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-image mr-1"></i>{{ __('themes::admin.settings.hero.select_background_image') }}</span>
-                </div>
-
+            {{-- Vertical alignment mirrors the front-end hero.blade.php:
+                 with a foreground image set, the text block is pushed
+                 toward the top (justify-start + top padding) so the
+                 image has room; without one, content stays centered. --}}
+            <section class="pv-hero relative min-h-[600px] flex flex-col overflow-hidden"
+                :class="heroForegroundPreviewUrl
+                    ? 'justify-start pt-20 md:pt-28 pb-12'
+                    : 'justify-center'">
                 {{-- 動画設定インジケーター --}}
                 <template x-if="heroVideoPreviewUrl">
                     <div class="absolute top-4 left-4 z-20">
@@ -204,7 +205,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
                         {{-- Sub Title --}}
                         <div class="relative group cursor-pointer mb-8" @click.stop="startEdit('heroSubTitle')">
-                            <p class="pv-subtitle text-lg max-w-lg" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
+                            <p class="pv-subtitle text-lg max-w-lg mx-auto" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
                             <textarea
                                 x-show="editing === 'heroSubTitle'"
                                 x-model="heroSubTitle"
@@ -212,7 +213,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                 x-ref="editHeroSubTitle"
                                 x-effect="if (editing === 'heroSubTitle') $nextTick(() => $refs.editHeroSubTitle?.focus())"
                                 rows="2"
-                                class="pv-edit-input w-full max-w-lg text-lg border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                class="pv-edit-input w-full max-w-lg mx-auto text-lg border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                             ></textarea>
                             <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroSubTitle'">
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
@@ -253,6 +254,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                             </div>
                         </div>
                     </div>
+
+                    {{-- 前景画像（テキスト/ボタンの下に置くスクリーンショットなど） --}}
+                    <template x-if="heroForegroundPreviewUrl">
+                        <div class="mt-12 md:mt-16 max-w-5xl mx-auto">
+                            <img :src="heroForegroundPreviewUrl" alt="" class="w-full h-auto rounded-2xl shadow-2xl">
+                        </div>
+                    </template>
                 </div>
             </section>
 

@@ -57,10 +57,12 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             ['name' => 'hero_sub_title', 'value' => 'Modern CMS Platform for Building Amazing Websites'],
             ['name' => 'hero_button_text', 'value' => 'Get Started'],
             ['name' => 'hero_button_link', 'value' => '#'],
+            ['name' => 'hero_button_target', 'value' => '_self'],
             ['name' => 'hero_button_enabled', 'value' => '1'],
             ['name' => 'hero_button_secondary_text', 'value' => 'Learn More'],
             ['name' => 'hero_button_secondary_link', 'value' => '#features'],
             ['name' => 'hero_button_secondary_enabled', 'value' => '1'],
+            ['name' => 'hero_button_secondary_target', 'value' => '_self'],
 
             // Footer
             ['name' => 'footer_description', 'value' => 'Powered by Dixlase CMS'],

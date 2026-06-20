@@ -142,6 +142,23 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     </x-admin.theme-preview-sidebar-section>
     @endif
 
+    {{-- ===== Hero Text (title / sub-title — also editable inline in the preview) ===== --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.edit_title')" icon="fas fa-heading" :open="true">
+        <div class="space-y-3">
+            <div>
+                <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('themes::admin.settings.hero.main_title') }}</label>
+                <input type="text" x-model="heroMainTitle"
+                    class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('themes::admin.settings.hero.sub_title') }}</label>
+                <textarea x-model="heroSubTitle" rows="3"
+                    class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('themes::admin.settings.hero.edit_help') }}</p>
+        </div>
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Hero Background Image ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.background_image')" icon="fas fa-image" :open="true">
         <x-media.picker
@@ -185,7 +202,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         />
     </x-admin.theme-preview-sidebar-section>
 
-    {{-- ===== Hero Buttons (visibility) ===== --}}
+    {{-- ===== Hero Buttons (visibility + target) ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.buttons.title')" icon="fas fa-mouse-pointer">
         <label class="flex items-center gap-2 cursor-pointer">
             <input type="checkbox"
@@ -194,6 +211,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.hero.buttons.primary_enable') }}</span>
         </label>
+        <div class="ml-6 mt-1 mb-3" x-show="heroButtonEnabled === '1'">
+            <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('themes::admin.settings.hero.buttons.primary_target') }}</label>
+            <select x-model="heroButtonTarget"
+                class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
+                <option value="_self">{{ __('themes::admin.settings.hero.buttons.target_self') }}</option>
+                <option value="_blank">{{ __('themes::admin.settings.hero.buttons.target_blank') }}</option>
+            </select>
+        </div>
+
         <label class="flex items-center gap-2 cursor-pointer mt-2">
             <input type="checkbox"
                 @change="heroButtonSecondaryEnabled = $el.checked ? '1' : '0'"
@@ -201,6 +227,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700">
             <span class="text-sm text-gray-700 dark:text-gray-300">{{ __('themes::admin.settings.hero.buttons.secondary_enable') }}</span>
         </label>
+        <div class="ml-6 mt-1 mb-2" x-show="heroButtonSecondaryEnabled === '1'">
+            <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('themes::admin.settings.hero.buttons.secondary_target') }}</label>
+            <select x-model="heroButtonSecondaryTarget"
+                class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
+                <option value="_self">{{ __('themes::admin.settings.hero.buttons.target_self') }}</option>
+                <option value="_blank">{{ __('themes::admin.settings.hero.buttons.target_blank') }}</option>
+            </select>
+        </div>
+
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.hero.buttons.help') }}</p>
     </x-admin.theme-preview-sidebar-section>
 

@@ -84,7 +84,13 @@ return [
                 'primary_enable' => 'Display primary button',
                 'secondary_enable' => 'Display secondary button',
                 'help' => 'Toggle off to hide a button. The button text and link are kept and can be restored by toggling back on.',
+                'primary_target' => 'Primary button target',
+                'secondary_target' => 'Secondary button target',
+                'target_self' => 'Same window',
+                'target_blank' => 'New window',
             ],
+            'edit_title' => 'Hero Text',
+            'edit_help' => 'These fields edit the hero headline and sub-headline. The same values can also be edited inline by clicking them in the preview.',
         ],
 
         // Footer Section

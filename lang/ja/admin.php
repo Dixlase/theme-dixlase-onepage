@@ -84,7 +84,13 @@ return [
                 'primary_enable' => 'プライマリボタンを表示する',
                 'secondary_enable' => 'セカンダリボタンを表示する',
                 'help' => 'OFFにするとボタンが非表示になります。テキストとリンクの設定は保持され、ONに戻すと復活します。',
+                'primary_target' => 'プライマリボタンのターゲット',
+                'secondary_target' => 'セカンダリボタンのターゲット',
+                'target_self' => '同じウィンドウ',
+                'target_blank' => '新しいウィンドウ',
             ],
+            'edit_title' => 'ヒーローテキスト',
+            'edit_help' => 'ヒーローのタイトルとサブタイトルを編集します。プレビュー側のテキストをクリックしても同じ内容を編集できます。',
         ],
 
         // Footer Section

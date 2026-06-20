@@ -56,9 +56,11 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_button_text',
             'hero_button_link',
             'hero_button_enabled',
+            'hero_button_target',
             'hero_button_secondary_text',
             'hero_button_secondary_link',
             'hero_button_secondary_enabled',
+            'hero_button_secondary_target',
             'footer_links',
             'footer_copyright',
             'footer_sns_instagram',
@@ -93,9 +95,11 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_button_text' => 'Get Started',
             'hero_button_link' => '#',
             'hero_button_enabled' => '1',
+            'hero_button_target' => '_self',
             'hero_button_secondary_text' => 'Learn More',
             'hero_button_secondary_link' => '#features',
             'hero_button_secondary_enabled' => '1',
+            'hero_button_secondary_target' => '_self',
             'footer_links' => '[]',
             // `© <year>` is auto-rendered (current year) at display time;
             // only the editable suffix is persisted.
