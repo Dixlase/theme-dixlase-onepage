@@ -181,10 +181,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     </div>
                 </template>
 
-                {{-- 背景なし時のプライマリカラー放射グラデーション（フロントと同等） --}}
+                {{-- 背景なし時の 3 層放射グラデーション（フロントと 1:1） --}}
                 <template x-if="!heroBgPreviewUrl && !heroVideoPreviewUrl">
                     <div class="absolute inset-0 z-0 pointer-events-none"
-                        :style="'background: radial-gradient(ellipse 80% 70% at 50% 10%, ' + primaryColor + '66 0%, transparent 70%);'"></div>
+                        :style="'background: ' +
+                            'radial-gradient(ellipse 50% 65% at 70% 5%,  ' + primaryColor + '80 0%, transparent 60%),' +
+                            'radial-gradient(ellipse 55% 70% at 25% 15%, ' + primaryColor + '55 0%, transparent 70%),' +
+                            'radial-gradient(ellipse 100% 40% at 50% 0%, ' + primaryColor + '30 0%, transparent 75%);'"></div>
                 </template>
 
                 {{-- コンテンツ --}}
