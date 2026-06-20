@@ -166,12 +166,21 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </div>
         </div>
 
-        {{-- 前景画像（設定時のみ。最大 1488px、フロントの最大幅 1480 に揃える） --}}
+        {{-- 前景画像（設定時のみ）。
+             横幅: ラッパが `max-w-[1488px]` で 1480 のフロント最大幅に揃える。
+             縦幅: `max-h-[55vh]` でビューポートの 55% を超えないよう
+             キャップ — 16:9 の画像を 1480px 幅で出すと高さが 832px
+             になり、ヒーローの `min-h-[calc(100vh-3rem)]`
+             (812 - 48 = 764px) を 1 枚で超えてしまい、テキスト + ボタン
+             + 画像を同時にビューポート内に収められなかった。
+             `max-w-full max-h-[55vh]` 併用でアスペクト比を維持しつつ
+             横/縦どちらの上限にもぶつかった方で縮む。`mx-auto` で
+             ラッパ内中央寄せ。 --}}
         @if($heroForegroundPath)
-            <div class="mt-6 md:mt-16 lg:mt-20 max-w-[1488px] mx-auto">
+            <div class="mt-4 md:mt-16 lg:mt-20 max-w-[1488px] mx-auto">
                 <img src="{{ asset('storage/' . $heroForegroundPath) }}"
                      alt=""
-                     class="w-full h-auto rounded-2xl shadow-2xl">
+                     class="max-w-full max-h-[55vh] mx-auto rounded-2xl shadow-2xl">
             </div>
         @endif
     </div>
