@@ -164,7 +164,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                  image has room; without one, content stays centered. --}}
             <section class="pv-hero relative min-h-[600px] flex flex-col overflow-hidden"
                 :class="heroForegroundPreviewUrl
-                    ? 'justify-start pt-20 md:pt-28 pb-12'
+                    ? 'justify-start pt-12 md:pt-16 pb-12'
                     : 'justify-center'">
                 {{-- 動画設定インジケーター --}}
                 <template x-if="heroVideoPreviewUrl">
@@ -181,13 +181,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     </div>
                 </template>
 
-                {{-- 背景なし時の Astro 風 mid-bottom 寄せ放射グラデーション
-                     （フロントと 1:1） --}}
+                {{-- 背景なし時の中央単一放射グラデーション（フロントと 1:1） --}}
                 <template x-if="!heroBgPreviewUrl && !heroVideoPreviewUrl">
                     <div class="absolute inset-0 z-0 pointer-events-none"
-                        :style="'background: ' +
-                            'radial-gradient(ellipse 75% 85% at 70% 60%, ' + primaryColor + '80 0%, transparent 60%),' +
-                            'radial-gradient(ellipse 65% 75% at 25% 75%, ' + primaryColor + '55 0%, transparent 65%);'"></div>
+                        :style="'background: radial-gradient(ellipse 80% 80% at 50% 50%, ' + primaryColor + '80 0%, transparent 65%);'"></div>
                 </template>
 
                 {{-- コンテンツ --}}
@@ -195,7 +192,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     <div class="max-w-4xl mx-auto text-center">
                         {{-- Main Title — textarea で改行入力可、表示は white-space:pre-line で改行を反映 --}}
                         <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
-                            <h1 class="pv-title text-5xl lg:text-6xl font-bold leading-tight whitespace-pre-line" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
+                            <h1 class="pv-title text-6xl lg:text-7xl font-bold leading-tight whitespace-pre-line" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
                             </h1>
                             <textarea
                                 x-show="editing === 'heroMainTitle'"
@@ -204,7 +201,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                 x-ref="editHeroMainTitle"
                                 x-effect="if (editing === 'heroMainTitle') $nextTick(() => $refs.editHeroMainTitle?.focus())"
                                 rows="2"
-                                class="pv-edit-input w-full text-5xl lg:text-6xl font-bold border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                class="pv-edit-input w-full text-6xl lg:text-7xl font-bold border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                             ></textarea>
                             <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroMainTitle'">
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
@@ -268,7 +265,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                          picker があるが、プレビュー上でその画像をクリックすると
                          即差し替えできるという UX のため。 --}}
                     <template x-if="heroForegroundPreviewUrl">
-                        <div class="mt-12 md:mt-16 max-w-5xl mx-auto relative group cursor-pointer"
+                        <div class="mt-12 md:mt-16 lg:mt-20 max-w-[1200px] mx-auto relative group cursor-pointer"
                             @click.stop="openMediaSelector('hero_foreground_image_id_selector', 'hero_foreground_image_id', 'hero_foreground_image_id_preview', false, 'hero')">
                             <img :src="heroForegroundPreviewUrl" alt="" class="w-full h-auto rounded-2xl shadow-2xl">
                             <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
