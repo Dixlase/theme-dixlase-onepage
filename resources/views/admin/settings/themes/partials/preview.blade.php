@@ -255,10 +255,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         </div>
                     </div>
 
-                    {{-- 前景画像（テキスト/ボタンの下に置くスクリーンショットなど） --}}
+                    {{-- 前景画像（テキスト/ボタンの下に置くスクリーンショットなど）
+                         クリックで媒体ピッカーを直接開く。サイドバーにも同じ
+                         picker があるが、プレビュー上でその画像をクリックすると
+                         即差し替えできるという UX のため。 --}}
                     <template x-if="heroForegroundPreviewUrl">
-                        <div class="mt-12 md:mt-16 max-w-5xl mx-auto">
+                        <div class="mt-12 md:mt-16 max-w-5xl mx-auto relative group cursor-pointer"
+                            @click.stop="openMediaSelector('hero_foreground_image_id_selector', 'hero_foreground_image_id', 'hero_foreground_image_id_preview', false, 'hero')">
                             <img :src="heroForegroundPreviewUrl" alt="" class="w-full h-auto rounded-2xl shadow-2xl">
+                            <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-image mr-1"></i>{{ __('themes::admin.settings.hero.select_foreground_image') }}</span>
+                            </div>
                         </div>
                     </template>
                 </div>
