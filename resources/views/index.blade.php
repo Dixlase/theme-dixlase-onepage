@@ -50,7 +50,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 {{-- Front Page Content --}}
 @if(!empty($frontContent))
-<section class="front-content py-16">
+{{-- pb-16 only: the hero above already fills the viewport, so a pt-16
+     here would push the page total beyond one screen and make the
+     hero appear to overflow. Bottom padding stays for separation
+     from the footer. --}}
+<section class="front-content pb-16">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
             @if($frontEditorType === 'blade')

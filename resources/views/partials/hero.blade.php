@@ -93,16 +93,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
     @endif
 
-    {{-- 背景画像も動画も無いときの装飾: 左上 / 右上のコーナーをアンカー
-         にしたプライマリカラーの放射グラデーション。中心点を画面外に
-         置くことで、コーナーから広がる「光が差し込む」風の質感になる。
+    {{-- 背景画像も動画も無いときの装飾: 2 つの放射グラデーションを
+         画面の中段〜下寄りにアンカー（Astro 風）。中心位置を上から
+         半分より下にずらすことで、ヒーローの重心に光が集中して見える。
+         左右で X / Y 共にオフセットを変えて意図的に非対称にする。
          ユーザ操作対象ではないので `pointer-events-none`。
          8 桁 HEX 末尾 = α 比率 (80=50%, 55=33%)。 --}}
     @if(empty($heroBackgroundPath) && empty($heroVideoPath))
         <div class="absolute inset-0 z-0 pointer-events-none"
              style="background:
-                radial-gradient(ellipse 85% 90% at 100% 0%, {{ $primaryColor }}80 0%, transparent 60%),
-                radial-gradient(ellipse 75% 80% at 0% 0%,   {{ $primaryColor }}55 0%, transparent 65%);"></div>
+                radial-gradient(ellipse 75% 85% at 70% 60%, {{ $primaryColor }}80 0%, transparent 60%),
+                radial-gradient(ellipse 65% 75% at 25% 75%, {{ $primaryColor }}55 0%, transparent 65%);"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}
