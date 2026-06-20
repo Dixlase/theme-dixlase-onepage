@@ -147,8 +147,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <div class="space-y-3">
             <div>
                 <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('themes::admin.settings.hero.main_title') }}</label>
-                <input type="text" x-model="heroMainTitle"
-                    class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
+                <textarea x-model="heroMainTitle" rows="2"
+                    class="w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
             </div>
             <div>
                 <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('themes::admin.settings.hero.sub_title') }}</label>
