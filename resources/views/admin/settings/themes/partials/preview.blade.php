@@ -183,7 +183,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
                 {{-- コンテンツ --}}
                 <div class="container mx-auto px-8 py-20 relative z-10">
-                    <div class="max-w-2xl mx-auto text-center">
+                    <div class="max-w-4xl mx-auto text-center">
                         {{-- Main Title — textarea で改行入力可、表示は white-space:pre-line で改行を反映 --}}
                         <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
                             <h1 class="pv-title text-5xl lg:text-6xl font-bold leading-tight whitespace-pre-line" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
