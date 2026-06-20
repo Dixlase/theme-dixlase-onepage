@@ -94,15 +94,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     @endif
 
     {{-- 背景画像も動画も無いときの装飾: ヒーロー中央に 1 つの
-         オーソドックスな放射グラデーション。形状は `circle 600px` で
-         固定 — `ellipse 80% 80%` だと親要素のアスペクト比に追従して
-         縦長ビューポートで縦長の楕円になっていた。固定半径の `circle`
-         で常に正円になる。
+         オーソドックスな放射グラデーション。形状は `circle` 固定で
+         常に正円。半径は `clamp(500px, 50vw, 1200px)` でビューポート
+         幅に応じてスケール — モバイルでは 500px、PC では 640〜960px
+         前後、超ワイドでは 1200px に頭打ち。
          ユーザ操作対象ではないので `pointer-events-none`。
          8 桁 HEX 末尾 `80` = α 50%。 --}}
     @if(empty($heroBackgroundPath) && empty($heroVideoPath))
         <div class="absolute inset-0 z-0 pointer-events-none"
-             style="background: radial-gradient(circle 600px at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
+             style="background: radial-gradient(circle clamp(500px, 50vw, 1200px) at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}
