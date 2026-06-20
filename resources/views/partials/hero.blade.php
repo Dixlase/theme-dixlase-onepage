@@ -69,7 +69,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // image we pull the text/buttons toward the top so the image
     // (rendered below the buttons) has room to breathe.
     $heroVerticalAlign = $heroForegroundPath
-        ? 'justify-start pt-20 md:pt-28 lg:pt-32 pb-12'
+        ? 'justify-start pt-12 md:pt-16 lg:pt-20 pb-12'
         : 'justify-center';
 @endphp
 
@@ -93,17 +93,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
     @endif
 
-    {{-- 背景画像も動画も無いときの装飾: 2 つの放射グラデーションを
-         画面の中段〜下寄りにアンカー（Astro 風）。中心位置を上から
-         半分より下にずらすことで、ヒーローの重心に光が集中して見える。
-         左右で X / Y 共にオフセットを変えて意図的に非対称にする。
+    {{-- 背景画像も動画も無いときの装飾: ヒーロー中央に 1 つの
+         オーソドックスな放射グラデーション。プライマリカラーの光が
+         中心から外へと放射する正統的な構図。
          ユーザ操作対象ではないので `pointer-events-none`。
-         8 桁 HEX 末尾 = α 比率 (80=50%, 55=33%)。 --}}
+         8 桁 HEX 末尾 `80` = α 50%。 --}}
     @if(empty($heroBackgroundPath) && empty($heroVideoPath))
         <div class="absolute inset-0 z-0 pointer-events-none"
-             style="background:
-                radial-gradient(ellipse 75% 85% at 70% 60%, {{ $primaryColor }}80 0%, transparent 60%),
-                radial-gradient(ellipse 65% 75% at 25% 75%, {{ $primaryColor }}55 0%, transparent 65%);"></div>
+             style="background: radial-gradient(ellipse 80% 80% at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}
@@ -119,7 +116,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     {{-- コンテンツ --}}
     <div class="container mx-auto px-4 py-20 relative z-10">
         <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line">
                 {{ $heroMainTitle }}
             </h1>
 
@@ -159,9 +156,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </div>
         </div>
 
-        {{-- 前景画像（設定時のみ。テキスト/ボタンより広い枠で中央寄せ） --}}
+        {{-- 前景画像（設定時のみ。最大 1200px、ヒーロー内に大きく配置） --}}
         @if($heroForegroundPath)
-            <div class="mt-20 md:mt-28 lg:mt-32 max-w-5xl mx-auto">
+            <div class="mt-12 md:mt-16 lg:mt-20 max-w-[1200px] mx-auto">
                 <img src="{{ asset('storage/' . $heroForegroundPath) }}"
                      alt=""
                      class="w-full h-auto rounded-2xl shadow-2xl">
