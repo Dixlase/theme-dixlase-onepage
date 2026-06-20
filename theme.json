@@ -57,7 +57,7 @@
                 "fields": [
                     {
                         "name": "hero_main_title",
-                        "type": "text",
+                        "type": "textarea",
                         "rules": "nullable|string|max:200"
                     },
                     {

@@ -96,12 +96,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     {{-- コンテンツ --}}
     <div class="container mx-auto px-4 py-20 relative z-10">
         <div class="max-w-2xl mx-auto text-center">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-gray-900 dark:text-white">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line">
                 {{ $heroMainTitle }}
             </h1>
 
             @if($heroSubTitle)
-                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg mx-auto">
+                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg mx-auto whitespace-pre-line">
                     {{ $heroSubTitle }}
                 </p>
             @endif

@@ -184,20 +184,19 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 {{-- コンテンツ --}}
                 <div class="container mx-auto px-8 py-20 relative z-10">
                     <div class="max-w-2xl mx-auto text-center">
-                        {{-- Main Title --}}
+                        {{-- Main Title — textarea で改行入力可、表示は white-space:pre-line で改行を反映 --}}
                         <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
-                            <h1 class="pv-title text-5xl lg:text-6xl font-bold leading-tight" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
+                            <h1 class="pv-title text-5xl lg:text-6xl font-bold leading-tight whitespace-pre-line" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
                             </h1>
-                            <input
+                            <textarea
                                 x-show="editing === 'heroMainTitle'"
                                 x-model="heroMainTitle"
                                 @click.away="stopEdit()"
-                                @keydown.enter="stopEdit()"
                                 x-ref="editHeroMainTitle"
                                 x-effect="if (editing === 'heroMainTitle') $nextTick(() => $refs.editHeroMainTitle?.focus())"
-                                type="text"
-                                class="pv-edit-input w-full text-5xl lg:text-6xl font-bold border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
+                                rows="2"
+                                class="pv-edit-input w-full text-5xl lg:text-6xl font-bold border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                            ></textarea>
                             <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroMainTitle'">
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
                             </div>
@@ -205,7 +204,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
                         {{-- Sub Title --}}
                         <div class="relative group cursor-pointer mb-8" @click.stop="startEdit('heroSubTitle')">
-                            <p class="pv-subtitle text-lg max-w-lg mx-auto" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
+                            <p class="pv-subtitle text-lg max-w-lg mx-auto whitespace-pre-line" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
                             <textarea
                                 x-show="editing === 'heroSubTitle'"
                                 x-model="heroSubTitle"
