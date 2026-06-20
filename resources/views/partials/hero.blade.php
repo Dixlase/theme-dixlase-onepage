@@ -69,7 +69,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // image we pull the text/buttons toward the top so the image
     // (rendered below the buttons) has room to breathe.
     $heroVerticalAlign = $heroForegroundPath
-        ? 'justify-start pt-12 md:pt-16 lg:pt-20 pb-12'
+        ? 'justify-start pt-6 md:pt-16 lg:pt-20 pb-12'
         : 'justify-center';
 @endphp
 
@@ -95,14 +95,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     {{-- 背景画像も動画も無いときの装飾: ヒーロー中央に 1 つの
          オーソドックスな放射グラデーション。形状は `circle` 固定で
-         常に正円。半径は `clamp(500px, 80vw, 2000px)` でビューポート
+         常に正円。半径は `clamp(500px, 100vw, 2400px)` でビューポート
          幅に応じてスケール — モバイルでは 500px、Desktop 1280px で
-         ~1024px、Wide 1920px で ~1536px、超ワイドでは 2000px に頭打ち。
+         1280px、Wide 1920px で 1920px、超ワイドでは 2400px に頭打ち。
          ユーザ操作対象ではないので `pointer-events-none`。
          8 桁 HEX 末尾 `80` = α 50%。 --}}
     @if(empty($heroBackgroundPath) && empty($heroVideoPath))
         <div class="absolute inset-0 z-0 pointer-events-none"
-             style="background: radial-gradient(circle clamp(500px, 80vw, 2000px) at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
+             style="background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}
@@ -124,13 +124,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                  redistribute glyphs across wrapped lines so the visible
                  break falls at a punctuation pause (e.g. ja: "、" "。")
                  rather than mid-phrase greedy wrapping. --}}
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line"
+            <h1 class="text-3xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line"
                 style="text-wrap: balance;">
                 {{ $heroMainTitle }}
             </h1>
 
             @if($heroSubTitle)
-                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg mx-auto whitespace-pre-line"
+                <p class="text-lg text-gray-600 dark:text-gray-300 mb-6 md:mb-8 max-w-lg mx-auto whitespace-pre-line"
                    style="text-wrap: balance;">
                     {{ $heroSubTitle }}
                 </p>
@@ -168,7 +168,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
         {{-- 前景画像（設定時のみ。最大 1488px、フロントの最大幅 1480 に揃える） --}}
         @if($heroForegroundPath)
-            <div class="mt-12 md:mt-16 lg:mt-20 max-w-[1488px] mx-auto">
+            <div class="mt-6 md:mt-16 lg:mt-20 max-w-[1488px] mx-auto">
                 <img src="{{ asset('storage/' . $heroForegroundPath) }}"
                      alt=""
                      class="w-full h-auto rounded-2xl shadow-2xl">
