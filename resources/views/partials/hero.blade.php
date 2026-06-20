@@ -55,25 +55,24 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
 
     // When the admin bar is present (member is logged in), it occupies
-    // ~48px (Tailwind `top-12` = 3rem) at the top of the viewport. The
-    // hero used to be a flat `min-h-screen` (100vh) which made the total
-    // page height = admin bar + 100vh, pushing the hero down by 48px
-    // and causing the headline to fall under the sticky admin bar as
-    // soon as the visitor scrolled even slightly. Subtract the bar
-    // height when it's there so admin-bar + hero exactly fills 100vh.
+    // ~48px (Tailwind `top-12` = 3rem) at the top of the viewport.
+    // Use exact `h-[…]` (not `min-h-…`) so the hero is pinned to one
+    // viewport height — combined with the flex-1 image layout below,
+    // this keeps "text + image" inside one screen even on very short
+    // viewports (the image area shrinks to fit the remainder).
     $hasAdminBar = auth('member')->check();
-    $heroMinHeight = $hasAdminBar ? 'min-h-[calc(100vh-3rem)]' : 'min-h-screen';
+    $heroHeight = $hasAdminBar ? 'h-[calc(100vh-3rem)]' : 'h-screen';
 
-    // Without a foreground image the hero is a centered text block —
-    // `justify-center` keeps the existing layout. With a foreground
-    // image we pull the text/buttons toward the top so the image
-    // (rendered below the buttons) has room to breathe.
+    // Without a foreground image the hero is a centred text block.
+    // With one, we lay out as: text on top (natural height), image
+    // area underneath taking the remaining viewport space — see the
+    // `flex-1 min-h-0` block below.
     $heroVerticalAlign = $heroForegroundPath
-        ? 'justify-start pt-6 md:pt-16 lg:pt-20 pb-12'
+        ? 'justify-start pt-6 md:pt-16 lg:pt-20 pb-6 md:pb-12'
         : 'justify-center';
 @endphp
 
-<section class="relative {{ $heroMinHeight }} flex flex-col {{ $heroVerticalAlign }} overflow-hidden bg-gray-100 dark:bg-gray-950"
+<section class="relative {{ $heroHeight }} flex flex-col {{ $heroVerticalAlign }} overflow-hidden bg-gray-100 dark:bg-gray-950"
     @if($heroVideoPath)
         x-data="{ videoPlaying: false }"
     @endif
@@ -115,73 +114,55 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
     @endif
 
-    {{-- コンテンツ --}}
-    <div class="container mx-auto px-4 py-20 relative z-10">
-        <div class="max-w-4xl mx-auto text-center">
-            {{-- `text-wrap: balance` via inline style: Tailwind v4 doesn't
-                 emit the `text-balance` utility in our dev pipeline, so we
-                 apply the CSS property directly. It tells the browser to
-                 redistribute glyphs across wrapped lines so the visible
-                 break falls at a punctuation pause (e.g. ja: "、" "。")
-                 rather than mid-phrase greedy wrapping. --}}
-            <h1 class="text-3xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line"
-                style="text-wrap: balance;">
-                {{ $heroMainTitle }}
-            </h1>
-
-            @if($heroSubTitle)
-                <p class="text-lg text-gray-600 dark:text-gray-300 mb-6 md:mb-8 max-w-lg mx-auto whitespace-pre-line"
-                   style="text-wrap: balance;">
-                    {{ $heroSubTitle }}
-                </p>
-            @endif
-
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                @if($heroButtonEnabled && $heroButtonText)
-                    <a href="{{ $heroButtonLink }}"
-                       target="{{ $heroButtonTarget }}"
-                       @if($heroButtonTarget === '_blank') rel="noopener noreferrer" @endif
-                       class="inline-flex items-center justify-center gap-2 h-11 rounded-xl text-white px-8 py-6 transition-opacity hover:opacity-90"
-                       style="background-color: {{ $primaryColor }}">
-                        {{ $heroButtonText }}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-5 w-5">
-                            <path d="M5 12h14"></path>
-                            <path d="m12 5 7 7-7 7"></path>
-                        </svg>
-                    </a>
-                @endif
-
-                @if($heroButtonSecondaryEnabled && $heroButtonSecondaryText)
-                    <a href="{{ $heroButtonSecondaryLink }}"
-                       target="{{ $heroButtonSecondaryTarget }}"
-                       @if($heroButtonSecondaryTarget === '_blank') rel="noopener noreferrer" @endif
-                       class="hero-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-white/5 py-6 transition-colors">
-                        {{ $heroButtonSecondaryText }}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-5 w-5">
-                            <path d="M7 7h10v10"></path>
-                            <path d="M7 17 17 7"></path>
-                        </svg>
-                    </a>
-                @endif
+    {{-- コンテンツ。
+         前景画像があるときは flex-col のメイン軸を利用した「上=テキスト
+         (自然高さ)、下=画像 (残り全部)」レイアウト。画像エリアが
+         `flex-1 min-h-0` で section の残りスペースを吸収し、画像自身は
+         `max-w-full max-h-full object-contain` で親に合わせて
+         アスペクト比保持で縮む。viewport が短くても画像が押し出される
+         ことがなく、常に "text + 画像 = 1 ビューポート" を保つ。
+         前景画像が無いときは従来通り `py-20` + section 側の
+         `justify-center` でテキストを中央寄せ。 --}}
+    @if($heroForegroundPath)
+        <div class="container mx-auto px-4 relative z-10 flex flex-col flex-1 min-h-0 w-full">
+            <div class="max-w-4xl mx-auto text-center flex-shrink-0">
+                @include('themes::partials.hero.text-block', [
+                    'heroMainTitle' => $heroMainTitle,
+                    'heroSubTitle' => $heroSubTitle,
+                    'heroButtonEnabled' => $heroButtonEnabled,
+                    'heroButtonText' => $heroButtonText,
+                    'heroButtonLink' => $heroButtonLink,
+                    'heroButtonTarget' => $heroButtonTarget,
+                    'heroButtonSecondaryEnabled' => $heroButtonSecondaryEnabled,
+                    'heroButtonSecondaryText' => $heroButtonSecondaryText,
+                    'heroButtonSecondaryLink' => $heroButtonSecondaryLink,
+                    'heroButtonSecondaryTarget' => $heroButtonSecondaryTarget,
+                    'primaryColor' => $primaryColor,
+                ])
             </div>
-        </div>
-
-        {{-- 前景画像（設定時のみ）。
-             横幅: ラッパが `max-w-[1488px]` で 1480 のフロント最大幅に揃える。
-             縦幅: `max-h-[55vh]` でビューポートの 55% を超えないよう
-             キャップ — 16:9 の画像を 1480px 幅で出すと高さが 832px
-             になり、ヒーローの `min-h-[calc(100vh-3rem)]`
-             (812 - 48 = 764px) を 1 枚で超えてしまい、テキスト + ボタン
-             + 画像を同時にビューポート内に収められなかった。
-             `max-w-full max-h-[55vh]` 併用でアスペクト比を維持しつつ
-             横/縦どちらの上限にもぶつかった方で縮む。`mx-auto` で
-             ラッパ内中央寄せ。 --}}
-        @if($heroForegroundPath)
-            <div class="mt-4 md:mt-16 lg:mt-20 max-w-[1488px] mx-auto">
+            <div class="mt-4 md:mt-8 lg:mt-12 max-w-[1488px] mx-auto flex-1 min-h-0 flex items-center justify-center w-full">
                 <img src="{{ asset('storage/' . $heroForegroundPath) }}"
                      alt=""
-                     class="max-w-full max-h-[55vh] mx-auto rounded-2xl shadow-2xl">
+                     class="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl shadow-2xl">
             </div>
-        @endif
-    </div>
+        </div>
+    @else
+        <div class="container mx-auto px-4 py-20 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                @include('themes::partials.hero.text-block', [
+                    'heroMainTitle' => $heroMainTitle,
+                    'heroSubTitle' => $heroSubTitle,
+                    'heroButtonEnabled' => $heroButtonEnabled,
+                    'heroButtonText' => $heroButtonText,
+                    'heroButtonLink' => $heroButtonLink,
+                    'heroButtonTarget' => $heroButtonTarget,
+                    'heroButtonSecondaryEnabled' => $heroButtonSecondaryEnabled,
+                    'heroButtonSecondaryText' => $heroButtonSecondaryText,
+                    'heroButtonSecondaryLink' => $heroButtonSecondaryLink,
+                    'heroButtonSecondaryTarget' => $heroButtonSecondaryTarget,
+                    'primaryColor' => $primaryColor,
+                ])
+            </div>
+        </div>
+    @endif
 </section>
