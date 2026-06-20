@@ -379,7 +379,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             x-transition:leave="transition ease-in duration-200 transform"
             x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="fixed {{ $hasAdminBar ? 'top-12' : 'top-0' }} right-0 z-[70] {{ $hasAdminBar ? 'h-[calc(100%-3rem)]' : 'h-full' }} w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
+            {{-- Translucent + backdrop blur, matching the DixlaseLegal
+                 cookie banner's `bg-gray-900/60 backdrop-blur-md` look so
+                 the drawer reads as a soft glass surface that hints at
+                 the page content behind it, rather than a solid wall. --}}
+            class="fixed {{ $hasAdminBar ? 'top-12' : 'top-0' }} right-0 z-[70] {{ $hasAdminBar ? 'h-[calc(100%-3rem)]' : 'h-full' }} w-80 max-w-[85vw] bg-white/60 dark:bg-gray-900/60 backdrop-blur-md shadow-2xl"
             :class="{ 'lg:hidden': !forceHamburger }"
             x-cloak
         >
