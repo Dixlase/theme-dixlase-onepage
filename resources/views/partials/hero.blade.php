@@ -54,6 +54,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $heroForegroundPath = $themeSettings->heroForegroundPath ?? null;
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
 
+    // When the admin bar is present (member is logged in), it occupies
+    // ~48px (Tailwind `top-12` = 3rem) at the top of the viewport. The
+    // hero used to be a flat `min-h-screen` (100vh) which made the total
+    // page height = admin bar + 100vh, pushing the hero down by 48px
+    // and causing the headline to fall under the sticky admin bar as
+    // soon as the visitor scrolled even slightly. Subtract the bar
+    // height when it's there so admin-bar + hero exactly fills 100vh.
+    $hasAdminBar = auth('member')->check();
+    $heroMinHeight = $hasAdminBar ? 'min-h-[calc(100vh-3rem)]' : 'min-h-screen';
+
     // Without a foreground image the hero is a centered text block —
     // `justify-center` keeps the existing layout. With a foreground
     // image we pull the text/buttons toward the top so the image
@@ -63,7 +73,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         : 'justify-center';
 @endphp
 
-<section class="relative min-h-screen flex flex-col {{ $heroVerticalAlign }} overflow-hidden bg-gray-100 dark:bg-gray-950"
+<section class="relative {{ $heroMinHeight }} flex flex-col {{ $heroVerticalAlign }} overflow-hidden bg-gray-100 dark:bg-gray-950"
     @if($heroVideoPath)
         x-data="{ videoPlaying: false }"
     @endif
