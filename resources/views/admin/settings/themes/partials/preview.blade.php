@@ -181,13 +181,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     </div>
                 </template>
 
-                {{-- 背景なし時の左上 / 右上コーナー放射グラデーション
+                {{-- 背景なし時の Astro 風 mid-bottom 寄せ放射グラデーション
                      （フロントと 1:1） --}}
                 <template x-if="!heroBgPreviewUrl && !heroVideoPreviewUrl">
                     <div class="absolute inset-0 z-0 pointer-events-none"
                         :style="'background: ' +
-                            'radial-gradient(ellipse 85% 90% at 100% 0%, ' + primaryColor + '80 0%, transparent 60%),' +
-                            'radial-gradient(ellipse 75% 80% at 0% 0%,   ' + primaryColor + '55 0%, transparent 65%);'"></div>
+                            'radial-gradient(ellipse 75% 85% at 70% 60%, ' + primaryColor + '80 0%, transparent 60%),' +
+                            'radial-gradient(ellipse 65% 75% at 25% 75%, ' + primaryColor + '55 0%, transparent 65%);'"></div>
                 </template>
 
                 {{-- コンテンツ --}}

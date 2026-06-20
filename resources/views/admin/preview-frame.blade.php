@@ -53,7 +53,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 {{-- Front Page Content --}}
 {{-- Bare mode keeps the same wrapping classes as the live front so the
      embedding iframe shows the content centered at the same width. --}}
-<section class="front-content {{ ($bareContent ?? false) ? 'py-0' : 'py-16' }}" id="preview-content-section">
+<section class="front-content {{ ($bareContent ?? false) ? 'py-0' : 'pb-16' }}" id="preview-content-section">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto prose prose-lg dark:prose-invert" id="preview-content-area">
             {!! $initialRenderedContent ?? '' !!}
