@@ -102,7 +102,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
          8 桁 HEX 末尾 `80` = α 50%。 --}}
     @if(empty($heroBackgroundPath) && empty($heroVideoPath))
         <div class="absolute inset-0 z-0 pointer-events-none"
-             style="background: radial-gradient(circle clamp(500px, 50vw, 1200px) at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
+             style="background: radial-gradient(circle clamp(500px, 80vw, 2000px) at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}

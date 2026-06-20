@@ -185,7 +185,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                      スケール（フロントと 1:1） --}}
                 <template x-if="!heroBgPreviewUrl && !heroVideoPreviewUrl">
                     <div class="absolute inset-0 z-0 pointer-events-none"
-                        :style="'background: radial-gradient(circle clamp(500px, 50vw, 1200px) at 50% 50%, ' + primaryColor + '80 0%, transparent 65%);'"></div>
+                        :style="'background: radial-gradient(circle clamp(500px, 80vw, 2000px) at 50% 50%, ' + primaryColor + '80 0%, transparent 65%);'"></div>
                 </template>
 
                 {{-- コンテンツ --}}
