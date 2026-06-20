@@ -206,16 +206,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </div>
         @endif
 
-        {{-- Copyright — border-t is the only divider in the footer's
-             meta area. Constrained to `max-w-4xl mx-auto` so it visually
-             aligns with the hero/front-content block widths instead of
-             stretching edge-to-edge across the page. `border-gray-200`
-             (light) / `border-gray-800` (dark) keeps the line as a quiet
-             separator rather than a heavy rule — `border-white/5` would
-             read more naturally for dark mode, but Tailwind's default
-             scanner doesn't generate that exact opacity step, and we
-             want classes the JIT actually emits. --}}
-        <div class="max-w-4xl mx-auto border-t border-gray-200 dark:border-gray-800 pt-8 flex justify-center">
+    </div>
+
+    {{-- Copyright — border-t spans the full window width. Placed outside
+         the `.container` wrapper above so the rule isn't constrained by
+         the container's max-width. `border-gray-200` (light) /
+         `border-gray-800` (dark) keeps the line as a quiet separator,
+         not a heavy rule. --}}
+    <div class="border-t border-gray-200 dark:border-gray-800">
+        <div class="container mx-auto px-4 pt-8 flex justify-center">
             <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 md:mb-0">
                 {{ $footerCopyright }}
             </p>
