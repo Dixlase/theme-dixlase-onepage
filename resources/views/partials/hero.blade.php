@@ -116,7 +116,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     {{-- コンテンツ --}}
     <div class="container mx-auto px-4 py-20 relative z-10">
         <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line">
                 {{ $heroMainTitle }}
             </h1>
 
