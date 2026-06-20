@@ -94,13 +94,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     @endif
 
     {{-- 背景画像も動画も無いときの装飾: ヒーロー中央に 1 つの
-         オーソドックスな放射グラデーション。プライマリカラーの光が
-         中心から外へと放射する正統的な構図。
+         オーソドックスな放射グラデーション。形状は `circle 600px` で
+         固定 — `ellipse 80% 80%` だと親要素のアスペクト比に追従して
+         縦長ビューポートで縦長の楕円になっていた。固定半径の `circle`
+         で常に正円になる。
          ユーザ操作対象ではないので `pointer-events-none`。
          8 桁 HEX 末尾 `80` = α 50%。 --}}
     @if(empty($heroBackgroundPath) && empty($heroVideoPath))
         <div class="absolute inset-0 z-0 pointer-events-none"
-             style="background: radial-gradient(ellipse 80% 80% at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
+             style="background: radial-gradient(circle 600px at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}
@@ -116,12 +118,20 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     {{-- コンテンツ --}}
     <div class="container mx-auto px-4 py-20 relative z-10">
         <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line">
+            {{-- `text-wrap: balance` via inline style: Tailwind v4 doesn't
+                 emit the `text-balance` utility in our dev pipeline, so we
+                 apply the CSS property directly. It tells the browser to
+                 redistribute glyphs across wrapped lines so the visible
+                 break falls at a punctuation pause (e.g. ja: "、" "。")
+                 rather than mid-phrase greedy wrapping. --}}
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line"
+                style="text-wrap: balance;">
                 {{ $heroMainTitle }}
             </h1>
 
             @if($heroSubTitle)
-                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg mx-auto whitespace-pre-line">
+                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg mx-auto whitespace-pre-line"
+                   style="text-wrap: balance;">
                     {{ $heroSubTitle }}
                 </p>
             @endif
@@ -156,9 +166,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </div>
         </div>
 
-        {{-- 前景画像（設定時のみ。最大 1200px、ヒーロー内に大きく配置） --}}
+        {{-- 前景画像（設定時のみ。最大 1488px、フロントの最大幅 1480 に揃える） --}}
         @if($heroForegroundPath)
-            <div class="mt-12 md:mt-16 lg:mt-20 max-w-[1200px] mx-auto">
+            <div class="mt-12 md:mt-16 lg:mt-20 max-w-[1488px] mx-auto">
                 <img src="{{ asset('storage/' . $heroForegroundPath) }}"
                      alt=""
                      class="w-full h-auto rounded-2xl shadow-2xl">

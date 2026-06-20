@@ -181,10 +181,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     </div>
                 </template>
 
-                {{-- 背景なし時の中央単一放射グラデーション（フロントと 1:1） --}}
+                {{-- 背景なし時の中央固定円放射グラデーション（フロントと 1:1） --}}
                 <template x-if="!heroBgPreviewUrl && !heroVideoPreviewUrl">
                     <div class="absolute inset-0 z-0 pointer-events-none"
-                        :style="'background: radial-gradient(ellipse 80% 80% at 50% 50%, ' + primaryColor + '80 0%, transparent 65%);'"></div>
+                        :style="'background: radial-gradient(circle 600px at 50% 50%, ' + primaryColor + '80 0%, transparent 65%);'"></div>
                 </template>
 
                 {{-- コンテンツ --}}
@@ -192,7 +192,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     <div class="max-w-4xl mx-auto text-center">
                         {{-- Main Title — textarea で改行入力可、表示は white-space:pre-line で改行を反映 --}}
                         <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
-                            <h1 class="pv-title text-6xl lg:text-7xl font-bold leading-tight whitespace-pre-line" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
+                            <h1 class="pv-title text-6xl lg:text-7xl font-bold leading-tight whitespace-pre-line" style="text-wrap: balance;" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
                             </h1>
                             <textarea
                                 x-show="editing === 'heroMainTitle'"
@@ -210,7 +210,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
                         {{-- Sub Title --}}
                         <div class="relative group cursor-pointer mb-8" @click.stop="startEdit('heroSubTitle')">
-                            <p class="pv-subtitle text-lg max-w-lg mx-auto whitespace-pre-line" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
+                            <p class="pv-subtitle text-lg max-w-lg mx-auto whitespace-pre-line" style="text-wrap: balance;" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
                             <textarea
                                 x-show="editing === 'heroSubTitle'"
                                 x-model="heroSubTitle"
