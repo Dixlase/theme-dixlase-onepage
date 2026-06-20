@@ -195,7 +195,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 && (string) ($themeSettings->multilingual_switcher_enabled ?? '0') === '1';
         @endphp
         @if ($multilingualReady)
-            <div class="border-t border-gray-300 dark:border-white/10 pt-8 flex justify-center mb-6">
+            {{-- Border-less wrapper: the copyright block below carries its
+                 own `border-t` and is the only horizontal divider in the
+                 lower footer, so adding a second `border-t` here would
+                 sandwich the switcher between two lines for no visual
+                 gain. `mt-8 mb-6` keeps roughly the same vertical
+                 spacing the previous `border-t pt-8 mb-6` produced. --}}
+            <div class="mt-8 mb-6 flex justify-center">
                 <x-dynamic-component component="dixlase-multilingual::language-switcher" variant="links" />
             </div>
         @endif
