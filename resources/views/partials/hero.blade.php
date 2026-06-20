@@ -83,6 +83,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
     @endif
 
+    {{-- 背景画像も動画も無いときの装飾: プライマリカラーで上方中央に
+         放射グラデーションを敷く。ユーザ操作対象ではないので
+         `pointer-events-none`。8桁HEXの末尾 `66` = α 40%。 --}}
+    @if(empty($heroBackgroundPath) && empty($heroVideoPath))
+        <div class="absolute inset-0 z-0 pointer-events-none"
+             style="background: radial-gradient(ellipse 80% 70% at 50% 10%, {{ $primaryColor }}66 0%, transparent 70%);"></div>
+    @endif
+
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}
     @if($heroBackgroundPath)
         <div class="absolute inset-0 z-0"

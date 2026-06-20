@@ -181,6 +181,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     </div>
                 </template>
 
+                {{-- 背景なし時のプライマリカラー放射グラデーション（フロントと同等） --}}
+                <template x-if="!heroBgPreviewUrl && !heroVideoPreviewUrl">
+                    <div class="absolute inset-0 z-0 pointer-events-none"
+                        :style="'background: radial-gradient(ellipse 80% 70% at 50% 10%, ' + primaryColor + '66 0%, transparent 70%);'"></div>
+                </template>
+
                 {{-- コンテンツ --}}
                 <div class="container mx-auto px-8 py-20 relative z-10">
                     <div class="max-w-4xl mx-auto text-center">
