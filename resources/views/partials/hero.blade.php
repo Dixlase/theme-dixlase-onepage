@@ -74,8 +74,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // utility-specific quirk), so we apply the padding via inline
     // `style="…"` below on the section. The class string here keeps
     // only the flex-alignment utility.
+    //
+    // Top padding has to clear the fixed theme header (`h-14` = 56 px
+    // = 3.5 rem) that sits on top of the hero — otherwise the title
+    // tucks under the header. `calc(3.5rem + 3vh)` gives header
+    // offset + the same 3vh visual breathing room we want lower
+    // viewports to scale with.
     $heroVerticalAlign = $heroForegroundPath ? 'justify-start' : 'justify-center';
-    $heroSectionStyle = $heroForegroundPath ? 'padding-top: 3vh; padding-bottom: 3vh;' : '';
+    $heroSectionStyle = $heroForegroundPath ? 'padding-top: calc(3.5rem + 3vh); padding-bottom: 3vh;' : '';
 @endphp
 
 <section class="relative {{ $heroHeight }} flex flex-col {{ $heroVerticalAlign }} overflow-hidden bg-gray-100 dark:bg-gray-950"
