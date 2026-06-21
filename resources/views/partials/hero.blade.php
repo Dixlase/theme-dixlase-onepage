@@ -68,16 +68,18 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // area underneath taking the remaining viewport space — see the
     // `flex-1 min-h-0` block below.
     // Foreground-image branch: vh-based padding so the spacing scales
-    // with viewport height instead of breakpoint. On a 812 px tall
-    // viewport 3vh ≈ 24 px, on 1080 ≈ 32 px, on a very short
-    // wide window (~336 px) ≈ 10 px — the hero adapts to the actual
-    // viewport instead of guessing per breakpoint.
-    $heroVerticalAlign = $heroForegroundPath
-        ? 'justify-start pt-[3vh] pb-[3vh]'
-        : 'justify-center';
+    // with viewport height instead of breakpoint. Tailwind v4's
+    // arbitrary-value scanner in this dev pipeline doesn't generate
+    // `pt-[3vh]` / `pb-[3vh]` (it does generate `max-h-[55vh]` —
+    // utility-specific quirk), so we apply the padding via inline
+    // `style="…"` below on the section. The class string here keeps
+    // only the flex-alignment utility.
+    $heroVerticalAlign = $heroForegroundPath ? 'justify-start' : 'justify-center';
+    $heroSectionStyle = $heroForegroundPath ? 'padding-top: 3vh; padding-bottom: 3vh;' : '';
 @endphp
 
 <section class="relative {{ $heroHeight }} flex flex-col {{ $heroVerticalAlign }} overflow-hidden bg-gray-100 dark:bg-gray-950"
+    @if($heroSectionStyle) style="{{ $heroSectionStyle }}" @endif
     @if($heroVideoPath)
         x-data="{ videoPlaying: false }"
     @endif
@@ -145,7 +147,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     'primaryColor' => $primaryColor,
                 ])
             </div>
-            <div class="mt-[2vh] max-w-[1488px] mx-auto flex-1 min-h-0 flex items-center justify-center w-full">
+            <div class="max-w-[1488px] mx-auto flex-1 min-h-0 flex items-center justify-center w-full"
+                 style="margin-top: 2vh;">
                 <img src="{{ asset('storage/' . $heroForegroundPath) }}"
                      alt=""
                      class="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl shadow-2xl">
