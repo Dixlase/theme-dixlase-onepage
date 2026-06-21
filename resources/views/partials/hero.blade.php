@@ -67,8 +67,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // With one, we lay out as: text on top (natural height), image
     // area underneath taking the remaining viewport space — see the
     // `flex-1 min-h-0` block below.
+    // Foreground-image branch: vh-based padding so the spacing scales
+    // with viewport height instead of breakpoint. On a 812 px tall
+    // viewport 3vh ≈ 24 px, on 1080 ≈ 32 px, on a very short
+    // wide window (~336 px) ≈ 10 px — the hero adapts to the actual
+    // viewport instead of guessing per breakpoint.
     $heroVerticalAlign = $heroForegroundPath
-        ? 'justify-start pt-6 md:pt-16 lg:pt-20 pb-6 md:pb-12'
+        ? 'justify-start pt-[3vh] pb-[3vh]'
         : 'justify-center';
 @endphp
 
@@ -140,7 +145,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     'primaryColor' => $primaryColor,
                 ])
             </div>
-            <div class="mt-4 md:mt-8 lg:mt-12 max-w-[1488px] mx-auto flex-1 min-h-0 flex items-center justify-center w-full">
+            <div class="mt-[2vh] max-w-[1488px] mx-auto flex-1 min-h-0 flex items-center justify-center w-full">
                 <img src="{{ asset('storage/' . $heroForegroundPath) }}"
                      alt=""
                      class="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl shadow-2xl">
