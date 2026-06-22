@@ -39,19 +39,23 @@
     @endif
 
     @if($heroButtonSecondaryEnabled && $heroButtonSecondaryText)
-        {{-- Secondary button: a translucent white surface gives the
-             border something to sit against, which it lacked against
-             the primary-coloured radial gradient in light mode —
+        {{-- Secondary button: a translucent surface gives the border
+             something to sit against, which it lacked against the
+             primary-coloured radial gradient in light mode —
              `border-gray-300` alone read as nearly invisible there.
-             `bg-white/50 + backdrop-blur-sm` is the same glass-recipe
-             the drawer / cookie banner / header use, so the button
-             feels at home in the site's translucent-overlay vocabulary.
-             Border bumped a tier (gray-300 → gray-400) for additional
-             contrast on the white-glass background. --}}
+             `bg-white/70` (light) and `bg-gray-800/60` (dark) are the
+             same glass-recipe family the drawer / cookie banner /
+             header use, so the button feels at home in the site's
+             translucent-overlay vocabulary. Border bumped a tier
+             (`gray-300` → `gray-400` light, dark stays `gray-600`)
+             for additional contrast on the glass backdrop.
+             Opacity steps picked from the set Tailwind's scanner
+             actually emits in this dev pipeline — `bg-white/50` and
+             `bg-white/5` look correct but don't generate. --}}
         <a href="{{ $heroButtonSecondaryLink }}"
            target="{{ $heroButtonSecondaryTarget }}"
            @if($heroButtonSecondaryTarget === '_blank') rel="noopener noreferrer" @endif
-           class="hero-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-400 dark:border-gray-600 bg-white/50 dark:bg-white/5 backdrop-blur-sm text-gray-700 dark:text-white hover:bg-white/70 dark:hover:bg-white/10 py-6 transition-colors">
+           class="hero-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-400 dark:border-gray-600 bg-white/70 dark:bg-gray-800/60 backdrop-blur-sm text-gray-700 dark:text-white hover:bg-white/80 dark:hover:border-gray-500 py-6 transition-colors">
             {{ $heroButtonSecondaryText }}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-5 w-5">
                 <path d="M7 7h10v10"></path>
