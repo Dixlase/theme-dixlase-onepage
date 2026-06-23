@@ -66,6 +66,28 @@ footer a:hover,
     color: var(--color-primary-dark-safe, #3b82f6) !important;
 }
 
+// Hero secondary "Learn More" / "Demo" button — translucent glass
+// surface so the border is visible against the primary-coloured
+// radial gradient and the button feels like part of the same
+// translucent-overlay vocabulary as the drawer / cookie banner /
+// header. Background opacities (`/30` light, `/10` dark) live here
+// rather than as Tailwind utilities because Tailwind v4's scanner
+// in this dev pipeline only emits `/20` and `/70+` opacities — the
+// middle-range glass values we need aren't generated, so SCSS is
+// the stable place for them.
+.hero-btn-secondary {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.hero-btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+.dark .hero-btn-secondary {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+.dark .hero-btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
 // ナビゲーションスタイル
 .navigation {
     a {
