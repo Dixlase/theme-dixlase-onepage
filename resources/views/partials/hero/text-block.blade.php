@@ -53,7 +53,7 @@
         <a href="{{ $heroButtonSecondaryLink }}"
            target="{{ $heroButtonSecondaryTarget }}"
            @if($heroButtonSecondaryTarget === '_blank') rel="noopener noreferrer" @endif
-           class="hero-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-200 dark:border-gray-700 backdrop-blur-sm text-gray-700 dark:text-white py-6 transition-colors">
+           class="hero-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-300 dark:border-gray-700 backdrop-blur-sm text-gray-700 dark:text-white py-6 transition-colors">
             {{ $heroButtonSecondaryText }}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-5 w-5">
                 <path d="M7 7h10v10"></path>
