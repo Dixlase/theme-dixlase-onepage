@@ -45,7 +45,24 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Bind OnePage's appearance provider to Core's
+        // SiteAppearanceProviderInterface contract so out-of-tree
+        // consumers (Cloudflare Turnstile widget, third-party
+        // embeds that need site-theme awareness, etc.) can read the
+        // currently-configured light/dark/auto mode without coupling
+        // to OnePage's own settings table.
         //
+        // Guarded by `interface_exists` because the contract ships in
+        // dixlase-core#104; Core builds that pre-date the contract
+        // would autoload-fail when the binding fires, so we skip the
+        // bind entirely on those (the consumer-side then falls back
+        // to its own safe default — `auto` for Turnstile).
+        if (interface_exists(\App\Contracts\Theme\SiteAppearanceProviderInterface::class)) {
+            $this->app->bind(
+                \App\Contracts\Theme\SiteAppearanceProviderInterface::class,
+                \Themes\DixlaseOnePage\App\Services\DixlaseOnePageAppearanceProvider::class,
+            );
+        }
     }
 
     /**
