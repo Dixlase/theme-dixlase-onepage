@@ -41,8 +41,23 @@
 @source "../../../resources/**/*.vue";
 @source "../../../../../../resources/views/components/**/*.blade.php";
 @source "../../../../../../resources/src/components/**/*.js";
-@source "../../../../../../plugins/*/resources/views/front/**/*.blade.php";
-@source "../../../../../../plugins/*/resources/views/components/**/*.blade.php";
+/*
+ * `plugins/*` is gitignored at the html/ root, and Tailwind v4 honours
+ * `.gitignore` for *glob* @source patterns. List each plugin's view
+ * directory as an *explicit* (non-glob) path so Tailwind treats it as
+ * an external-library scan and bypasses .gitignore.
+ */
+@source "../../../../../../plugins/DixlaseBlog/resources/views";
+@source "../../../../../../plugins/DixlaseCookie/resources/views";
+@source "../../../../../../plugins/DixlaseCoreDevKit/resources/views";
+@source "../../../../../../plugins/DixlaseDeploy/resources/views";
+@source "../../../../../../plugins/DixlaseDevKit/resources/views";
+@source "../../../../../../plugins/DixlaseInquiry/resources/views";
+@source "../../../../../../plugins/DixlaseLegal/resources/views";
+@source "../../../../../../plugins/DixlaseMenus/resources/views";
+@source "../../../../../../plugins/DixlaseMultilingual/resources/views";
+@source "../../../../../../plugins/DixlasePages/resources/views";
+@source "../../../../../../plugins/DixlaseSEO/resources/views";
 /*
  * The front page's editable HTML lives at storage/app/private/core/front/.
  * That tree is outside the @source paths above and the storage directory
