@@ -47,12 +47,13 @@
              because Tailwind's scanner in this dev pipeline doesn't
              emit the mid-range opacity steps we need (`/30` / `/10`)
              — keeping it in SCSS makes the recipe explicit and stable.
-             Border bumped a tier (`gray-400` light / `gray-600` dark)
-             for contrast on the glass backdrop. --}}
+             Border kept subtle (`gray-200` light / `gray-700` dark) so
+             it reads as a hairline outline of the glass rather than a
+             hard frame, per the operator's reference. --}}
         <a href="{{ $heroButtonSecondaryLink }}"
            target="{{ $heroButtonSecondaryTarget }}"
            @if($heroButtonSecondaryTarget === '_blank') rel="noopener noreferrer" @endif
-           class="hero-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-400 dark:border-gray-600 backdrop-blur-sm text-gray-700 dark:text-white py-6 transition-colors">
+           class="hero-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border border-gray-200 dark:border-gray-700 backdrop-blur-sm text-gray-700 dark:text-white py-6 transition-colors">
             {{ $heroButtonSecondaryText }}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-5 w-5">
                 <path d="M7 7h10v10"></path>
