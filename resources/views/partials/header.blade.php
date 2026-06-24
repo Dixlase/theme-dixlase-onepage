@@ -93,7 +93,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         }
     }"
     x-init="initObserver()"
-    class="fixed h-14 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $headerTopClass }}"
+    {{-- Background opacity lives in `style.scss` under `header` because
+         Tailwind's scanner in this dev pipeline doesn't emit `/65`
+         opacity steps for `bg-white` / `bg-gray-900` — only `/20`,
+         `/70`, `/75`, `/80` round-trip. The site-stack opacity ladder
+         is admin-bar /85 > theme-header /65 > page-nav /45 (unified
+         blur md / 12px); keeping the off-grid /65 value in SCSS makes
+         that ladder explicit and stable. --}}
+    class="theme-front-header fixed h-14 items-center w-full z-50 transition-all duration-300 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $headerTopClass }}"
 >
     <div x-ref="navContainer" class="w-full h-full px-4 flex justify-between items-center">
         <div class="flex items-center justify-between w-full">
