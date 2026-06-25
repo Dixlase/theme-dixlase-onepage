@@ -96,7 +96,25 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     {{-- 管理バー / メンテナンスバナー / プラグインが @push('front-banners') で
          差し込む通知をまとめて管理バーの上に積み上げるスタック。 --}}
     <x-ui-front-banner-stack />
-    
+    {{-- 本テーマのヘッダー / モバイルドロワーは position: fixed なので、
+         スタックの実高さを CSS variable に出してヘッダー側 (partials/header)
+         が var(--front-banner-stack-height) で追従できるようにする。
+         Core 側 (<x-ui-front-banner-stack />) は構造のみを提供し、計測は
+         fixed ヘッダーを使う本テーマが受け持つ。 --}}
+    <script @cspNonce>
+        (function () {
+            var stack = document.getElementById('front-banner-stack');
+            if (!stack) return;
+            var root = document.documentElement;
+            var update = function () {
+                root.style.setProperty('--front-banner-stack-height', (stack.offsetHeight || 0) + 'px');
+            };
+            update();
+            new ResizeObserver(update).observe(stack);
+            window.addEventListener('resize', update);
+        })();
+    </script>
+
     @include('themes::partials.header')
 
     <main class="flex-grow">
