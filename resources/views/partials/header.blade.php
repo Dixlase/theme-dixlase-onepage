@@ -33,8 +33,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $logoText = config('app.name', 'Dixlase');
     $hasAdminBar = auth('member')->check();
 
-    // ヘッダーの位置を計算（管理バーがある場合のみ下げる）
-    $headerTopClass = $hasAdminBar ? 'top-12' : 'top-0';
+    // <x-ui-front-banner-stack /> の ResizeObserver が
+    // --front-banner-stack-height を計算する前の初期値。プラグインが
+    // バナーを @push していない通常状態では 3rem (= 管理バー高さ) が
+    // ぴったり合う。ログアウト時はスタックが空なので 0px。JS が値を
+    // 設定したあとは CSS variable が優先される。
+    $stackHeightFallback = $hasAdminBar ? '3rem' : '0px';
 
     // ロゴサイズ設定（ヘッダー用は sm サイズ）
     $logoSize = 'sm';
@@ -93,7 +97,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         }
     }"
     x-init="initObserver()"
-    class="fixed h-14 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10 {{ $headerTopClass }}"
+    class="fixed h-14 items-center w-full z-50 transition-all duration-300 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg dark:shadow-gray-700/10"
+    style="top: var(--front-banner-stack-height, {{ $stackHeightFallback }})"
 >
     <div x-ref="navContainer" class="w-full h-full px-4 flex justify-between items-center">
         <div class="flex items-center justify-between w-full">
@@ -362,7 +367,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-[60] bg-black/50 {{ $hasAdminBar ? 'top-12' : '' }}"
+            class="fixed inset-0 z-[60] bg-black/50"
+            style="top: var(--front-banner-stack-height, {{ $stackHeightFallback }})"
             :class="{ 'lg:hidden': !forceHamburger }"
             x-cloak
             @click="mobileMenuOpen = false"
@@ -379,7 +385,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             x-transition:leave="transition ease-in duration-200 transform"
             x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="fixed {{ $hasAdminBar ? 'top-12' : 'top-0' }} right-0 z-[70] {{ $hasAdminBar ? 'h-[calc(100%-3rem)]' : 'h-full' }} w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
+            class="fixed right-0 z-[70] w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
+            style="top: var(--front-banner-stack-height, {{ $stackHeightFallback }}); height: calc(100% - var(--front-banner-stack-height, {{ $stackHeightFallback }}));"
             :class="{ 'lg:hidden': !forceHamburger }"
             x-cloak
         >
