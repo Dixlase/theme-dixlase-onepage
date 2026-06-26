@@ -36,9 +36,25 @@
  * are needed to reach the Dixlase root (.../html/); plugin scans use
  * six, theme-internal scans use three.
  */
-@source "../../../resources/**/*.blade.php";
-@source "../../../resources/**/*.js";
-@source "../../../resources/**/*.vue";
+/*
+ * @source paths are relative to *this* CSS file at
+ * `themes/DixlaseOnePage/resources/src/front/css/tailwind.css`.
+ *   `..`          = `…/resources/src/front/`
+ *   `../..`       = `…/resources/src/`
+ *   `../../..`    = `…/resources/`           ← theme resource root
+ * The earlier `../../../resources/...` patterns resolved to
+ * `themes/DixlaseOnePage/resources/resources/…` (non-existent) and
+ * silently scanned nothing — Tailwind v4's `@tailwindcss/vite`
+ * auto-detect picked up some blade files anyway, but inconsistently:
+ * deep subdirs like `views/partials/hero/` and
+ * `views/admin/settings/themes/partials/` were missed, so utilities
+ * only used there (`md:text-6xl`, `lg:text-7xl`, `text-7xl`) failed
+ * to round-trip and the hero title silently downgraded to mobile size
+ * on PC.
+ */
+@source "../../../views/**/*.blade.php";
+@source "../../../src/**/*.js";
+@source "../../../src/**/*.vue";
 @source "../../../../../../resources/views/components/**/*.blade.php";
 @source "../../../../../../resources/src/components/**/*.js";
 /*
