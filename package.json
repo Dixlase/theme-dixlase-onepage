@@ -6,6 +6,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
+        "check:tailwind-sources": "node scripts/check-tailwind-sources.mjs",
+        "prebuild": "npm run check:tailwind-sources",
         "build": "vite build",
         "preview": "vite preview"
     },
