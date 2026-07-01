@@ -308,29 +308,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     @include('dixlase-users::components.auth-buttons')
                 </div>
                 @endif
-
-                {{-- Desktop Language Switcher (provided by DixlaseMultilingual plugin).
-                     Renders only when (a) the multilingual plugin is enabled,
-                     (b) the plugin's locale_url_routing_enabled toggle is on,
-                     (c) the theme's "multilingual_switcher_enabled" setting is on.
-
-                     IMPORTANT: the component tag is wrapped in <x-dynamic-component>
-                     so that Blade's compile-time tag resolver does not try to load
-                     `dixlase-multilingual::language-switcher` when the plugin is
-                     uninstalled. Compile-time resolution would fail even inside an
-                     @if branch that is never executed at runtime, taking the whole
-                     page down with a 500. With dynamic-component the inner name is
-                     looked up at runtime only, which the @if guard already gates. --}}
-                @php
-                    $multilingualReady = view()->exists('dixlase-multilingual::components.language-switcher')
-                        && (bool) config('dixlase_multilingual.locale_url_routing_enabled')
-                        && (string) ($themeSettings->multilingual_switcher_enabled ?? '0') === '1';
-                @endphp
-                @if ($multilingualReady)
-                <div class="flex items-center ml-4">
-                    <x-dynamic-component component="dixlase-multilingual::language-switcher" variant="dropdown" />
-                </div>
-                @endif
             </div>
 
             {{-- Mobile Menu Button --}}
@@ -530,20 +507,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div class="px-4 py-2">
                     @include('dixlase-users::components.auth-buttons')
-                </div>
-            </div>
-            @endif
-
-            {{-- Mobile Language Switcher (provided by DixlaseMultilingual plugin) --}}
-            @if(function_exists('dls_multilingual_switcher'))
-            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <div class="px-4 py-2">
-                    <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        {{ __('common.language') }}
-                    </span>
-                </div>
-                <div class="px-4 py-2">
-                    {!! dls_multilingual_switcher('inline', ['showFlag' => true]) !!}
                 </div>
             </div>
             @endif
