@@ -344,29 +344,4 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </p>
     </x-admin.theme-preview-sidebar-section>
 
-    {{-- ===== Multilingual Switcher ===== --}}
-    {{-- Reads from the multilingual plugin when available so the help text
-         can hint at "install / enable the plugin first" without crashing
-         single-locale installs. --}}
-    @php
-        $multilingualPluginEnabled = \App\Helpers\PluginHelper::isEnabled('dixlase-multilingual');
-        $multilingualEffectivelyOn = $multilingualPluginEnabled
-            && (bool) config('dixlase_multilingual.locale_url_routing_enabled');
-    @endphp
-    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.multilingual.title')" icon="fas fa-language" :divider="false">
-        <x-form-toggle
-            name="multilingual_switcher_enabled"
-            :label="__('themes::admin.settings.multilingual.switcher_label')"
-            :checked="old('multilingual_switcher_enabled', $settings->multilingual_switcher_enabled ?? '0') === '1'"
-            :disabled="! $multilingualEffectivelyOn"
-            value="1"
-        />
-        @if (! $multilingualPluginEnabled)
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.multilingual.requires_plugin') }}</p>
-        @elseif (! $multilingualEffectivelyOn)
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.multilingual.requires_enabled') }}</p>
-        @else
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.multilingual.help') }}</p>
-        @endif
-    </x-admin.theme-preview-sidebar-section>
 </x-admin.theme-preview-sidebar>

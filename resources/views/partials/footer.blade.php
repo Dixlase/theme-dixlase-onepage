@@ -181,31 +181,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </p>
         </div>
 
-        {{-- Footer Language Switcher (provided by DixlaseMultilingual plugin).
-
-             IMPORTANT: see the matching block in partials/header.blade.php for
-             why the component is invoked through <x-dynamic-component>. The
-             short version: Blade's compile-time tag resolver would otherwise
-             try to load `dixlase-multilingual::language-switcher` even inside
-             a never-executed @if branch, and fail with a 500 when the plugin
-             is uninstalled. Dynamic-component defers the lookup to runtime. --}}
-        @php
-            $multilingualReady = view()->exists('dixlase-multilingual::components.language-switcher')
-                && (bool) config('dixlase_multilingual.locale_url_routing_enabled')
-                && (string) ($themeSettings->multilingual_switcher_enabled ?? '0') === '1';
-        @endphp
-        @if ($multilingualReady)
-            {{-- Border-less wrapper: the copyright block below carries its
-                 own `border-t` and is the only horizontal divider in the
-                 lower footer, so adding a second `border-t` here would
-                 sandwich the switcher between two lines for no visual
-                 gain. `mt-8 mb-6` keeps roughly the same vertical
-                 spacing the previous `border-t pt-8 mb-6` produced. --}}
-            <div class="mt-8 mb-6 flex justify-center">
-                <x-dynamic-component component="dixlase-multilingual::language-switcher" variant="links" />
-            </div>
-        @endif
-
     </div>
 
     {{-- Copyright — border-t spans the full window width. Placed outside
