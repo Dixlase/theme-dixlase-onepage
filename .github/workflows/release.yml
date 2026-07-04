@@ -37,7 +37,7 @@
 # │ portion of core's release ZIP.                                │
 # │                                                               │
 # │ Requires:                                                     │
-# │   secrets.RELEASE_TOKEN — a PAT with `contents: read` on      │
+# │   secrets.CORE_REPO_TOKEN — a PAT with `contents: read` on      │
 # │   `Dixlase/dixlase-core` (needed for the core checkout below; │
 # │   core is private).                                           │
 # └───────────────────────────────────────────────────────────────┘
@@ -103,7 +103,7 @@ jobs:
         with:
           repository: Dixlase/dixlase-core
           ref: main
-          token: ${{ secrets.RELEASE_TOKEN }}
+          token: ${{ secrets.CORE_REPO_TOKEN }}
           path: ${{ env.DIXLASE_CTX }}
 
       - name: Seed empty Tailwind plugin-sources stub
