@@ -82,16 +82,22 @@ jobs:
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
           echo "Building release from ref: $REF"
 
-      - name: Checkout theme at target ref
-        # Land the theme at the same path it would occupy in a full
-        # Dixlase install: `<ctx>/themes/DixlaseOnePage/`. Its
-        # `tailwind.css` uses `../../../../../..` relative paths, so
-        # every level of the path matters here.
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.ref.outputs.ref }}
-          path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
-
+      # Order matters. `actions/checkout` cleans its `path` before
+      # extracting the tree, so we must check out `dixlase-core` into
+      # `dixlase-ctx/` FIRST — that empties `dixlase-ctx/` (fine, it
+      # didn't exist yet) and drops core's tree there. THEN check out
+      # the theme into `dixlase-ctx/themes/DixlaseOnePage/`; that
+      # subdir either doesn't exist yet or is empty, so the theme
+      # checkout doesn't clobber anything from core, and the theme's
+      # tree lands intact (including `package-lock.json` needed by
+      # `setup-node --cache=npm` below).
+      #
+      # The initial version of this workflow had the checkouts in the
+      # reverse order (theme first, then core into the parent). The
+      # core checkout's clean-target-dir behaviour wiped the theme
+      # subtree, causing `setup-node` to fail with "Some specified
+      # paths were not resolved, unable to cache dependencies"
+      # (workflow run 28712783001).
       - name: Checkout dixlase-core (for CSS @import + components @source)
         # Only needed for:
         #   resources/src/common/css/                    (`@import` target)
@@ -105,6 +111,16 @@ jobs:
           ref: main
           token: ${{ secrets.CORE_REPO_TOKEN }}
           path: ${{ env.DIXLASE_CTX }}
+
+      - name: Checkout theme at target ref
+        # Land the theme at the same path it would occupy in a full
+        # Dixlase install: `<ctx>/themes/DixlaseOnePage/`. Its
+        # `tailwind.css` uses `../../../../../..` relative paths, so
+        # every level of the path matters here.
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ref.outputs.ref }}
+          path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
 
       - name: Seed empty Tailwind plugin-sources stub
         # Runtime, `php artisan dls:tailwind:regenerate-plugin-sources`
