@@ -10,8 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # Order-critical: core → theme (see the same note in release.yml).
+      # actions/checkout cleans its target before extracting, so the
+      # inverse order would wipe the theme subtree that setup-node
+      # then needs for its npm cache lookup and that vite needs for
+      # the build itself.
+      - name: Checkout dixlase-core (for CSS @import + components @source)
+        # Only needed for:
+        #   resources/src/common/css/                    (`@import` target)
+        #   resources/views/components/**/*.blade.php    (`@source` for core shared components)
+        #   resources/src/components/**/*.js             (`@source` for core shared components)
+        # See release.yml for the full rationale — this deploy runner
+        # is standalone-checkout too (no plugins/ siblings) and hits
+        # the same cross-repo `@import` failure without core present.
         uses: actions/checkout@v4
+        with:
+          repository: Dixlase/dixlase-core
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx
+
+      - name: Checkout theme code
+        uses: actions/checkout@v4
+        with:
+          path: dixlase-ctx/themes/DixlaseOnePage
 
       - name: Set deploy target
         id: target
@@ -24,16 +46,49 @@ jobs:
             echo "base_dir=/srv/dixlase/staging" >> $GITHUB_OUTPUT
           fi
 
+      - name: Seed empty Tailwind plugin-sources stub
+        # Same trick release.yml uses (which itself mirrors
+        # dixlase-core release.yml). Runtime, `php artisan
+        # dls:tailwind:regenerate-plugin-sources` writes this file
+        # based on enabled plugins; in CI we do not install any
+        # plugin, so we write the empty form the runtime aggregator
+        # would produce on a fresh install. `theme/tailwind.css`
+        # `@import`s this path — the file must exist for `vite build`
+        # to succeed.
+        run: |
+          cat > "dixlase-ctx/resources/src/common/css/dixlase-tailwind-plugin-sources.css" <<'CSS'
+          /*
+           * Empty stub emitted by theme deploy CI. Same shape as
+           * `php artisan dls:tailwind:regenerate-plugin-sources`
+           * produces on a fresh install with no plugin enabled.
+           */
+          /* No enabled plugin currently declares Tailwind content sources. */
+          CSS
+
+      - name: Ensure optional scan paths exist
+        # `theme/tailwind.css` has a bare-dir `@source` for
+        # `storage/app/private/core/front/`. Tailwind silently skips
+        # missing paths but we `mkdir -p` so the scan output is
+        # clean.
+        run: |
+          mkdir -p "dixlase-ctx/storage/app/private/core/front"
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: dixlase-ctx/themes/DixlaseOnePage/package-lock.json
 
       - name: Build frontend assets
+        # `--outDir` written as an absolute path so it lands back at
+        # the workspace root regardless of the working-directory
+        # switch — the rsync step downstream still uploads `dist/`
+        # from the workspace root.
+        working-directory: dixlase-ctx/themes/DixlaseOnePage
         run: |
           npm ci --no-audit --no-fund
-          NODE_ENV=production npx vite build --outDir dist
+          NODE_ENV=production npx vite build --outDir "$GITHUB_WORKSPACE/dist"
 
       - name: Create shared build directory on server
         uses: appleboy/ssh-action@v1
