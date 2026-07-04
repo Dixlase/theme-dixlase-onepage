@@ -1,0 +1,154 @@
+# Publish the operator-facing distribution ZIP for this theme.
+#
+# Produces `theme-dixlase-onepage-<tag>.zip` with prebuilt front-end
+# assets under `resources/assets/` already in place. The Dixlase Core
+# extension updater (v0.1.0+, PR #117) defaults to `auto` mode, which
+# short-circuits `npm install && npm run build` when the freshly
+# extracted ZIP already carries `resources/assets/`. That means
+# production hosts — which are guaranteed neither Node nor Composer —
+# can update this theme from the admin panel with no toolchain
+# installed on the destination.
+#
+# A versionless copy (`theme-dixlase-onepage.zip`) is attached
+# alongside so external links can use the static
+# `releases/latest/download/theme-dixlase-onepage.zip` URL — GitHub
+# resolves it to whichever release is currently "Latest", so
+# consumers don't have to be updated for every new tag.
+#
+# Trigger:
+#   - `release: published` → automatically attaches both ZIPs to the
+#     GitHub release as downloadable assets.
+#   - `workflow_dispatch` → manual run for testing the build before
+#     cutting a real release; result is uploaded as a workflow
+#     artifact (30-day retention).
+#
+# `deploy.yml` (server-side push) is a separate concern and is
+# intentionally left untouched — it deploys the *repo state* to
+# maintenance servers over SSH; this workflow packages a
+# *downloadable release artifact* for the extension updater.
+
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build (e.g. v0.1.0)'
+        required: true
+
+permissions:
+  contents: write   # required for softprops/action-gh-release
+
+env:
+  NODE_VERSION: '20'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve target ref
+        id: ref
+        run: |
+          REF="${{ github.event.release.tag_name }}"
+          [ -z "$REF" ] && REF="${{ inputs.tag }}"
+          [ -z "$REF" ] && REF="${{ github.ref_name }}"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+          echo "Building release from ref: $REF"
+
+      - name: Checkout theme at target ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ref.outputs.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build front-end assets
+        # Runs the theme's `prebuild` (check-tailwind-sources.mjs) and
+        # then `vite build`. Vite writes into `resources/assets/`, which
+        # is gitignored — the whole point of this workflow is to ship
+        # that gitignored output inside the release ZIP so operators
+        # never have to re-run the build on production hosts.
+        run: npm run build
+
+      - name: Stage release directory
+        id: stage
+        run: |
+          TAG="${{ steps.ref.outputs.ref }}"
+          # Directory name inside the ZIP. The core extension updater's
+          # `extractZipReplacingDir()` reads the first top-level entry
+          # and unwraps it, so the name only needs to be a stable single
+          # top-level directory — the operator never sees it.
+          DIR="theme-dixlase-onepage-${TAG}"
+          mkdir -p "dist/${DIR}"
+
+          # Copy the theme into the staging dir. Excludes:
+          #   .git*             CI + git metadata (not needed at runtime)
+          #   node_modules      dev-only, regenerable via package.json
+          #   dist              this job's own output
+          # `resources/assets/` is INCLUDED (the whole point) even
+          # though the repo's .gitignore keeps it out of the tracked
+          # tree — `rsync ./` walks the working tree, which by this
+          # point contains the freshly-built assets from the Vite
+          # build step above.
+          rsync -a \
+                --exclude '.git' \
+                --exclude '.github' \
+                --exclude 'node_modules' \
+                --exclude 'dist' \
+                --exclude '.phpunit.cache' \
+                --exclude '.phpunit.result.cache' \
+                ./ "dist/${DIR}/"
+
+          echo "dir=$DIR" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Create release ZIP
+        id: zip
+        run: |
+          ZIP_NAME="theme-dixlase-onepage-${{ steps.stage.outputs.tag }}.zip"
+          LATEST_ALIAS="theme-dixlase-onepage.zip"
+
+          (cd dist && zip -rq "../$ZIP_NAME" "${{ steps.stage.outputs.dir }}")
+
+          # Duplicate as versionless alias so external links can use
+          # the static `releases/latest/download/theme-dixlase-onepage.zip`
+          # URL.
+          cp "$ZIP_NAME" "$LATEST_ALIAS"
+
+          echo "name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
+          echo "latest_alias=$LATEST_ALIAS" >> "$GITHUB_OUTPUT"
+
+          # Diagnostics — surface the ZIP contents in the build log so
+          # a reviewer can eyeball that resources/assets/ made it in.
+          echo "=== ZIP top-level contents ==="
+          unzip -l "$ZIP_NAME" | head -30
+          echo "=== resources/assets/ inside ZIP ==="
+          unzip -l "$ZIP_NAME" | grep 'resources/assets' | head -20
+
+      - name: Attach ZIPs to GitHub release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ steps.zip.outputs.name }}
+            ${{ steps.zip.outputs.latest_alias }}
+
+      - name: Upload as workflow artifact
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.zip.outputs.name }}
+          path: ${{ steps.zip.outputs.name }}
+          retention-days: 30
