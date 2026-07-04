@@ -362,7 +362,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             x-transition:leave="transition ease-in duration-200 transform"
             x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="fixed right-0 z-[70] w-80 max-w-[85vw] bg-white dark:bg-gray-900 shadow-2xl"
+            {{-- Translucent + backdrop blur — same glass recipe the
+                 site header and cookie banner use, so the drawer reads
+                 as part of the same translucent-overlay vocabulary and
+                 lets the darkened page underneath show through. --}}
+            class="fixed right-0 z-[70] w-80 max-w-[85vw] bg-white/70 dark:bg-gray-900/60 backdrop-blur-md shadow-2xl"
             style="top: var(--front-banner-stack-height, {{ $stackHeightFallback }}); height: calc(100% - var(--front-banner-stack-height, {{ $stackHeightFallback }}));"
             :class="{ 'lg:hidden': !forceHamburger }"
             x-cloak

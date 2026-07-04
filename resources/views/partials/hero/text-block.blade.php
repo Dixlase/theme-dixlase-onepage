@@ -23,7 +23,12 @@
     </p>
 @endif
 
-<div class="flex flex-col sm:flex-row justify-center gap-4">
+{{-- `items-center` prevents the mobile flex-col from stretching the
+     buttons to full container width — they stay at content width and
+     read as CTAs rather than blocks that visually outweigh the
+     foreground image below. Desktop (sm:flex-row) still centres them
+     horizontally within the row via `justify-center`. --}}
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
     @if($heroButtonEnabled && $heroButtonText)
         <a href="{{ $heroButtonLink }}"
            target="{{ $heroButtonTarget }}"
