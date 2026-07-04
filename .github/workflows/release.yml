@@ -4,16 +4,14 @@
 # assets under `resources/assets/` already in place. The Dixlase Core
 # extension updater (v0.1.0+, PR #117) defaults to `auto` mode, which
 # short-circuits `npm install && npm run build` when the freshly
-# extracted ZIP already carries `resources/assets/`. That means
-# production hosts — which are guaranteed neither Node nor Composer —
-# can update this theme from the admin panel with no toolchain
-# installed on the destination.
+# extracted release ZIP already carries `resources/assets/`. That
+# means production hosts — which are guaranteed neither Node nor
+# Composer — can update this theme from the admin panel with no
+# toolchain installed on the destination.
 #
 # A versionless copy (`theme-dixlase-onepage.zip`) is attached
 # alongside so external links can use the static
-# `releases/latest/download/theme-dixlase-onepage.zip` URL — GitHub
-# resolves it to whichever release is currently "Latest", so
-# consumers don't have to be updated for every new tag.
+# `releases/latest/download/theme-dixlase-onepage.zip` URL.
 #
 # Trigger:
 #   - `release: published` → automatically attaches both ZIPs to the
@@ -22,10 +20,27 @@
 #     cutting a real release; result is uploaded as a workflow
 #     artifact (30-day retention).
 #
-# `deploy.yml` (server-side push) is a separate concern and is
-# intentionally left untouched — it deploys the *repo state* to
-# maintenance servers over SSH; this workflow packages a
-# *downloadable release artifact* for the extension updater.
+# `deploy.yml` (server-side SSH push) is a separate concern and is
+# intentionally left untouched.
+#
+# ┌─── Cross-repo context ───────────────────────────────────────┐
+# │ The theme's `tailwind.css` `@import`s core's                  │
+# │ `resources/src/common/css/dixlase-tailwind-plugin-sources.css`│
+# │ — a file that core normally auto-generates at runtime by      │
+# │ scanning enabled plugins' `plugin.json`. In this release CI   │
+# │ we do NOT install any plugin (the operator does that later    │
+# │ from the admin panel), so we write an EMPTY stub of that      │
+# │ file in the exact shape the runtime aggregator would produce  │
+# │ on a fresh install with no plugin enabled. This is the same   │
+# │ trick dixlase-core's own `release.yml` uses when building its │
+# │ bundled theme — the resulting CSS is identical to the theme   │
+# │ portion of core's release ZIP.                                │
+# │                                                               │
+# │ Requires:                                                     │
+# │   secrets.RELEASE_TOKEN — a PAT with `contents: read` on      │
+# │   `Dixlase/dixlase-core` (needed for the core checkout below; │
+# │   core is private).                                           │
+# └───────────────────────────────────────────────────────────────┘
 
 name: Release
 
@@ -43,6 +58,13 @@ permissions:
 
 env:
   NODE_VERSION: '20'
+  # Path under the runner workspace where we assemble the minimal
+  # Dixlase directory tree needed to satisfy the theme's cross-repo
+  # `@import` and `@source` paths at build time. `dixlase-ctx/` mimics
+  # the html/ root of a full install; the theme sits at
+  # `dixlase-ctx/themes/DixlaseOnePage/` and its tailwind.css
+  # relative paths resolve to sibling files inside `dixlase-ctx/`.
+  DIXLASE_CTX: dixlase-ctx
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -61,57 +83,103 @@ jobs:
           echo "Building release from ref: $REF"
 
       - name: Checkout theme at target ref
+        # Land the theme at the same path it would occupy in a full
+        # Dixlase install: `<ctx>/themes/DixlaseOnePage/`. Its
+        # `tailwind.css` uses `../../../../../..` relative paths, so
+        # every level of the path matters here.
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.ref.outputs.ref }}
+          path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
+
+      - name: Checkout dixlase-core (for CSS @import + components @source)
+        # Only needed for:
+        #   resources/src/common/css/                    (`@import` target)
+        #   resources/views/components/**/*.blade.php    (`@source` for core shared components)
+        #   resources/src/components/**/*.js             (`@source` for core shared components)
+        # A shallow default-branch checkout is enough — none of the
+        # theme's build steps care about core's PHP source.
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/dixlase-core
+          ref: main
+          token: ${{ secrets.RELEASE_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}
+
+      - name: Seed empty Tailwind plugin-sources stub
+        # Runtime, `php artisan dls:tailwind:regenerate-plugin-sources`
+        # writes this file every time a plugin is enabled / disabled /
+        # installed / uninstalled, aggregating `@source` directives
+        # from each enabled plugin's `plugin.json`. In release CI we do
+        # not install any plugin — the operator does that later from
+        # the admin panel — so we write an EMPTY stub in the same shape
+        # the aggregator would produce on a fresh install with no
+        # plugin enabled. `theme/resources/src/front/css/tailwind.css`
+        # `@import`s this path; the file must exist and be valid CSS
+        # for the vite build to succeed. This mirrors dixlase-core's
+        # own `release.yml` (see the "Seed Tailwind plugin-sources stub"
+        # step there).
+        run: |
+          cat > "$DIXLASE_CTX/resources/src/common/css/dixlase-tailwind-plugin-sources.css" <<'CSS'
+          /*
+           * Empty stub emitted by theme release CI. Same shape as
+           * `php artisan dls:tailwind:regenerate-plugin-sources`
+           * produces on a fresh install with no plugin enabled — the
+           * runtime aggregator rewrites this file once the operator
+           * enables their first plugin on the destination host.
+           */
+          /* No enabled plugin currently declares Tailwind content sources. */
+          CSS
+
+      - name: Ensure optional scan paths exist
+        # `theme/tailwind.css` has an `@source` for
+        # `storage/app/private/core/front/` (page-content HTML the
+        # operator authors in the admin panel). It is not populated by
+        # the core checkout — the directory only exists on a running
+        # install. Tailwind's `@source` silently skips missing paths,
+        # but we `mkdir -p` here so the check output is clean.
+        run: |
+          mkdir -p "$DIXLASE_CTX/storage/app/private/core/front"
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage/package-lock.json
 
       - name: Install npm dependencies
+        working-directory: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
         run: npm ci --no-audit --no-fund
 
       - name: Build front-end assets
         # Invokes `vite build` directly (bypassing `npm run build`) so
-        # the `prebuild` hook — the `check-tailwind-sources.mjs` script —
+        # the theme's `prebuild` hook — `check-tailwind-sources.mjs` —
         # does NOT run in this release context. That script exists to
         # catch broken `@source` paths during development inside a full
-        # Dixlase install, where cross-repo paths (core views, plugins/*,
-        # storage/*) resolve. In this workflow the theme is checked out
-        # standalone, so those paths correctly do not exist and the
-        # check would fail. That failure would be a false positive:
-        # standalone-repo release CI has no way to satisfy the check.
-        # Vite itself only needs the theme's own tree to build.
-        #
-        # Writes into `resources/assets/`, which is gitignored — the
-        # whole point of this workflow is to ship that gitignored
-        # output inside the release ZIP so operators never have to
-        # re-run the build on production hosts.
+        # Dixlase install, where every cross-repo path resolves.
+        # Here, plugin-owned `@source` paths correctly do not resolve
+        # (we intentionally did not check out plugins), and the check
+        # would fail. Vite itself skips missing `@source` paths, so
+        # `vite build` succeeds and simply emits a CSS that excludes
+        # plugin utilities — matching what dixlase-core's release.yml
+        # produces for the same theme.
+        working-directory: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
         run: npx vite build
 
       - name: Stage release directory
         id: stage
         run: |
           TAG="${{ steps.ref.outputs.ref }}"
-          # Directory name inside the ZIP. The core extension updater's
-          # `extractZipReplacingDir()` reads the first top-level entry
-          # and unwraps it, so the name only needs to be a stable single
-          # top-level directory — the operator never sees it.
           DIR="theme-dixlase-onepage-${TAG}"
           mkdir -p "dist/${DIR}"
 
-          # Copy the theme into the staging dir. Excludes:
-          #   .git*             CI + git metadata (not needed at runtime)
-          #   node_modules      dev-only, regenerable via package.json
+          # Copy the theme's runtime tree (which by this point holds the
+          # freshly-built `resources/assets/`) into the staging dir.
+          # Excludes:
+          #   .git*             CI + git metadata
+          #   node_modules      dev-only, regenerable from package.json
           #   dist              this job's own output
-          # `resources/assets/` is INCLUDED (the whole point) even
-          # though the repo's .gitignore keeps it out of the tracked
-          # tree — `rsync ./` walks the working tree, which by this
-          # point contains the freshly-built assets from the Vite
-          # build step above.
           rsync -a \
                 --exclude '.git' \
                 --exclude '.github' \
@@ -119,7 +187,7 @@ jobs:
                 --exclude 'dist' \
                 --exclude '.phpunit.cache' \
                 --exclude '.phpunit.result.cache' \
-                ./ "dist/${DIR}/"
+                "$DIXLASE_CTX/themes/DixlaseOnePage/" "dist/${DIR}/"
 
           echo "dir=$DIR" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
@@ -132,17 +200,16 @@ jobs:
 
           (cd dist && zip -rq "../$ZIP_NAME" "${{ steps.stage.outputs.dir }}")
 
-          # Duplicate as versionless alias so external links can use
-          # the static `releases/latest/download/theme-dixlase-onepage.zip`
-          # URL.
+          # Duplicate as a versionless alias so external links can use
+          # `releases/latest/download/theme-dixlase-onepage.zip`.
           cp "$ZIP_NAME" "$LATEST_ALIAS"
 
           echo "name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
           echo "latest_alias=$LATEST_ALIAS" >> "$GITHUB_OUTPUT"
 
-          # Diagnostics — surface the ZIP contents in the build log so
-          # a reviewer can eyeball that resources/assets/ made it in.
-          echo "=== ZIP top-level contents ==="
+          # Diagnostics — surface the ZIP contents so a reviewer can
+          # eyeball that resources/assets/ made it in.
+          echo "=== ZIP top-level contents (first 30 lines) ==="
           unzip -l "$ZIP_NAME" | head -30
           echo "=== resources/assets/ inside ZIP ==="
           unzip -l "$ZIP_NAME" | grep 'resources/assets' | head -20
