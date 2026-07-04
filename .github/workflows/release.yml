@@ -75,12 +75,22 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Build front-end assets
-        # Runs the theme's `prebuild` (check-tailwind-sources.mjs) and
-        # then `vite build`. Vite writes into `resources/assets/`, which
-        # is gitignored — the whole point of this workflow is to ship
-        # that gitignored output inside the release ZIP so operators
-        # never have to re-run the build on production hosts.
-        run: npm run build
+        # Invokes `vite build` directly (bypassing `npm run build`) so
+        # the `prebuild` hook — the `check-tailwind-sources.mjs` script —
+        # does NOT run in this release context. That script exists to
+        # catch broken `@source` paths during development inside a full
+        # Dixlase install, where cross-repo paths (core views, plugins/*,
+        # storage/*) resolve. In this workflow the theme is checked out
+        # standalone, so those paths correctly do not exist and the
+        # check would fail. That failure would be a false positive:
+        # standalone-repo release CI has no way to satisfy the check.
+        # Vite itself only needs the theme's own tree to build.
+        #
+        # Writes into `resources/assets/`, which is gitignored — the
+        # whole point of this workflow is to ship that gitignored
+        # output inside the release ZIP so operators never have to
+        # re-run the build on production hosts.
+        run: npx vite build
 
       - name: Stage release directory
         id: stage
