@@ -122,6 +122,94 @@ jobs:
           ref: ${{ steps.ref.outputs.ref }}
           path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
 
+      # Check out every plugin the theme's `tailwind.css` scans via a
+      # hardcoded `@source "…/plugins/<Plugin>/resources/views"` line.
+      # Without these, Tailwind's scanner finds 0 matches for each
+      # plugin path, and the emitted CSS drops ~140 utilities used
+      # only in plugin views — the release ZIP would ship a CSS that
+      # silently breaks any site using those plugins (which is every
+      # site, since these are all first-party plugins that ship with
+      # Dixlase). Same block deploy.yml uses.
+      - name: Checkout plugin — DixlaseBlog
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-blog
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseBlog
+
+      - name: Checkout plugin — DixlaseCookie
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-cookie
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseCookie
+
+      - name: Checkout plugin — DixlaseCoreDevKit
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-core-devkit
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseCoreDevKit
+
+      - name: Checkout plugin — DixlaseDeploy
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-deploy
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseDeploy
+
+      - name: Checkout plugin — DixlaseInquiry
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-inquiry
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseInquiry
+
+      - name: Checkout plugin — DixlaseLegal
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-legal
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseLegal
+
+      - name: Checkout plugin — DixlaseMenus
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-menus
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseMenus
+
+      - name: Checkout plugin — DixlaseMultilingual
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-multilingual
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseMultilingual
+
+      - name: Checkout plugin — DixlasePages
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-pages
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlasePages
+
+      - name: Checkout plugin — DixlaseSEO
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-seo
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseSEO
+
       - name: Seed empty Tailwind plugin-sources stub
         # Runtime, `php artisan dls:tailwind:regenerate-plugin-sources`
         # writes this file every time a plugin is enabled / disabled /
