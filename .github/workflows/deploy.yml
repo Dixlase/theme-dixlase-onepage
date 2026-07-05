@@ -35,6 +35,102 @@ jobs:
         with:
           path: dixlase-ctx/themes/DixlaseOnePage
 
+      # Check out every plugin the theme's `tailwind.css` scans via a
+      # hardcoded `@source "…/plugins/<Plugin>/resources/views"` line.
+      # Without these, the runner tree lacks the plugin view files,
+      # Tailwind's scanner (correctly) reports 0 matches for each
+      # plugin, and the emitted CSS drops every utility used only by
+      # plugin views (`bg-gray-900`, `border-gray-400`, `col-span-2`,
+      # form-focus / disabled variants, etc.) — ~140 classes at time
+      # of writing. The site still renders the *theme's* own views
+      # but breaks anywhere a plugin view or `custom/` override needs
+      # one of those utilities. This is the same problem PR #14 left
+      # unresolved (see #14's discussion + the follow-up in the
+      # `extension-update-prebuilt-assets-no-npm` backlog).
+      #
+      # Each checkout targets `main`; the theme's `@source` never pins
+      # a tag. If per-tag builds ever become necessary, revisit this
+      # block and thread the tag through inputs / secrets.
+      - name: Checkout plugin — DixlaseBlog
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-blog
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseBlog
+
+      - name: Checkout plugin — DixlaseCookie
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-cookie
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseCookie
+
+      - name: Checkout plugin — DixlaseCoreDevKit
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-core-devkit
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseCoreDevKit
+
+      - name: Checkout plugin — DixlaseDeploy
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-deploy
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseDeploy
+
+      - name: Checkout plugin — DixlaseInquiry
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-inquiry
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseInquiry
+
+      - name: Checkout plugin — DixlaseLegal
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-legal
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseLegal
+
+      - name: Checkout plugin — DixlaseMenus
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-menus
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseMenus
+
+      - name: Checkout plugin — DixlaseMultilingual
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-multilingual
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseMultilingual
+
+      - name: Checkout plugin — DixlasePages
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-pages
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlasePages
+
+      - name: Checkout plugin — DixlaseSEO
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/plugin-dixlase-seo
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: dixlase-ctx/plugins/DixlaseSEO
+
       - name: Set deploy target
         id: target
         run: |
