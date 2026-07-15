@@ -216,7 +216,7 @@ jobs:
             THEME_DIR="DixlaseOnePage"
             EXPECTED_URL="git@github.com:${{ github.repository }}.git"
 
-            for SITE in brand docs keys; do
+            for SITE in brand docs demo keys; do
               DEST="$BASE/$SITE/themes/$THEME_DIR"
               echo "=== Deploying theme $THEME_DIR to $SITE (${{ steps.target.outputs.env }}) ==="
 
