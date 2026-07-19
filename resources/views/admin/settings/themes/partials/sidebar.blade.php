@@ -78,6 +78,49 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             @endforeach
         </div>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.typography.heading_font_family_help') }}</p>
+
+        {{-- Per-region apply toggles. When a region is OFF, its
+             --font-heading-{region} variable is not declared, so the
+             region CSS rule falls back through var(name, inherit) to
+             the parent (body) font stack. This lets the operator use
+             one face for some regions and the system default for others.
+             Hidden inputs sync the Alpine truthy/falsy state to '1'/'0'
+             so PHP validation (in:0,1) accepts the value.
+             --}}
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('themes::admin.settings.typography.apply_to') }}</div>
+            <input type="hidden" name="heading_font_apply_header"  :value="headingFontApplyHeader  ? '1' : '0'">
+            <input type="hidden" name="heading_font_apply_hero"    :value="headingFontApplyHero    ? '1' : '0'">
+            <input type="hidden" name="heading_font_apply_footer"  :value="headingFontApplyFooter  ? '1' : '0'">
+            <input type="hidden" name="heading_font_apply_content" :value="headingFontApplyContent ? '1' : '0'">
+            <div class="flex flex-col gap-2">
+                <x-form-toggle
+                    id="heading_font_apply_header_toggle"
+                    :label="__('themes::admin.settings.typography.apply_header')"
+                    xModel="headingFontApplyHeader"
+                    color="blue"
+                />
+                <x-form-toggle
+                    id="heading_font_apply_hero_toggle"
+                    :label="__('themes::admin.settings.typography.apply_hero')"
+                    xModel="headingFontApplyHero"
+                    color="blue"
+                />
+                <x-form-toggle
+                    id="heading_font_apply_footer_toggle"
+                    :label="__('themes::admin.settings.typography.apply_footer')"
+                    xModel="headingFontApplyFooter"
+                    color="blue"
+                />
+                <x-form-toggle
+                    id="heading_font_apply_content_toggle"
+                    :label="__('themes::admin.settings.typography.apply_content')"
+                    xModel="headingFontApplyContent"
+                    color="blue"
+                />
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.typography.apply_to_help') }}</p>
+        </div>
     </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Default Locale (primary language of theme settings) ===== --}}

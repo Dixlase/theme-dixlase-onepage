@@ -171,7 +171,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             @endif
 
             {{-- Site Name --}}
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+            <h2 class="font-heading-footer text-2xl font-bold text-gray-900 dark:text-white">
                 {{ config('app.name', 'Dixlase') }}
             </h2>
 

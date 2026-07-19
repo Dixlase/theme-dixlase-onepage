@@ -77,6 +77,10 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_github',
             'appearance_mode',
             'heading_font_family',
+            'heading_font_apply_header',
+            'heading_font_apply_hero',
+            'heading_font_apply_footer',
+            'heading_font_apply_content',
             'default_locale',
             'header_menu_id',
             'footer_menu_id',
@@ -120,6 +124,10 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
             'heading_font_family' => 'gothic', // 'gothic' | 'mincho' (see UpdateThemeSettingsRequest)
+            'heading_font_apply_header' => '1',
+            'heading_font_apply_hero' => '1',
+            'heading_font_apply_footer' => '1',
+            'heading_font_apply_content' => '1',
             'default_locale' => 'auto', // 'auto' resolves to site default at runtime
             'header_menu_id' => null,
             'footer_menu_id' => null,

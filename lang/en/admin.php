@@ -154,6 +154,12 @@ return [
             'gothic_description' => 'Sans-serif — the modern web default. Neutral and readable at any size.',
             'mincho' => 'Mincho (Noto Serif JP)',
             'mincho_description' => 'Serif — a traditional, editorial look with clear stroke contrast.',
+            'apply_to' => 'Apply to',
+            'apply_to_help' => 'Turn a region off to leave it on the default system font. This lets you use, say, Mincho for the hero and content headings while keeping the header on a plain sans-serif.',
+            'apply_header' => 'Header site name',
+            'apply_hero' => 'Hero title',
+            'apply_footer' => 'Footer site name',
+            'apply_content' => 'Page headings (h1–h4)',
         ],
 
         // Appearance Section
