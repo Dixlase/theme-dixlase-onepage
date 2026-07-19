@@ -53,9 +53,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     <title>{{ config('app.name', 'Dixlase') }} @yield('title')</title>
 
-    {{-- Fonts --}}
+    {{-- Fonts. Both heading families (Noto Sans JP / Noto Serif JP) are
+         loaded so the operator sees an authentic preview no matter which
+         setting they land on; see layouts/app.blade.php for the rationale. --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap" rel="stylesheet" />
 
     {{-- Font Awesome（フッターSNSアイコン等で使用） --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -102,6 +104,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             $primaryColorDarkSafe = $primaryColor;
         }
     @endphp
+    @php
+        // Preview layout mirrors app.blade.php's heading-font wiring so
+        // the iframe reflects the same setting the front page will show.
+        $headingFontStack = ($themeSettings->heading_font_family ?? 'gothic') === 'mincho'
+            ? "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif"
+            : "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif";
+    @endphp
     <style @cspNonce>
         [x-cloak] { display: none !important; }
         header.fixed { top: 0 !important; }
@@ -109,6 +118,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         :root {
             --color-primary: {{ $primaryColor }};
             --color-primary-dark-safe: {{ $primaryColorDarkSafe }};
+            --font-heading: {!! $headingFontStack !!};
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: var(--font-heading);
         }
         /* プレビュー専用: 全インタラクティブ要素を無効化 */
         a, button, [role="button"],

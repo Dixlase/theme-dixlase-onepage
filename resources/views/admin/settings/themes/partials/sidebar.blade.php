@@ -44,6 +44,42 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Heading Font (Gothic / Mincho) ===== --}}
+    {{-- Two-card picker. The label previews the actual font family via an --}}
+    {{-- inline style="font-family: ..." span so the operator sees what     --}}
+    {{-- they're choosing before saving. The Bunny <link> in the layout    --}}
+    {{-- loads both families, so the sample is authentic even in the      --}}
+    {{-- admin (not a system-font approximation).                          --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.typography.title')" icon="fas fa-font">
+        <input type="hidden" name="heading_font_family" :value="headingFontFamily">
+        <div class="grid grid-cols-2 gap-2">
+            @php
+                $fontOptions = [
+                    'gothic' => [
+                        'label' => __('themes::admin.settings.typography.gothic'),
+                        'description' => __('themes::admin.settings.typography.gothic_description'),
+                        'sample_family' => "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', sans-serif",
+                    ],
+                    'mincho' => [
+                        'label' => __('themes::admin.settings.typography.mincho'),
+                        'description' => __('themes::admin.settings.typography.mincho_description'),
+                        'sample_family' => "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif",
+                    ],
+                ];
+            @endphp
+            @foreach($fontOptions as $value => $opt)
+                <button type="button"
+                    @click="headingFontFamily = '{{ $value }}'"
+                    :class="headingFontFamily === '{{ $value }}' ? 'border-indigo-500 ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'"
+                    class="flex flex-col items-center gap-1 p-3 rounded-lg border transition-all duration-150 text-center">
+                    <span class="text-2xl leading-none text-gray-900 dark:text-gray-100" style="font-family: {{ $opt['sample_family'] }};">見出し</span>
+                    <span class="text-xs font-medium text-gray-900 dark:text-gray-100 mt-1">{{ $opt['label'] }}</span>
+                </button>
+            @endforeach
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.typography.heading_font_family_help') }}</p>
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Default Locale (primary language of theme settings) ===== --}}
     {{-- Declares the locale the operator authored the hero text and other  --}}
     {{-- translatable settings in. The central translation manager UI       --}}
