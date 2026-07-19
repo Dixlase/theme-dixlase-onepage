@@ -100,6 +100,9 @@ function themeSettingsEditor() {
         // プライマリカラー
         primaryColor: @json(old('primary_color', $settings->primary_color ?? '#3b82f6')),
 
+        // Heading font family — 'gothic' | 'mincho'
+        headingFontFamily: @json(old('heading_font_family', $settings->heading_font_family ?? 'gothic')),
+
         // Hero settings
         heroMainTitle: @json(old('hero_main_title', $settings->hero_main_title ?? '')),
         heroSubTitle: @json(old('hero_sub_title', $settings->hero_sub_title ?? '')),

@@ -145,6 +145,17 @@ return [
             'gray' => 'グレー',
         ],
 
+        // Typography Section
+        'typography' => [
+            'title' => 'タイポグラフィ',
+            'heading_font_family' => '見出しフォント',
+            'heading_font_family_help' => 'サイト名、ヒーロータイトル、フロントの見出し (h1〜h4) 全てに適用されるフォント。本文はシステムフォントスタックのまま。フォントは Bunny Fonts で配信 (プライバシー配慮 / Cookie なし)。',
+            'gothic' => 'ゴシック (Noto Sans JP)',
+            'gothic_description' => 'サンセリフ。モダン Web の定番、どのサイズでもニュートラルで読みやすい。',
+            'mincho' => '明朝 (Noto Serif JP)',
+            'mincho_description' => 'セリフ体。伝統的で編集的な佇まい、線のコントラストが明確。',
+        ],
+
         // Appearance Section
         'appearance' => [
             'title' => '外観モード',

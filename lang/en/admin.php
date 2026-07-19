@@ -145,6 +145,17 @@ return [
             'gray' => 'Gray',
         ],
 
+        // Typography Section
+        'typography' => [
+            'title' => 'Typography',
+            'heading_font_family' => 'Heading Font',
+            'heading_font_family_help' => 'Font applied to site name, hero title, and every heading (h1–h4) on the front. Body text stays on the system stack. Fonts are served over Bunny Fonts (privacy-friendly, cookie-free).',
+            'gothic' => 'Gothic (Noto Sans JP)',
+            'gothic_description' => 'Sans-serif — the modern web default. Neutral and readable at any size.',
+            'mincho' => 'Mincho (Noto Serif JP)',
+            'mincho_description' => 'Serif — a traditional, editorial look with clear stroke contrast.',
+        ],
+
         // Appearance Section
         'appearance' => [
             'title' => 'Appearance Mode',

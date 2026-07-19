@@ -135,7 +135,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                             >
                         @endif
                         {{-- サイト名 --}}
-                        <span class="text-xl font-bold text-gray-900 dark:text-white">
+                        <span class="text-xl font-bold text-gray-900 dark:text-white font-heading">
                             {{ $logoText }}
                         </span>
                     @else
@@ -146,7 +146,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                 {{ substr($logoText, 0, 1) }}
                             </text>
                         </svg>
-                        <span class="text-xl font-bold text-gray-900 dark:text-white">
+                        <span class="text-xl font-bold text-gray-900 dark:text-white font-heading">
                             {{ $logoText }}
                         </span>
                     @endif

@@ -76,6 +76,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_discord',
             'footer_sns_github',
             'appearance_mode',
+            'heading_font_family',
             'default_locale',
             'header_menu_id',
             'footer_menu_id',
@@ -118,6 +119,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
+            'heading_font_family' => 'gothic', // 'gothic' | 'mincho' (see UpdateThemeSettingsRequest)
             'default_locale' => 'auto', // 'auto' resolves to site default at runtime
             'header_menu_id' => null,
             'footer_menu_id' => null,

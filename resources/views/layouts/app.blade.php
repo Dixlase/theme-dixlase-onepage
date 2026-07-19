@@ -82,10 +82,31 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             $primaryColorDarkSafe = $primaryColor;
         }
     @endphp
+    {{-- Heading font (Noto Sans JP / Noto Serif JP) via Bunny Fonts.
+         Both families are loaded eagerly so the operator can swap the
+         theme setting and see it take effect immediately without a
+         second network round-trip. `unicode-range` chunking on Bunny
+         means the JP page usually needs only the base subset (~300KB
+         gzipped per family). `display=swap` prevents FOIT. --}}
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap">
+
+    @php
+        // Heading font stack resolves setting → CSS variable that any
+        // rule can consume via var(--font-heading). System-JP fallbacks
+        // keep the site readable when Bunny is unreachable or blocked.
+        $headingFontStack = ($themeSettings->heading_font_family ?? 'gothic') === 'mincho'
+            ? "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif"
+            : "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif";
+    @endphp
     <style @cspNonce>
         :root {
             --color-primary: {{ $primaryColor }};
             --color-primary-dark-safe: {{ $primaryColorDarkSafe }};
+            --font-heading: {!! $headingFontStack !!};
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: var(--font-heading);
         }
     </style>
 

@@ -90,6 +90,9 @@ class ThemeSettingsSeeder extends Seeder
             // Multilingual: locale the primary settings are authored in.
             // 'auto' resolves to the site default at runtime.
             'default_locale' => 'auto',
+
+            // Heading font family. 'gothic' → Noto Sans JP, 'mincho' → Noto Serif JP.
+            'heading_font_family' => 'gothic',
         ];
 
         foreach ($settings as $name => $value) {

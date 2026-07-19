@@ -90,6 +90,10 @@ class UpdateThemeSettingsRequest extends FormRequest
             // Appearance Mode
             'appearance_mode' => 'required|in:0,1,2',
 
+            // Heading font family (headings only — body stays on system stack).
+            // 'gothic' → Noto Sans JP, 'mincho' → Noto Serif JP.
+            'heading_font_family' => 'nullable|in:gothic,mincho',
+
             // Multilingual: locale the primary-stored theme-settings values
             // are authored in. 'auto' resolves to the site default at runtime;
             // any other value must be a locale code recognised by Core's
@@ -148,6 +152,7 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_button_secondary_link' => __('themes::admin.settings.hero.button_secondary_link'),
             'footer_copyright' => __('themes::admin.settings.footer.copyright'),
             'appearance_mode' => __('common.appearance_mode'),
+            'heading_font_family' => __('themes::admin.settings.typography.heading_font_family'),
         ];
     }
 }
