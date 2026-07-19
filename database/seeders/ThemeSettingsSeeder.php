@@ -93,6 +93,11 @@ class ThemeSettingsSeeder extends Seeder
 
             // Heading font family. 'gothic' → Noto Sans JP, 'mincho' → Noto Serif JP.
             'heading_font_family' => 'gothic',
+            // Per-region apply toggles (default: apply everywhere).
+            'heading_font_apply_header' => '1',
+            'heading_font_apply_hero' => '1',
+            'heading_font_apply_footer' => '1',
+            'heading_font_apply_content' => '1',
         ];
 
         foreach ($settings as $name => $value) {

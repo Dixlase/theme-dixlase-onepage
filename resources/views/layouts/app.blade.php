@@ -98,16 +98,30 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         $headingFontStack = ($themeSettings->heading_font_family ?? 'gothic') === 'mincho'
             ? "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif"
             : "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif";
+
+        // Per-region toggles. Only regions whose toggle is ON get their
+        // --font-heading-* variable declared, so region CSS rules fall
+        // back through `var(name, inherit)` to the parent (body) font
+        // stack when OFF.
+        $applyHeader = (string) ($themeSettings->heading_font_apply_header ?? '1') === '1';
+        $applyHero = (string) ($themeSettings->heading_font_apply_hero ?? '1') === '1';
+        $applyFooter = (string) ($themeSettings->heading_font_apply_footer ?? '1') === '1';
+        $applyContent = (string) ($themeSettings->heading_font_apply_content ?? '1') === '1';
     @endphp
     <style @cspNonce>
         :root {
             --color-primary: {{ $primaryColor }};
             --color-primary-dark-safe: {{ $primaryColorDarkSafe }};
             --font-heading: {!! $headingFontStack !!};
+            @if ($applyHeader) --font-heading-header: var(--font-heading); @endif
+            @if ($applyHero) --font-heading-hero: var(--font-heading); @endif
+            @if ($applyFooter) --font-heading-footer: var(--font-heading); @endif
+            @if ($applyContent) --font-heading-content: var(--font-heading); @endif
         }
-        h1, h2, h3, h4, .font-heading {
-            font-family: var(--font-heading);
-        }
+        .font-heading-header { font-family: var(--font-heading-header, inherit); }
+        .font-heading-hero   { font-family: var(--font-heading-hero, inherit); }
+        .font-heading-footer { font-family: var(--font-heading-footer, inherit); }
+        h1, h2, h3, h4       { font-family: var(--font-heading-content, inherit); }
     </style>
 
     {{-- Font Awesome for SNS Icons --}}

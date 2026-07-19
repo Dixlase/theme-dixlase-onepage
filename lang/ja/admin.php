@@ -154,6 +154,12 @@ return [
             'gothic_description' => 'サンセリフ。モダン Web の定番、どのサイズでもニュートラルで読みやすい。',
             'mincho' => '明朝 (Noto Serif JP)',
             'mincho_description' => 'セリフ体。伝統的で編集的な佇まい、線のコントラストが明確。',
+            'apply_to' => '適用範囲',
+            'apply_to_help' => 'OFF にした箇所はシステムフォント (デフォルト) のままになります。例えば「ヒーローと見出しは明朝、ヘッダーはプレーンなサンセリフ」といった使い分けが可能です。',
+            'apply_header' => 'ヘッダーのサイト名',
+            'apply_hero' => 'ヒーローのタイトル',
+            'apply_footer' => 'フッターのサイト名',
+            'apply_content' => 'ページ内の見出し (h1〜h4)',
         ],
 
         // Appearance Section

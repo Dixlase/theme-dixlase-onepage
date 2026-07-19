@@ -234,6 +234,12 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
             'heading_font_family' => 'gothic', // 'gothic' (Noto Sans JP) | 'mincho' (Noto Serif JP)
+            // Per-region apply toggles. When '0', that region inherits the body
+            // font (system stack); when '1', it uses --font-heading.
+            'heading_font_apply_header' => '1',
+            'heading_font_apply_hero' => '1',
+            'heading_font_apply_footer' => '1',
+            'heading_font_apply_content' => '1',
             'default_locale' => 'auto', // primary-locale for theme settings; 'auto' = site default
             'multilingual_switcher_enabled' => '0',
             // メディア関連のプロパティ（loadMediaForThemeSettings()で設定されるが、デフォルトでも必要）

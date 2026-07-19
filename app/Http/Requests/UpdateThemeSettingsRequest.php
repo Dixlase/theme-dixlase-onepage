@@ -94,6 +94,13 @@ class UpdateThemeSettingsRequest extends FormRequest
             // 'gothic' → Noto Sans JP, 'mincho' → Noto Serif JP.
             'heading_font_family' => 'nullable|in:gothic,mincho',
 
+            // Per-region apply toggles. When '0', that region inherits the body
+            // font (system stack); when '1', it uses --font-heading.
+            'heading_font_apply_header' => 'nullable|in:0,1',
+            'heading_font_apply_hero' => 'nullable|in:0,1',
+            'heading_font_apply_footer' => 'nullable|in:0,1',
+            'heading_font_apply_content' => 'nullable|in:0,1',
+
             // Multilingual: locale the primary-stored theme-settings values
             // are authored in. 'auto' resolves to the site default at runtime;
             // any other value must be a locale code recognised by Core's
