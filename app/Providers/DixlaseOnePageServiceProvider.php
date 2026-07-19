@@ -207,6 +207,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
     {
         return (object) [
             'header_logo_id' => null,
+            'header_logo_dark_id' => null,
             'favicon_id' => null,
             'hero_background_image_id' => null,
             'hero_foreground_image_id' => null,
@@ -237,6 +238,8 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             // メディア関連のプロパティ（loadMediaForThemeSettings()で設定されるが、デフォルトでも必要）
             'headerLogo' => null,
             'headerLogoPath' => null,
+            'headerLogoDark' => null,
+            'headerLogoDarkPath' => null,
             'favicon' => null,
             'faviconPath' => null,
             'heroBackground' => null,
@@ -261,6 +264,18 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
         } else {
             $themeSettings->headerLogo = null;
             $themeSettings->headerLogoPath = null;
+        }
+
+        // ヘッダーロゴ（ダークモード用）— 未指定なら null。テーマ側は
+        // headerLogoDarkPath があれば dark:block で切り替え、無ければ
+        // fallback として単色 SVG に自動 invert を当てる。
+        if (! empty($themeSettings->header_logo_dark_id)) {
+            $headerLogoDark = \App\Models\Media::find($themeSettings->header_logo_dark_id);
+            $themeSettings->headerLogoDark = $headerLogoDark;
+            $themeSettings->headerLogoDarkPath = $headerLogoDark ? $mediaPath.'/'.$headerLogoDark->path : null;
+        } else {
+            $themeSettings->headerLogoDark = null;
+            $themeSettings->headerLogoDarkPath = null;
         }
 
         // ファビコン

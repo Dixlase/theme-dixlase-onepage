@@ -106,12 +106,34 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             <div x-ref="logo" class="flex-shrink-0">
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group" aria-label="Home">
                     @if(!empty($themeSettings->headerLogoPath))
-                        {{-- テーマ設定のロゴ画像 --}}
-                        <img
-                            src="{{ asset('storage/' . $themeSettings->headerLogoPath) }}"
-                            alt="{{ $logoText }}"
-                            class="{{ $heightClass }} w-auto"
-                        >
+                        {{-- テーマ設定のロゴ画像。ダークモード用ロゴが別途
+                             設定されていればモード毎に切り替え。指定が無ければ
+                             ライト用ロゴを `dark:invert` で fallback 反転させて
+                             真っ黒の単色マークがダーク背景で潰れるのを防ぐ。
+                             `dark:invert` は多色マークだと色相まで反転して
+                             ちぐはぐに見えるため、その場合はダーク用ロゴを
+                             明示的にアップロードして fallback を無効化する。 --}}
+                        @if(!empty($themeSettings->headerLogoDarkPath))
+                            {{-- ライト: dark:hidden で隠す --}}
+                            <img
+                                src="{{ asset('storage/' . $themeSettings->headerLogoPath) }}"
+                                alt="{{ $logoText }}"
+                                class="{{ $heightClass }} w-auto block dark:hidden"
+                            >
+                            {{-- ダーク: 通常は hidden、dark:block で表示 --}}
+                            <img
+                                src="{{ asset('storage/' . $themeSettings->headerLogoDarkPath) }}"
+                                alt="{{ $logoText }}"
+                                class="{{ $heightClass }} w-auto hidden dark:block"
+                            >
+                        @else
+                            {{-- ダーク用未指定 → `dark:invert` fallback --}}
+                            <img
+                                src="{{ asset('storage/' . $themeSettings->headerLogoPath) }}"
+                                alt="{{ $logoText }}"
+                                class="{{ $heightClass }} w-auto dark:invert"
+                            >
+                        @endif
                         {{-- サイト名 --}}
                         <span class="text-xl font-bold text-gray-900 dark:text-white">
                             {{ $logoText }}

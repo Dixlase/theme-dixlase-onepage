@@ -48,6 +48,8 @@ return [
             'title' => 'Header & Favicon Settings',
             'header_logo' => 'Header Logo',
             'header_logo_help' => 'Set the logo image to be displayed in the site header.',
+            'header_logo_dark' => 'Header Logo (Dark Mode)',
+            'header_logo_dark_help' => 'Optional. Uploaded here, this logo is shown in dark mode instead of the light one above. If left empty, the light logo is auto-inverted (`filter: invert(1)`) as a fallback so single-colour marks stay visible on dark backgrounds — for multi-colour marks, upload an explicitly-authored dark version to avoid hue-flip.',
             'favicon' => 'Favicon',
             'favicon_help' => 'Set the icon to be displayed in the browser tab. (Recommended size: 32x32px or 64x64px)',
         ],
