@@ -53,6 +53,7 @@ class UpdateThemeSettingsRequest extends FormRequest
         return [
             // Header & Favicon
             'header_logo_id' => 'nullable|integer|exists:media,id',
+            'header_logo_dark_id' => 'nullable|integer|exists:media,id',
             'favicon_id' => 'nullable|integer|exists:media,id',
 
             // Hero Section
@@ -134,6 +135,7 @@ class UpdateThemeSettingsRequest extends FormRequest
     {
         return [
             'header_logo_id' => __('themes::admin.settings.header.header_logo'),
+            'header_logo_dark_id' => __('themes::admin.settings.header.header_logo_dark'),
             'favicon_id' => __('themes::admin.settings.header.favicon'),
             'hero_background_image_id' => __('themes::admin.settings.hero.background_image'),
             'hero_background_video_id' => __('themes::admin.settings.hero.background_video'),

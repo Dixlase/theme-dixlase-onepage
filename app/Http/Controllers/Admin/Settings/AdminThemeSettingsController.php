@@ -47,6 +47,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
         // すべての設定をキーバリュー形式で取得
         $settingsData = ThemeSetting::getValues([
             'header_logo_id',
+            'header_logo_dark_id',
             'favicon_id',
             'hero_background_image_id',
             'hero_background_video_id',
@@ -86,6 +87,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
         // デフォルト値を設定
         $defaults = [
             'header_logo_id' => null,
+            'header_logo_dark_id' => null,
             'favicon_id' => null,
             'hero_background_image_id' => null,
             'hero_background_video_id' => null,
@@ -141,6 +143,11 @@ class AdminThemeSettingsController extends AdminLoggedInController
             $headerLogo = Media::find($settings->header_logo_id);
         }
 
+        $headerLogoDark = null;
+        if (isset($settings->header_logo_dark_id)) {
+            $headerLogoDark = Media::find($settings->header_logo_dark_id);
+        }
+
         $favicon = null;
         if (isset($settings->favicon_id)) {
             $favicon = Media::find($settings->favicon_id);
@@ -163,6 +170,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
 
         $this->viewParams['settings'] = $settings;
         $this->viewParams['headerLogo'] = $headerLogo;
+        $this->viewParams['headerLogoDark'] = $headerLogoDark;
         $this->viewParams['favicon'] = $favicon;
         $this->viewParams['heroBackgroundImage'] = $heroBackgroundImage;
         $this->viewParams['heroBackgroundVideo'] = $heroBackgroundVideo;

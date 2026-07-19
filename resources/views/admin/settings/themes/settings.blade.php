@@ -121,6 +121,7 @@ function themeSettingsEditor() {
 
         // Media preview URLs
         headerLogoPreviewUrl: @json($headerLogo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $headerLogo->path) : null),
+        headerLogoDarkPreviewUrl: @json($headerLogoDark ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $headerLogoDark->path) : null),
         heroBgPreviewUrl: @json($heroBackgroundImage ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroBackgroundImage->path) : null),
         heroVideoPreviewUrl: @json($heroBackgroundVideo ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroBackgroundVideo->path) : null),
         heroForegroundPreviewUrl: @json($heroForegroundImage ? asset('storage/' . config('admin.files.mediaPath', 'media') . '/' . $heroForegroundImage->path) : null),
@@ -164,6 +165,8 @@ function themeSettingsEditor() {
                 const { inputId, url } = e.detail;
                 if (inputId === 'header_logo_id') {
                     self.headerLogoPreviewUrl = url || null;
+                } else if (inputId === 'header_logo_dark_id') {
+                    self.headerLogoDarkPreviewUrl = url || null;
                 } else if (inputId === 'hero_background_image_id') {
                     self.heroBgPreviewUrl = url || null;
                 } else if (inputId === 'hero_background_video_id') {
@@ -174,13 +177,15 @@ function themeSettingsEditor() {
             });
 
             // Update preview URLs when media is removed
-            ['header_logo_id', 'hero_background_image_id', 'hero_background_video_id'].forEach(name => {
+            ['header_logo_id', 'header_logo_dark_id', 'hero_background_image_id', 'hero_background_video_id'].forEach(name => {
                 const input = document.getElementById(name);
                 if (input) {
                     input.addEventListener('change', () => {
                         if (!input.value) {
                             if (name === 'header_logo_id') {
                                 self.headerLogoPreviewUrl = null;
+                            } else if (name === 'header_logo_dark_id') {
+                                self.headerLogoDarkPreviewUrl = null;
                             } else if (name === 'hero_background_image_id') {
                                 self.heroBgPreviewUrl = null;
                             } else if (name === 'hero_background_video_id') {

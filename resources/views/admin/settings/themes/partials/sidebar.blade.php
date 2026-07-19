@@ -125,6 +125,26 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         />
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Header Logo (Dark Mode) ===== --}}
+    {{-- Optional. If left empty, the base header logo is shown in dark
+         mode with a `filter: invert(1)` CSS fallback — that recovers
+         single-colour SVG / PNG marks that would otherwise disappear
+         against the dark header, at the cost of also flipping the
+         hue on multi-colour marks. Uploading an explicitly-authored
+         dark-mode file skips the fallback and gives pixel-perfect
+         control. --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.header.header_logo_dark')" icon="fas fa-moon">
+        <x-media.picker
+            name="header_logo_dark_id"
+            :value="$settings->header_logo_dark_id ?? null"
+            :media="$headerLogoDark ?? null"
+            :help="__('themes::admin.settings.header.header_logo_dark_help')"
+            :error="$errors->first('header_logo_dark_id')"
+            :buttonText="__('themes::admin.settings.select_logo_image')"
+            :confirmUploadNavigation="true"
+        />
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Header Menu (Plugin: DixlaseMenus) ===== --}}
     @if($menuPluginEnabled)
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.plugins.menu.title')" icon="fas fa-bars">

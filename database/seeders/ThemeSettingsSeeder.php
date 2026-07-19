@@ -45,6 +45,7 @@ class ThemeSettingsSeeder extends Seeder
         $settings = [
             // Header & Favicon
             'header_logo_id' => null,
+            'header_logo_dark_id' => null,
             'favicon_id' => null,
 
             // Hero Section
