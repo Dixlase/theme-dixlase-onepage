@@ -34,7 +34,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // 保存値はそれ以降の編集可能サフィックスだけを期待する。古い
     // 保存値に `© 2026 ` 形式の prefix が残っていても二重表示にならない
     // よう、念のためここで剥がしてから前置し直す。
-    $copyrightSuffix = $themeSettings->footer_copyright ?? config('app.name', 'Dixlase') . '. All rights reserved.';
+    $copyrightSuffix = $themeSettings->footer_copyright ?? config('app.name', 'Dixlase') . ' and Dixlase contributors';
     $copyrightSuffix = preg_replace('/^\s*©\s*\d{4}\s+/u', '', $copyrightSuffix);
     $footerCopyright = '© ' . date('Y') . ' ' . $copyrightSuffix;
     // SNSリンクはServiceProviderで自動生成される
@@ -175,9 +175,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 {{ config('app.name', 'Dixlase') }}
             </h2>
 
-            {{-- Description --}}
+            {{-- Platform + theme attribution. The `·` separator matches
+                 Core's <x-brand-attribution> pattern (admin auth screens)
+                 so the front reads consistently with the admin surfaces. --}}
             <p class="text-gray-600 dark:text-gray-400">
-                Powered by Dixlase
+                Powered by Dixlase <span class="mx-1" aria-hidden="true">·</span> DixlaseOnePage
             </p>
         </div>
 
