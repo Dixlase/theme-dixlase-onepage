@@ -224,6 +224,29 @@ function themeSettingsEditor() {
                     this.$nextTick(() => this.updatePreviewScale());
                 }
             });
+
+            // Session keep-alive: HEAD the current URL every 25 min so
+            // the session cookie stays fresh and the CSRF token in the
+            // pre-rendered form does not outlive its 120-min lifetime
+            // while the operator is mid-edit. Any authenticated request
+            // touches the session (Laravel routes HEAD as GET
+            // internally); HEAD returns no body so this is cheap on
+            // the wire. 25 < 30-min ping half-cycle < 60-min half of
+            // the 120-min session lifetime, so a single missed ping
+            // still leaves plenty of head-room.
+            //
+            // Scope note: this only covers the "left the settings page
+            // open too long" cause of 419. Multi-tab logout /
+            // browser-back-after-logout paths need a Core-side fix
+            // (session refresh endpoint or better 419 UX handling).
+            // The interval is auto-cleared on page unload.
+            setInterval(() => {
+                fetch(window.location.href, {
+                    method: 'HEAD',
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                }).catch(() => { /* silent — next tick retries */ });
+            }, 25 * 60 * 1000);
         },
 
         startEdit(field) {
