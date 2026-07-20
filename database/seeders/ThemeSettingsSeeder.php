@@ -91,8 +91,8 @@ class ThemeSettingsSeeder extends Seeder
             // 'auto' resolves to the site default at runtime.
             'default_locale' => 'auto',
 
-            // Heading font family. 'gothic' → Noto Sans JP, 'mincho' → Noto Serif JP.
-            'heading_font_family' => 'gothic',
+            // Heading font family. See UpdateThemeSettingsRequest for the value set.
+            'heading_font_family' => 'noto-sans-jp',
             // Per-region apply toggles (default: apply everywhere).
             'heading_font_apply_header' => '1',
             'heading_font_apply_hero' => '1',

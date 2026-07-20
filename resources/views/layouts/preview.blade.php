@@ -53,11 +53,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     <title>{{ config('app.name', 'Dixlase') }} @yield('title')</title>
 
-    {{-- Fonts. Both heading families (Noto Sans JP / Noto Serif JP) are
-         loaded so the operator sees an authentic preview no matter which
-         setting they land on; see layouts/app.blade.php for the rationale. --}}
+    {{-- Fonts. All four heading families (Cormorant Garamond, Jost,
+         Noto Sans JP, Noto Serif JP) are loaded so the operator sees
+         an authentic preview no matter which setting they land on;
+         see layouts/app.blade.php for the rationale. --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|cormorant-garamond:400,700|jost:400,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap" rel="stylesheet" />
 
     {{-- Font Awesome（フッターSNSアイコン等で使用） --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -107,9 +108,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     @php
         // Preview layout mirrors app.blade.php's heading-font wiring so
         // the iframe reflects the same setting the front page will show.
-        $headingFontStack = ($themeSettings->heading_font_family ?? 'gothic') === 'mincho'
-            ? "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif"
-            : "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif";
+        // See app.blade.php for the per-face rationale.
+        $headingFontStack = match ($themeSettings->heading_font_family ?? 'noto-sans-jp') {
+            'cormorant' => "'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+            'jost' => "'Jost', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+            'noto-serif-jp', 'mincho' => "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+            default => "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+        };
 
         $applyHeader = (string) ($themeSettings->heading_font_apply_header ?? '1') === '1';
         $applyHero = (string) ($themeSettings->heading_font_apply_hero ?? '1') === '1';

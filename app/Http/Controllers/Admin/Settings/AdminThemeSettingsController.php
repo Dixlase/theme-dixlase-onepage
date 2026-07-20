@@ -123,7 +123,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
-            'heading_font_family' => 'gothic', // 'gothic' | 'mincho' (see UpdateThemeSettingsRequest)
+            'heading_font_family' => 'noto-sans-jp', // see UpdateThemeSettingsRequest for the value set
             'heading_font_apply_header' => '1',
             'heading_font_apply_hero' => '1',
             'heading_font_apply_footer' => '1',
@@ -138,6 +138,17 @@ class AdminThemeSettingsController extends AdminLoggedInController
 
         // デフォルト値とマージ
         $settingsData = array_merge($defaults, array_filter($settingsData, fn ($v) => $v !== null));
+
+        // Normalise legacy heading_font_family values from the 2-choice
+        // era so the sidebar picker highlights the correct card. The
+        // layout resolver also accepts legacy values, but the picker
+        // Alpine state uses strict equality against the new slugs.
+        $settingsData['heading_font_family'] = match ($settingsData['heading_font_family'] ?? null) {
+            'gothic' => 'noto-sans-jp',
+            'mincho' => 'noto-serif-jp',
+            'cormorant', 'jost', 'noto-sans-jp', 'noto-serif-jp' => $settingsData['heading_font_family'],
+            default => 'noto-sans-jp',
+        };
 
         // オブジェクトに変換
         $settings = (object) $settingsData;

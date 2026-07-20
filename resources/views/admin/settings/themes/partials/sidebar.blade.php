@@ -52,17 +52,28 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     {{-- admin (not a system-font approximation).                          --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.typography.title')" icon="fas fa-font">
         <input type="hidden" name="heading_font_family" :value="headingFontFamily">
+        {{-- 2x2 grid. Cormorant / Jost first (Latin display faces),
+             then the two Noto JP families. Sample "Aa 見出し" lets the
+             Latin faces show off their glyphs on the "Aa" and the JP
+             fallback on the "見出し", so the operator sees exactly what
+             each face will render for both scripts before saving. --}}
         <div class="grid grid-cols-2 gap-2">
             @php
                 $fontOptions = [
-                    'gothic' => [
-                        'label' => __('themes::admin.settings.typography.gothic'),
-                        'description' => __('themes::admin.settings.typography.gothic_description'),
+                    'cormorant' => [
+                        'label' => __('themes::admin.settings.typography.font_cormorant'),
+                        'sample_family' => "'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', serif",
+                    ],
+                    'jost' => [
+                        'label' => __('themes::admin.settings.typography.font_jost'),
+                        'sample_family' => "'Jost', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', sans-serif",
+                    ],
+                    'noto-sans-jp' => [
+                        'label' => __('themes::admin.settings.typography.font_noto_sans_jp'),
                         'sample_family' => "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', sans-serif",
                     ],
-                    'mincho' => [
-                        'label' => __('themes::admin.settings.typography.mincho'),
-                        'description' => __('themes::admin.settings.typography.mincho_description'),
+                    'noto-serif-jp' => [
+                        'label' => __('themes::admin.settings.typography.font_noto_serif_jp'),
                         'sample_family' => "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', serif",
                     ],
                 ];
@@ -72,8 +83,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     @click="headingFontFamily = '{{ $value }}'"
                     :class="headingFontFamily === '{{ $value }}' ? 'border-indigo-500 ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'"
                     class="flex flex-col items-center gap-1 p-3 rounded-lg border transition-all duration-150 text-center">
-                    <span class="text-2xl leading-none text-gray-900 dark:text-gray-100" style="font-family: {{ $opt['sample_family'] }};">見出し</span>
-                    <span class="text-xs font-medium text-gray-900 dark:text-gray-100 mt-1">{{ $opt['label'] }}</span>
+                    <span class="text-2xl leading-none text-gray-900 dark:text-gray-100" style="font-family: {{ $opt['sample_family'] }};">Aa 見出し</span>
+                    <span class="text-[11px] font-medium text-gray-900 dark:text-gray-100 mt-1 leading-tight">{{ $opt['label'] }}</span>
                 </button>
             @endforeach
         </div>

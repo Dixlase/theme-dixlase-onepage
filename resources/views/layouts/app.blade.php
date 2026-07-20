@@ -82,22 +82,32 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             $primaryColorDarkSafe = $primaryColor;
         }
     @endphp
-    {{-- Heading font (Noto Sans JP / Noto Serif JP) via Bunny Fonts.
-         Both families are loaded eagerly so the operator can swap the
-         theme setting and see it take effect immediately without a
-         second network round-trip. `unicode-range` chunking on Bunny
-         means the JP page usually needs only the base subset (~300KB
-         gzipped per family). `display=swap` prevents FOIT. --}}
+    {{-- Heading fonts via Bunny Fonts: two JP faces (Noto Sans JP,
+         Noto Serif JP) and two Latin display faces (Cormorant Garamond,
+         Jost). All four load eagerly so the operator can swap the
+         theme setting and see it take effect immediately. The two
+         Latin faces are tiny (~50KB gzip each); the two JP faces
+         subset per `unicode-range` and typically only the base chunk
+         (~300KB gzip) is downloaded for a JP page. `display=swap`
+         prevents FOIT. --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=cormorant-garamond:400,700|jost:400,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap">
 
     @php
         // Heading font stack resolves setting → CSS variable that any
-        // rule can consume via var(--font-heading). System-JP fallbacks
-        // keep the site readable when Bunny is unreachable or blocked.
-        $headingFontStack = ($themeSettings->heading_font_family ?? 'gothic') === 'mincho'
-            ? "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif"
-            : "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif";
+        // rule can consume via var(--font-heading). Cormorant / Jost
+        // are Latin-only faces, so their JP fallback is the system
+        // Mincho / Gothic respectively — Japanese glyphs render in
+        // the OS-native face while the Latin characters carry the
+        // chosen web font's personality. Legacy 'gothic' / 'mincho'
+        // values (from the 2-choice era) map onto the JP faces so
+        // existing installs render as before.
+        $headingFontStack = match ($themeSettings->heading_font_family ?? 'noto-sans-jp') {
+            'cormorant' => "'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+            'jost' => "'Jost', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+            'noto-serif-jp', 'mincho' => "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+            default => "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+        };
 
         // Per-region toggles. Only regions whose toggle is ON get their
         // --font-heading-* variable declared, so region CSS rules fall
