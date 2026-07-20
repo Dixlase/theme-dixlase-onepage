@@ -119,7 +119,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $shellNavigationItems = $navigationItems ?? [];
     $shellFooterMenuItems = $footerMenuItems ?? [];
     $shellSnsLinks = $snsLinks ?? $shellSettings->snsLinks ?? [];
-    $shellCopyright = $shellSettings->footer_copyright ?? '© ' . date('Y') . ' ' . config('app.name') . '. All rights reserved.';
+    $shellCopyright = $shellSettings->footer_copyright ?? '© ' . date('Y') . ' ' . config('app.name') . ' and Dixlase contributors';
 
     // お問い合わせ
     $shellShowInquiry = ($shellSettings->show_inquiry_form ?? '0') === '1';

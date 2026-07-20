@@ -220,7 +220,12 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'hero_button_secondary_link' => '#features',
             'hero_button_secondary_target' => '_self',
             'footer_links' => '[]',
-            'footer_copyright' => '© '.date('Y').' '.config('app.name', 'Dixlase').'. All rights reserved.',
+            // The footer render strips any leading `© YYYY ` prefix and
+            // prepends the current year, so the persisted suffix does
+            // not carry a year of its own. `and Dixlase contributors`
+            // matches the Dixlase-brand attribution pattern used on
+            // admin surfaces.
+            'footer_copyright' => config('app.name', 'Dixlase').' and Dixlase contributors',
             'footer_sns_instagram' => null,
             'footer_sns_x' => null,
             'footer_sns_facebook' => null,

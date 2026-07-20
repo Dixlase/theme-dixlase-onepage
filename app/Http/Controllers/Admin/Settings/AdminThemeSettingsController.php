@@ -113,8 +113,10 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_button_secondary_target' => '_self',
             'footer_links' => '[]',
             // `© <year>` is auto-rendered (current year) at display time;
-            // only the editable suffix is persisted.
-            'footer_copyright' => config('app.name', 'Dixlase').'. All rights reserved.',
+            // only the editable suffix is persisted. `and Dixlase
+            // contributors` matches the Dixlase-brand attribution
+            // pattern used on admin surfaces.
+            'footer_copyright' => config('app.name', 'Dixlase').' and Dixlase contributors',
             'footer_sns_instagram' => null,
             'footer_sns_x' => null,
             'footer_sns_facebook' => null,
