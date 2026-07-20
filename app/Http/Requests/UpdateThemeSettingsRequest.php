@@ -108,6 +108,15 @@ class UpdateThemeSettingsRequest extends FormRequest
             'heading_font_apply_footer' => 'nullable|in:0,1',
             'heading_font_apply_content' => 'nullable|in:0,1',
 
+            // Per-region tracking (letter-spacing) in em units. Range
+            // -0.1em to 0.3em covers idiomatic display-heading tightening
+            // through open editorial-style tracking; extremes beyond the
+            // range would break JP glyph shaping.
+            'heading_font_tracking_header' => 'nullable|numeric|between:-0.1,0.3',
+            'heading_font_tracking_hero' => 'nullable|numeric|between:-0.1,0.3',
+            'heading_font_tracking_footer' => 'nullable|numeric|between:-0.1,0.3',
+            'heading_font_tracking_content' => 'nullable|numeric|between:-0.1,0.3',
+
             // Multilingual: locale the primary-stored theme-settings values
             // are authored in. 'auto' resolves to the site default at runtime;
             // any other value must be a locale code recognised by Core's

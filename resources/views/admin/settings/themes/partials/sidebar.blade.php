@@ -135,6 +135,44 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.typography.apply_to_help') }}</p>
         </div>
+
+        {{-- Per-region tracking (letter-spacing).
+
+             Slider + number input share the same Alpine variable via
+             x-model, so dragging the slider updates the number input
+             and vice versa. Only the number input carries `name=` so
+             POST payload has one value per region. Validation range
+             mirrors the CSS var range (-0.1em to 0.3em, step 0.01).
+             --}}
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-3">{{ __('themes::admin.settings.typography.tracking') }}</div>
+            @php
+                $trackingRegions = [
+                    'header'  => ['alpine' => 'headingFontTrackingHeader',  'name' => 'heading_font_tracking_header',  'label' => __('themes::admin.settings.typography.apply_header')],
+                    'hero'    => ['alpine' => 'headingFontTrackingHero',    'name' => 'heading_font_tracking_hero',    'label' => __('themes::admin.settings.typography.apply_hero')],
+                    'footer'  => ['alpine' => 'headingFontTrackingFooter',  'name' => 'heading_font_tracking_footer',  'label' => __('themes::admin.settings.typography.apply_footer')],
+                    'content' => ['alpine' => 'headingFontTrackingContent', 'name' => 'heading_font_tracking_content', 'label' => __('themes::admin.settings.typography.apply_content')],
+                ];
+            @endphp
+            @foreach($trackingRegions as $key => $reg)
+                <div class="mb-3">
+                    <label class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
+                        <span>{{ $reg['label'] }}</span>
+                        <span class="font-mono text-gray-500 dark:text-gray-400" x-text="{{ $reg['alpine'] }} + 'em'"></span>
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input type="range" min="-0.1" max="0.3" step="0.01"
+                            x-model="{{ $reg['alpine'] }}"
+                            class="flex-1 accent-indigo-500 cursor-pointer">
+                        <input type="number" min="-0.1" max="0.3" step="0.01"
+                            x-model="{{ $reg['alpine'] }}"
+                            name="{{ $reg['name'] }}"
+                            class="w-16 text-xs bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded px-1 py-0.5 dark:text-white">
+                    </div>
+                </div>
+            @endforeach
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.typography.tracking_help') }}</p>
+        </div>
     </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Default Locale (primary language of theme settings) ===== --}}

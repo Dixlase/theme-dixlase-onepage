@@ -164,6 +164,8 @@ return [
             'apply_hero' => 'Hero title',
             'apply_footer' => 'Footer site name',
             'apply_content' => 'Page headings (h1–h4)',
+            'tracking' => 'Tracking (letter-spacing)',
+            'tracking_help' => 'Per-region letter-spacing in em units. Negative values tighten the characters, positive values open them up. Range −0.1em to 0.3em.',
         ],
 
         // Appearance Section

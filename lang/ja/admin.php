@@ -164,6 +164,8 @@ return [
             'apply_hero' => 'ヒーローのタイトル',
             'apply_footer' => 'フッターのサイト名',
             'apply_content' => 'ページ内の見出し (h1〜h4)',
+            'tracking' => 'トラッキング (字間)',
+            'tracking_help' => 'リージョンごとの letter-spacing を em 単位で指定。マイナス値で詰め、プラス値で広げる。範囲は −0.1em 〜 0.3em。',
         ],
 
         // Appearance Section

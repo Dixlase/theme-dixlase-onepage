@@ -120,6 +120,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         $applyHero = (string) ($themeSettings->heading_font_apply_hero ?? '1') === '1';
         $applyFooter = (string) ($themeSettings->heading_font_apply_footer ?? '1') === '1';
         $applyContent = (string) ($themeSettings->heading_font_apply_content ?? '1') === '1';
+
+        $trackingRegions = [
+            'header'  => (string) ($themeSettings->heading_font_tracking_header  ?? '0'),
+            'hero'    => (string) ($themeSettings->heading_font_tracking_hero    ?? '0'),
+            'footer'  => (string) ($themeSettings->heading_font_tracking_footer  ?? '0'),
+            'content' => (string) ($themeSettings->heading_font_tracking_content ?? '0'),
+        ];
     @endphp
     <style @cspNonce>
         [x-cloak] { display: none !important; }
@@ -133,11 +140,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             @if ($applyHero) --font-heading-hero: var(--font-heading); @endif
             @if ($applyFooter) --font-heading-footer: var(--font-heading); @endif
             @if ($applyContent) --font-heading-content: var(--font-heading); @endif
+            @foreach ($trackingRegions as $region => $emValue)
+                @if ($emValue !== '' && (float) $emValue !== 0.0) --font-heading-tracking-{{ $region }}: {{ $emValue }}em; @endif
+            @endforeach
         }
-        .font-heading-header { font-family: var(--font-heading-header, inherit); }
-        .font-heading-hero   { font-family: var(--font-heading-hero, inherit); }
-        .font-heading-footer { font-family: var(--font-heading-footer, inherit); }
-        h1, h2, h3, h4       { font-family: var(--font-heading-content, inherit); }
+        body { font-feature-settings: "palt"; }
+        .font-heading-header { font-family: var(--font-heading-header, inherit); letter-spacing: var(--font-heading-tracking-header, normal); }
+        .font-heading-hero   { font-family: var(--font-heading-hero, inherit);   letter-spacing: var(--font-heading-tracking-hero, normal); }
+        .font-heading-footer { font-family: var(--font-heading-footer, inherit); letter-spacing: var(--font-heading-tracking-footer, normal); }
+        h1, h2, h3, h4       { font-family: var(--font-heading-content, inherit); letter-spacing: var(--font-heading-tracking-content, normal); }
         /* プレビュー専用: 全インタラクティブ要素を無効化 */
         a, button, [role="button"],
         input, textarea, select {

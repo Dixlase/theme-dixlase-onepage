@@ -240,6 +240,13 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'heading_font_apply_hero' => '1',
             'heading_font_apply_footer' => '1',
             'heading_font_apply_content' => '1',
+            // Per-region tracking (letter-spacing) in em units. Stored as
+            // a decimal string; the layout only emits the CSS variable
+            // when non-zero to keep the inline <style> small.
+            'heading_font_tracking_header' => '0',
+            'heading_font_tracking_hero' => '0',
+            'heading_font_tracking_footer' => '0',
+            'heading_font_tracking_content' => '0',
             'default_locale' => 'auto', // primary-locale for theme settings; 'auto' = site default
             'multilingual_switcher_enabled' => '0',
             // メディア関連のプロパティ（loadMediaForThemeSettings()で設定されるが、デフォルトでも必要）
