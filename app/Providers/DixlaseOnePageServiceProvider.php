@@ -233,7 +233,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
-            'heading_font_family' => 'gothic', // 'gothic' (Noto Sans JP) | 'mincho' (Noto Serif JP)
+            'heading_font_family' => 'noto-sans-jp', // cormorant | jost | noto-sans-jp | noto-serif-jp
             // Per-region apply toggles. When '0', that region inherits the body
             // font (system stack); when '1', it uses --font-heading.
             'heading_font_apply_header' => '1',

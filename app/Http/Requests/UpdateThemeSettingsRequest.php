@@ -91,8 +91,15 @@ class UpdateThemeSettingsRequest extends FormRequest
             'appearance_mode' => 'required|in:0,1,2',
 
             // Heading font family (headings only — body stays on system stack).
-            // 'gothic' → Noto Sans JP, 'mincho' → Noto Serif JP.
-            'heading_font_family' => 'nullable|in:gothic,mincho',
+            // Values:
+            //   cormorant     → Cormorant Garamond (Latin serif display)
+            //   jost          → Jost (Latin geometric sans)
+            //   noto-sans-jp  → Noto Sans JP (JP sans)
+            //   noto-serif-jp → Noto Serif JP (JP serif)
+            // Legacy values 'gothic' / 'mincho' from the 2-choice era are
+            // still accepted and normalised by the layout resolver so old
+            // DB rows do not fail validation after upgrade.
+            'heading_font_family' => 'nullable|in:cormorant,jost,noto-sans-jp,noto-serif-jp,gothic,mincho',
 
             // Per-region apply toggles. When '0', that region inherits the body
             // font (system stack); when '1', it uses --font-heading.

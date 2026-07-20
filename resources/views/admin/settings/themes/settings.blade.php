@@ -100,8 +100,11 @@ function themeSettingsEditor() {
         // プライマリカラー
         primaryColor: @json(old('primary_color', $settings->primary_color ?? '#3b82f6')),
 
-        // Heading font family — 'gothic' | 'mincho'
-        headingFontFamily: @json(old('heading_font_family', $settings->heading_font_family ?? 'gothic')),
+        // Heading font family: cormorant | jost | noto-sans-jp | noto-serif-jp
+        // (Legacy gothic/mincho values are normalised to noto-sans-jp/noto-serif-jp
+        // by the Controller before reaching Alpine, so strict equality against
+        // the new slugs in the picker highlights the correct card.)
+        headingFontFamily: @json(old('heading_font_family', $settings->heading_font_family ?? 'noto-sans-jp')),
         // Per-region apply toggles. The form-toggle component's xModel
         // expects string '0' / '1' (see components/form-toggle.blade.php:90),
         // not booleans.
