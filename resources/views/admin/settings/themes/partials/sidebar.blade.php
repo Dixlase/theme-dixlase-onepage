@@ -84,36 +84,39 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
              region CSS rule falls back through var(name, inherit) to
              the parent (body) font stack. This lets the operator use
              one face for some regions and the system default for others.
-             Hidden inputs sync the Alpine truthy/falsy state to '1'/'0'
-             so PHP validation (in:0,1) accepts the value.
+
+             <x-form-toggle> emits its own hidden "0" input + checkbox
+             "1" pair, so the field always POSTs '0' or '1'. xModel
+             expects string values ('0'/'1'), not booleans — Alpine
+             state in settings.blade.php matches that shape.
              --}}
         <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('themes::admin.settings.typography.apply_to') }}</div>
-            <input type="hidden" name="heading_font_apply_header"  :value="headingFontApplyHeader  ? '1' : '0'">
-            <input type="hidden" name="heading_font_apply_hero"    :value="headingFontApplyHero    ? '1' : '0'">
-            <input type="hidden" name="heading_font_apply_footer"  :value="headingFontApplyFooter  ? '1' : '0'">
-            <input type="hidden" name="heading_font_apply_content" :value="headingFontApplyContent ? '1' : '0'">
             <div class="flex flex-col gap-2">
                 <x-form-toggle
                     id="heading_font_apply_header_toggle"
+                    name="heading_font_apply_header"
                     :label="__('themes::admin.settings.typography.apply_header')"
                     xModel="headingFontApplyHeader"
                     color="blue"
                 />
                 <x-form-toggle
                     id="heading_font_apply_hero_toggle"
+                    name="heading_font_apply_hero"
                     :label="__('themes::admin.settings.typography.apply_hero')"
                     xModel="headingFontApplyHero"
                     color="blue"
                 />
                 <x-form-toggle
                     id="heading_font_apply_footer_toggle"
+                    name="heading_font_apply_footer"
                     :label="__('themes::admin.settings.typography.apply_footer')"
                     xModel="headingFontApplyFooter"
                     color="blue"
                 />
                 <x-form-toggle
                     id="heading_font_apply_content_toggle"
+                    name="heading_font_apply_content"
                     :label="__('themes::admin.settings.typography.apply_content')"
                     xModel="headingFontApplyContent"
                     color="blue"
