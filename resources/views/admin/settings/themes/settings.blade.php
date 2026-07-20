@@ -102,12 +102,12 @@ function themeSettingsEditor() {
 
         // Heading font family — 'gothic' | 'mincho'
         headingFontFamily: @json(old('heading_font_family', $settings->heading_font_family ?? 'gothic')),
-        // Per-region apply toggles (bool for x-form-toggle two-way binding).
-        // Persisted as '0' / '1' via the hidden inputs in the sidebar.
-        headingFontApplyHeader:  @json((string) old('heading_font_apply_header',  $settings->heading_font_apply_header  ?? '1') === '1'),
-        headingFontApplyHero:    @json((string) old('heading_font_apply_hero',    $settings->heading_font_apply_hero    ?? '1') === '1'),
-        headingFontApplyFooter:  @json((string) old('heading_font_apply_footer',  $settings->heading_font_apply_footer  ?? '1') === '1'),
-        headingFontApplyContent: @json((string) old('heading_font_apply_content', $settings->heading_font_apply_content ?? '1') === '1'),
+        // Per-region apply toggles. <x-form-toggle> xModel expects string
+        // '0' / '1' (see components/form-toggle.blade.php:90), not booleans.
+        headingFontApplyHeader:  @json((string) old('heading_font_apply_header',  $settings->heading_font_apply_header  ?? '1')),
+        headingFontApplyHero:    @json((string) old('heading_font_apply_hero',    $settings->heading_font_apply_hero    ?? '1')),
+        headingFontApplyFooter:  @json((string) old('heading_font_apply_footer',  $settings->heading_font_apply_footer  ?? '1')),
+        headingFontApplyContent: @json((string) old('heading_font_apply_content', $settings->heading_font_apply_content ?? '1')),
 
         // Hero settings
         heroMainTitle: @json(old('hero_main_title', $settings->hero_main_title ?? '')),
