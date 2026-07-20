@@ -112,6 +112,13 @@ function themeSettingsEditor() {
         headingFontApplyHero:    @json((string) old('heading_font_apply_hero',    $settings->heading_font_apply_hero    ?? '1')),
         headingFontApplyFooter:  @json((string) old('heading_font_apply_footer',  $settings->heading_font_apply_footer  ?? '1')),
         headingFontApplyContent: @json((string) old('heading_font_apply_content', $settings->heading_font_apply_content ?? '1')),
+        // Per-region tracking (letter-spacing) in em. Kept as string so
+        // <input type="number"> and <input type="range"> share the exact
+        // Alpine value verbatim (no float rounding drift).
+        headingFontTrackingHeader:  @json((string) old('heading_font_tracking_header',  $settings->heading_font_tracking_header  ?? '0')),
+        headingFontTrackingHero:    @json((string) old('heading_font_tracking_hero',    $settings->heading_font_tracking_hero    ?? '0')),
+        headingFontTrackingFooter:  @json((string) old('heading_font_tracking_footer',  $settings->heading_font_tracking_footer  ?? '0')),
+        headingFontTrackingContent: @json((string) old('heading_font_tracking_content', $settings->heading_font_tracking_content ?? '0')),
 
         // Hero settings
         heroMainTitle: @json(old('hero_main_title', $settings->hero_main_title ?? '')),

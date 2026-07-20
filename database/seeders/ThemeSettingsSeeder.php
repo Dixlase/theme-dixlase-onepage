@@ -98,6 +98,11 @@ class ThemeSettingsSeeder extends Seeder
             'heading_font_apply_hero' => '1',
             'heading_font_apply_footer' => '1',
             'heading_font_apply_content' => '1',
+            // Per-region tracking (letter-spacing) in em, default 0 (no tracking).
+            'heading_font_tracking_header' => '0',
+            'heading_font_tracking_hero' => '0',
+            'heading_font_tracking_footer' => '0',
+            'heading_font_tracking_content' => '0',
         ];
 
         foreach ($settings as $name => $value) {
