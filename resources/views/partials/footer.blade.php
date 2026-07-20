@@ -175,12 +175,21 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 {{ config('app.name', 'Dixlase') }}
             </h2>
 
-            {{-- Platform + theme attribution. The `·` separator matches
-                 Core's <x-brand-attribution> pattern (admin auth screens)
-                 so the front reads consistently with the admin surfaces. --}}
-            <p class="text-gray-600 dark:text-gray-400">
-                Powered by Dixlase <span class="mx-1" aria-hidden="true">·</span> DixlaseOnePage
-            </p>
+            {{-- Platform + theme attribution.
+
+                 Layout mirrors Core's <x-brand-attribution> on admin
+                 auth screens: small Dixlase brand mark on top, Powered
+                 by line below. <x-brand-logo> is a Core @api component
+                 (SVG that inherits currentColor), sized to 20px so it
+                 reads as an attribution glyph, not a hero mark — and
+                 placed in the footer (not the header) so it can't be
+                 mistaken for the site's own logo. `and` (rather than
+                 the earlier `·`) reads naturally in a Powered-by line
+                 that names two co-attribution targets. --}}
+            <div class="flex flex-col items-center gap-2 text-gray-600 dark:text-gray-400">
+                <x-brand-logo class="h-5 w-5" :aria-label="''" />
+                <p>Powered by Dixlase and DixlaseOnePage</p>
+            </div>
         </div>
 
     </div>
