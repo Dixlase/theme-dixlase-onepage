@@ -61,6 +61,8 @@ class ThemeSettingsSeeder extends Seeder
             'hero_button_secondary_link' => '#features',
             'hero_button_secondary_enabled' => '1',
             'hero_button_secondary_target' => '_self',
+            'hero_gradient_mode' => 'primary',
+            'hero_gradient_color' => '#3b82f6',
 
             // Footer
             'footer_description' => 'Powered by Dixlase CMS',

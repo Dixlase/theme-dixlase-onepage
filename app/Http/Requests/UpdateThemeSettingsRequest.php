@@ -71,6 +71,12 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_button_secondary_enabled' => 'nullable|in:0,1',
             'hero_button_secondary_target' => 'nullable|in:_self,_blank',
 
+            // Hero radial gradient (background-less hero only).
+            'hero_gradient_mode' => 'nullable|in:primary,custom,none',
+            // 6-digit hex — narrow regex keeps CSS injection out of the
+            // style attribute this value is interpolated into.
+            'hero_gradient_color' => 'nullable|regex:/^#[0-9a-fA-F]{6}$/',
+
             // Footer
             'footer_copyright' => 'nullable|string|max:500',
 

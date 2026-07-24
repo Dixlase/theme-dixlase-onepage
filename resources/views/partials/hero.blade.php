@@ -54,6 +54,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $heroForegroundPath = $themeSettings->heroForegroundPath ?? null;
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
 
+    // Hero radial gradient controls (see plumbing in SP / Request /
+    // Controller / Seeder). Mode 'none' skips the gradient div
+    // entirely; 'primary' uses the primary color; 'custom' uses the
+    // operator-picked color. Fallback validation defaults to 6-hex
+    // string via the Request rule, so the value can be interpolated
+    // into the inline style directly.
+    $heroGradientMode = $themeSettings->hero_gradient_mode ?? 'primary';
+    $heroGradientColor = $heroGradientMode === 'custom'
+        ? ($themeSettings->hero_gradient_color ?? '#3b82f6')
+        : $primaryColor;
+
     // When the admin bar is present (member is logged in), it occupies
     // ~48px (Tailwind `top-12` = 3rem) at the top of the viewport.
     // Use exact `h-[…]` (not `min-h-…`) so the hero is pinned to one
@@ -112,9 +123,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
          1280px、Wide 1920px で 1920px、超ワイドでは 2400px に頭打ち。
          ユーザ操作対象ではないので `pointer-events-none`。
          8 桁 HEX 末尾 `80` = α 50%。 --}}
-    @if(empty($heroBackgroundPath) && empty($heroVideoPath))
+    @if(empty($heroBackgroundPath) && empty($heroVideoPath) && $heroGradientMode !== 'none')
         <div class="absolute inset-0 z-0 pointer-events-none"
-             style="background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, {{ $primaryColor }}80 0%, transparent 65%);"></div>
+             style="background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, {{ $heroGradientColor }}80 0%, transparent 65%);"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}

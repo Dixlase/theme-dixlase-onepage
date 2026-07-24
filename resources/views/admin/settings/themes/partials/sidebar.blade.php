@@ -339,6 +339,52 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         />
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Hero Radial Gradient ===== --}}
+    {{-- 3-mode picker: primary color / custom color / off. Only takes
+         effect when neither a hero background image nor a background
+         video is set (both above win); the front partial short-circuits
+         then. Hidden input carries the mode; a native color input under
+         it appears only when mode='custom'. --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.gradient.title')" icon="fas fa-circle-half-stroke">
+        <input type="hidden" name="hero_gradient_mode" :value="heroGradientMode">
+        <input type="hidden" name="hero_gradient_color" :value="heroGradientColor">
+        <div class="grid grid-cols-3 gap-2">
+            @php
+                $gradientModes = [
+                    'primary' => ['label' => __('themes::admin.settings.hero.gradient.mode_primary'), 'icon' => 'fas fa-palette'],
+                    'custom'  => ['label' => __('themes::admin.settings.hero.gradient.mode_custom'),  'icon' => 'fas fa-eye-dropper'],
+                    'none'    => ['label' => __('themes::admin.settings.hero.gradient.mode_none'),    'icon' => 'fas fa-ban'],
+                ];
+            @endphp
+            @foreach ($gradientModes as $value => $mode)
+                <button type="button"
+                    @click="heroGradientMode = '{{ $value }}'"
+                    :class="heroGradientMode === '{{ $value }}' ? 'border-indigo-500 ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'"
+                    class="flex flex-col items-center gap-1 p-2 rounded-lg border transition-all duration-150 text-center">
+                    <i class="{{ $mode['icon'] }} text-gray-600 dark:text-gray-400"></i>
+                    <span class="text-[11px] font-medium text-gray-900 dark:text-gray-100 leading-tight">{{ $mode['label'] }}</span>
+                </button>
+            @endforeach
+        </div>
+        <div x-show="heroGradientMode === 'custom'" x-cloak class="mt-3">
+            <label for="hero_gradient_color_picker" class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                {{ __('themes::admin.settings.hero.gradient.custom_color_label') }}
+            </label>
+            <div class="flex items-center gap-2">
+                <input type="color"
+                    id="hero_gradient_color_picker"
+                    x-model="heroGradientColor"
+                    class="h-8 w-12 rounded border border-gray-300 dark:border-gray-500 cursor-pointer bg-transparent">
+                <input type="text"
+                    x-model="heroGradientColor"
+                    pattern="^#[0-9a-fA-F]{6}$"
+                    maxlength="7"
+                    class="input-common flex-1 p-1 text-xs font-mono bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded dark:text-white">
+            </div>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.hero.gradient.help') }}</p>
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Hero Foreground Image ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.foreground_image')" icon="fas fa-image">
         <x-media.picker
