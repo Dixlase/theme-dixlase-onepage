@@ -132,6 +132,13 @@ function themeSettingsEditor() {
         heroButtonSecondaryEnabled: @json(old('hero_button_secondary_enabled', $settings->hero_button_secondary_enabled ?? '1')),
         heroButtonSecondaryTarget: @json(old('hero_button_secondary_target', $settings->hero_button_secondary_target ?? '_self')),
 
+        // Hero radial gradient — mode + custom-color pair. Mode value is
+        // one of 'primary' / 'custom' / 'none'; the color is only used
+        // when mode='custom' but is kept in state at all times so the
+        // last-selected shade returns when the operator toggles back.
+        heroGradientMode: @json(old('hero_gradient_mode', $settings->hero_gradient_mode ?? 'primary')),
+        heroGradientColor: @json(old('hero_gradient_color', $settings->hero_gradient_color ?? '#3b82f6')),
+
         // Footer settings
         // The `© <year>` prefix is rendered automatically at display time
         // (always current year), so the input only edits the suffix.

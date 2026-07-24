@@ -219,6 +219,13 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'hero_button_secondary_text' => 'Learn More',
             'hero_button_secondary_link' => '#features',
             'hero_button_secondary_target' => '_self',
+            // Hero radial-gradient controls. Applies only when the hero has
+            // no background image AND no background video (decorative fill).
+            //   mode 'primary' → use --color-primary
+            //   mode 'custom'  → use hero_gradient_color
+            //   mode 'none'    → skip the gradient div entirely
+            'hero_gradient_mode' => 'primary',
+            'hero_gradient_color' => '#3b82f6',
             'footer_links' => '[]',
             // The footer render strips any leading `© YYYY ` prefix and
             // prepends the current year, so the persisted suffix does

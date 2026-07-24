@@ -62,6 +62,8 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_button_secondary_link',
             'hero_button_secondary_enabled',
             'hero_button_secondary_target',
+            'hero_gradient_mode',
+            'hero_gradient_color',
             'footer_links',
             'footer_copyright',
             'footer_sns_instagram',
@@ -111,6 +113,8 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_button_secondary_link' => '#features',
             'hero_button_secondary_enabled' => '1',
             'hero_button_secondary_target' => '_self',
+            'hero_gradient_mode' => 'primary',
+            'hero_gradient_color' => '#3b82f6',
             'footer_links' => '[]',
             // `© <year>` is auto-rendered (current year) at display time;
             // only the editable suffix is persisted. `and Dixlase
