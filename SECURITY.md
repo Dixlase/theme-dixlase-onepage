@@ -24,4 +24,4 @@ This policy covers code in the [`theme-dixlase-onepage`](https://github.com/Dixl
 
 ---
 
-**Contact:** info@dixlase.org
+**Contact:** security@dixlase.org
