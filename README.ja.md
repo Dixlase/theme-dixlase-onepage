@@ -43,10 +43,10 @@ Dixlase OnePage は **デュアルライセンス** で配布されています�
 
 ## コントリビューションについて
 
-CLA (Contributor License Agreement) のレビュー中のため、現在 Pull Request を受け付けていません。  
-CLA 確定後に受付を開始し、その時点から [Dixlase Copyright Policy](https://github.com/Dixlase/dixlase-core/blob/main/COPYRIGHT-POLICY.md) と Dixlase CLA（詳細は [CONTRIBUTING.ja.md](./CONTRIBUTING.ja.md)）の対象となります。  
-それまでも Issue での不具合報告・機能提案は歓迎しています。
+現在、外部からのコード Pull Request は受け付けていません。受付は、コア API の安定化と初期リリース後の運用状況・反響を見極め、法務レビューを経たコントリビューターライセンス契約 (CLA) を用意した上で開始します。  
+CLA 確定後、コントリビューションは [Dixlase Copyright Policy](https://github.com/Dixlase/dixlase-core/blob/main/COPYRIGHT-POLICY.md) と Dixlase CLA（詳細は [CONTRIBUTING.ja.md](./CONTRIBUTING.ja.md)）の対象となります。  
+なお、Issue での不具合報告・機能提案は歓迎しています。
 
 ---
 
-(C) exc-D inc.
+© 2026 exc-D inc. and Dixlase contributors

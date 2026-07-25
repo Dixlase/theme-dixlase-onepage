@@ -36,8 +36,8 @@ A short overview of how these files fit together is in [NOTICE](./NOTICE) ([日�
 
 ## Contributing
 
-The Contributor License Agreement (CLA) is still under review, so code Pull Requests are not being accepted at this time. Once the CLA is finalized, contributions will open under the [Dixlase Copyright Policy](https://github.com/Dixlase/dixlase-core/blob/main/COPYRIGHT-POLICY.md) and the Dixlase CLA (see [CONTRIBUTING.md](./CONTRIBUTING.md)). Bug reports and proposals via Issues are welcome in the meantime.
+We do not yet accept external code Pull Requests. They will open once we have assessed core API stability and how the project operates after the initial release, and prepared a Contributor License Agreement (CLA) that has passed legal review. Once the CLA is finalized, contributions will fall under the [Dixlase Copyright Policy](https://github.com/Dixlase/dixlase-core/blob/main/COPYRIGHT-POLICY.md) and the Dixlase CLA (see [CONTRIBUTING.md](./CONTRIBUTING.md)). Bug reports and proposals via Issues are welcome.
 
 ---
 
-(C) exc-D inc.
+© 2026 exc-D inc. and Dixlase contributors
