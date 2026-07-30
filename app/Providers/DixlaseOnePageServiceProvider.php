@@ -70,9 +70,13 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // ビュー・翻訳・ルートはコアのThemeServiceProviderが読み込み済み
-        // マイグレーションのみテーマ側で登録
-        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+        // Views, translations and routes are already loaded by the core
+        // ThemeServiceProvider. Migrations are deliberately NOT registered
+        // here: they are applied by ThemeMigrator (dls:theme:install) and
+        // recorded in the dls_theme_migrations ledger. Handing them to the
+        // stock migrator makes a bare `php artisan migrate` try to
+        // re-create tables that ThemeMigrator already created (SQLSTATE
+        // 42S01). See PluginLoaderTrait::loadPluginMigrations() in core.
 
         // Load helper functions (dls_onepage_localized_setting etc.)
         require_once __DIR__.'/../Helpers/DixlaseOnePageHelpers.php';
