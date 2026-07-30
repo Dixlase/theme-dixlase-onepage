@@ -33,7 +33,7 @@ yarn-error.log
 /.zed
 
 # Claude Code / AI assistant configs
-CLAUDE.md
+CLAUDE.ja.md
 /.claude/
 /.mcp.json
 
