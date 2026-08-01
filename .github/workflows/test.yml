@@ -84,6 +84,19 @@ jobs:
           fi
           echo "APP_KEY=${APP_KEY}" >> .env
 
+      - name: Debug — inspect theme dir before PHPUnit
+        working-directory: core/themes/DixlaseOnePage
+        run: |
+          echo "pwd: $(pwd)"
+          echo "--- theme root ---"
+          ls -la
+          echo "--- tests/ ---"
+          ls -la tests/ 2>&1
+          echo "--- phpunit.xml first 5 lines ---"
+          head -5 phpunit.xml 2>&1
+          echo "--- vendor/bin/phpunit resolution ---"
+          ls -la ../../vendor/bin/phpunit 2>&1
+
       - name: Run PHPUnit tests
         working-directory: core/themes/DixlaseOnePage
         env:
