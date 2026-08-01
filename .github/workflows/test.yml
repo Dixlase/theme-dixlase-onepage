@@ -39,18 +39,6 @@ jobs:
           extensions: sodium, mbstring, json, sqlite3, pdo_sqlite, gd
           coverage: none
 
-      - name: Place theme into core directory
-        run: |
-          # Core no longer tracks `themes/` as a populated tree (themes
-          # are installed via composer in production), so `core/themes/`
-          # does not exist after `actions/checkout` of core. Create the
-          # parent dir explicitly, then remove any stale path before
-          # moving the freshly-checked-out theme into place. Same
-          # pattern as plugins in the plugin repos' test.yml.
-          mkdir -p core/themes
-          rm -rf core/themes/DixlaseOnePage
-          mv theme core/themes/DixlaseOnePage
-
       - name: Cache composer dependencies
         uses: actions/cache@v4
         with:
@@ -62,6 +50,24 @@ jobs:
       - name: Install core composer dependencies
         working-directory: core
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
+
+      - name: Place theme into core directory (overwrite composer's version)
+        run: |
+          # `composer install` above pulled `dixlase/dixlase-onepage` from
+          # the composer registry (it is a bundled dependency in Core's
+          # composer.json) into `core/themes/DixlaseOnePage/`. That is the
+          # LAST TAGGED release — an older snapshot that does not include
+          # any of the WIP work on this branch (including phpunit.xml
+          # itself). Overwrite it with our freshly-checked-out branch tree
+          # so PHPUnit runs against the branch's actual code, not the
+          # registry release.
+          #
+          # (Cookie's test.yml does not need this dance because the plugin
+          # is NOT a composer dep of Core — plugins are installed at
+          # runtime via the admin panel. The theme is the only extension
+          # bundled through composer today.)
+          rm -rf core/themes/DixlaseOnePage
+          mv theme core/themes/DixlaseOnePage
 
       - name: Sync theme autoload mappings
         working-directory: core
@@ -83,19 +89,6 @@ jobs:
             touch .env
           fi
           echo "APP_KEY=${APP_KEY}" >> .env
-
-      - name: Debug — inspect theme dir before PHPUnit
-        working-directory: core/themes/DixlaseOnePage
-        run: |
-          echo "pwd: $(pwd)"
-          echo "--- theme root ---"
-          ls -la
-          echo "--- tests/ ---"
-          ls -la tests/ 2>&1
-          echo "--- phpunit.xml first 5 lines ---"
-          head -5 phpunit.xml 2>&1
-          echo "--- vendor/bin/phpunit resolution ---"
-          ls -la ../../vendor/bin/phpunit 2>&1
 
       - name: Run PHPUnit tests
         working-directory: core/themes/DixlaseOnePage
