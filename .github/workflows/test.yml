@@ -1,0 +1,97 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+# GitHub OAuth token for composer to clone the private
+# `dixlase/dixlase-onepage` dependency referenced by Core's
+# composer.json. The PAT lives in the organization secret
+# `COMPOSER_AUTH` with Contents:Read scoped to that repo only.
+env:
+  COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: PHPUnit Tests
+
+    steps:
+      - name: Checkout theme
+        uses: actions/checkout@v4
+        with:
+          path: theme
+
+      - name: Checkout core
+        uses: actions/checkout@v4
+        with:
+          repository: Dixlase/dixlase-core
+          ref: main
+          token: ${{ secrets.CORE_REPO_TOKEN }}
+          path: core
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: sodium, mbstring, json, sqlite3, pdo_sqlite, gd
+          coverage: none
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: core/vendor
+          key: ${{ runner.os }}-php83-composer-${{ hashFiles('core/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php83-composer-
+
+      - name: Install core composer dependencies
+        working-directory: core
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
+
+      - name: Place theme into core directory (overwrite composer's version)
+        run: |
+          # `composer install` above pulled `dixlase/dixlase-onepage` from
+          # the composer registry (it is a bundled dependency in Core's
+          # composer.json) into `core/themes/DixlaseOnePage/`. That is the
+          # LAST TAGGED release — an older snapshot that does not include
+          # any of the WIP work on this branch (including phpunit.xml
+          # itself). Overwrite it with our freshly-checked-out branch tree
+          # so PHPUnit runs against the branch's actual code, not the
+          # registry release.
+          #
+          # (Cookie's test.yml does not need this dance because the plugin
+          # is NOT a composer dep of Core — plugins are installed at
+          # runtime via the admin panel. The theme is the only extension
+          # bundled through composer today.)
+          rm -rf core/themes/DixlaseOnePage
+          mv theme core/themes/DixlaseOnePage
+
+      - name: Sync theme autoload mappings
+        working-directory: core
+        run: |
+          # composer.local.json を生成（プラグイン + テーマの psr-4
+          # マッピングを集約）。通常は pre-autoload-dump フックで実行
+          # されるが --no-scripts のため明示実行。
+          php scripts/sync-local-autoload.php
+          composer dump-autoload --no-scripts --optimize
+
+      - name: Setup test environment
+        working-directory: core
+        env:
+          APP_KEY: base64:INAsYduzvVFuYXTFeMS0EkLXHynFalWYt/O9hUlTdfg=
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          else
+            touch .env
+          fi
+          echo "APP_KEY=${APP_KEY}" >> .env
+
+      - name: Run PHPUnit tests
+        working-directory: core/themes/DixlaseOnePage
+        env:
+          APP_KEY: base64:INAsYduzvVFuYXTFeMS0EkLXHynFalWYt/O9hUlTdfg=
+        run: ../../vendor/bin/phpunit
