@@ -54,21 +54,59 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $heroForegroundPath = $themeSettings->heroForegroundPath ?? null;
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
 
-    // Hero gradient controls (see plumbing in SP / Request /
-    // Controller / Seeder). Three knobs:
-    //   $heroGradientMode  = color source; 'none' skips the div entirely.
-    //   $heroGradientColor = resolved 6-hex tint.
-    //   $heroGradientShape = 'radial' (default) | 'linear-vertical'.
-    // All Request-validated so the values can be interpolated into
-    // the inline style directly.
+    // Hero background-fill resolver (see plumbing in SP / Request /
+    // Controller / Seeder). Four knobs:
+    //   mode    = 'primary' | 'custom'  (color source)
+    //   shape   = 'radial' | 'linear-vertical' | 'solid'
+    //   color1  = hero_gradient_color   (custom mode's start / centre color)
+    //   color2  = hero_gradient_color_2 (custom mode's end / outside color;
+    //                                    ignored when shape='solid')
+    //
+    // For mode='primary', color1 = --color-primary and color2 auto-picks
+    // the page body colour per appearance mode so the hero fills blend
+    // seamlessly into the surrounding page. The two-per-mode background
+    // strings are emitted as `.hero-bg-fill{}` + `.dark .hero-bg-fill{}`
+    // rules in a per-render inline <style> below so the .dark class
+    // toggle (from layouts/app.blade.php's appearanceTheme() Alpine data)
+    // just works without any Alpine binding on the div itself.
+    //
+    // Legacy value 'none' from the pre-restructure era migrates to
+    // shape='solid' + mode='primary' — a site that had "no gradient"
+    // now shows a plain primary-color fill (accepted design change,
+    // documented on the settings UI).
     $heroGradientMode = $themeSettings->hero_gradient_mode ?? 'primary';
+    $heroGradientShape = $themeSettings->hero_gradient_shape ?? 'radial';
+    if ($heroGradientMode === 'none') {
+        $heroGradientMode = 'primary';
+        $heroGradientShape = 'solid';
+    }
+
     $heroGradientColor = $heroGradientMode === 'custom'
         ? ($themeSettings->hero_gradient_color ?? '#3b82f6')
         : $primaryColor;
-    $heroGradientShape = $themeSettings->hero_gradient_shape ?? 'radial';
-    $heroGradientCss = $heroGradientShape === 'linear-vertical'
-        ? "linear-gradient(to bottom, {$heroGradientColor}80 0%, transparent 100%)"
-        : "radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, {$heroGradientColor}80 0%, transparent 65%)";
+    $heroGradientColor2 = $heroGradientMode === 'custom'
+        ? ($themeSettings->hero_gradient_color_2 ?? '#ffffff')
+        : null; // primary mode: computed per-appearance below
+
+    // Endpoint colors for mode='primary'. Match the body bg tokens
+    // (bg-gray-100 light / bg-gray-950 dark) so the hero fills read as
+    // a continuation of the page rather than a boxed panel.
+    $heroPrimaryEndpointLight = '#f3f4f6'; // Tailwind gray-100 = body bg (light)
+    $heroPrimaryEndpointDark  = '#030712'; // Tailwind gray-950 = body bg (dark)
+
+    $heroColor2Light = $heroGradientColor2 ?? $heroPrimaryEndpointLight;
+    $heroColor2Dark  = $heroGradientColor2 ?? $heroPrimaryEndpointDark;
+
+    // Build the two background strings (light + dark).
+    $heroBgBuilder = function (string $shape, string $c1, string $c2): string {
+        return match ($shape) {
+            'solid' => $c1,
+            'linear-vertical' => "linear-gradient(to bottom, {$c1} 0%, {$c2} 100%)",
+            default => "radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, {$c1} 0%, {$c2} 65%)",
+        };
+    };
+    $heroBgLight = $heroBgBuilder($heroGradientShape, $heroGradientColor, $heroColor2Light);
+    $heroBgDark  = $heroBgBuilder($heroGradientShape, $heroGradientColor, $heroColor2Dark);
 
     // When the admin bar is present (member is logged in), it occupies
     // ~48px (Tailwind `top-12` = 3rem) at the top of the viewport.
@@ -128,9 +166,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
          1280px、Wide 1920px で 1920px、超ワイドでは 2400px に頭打ち。
          ユーザ操作対象ではないので `pointer-events-none`。
          8 桁 HEX 末尾 `80` = α 50%。 --}}
-    @if(empty($heroBackgroundPath) && empty($heroVideoPath) && $heroGradientMode !== 'none')
-        <div class="absolute inset-0 z-0 pointer-events-none"
-             style="background: {{ $heroGradientCss }};"></div>
+    {{-- Background fill: rendered whenever neither a hero background
+         image nor a background video is set. Uses a class + per-render
+         <style> block (below) instead of inline style so the .dark
+         class toggle switches the fill without any Alpine binding on
+         the div. --}}
+    @if(empty($heroBackgroundPath) && empty($heroVideoPath))
+        <style @cspNonce>
+            .hero-bg-fill { background: {!! $heroBgLight !!}; }
+            .dark .hero-bg-fill { background: {!! $heroBgDark !!}; }
+        </style>
+        <div class="hero-bg-fill absolute inset-0 z-0 pointer-events-none"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}

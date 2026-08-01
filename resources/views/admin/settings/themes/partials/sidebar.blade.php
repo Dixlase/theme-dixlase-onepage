@@ -339,34 +339,35 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         />
     </x-admin.theme-preview-sidebar-section>
 
-    {{-- ===== Hero Gradient (shape + color mode) =====
-         Two orthogonal pickers stacked:
-           (1) Shape — radial (centred glow) or linear-vertical (top-heavy fade)
-           (2) Color — primary / custom / none
+    {{-- ===== Hero Background Color (shape + color mode + custom colors) =====
+         Two orthogonal pickers:
+           (1) Color mode — primary (auto) or custom (operator-picked)
+           (2) Shape       — radial / linear-vertical / solid
 
          Both only take effect when neither a hero background image nor
          a background video is set (both above win); the front partial
-         short-circuits then. Section-level help text at the bottom
-         restates that condition once instead of embedding it in the
-         section title.
+         short-circuits then.
 
-         mode='none' hides the shape picker since shape is meaningless
-         without a rendered gradient (the whole gradient div is
-         skipped in that mode). --}}
+         Custom mode reveals color inputs:
+           - shape='solid': one color slot (color1)
+           - other shapes: two color slots (color1 = center/top, color2 = outside/bottom)
+
+         Primary mode auto-picks a second endpoint that matches the
+         page body colour per appearance mode (see partials/hero.blade.php
+         resolver), so operators don't have to think about it. --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.gradient.title')" icon="fas fa-circle-half-stroke">
         <input type="hidden" name="hero_gradient_mode" :value="heroGradientMode">
         <input type="hidden" name="hero_gradient_color" :value="heroGradientColor">
+        <input type="hidden" name="hero_gradient_color_2" :value="heroGradientColor2">
         <input type="hidden" name="hero_gradient_shape" :value="heroGradientShape">
 
-        {{-- Color mode picker (primary / custom / none) — decides
-             WHERE the color comes from + whether to render at all. --}}
+        {{-- Color mode picker (2 buttons — primary / custom) --}}
         <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('themes::admin.settings.hero.gradient.color_label') }}</div>
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-2 gap-2">
             @php
                 $gradientModes = [
                     'primary' => ['label' => __('themes::admin.settings.hero.gradient.mode_primary'), 'icon' => 'fas fa-palette'],
                     'custom'  => ['label' => __('themes::admin.settings.hero.gradient.mode_custom'),  'icon' => 'fas fa-eye-dropper'],
-                    'none'    => ['label' => __('themes::admin.settings.hero.gradient.mode_none'),    'icon' => 'fas fa-ban'],
                 ];
             @endphp
             @foreach ($gradientModes as $value => $mode)
@@ -380,12 +381,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             @endforeach
         </div>
 
-        {{-- Custom color input — visible only when the operator picked
-             the custom mode. Uses x-cloak so Alpine hides it during
-             initial paint. --}}
+        {{-- Custom color inputs — visible only in custom mode.
+             Number of slots depends on shape:
+               solid           → 1 slot (color1 only)
+               radial / linear → 2 slots (color1 + color2) --}}
         <div x-show="heroGradientMode === 'custom'" x-cloak class="mt-3">
-            <label for="hero_gradient_color_picker" class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
-                {{ __('themes::admin.settings.hero.gradient.custom_color_label') }}
+            {{-- Color 1 (center / top / solid fill) --}}
+            <label for="hero_gradient_color_picker" class="block text-xs text-gray-600 dark:text-gray-400 mb-1"
+                x-text="heroGradientShape === 'solid'
+                    ? '{{ __('themes::admin.settings.hero.gradient.custom_color_solid_label') }}'
+                    : '{{ __('themes::admin.settings.hero.gradient.custom_color_label') }}'">
             </label>
             <div class="flex items-center gap-2">
                 <input type="color"
@@ -398,19 +403,35 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     maxlength="7"
                     class="input-common flex-1 p-1 text-xs font-mono bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded dark:text-white">
             </div>
+
+            {{-- Color 2 (outside / bottom) — hidden for solid --}}
+            <div x-show="heroGradientShape !== 'solid'" x-cloak class="mt-2">
+                <label for="hero_gradient_color_2_picker" class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                    {{ __('themes::admin.settings.hero.gradient.custom_color_2_label') }}
+                </label>
+                <div class="flex items-center gap-2">
+                    <input type="color"
+                        id="hero_gradient_color_2_picker"
+                        x-model="heroGradientColor2"
+                        class="h-8 w-12 rounded border border-gray-300 dark:border-gray-500 cursor-pointer bg-transparent">
+                    <input type="text"
+                        x-model="heroGradientColor2"
+                        pattern="^#[0-9a-fA-F]{6}$"
+                        maxlength="7"
+                        class="input-common flex-1 p-1 text-xs font-mono bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded dark:text-white">
+                </div>
+            </div>
         </div>
 
-        {{-- Shape picker (radial / linear-vertical) — hidden when
-             mode='none' since shape has no meaning without a rendered
-             gradient. Fa-circle for radial (centred glow) + fa-arrow-down
-             for linear-vertical (top-heavy fade). --}}
-        <div x-show="heroGradientMode !== 'none'" x-cloak class="mt-4">
+        {{-- Shape picker (radial / linear-vertical / solid) --}}
+        <div class="mt-4">
             <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('themes::admin.settings.hero.gradient.shape_label') }}</div>
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-3 gap-2">
                 @php
                     $gradientShapes = [
                         'radial'          => ['label' => __('themes::admin.settings.hero.gradient.shape_radial'),          'icon' => 'fas fa-circle'],
                         'linear-vertical' => ['label' => __('themes::admin.settings.hero.gradient.shape_linear_vertical'), 'icon' => 'fas fa-arrow-down'],
+                        'solid'           => ['label' => __('themes::admin.settings.hero.gradient.shape_solid'),           'icon' => 'fas fa-square'],
                     ];
                 @endphp
                 @foreach ($gradientShapes as $value => $shape)

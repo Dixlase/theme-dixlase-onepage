@@ -223,18 +223,28 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'hero_button_secondary_text' => 'Learn More',
             'hero_button_secondary_link' => '#features',
             'hero_button_secondary_target' => '_self',
-            // Hero radial-gradient controls. Applies only when the hero has
-            // no background image AND no background video (decorative fill).
-            //   mode 'primary' → use --color-primary
-            //   mode 'custom'  → use hero_gradient_color
-            //   mode 'none'    → skip the gradient div entirely
+            // Hero background-fill controls. Renders only when the hero has
+            // neither a background image nor a background video (image /
+            // video win). Three knobs:
+            //   mode  'primary'|'custom' — color source
+            //     'primary': color1 = --color-primary; color2 auto-picked to
+            //                match the page body bg (light: #f3f4f6, dark:
+            //                #030712) so the hero fills blend seamlessly.
+            //     'custom' : color1 = hero_gradient_color; color2 =
+            //                hero_gradient_color_2 (only used when
+            //                shape != 'solid').
+            //   shape 'radial'|'linear-vertical'|'solid'
+            //     'radial'          — classic centred circular gradient.
+            //     'linear-vertical' — top→bottom linear gradient.
+            //     'solid'           — 単色 (color1 only, no gradient).
+            //   color / color_2 — hex, used when mode='custom'.
+            //
+            // Legacy value 'none' from the pre-restructure era is migrated
+            // by the front resolver to shape='solid' + mode='primary'
+            // (see partials/hero.blade.php).
             'hero_gradient_mode' => 'primary',
             'hero_gradient_color' => '#3b82f6',
-            // Gradient shape — orthogonal to mode. 'radial' = the classic
-            // centred circular glow. 'linear-vertical' = top-heavy fade
-            // (color at top, transparent at bottom). Kept as a
-            // slug-shaped string so 'linear-horizontal' / 'conic' etc.
-            // can slot in later without another schema change.
+            'hero_gradient_color_2' => '#ffffff',
             'hero_gradient_shape' => 'radial',
             'footer_links' => '[]',
             // The footer render strips any leading `© YYYY ` prefix and
