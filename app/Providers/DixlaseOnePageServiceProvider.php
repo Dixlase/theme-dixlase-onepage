@@ -230,6 +230,12 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             //   mode 'none'    → skip the gradient div entirely
             'hero_gradient_mode' => 'primary',
             'hero_gradient_color' => '#3b82f6',
+            // Gradient shape — orthogonal to mode. 'radial' = the classic
+            // centred circular glow. 'linear-vertical' = top-heavy fade
+            // (color at top, transparent at bottom). Kept as a
+            // slug-shaped string so 'linear-horizontal' / 'conic' etc.
+            // can slot in later without another schema change.
+            'hero_gradient_shape' => 'radial',
             'footer_links' => '[]',
             // The footer render strips any leading `© YYYY ` prefix and
             // prepends the current year, so the persisted suffix does
