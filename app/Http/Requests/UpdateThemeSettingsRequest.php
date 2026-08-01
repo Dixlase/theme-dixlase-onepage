@@ -72,13 +72,17 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_button_secondary_target' => 'nullable|in:_self,_blank',
 
             // Hero radial gradient (background-less hero only).
+            // Legacy 'none' is still accepted for backward compat with sites
+            // saved before the restructure; it is normalised at resolve-time
+            // to shape='solid' + mode='primary' in partials/hero.blade.php.
             'hero_gradient_mode' => 'nullable|in:primary,custom,none',
             // 6-digit hex — narrow regex keeps CSS injection out of the
-            // style attribute this value is interpolated into.
+            // style attribute these values are interpolated into.
             'hero_gradient_color' => 'nullable|regex:/^#[0-9a-fA-F]{6}$/',
-            // Gradient shape. The whitelist keeps future values slot-in
-            // ready without opening up the string field.
-            'hero_gradient_shape' => 'nullable|in:radial,linear-vertical',
+            'hero_gradient_color_2' => 'nullable|regex:/^#[0-9a-fA-F]{6}$/',
+            // Shape whitelist — extendable to 'linear-horizontal', 'conic'
+            // etc. later without opening the string.
+            'hero_gradient_shape' => 'nullable|in:radial,linear-vertical,solid',
 
             // Footer
             'footer_copyright' => 'nullable|string|max:500',
