@@ -105,6 +105,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     border: 0 !important;
     color-scheme: normal;
 }
+
+/* Match the live layout's global palt so the mock's Japanese glyph
+   shaping (kana / punctuation width) matches what the front will show.
+   No-op for the Latin faces (Cormorant / Jost) since they carry no palt
+   metadata, so this is safe as a preview-wide default. */
+#preview-inner { font-feature-settings: "palt"; }
 </style>
 
 <x-admin.theme-preview-container
@@ -132,7 +138,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-image"></i></span>
                             </div>
                         </div>
-                        <span class="pv-app-name text-xl font-bold">{{ config('app.name', 'Dixlase') }}</span>
+                        <span class="pv-app-name text-xl font-bold" :style="regionTypographyStyle(headingFontApplyHeader, headingFontTrackingHeader)">{{ config('app.name', 'Dixlase') }}</span>
                     </div>
 
                     {{-- Navigation - dynamic from selected menu --}}
@@ -182,10 +188,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 </template>
 
                 {{-- 背景なし時の中央正円放射グラデーション、viewport で
-                     スケール（フロントと 1:1） --}}
-                <template x-if="!heroBgPreviewUrl && !heroVideoPreviewUrl">
-                    <div class="absolute inset-0 z-0 pointer-events-none"
-                        :style="'background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, ' + primaryColor + '80 0%, transparent 65%);'"></div>
+                     スケール（フロントと 1:1）。テーマ設定の hero_gradient_mode
+                     が 'none' の場合は描画スキップ、'custom' の場合は
+                     hero_gradient_color を使う。ロジックは Alpine helper
+                     (showHeroGradient / heroGradientStyle) に集約。 --}}
+                <template x-if="showHeroGradient()">
+                    <div class="absolute inset-0 z-0 pointer-events-none" :style="heroGradientStyle()"></div>
                 </template>
 
                 {{-- コンテンツ --}}
@@ -193,7 +201,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     <div class="max-w-4xl mx-auto text-center">
                         {{-- Main Title — textarea で改行入力可、表示は white-space:pre-line で改行を反映 --}}
                         <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
-                            <h1 class="pv-title text-6xl lg:text-7xl font-bold leading-tight whitespace-pre-line" style="text-wrap: balance;" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
+                            <h1 class="pv-title text-6xl lg:text-7xl font-bold leading-tight whitespace-pre-line" style="text-wrap: balance;" :style="regionTypographyStyle(headingFontApplyHero, headingFontTrackingHero)" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
                             </h1>
                             <textarea
                                 x-show="editing === 'heroMainTitle'"
@@ -443,7 +451,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                             <template x-if="snsLinks.github"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-github"></i></a></template>
                         </div>
                         {{-- Site Name --}}
-                        <h2 class="pv-footer-title text-2xl font-bold">{{ config('app.name', 'Dixlase') }}</h2>
+                        <h2 class="pv-footer-title text-2xl font-bold" :style="regionTypographyStyle(headingFontApplyFooter, headingFontTrackingFooter)">{{ config('app.name', 'Dixlase') }}</h2>
                         {{-- Description (fixed) --}}
                         <p class="pv-footer-text">Powered by Dixlase</p>
                     </div>

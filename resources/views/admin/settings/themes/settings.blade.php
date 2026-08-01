@@ -88,12 +88,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 @endsection
 
 @push('styles')
-{{-- Load all four heading-font families here so the inline theme
-     preview mock (preview-shell.blade.php) and the two picker cards
-     in the sidebar can render the actual faces the operator picks.
-     The admin layout preconnects to fonts.bunny.net and loads only
-     the figtree UI font; this <link> is additive and same-origin —
-     the browser reuses the existing preconnect. --}}
+{{-- Load all four heading-font families here so the inline sidebar
+     preview mock (admin/settings/themes/partials/preview.blade.php)
+     and the two picker cards in the sidebar can render the actual
+     faces the operator picks. The admin layout preconnects to
+     fonts.bunny.net and loads only the figtree UI font; this <link>
+     is additive and same-origin — the browser reuses the existing
+     preconnect. --}}
 <link rel="stylesheet" href="https://fonts.bunny.net/css?family=cormorant-garamond:400,700|jost:400,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap">
 <style @cspNonce>
 #admin-main-content { min-width: 0; }
@@ -189,6 +190,54 @@ function themeSettingsEditor() {
 
         // Editing state
         editing: null,
+
+        // ===== Preview-mock helpers =====
+        // The inline sidebar preview (partials/preview.blade.php) needs to
+        // reflect hero_gradient + heading_font settings via Alpine :style
+        // bindings. These helpers keep the resolution logic in one place
+        // (mirrors layouts/app.blade.php's PHP resolvers) so per-element
+        // bindings stay short and CSP-safe (no complex inline expressions).
+
+        // Font-family stack lookup. Legacy 'gothic' / 'mincho' from the
+        // 2-choice era map onto the JP faces, same as layouts/app.blade.php.
+        resolvedHeadingFontStack() {
+            const stacks = {
+                cormorant: "'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+                jost: "'Jost', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+                'noto-sans-jp': "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+                'noto-serif-jp': "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+                gothic: "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+                mincho: "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+            };
+            return stacks[this.headingFontFamily] || stacks['noto-sans-jp'];
+        },
+
+        // Per-region typography :style object. font-family only when the
+        // region's apply toggle is ON (matches the live layout's
+        // var(--font-heading-{region}, inherit) fallback). letter-spacing
+        // is orthogonal: applies whenever non-zero, regardless of the apply
+        // toggle — same as the live layout's letter-spacing rule.
+        regionTypographyStyle(applyToggle, trackingValue) {
+            const style = {};
+            if (applyToggle === '1') style.fontFamily = this.resolvedHeadingFontStack();
+            const t = parseFloat(trackingValue);
+            if (!isNaN(t) && t !== 0) style.letterSpacing = trackingValue + 'em';
+            return style;
+        },
+
+        // Hero gradient template gate. Hidden when a hero background image
+        // or video is set (both win) or the gradient mode is 'none'.
+        showHeroGradient() {
+            return !this.heroBgPreviewUrl && !this.heroVideoPreviewUrl && this.heroGradientMode !== 'none';
+        },
+
+        // Hero gradient inline style. Mirrors partials/hero.blade.php:
+        // radial-gradient in the resolved tint at 50% alpha (the trailing
+        // '80' = 8-hex alpha suffix).
+        heroGradientStyle() {
+            const color = this.heroGradientMode === 'custom' ? this.heroGradientColor : this.primaryColor;
+            return 'background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, ' + color + '80 0%, transparent 65%);';
+        },
 
         init() {
             this.$dispatch('right-sidebar-active');
