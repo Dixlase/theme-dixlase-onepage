@@ -88,6 +88,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 @endsection
 
 @push('styles')
+{{-- Load all four heading-font families here so the inline theme
+     preview mock (preview-shell.blade.php) and the two picker cards
+     in the sidebar can render the actual faces the operator picks.
+     The admin layout preconnects to fonts.bunny.net and loads only
+     the figtree UI font; this <link> is additive and same-origin —
+     the browser reuses the existing preconnect. --}}
+<link rel="stylesheet" href="https://fonts.bunny.net/css?family=cormorant-garamond:400,700|jost:400,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap">
 <style @cspNonce>
 #admin-main-content { min-width: 0; }
 </style>

@@ -131,7 +131,83 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             $shellInquiryPreview = $result->instance->getPreview('inquiry_form');
         }
     }
+
+    // ===== Preview-shell mock resolvers for the new hero-gradient / typography
+    // settings. This shell is a stylized inline mock (NOT partials/hero), so it
+    // needs its own resolvers to reflect operator picks. Keep the logic in
+    // lockstep with partials/hero.blade.php + layouts/app.blade.php so the
+    // sidebar preview reads the same as the live front. =====
+
+    $shellPrimaryColor = $shellSettings->primary_color ?? '#3b82f6';
+
+    // Hero radial gradient — mode + resolved tint. mode='none' hides the
+    // decoration (matches the live hero's short-circuit).
+    $shellGradientMode = $shellSettings->hero_gradient_mode ?? 'primary';
+    $shellGradientColor = $shellGradientMode === 'custom'
+        ? ($shellSettings->hero_gradient_color ?? '#3b82f6')
+        : $shellPrimaryColor;
+
+    // Heading font stack — legacy 'gothic' / 'mincho' from the 2-choice era
+    // map onto the new JP faces, same as layouts/app.blade.php.
+    $shellHeadingFontStack = match ($shellSettings->heading_font_family ?? 'noto-sans-jp') {
+        'cormorant' => "'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+        'jost' => "'Jost', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+        'noto-serif-jp', 'mincho' => "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
+        default => "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
+    };
+    $shellApplyHeader  = (string) ($shellSettings->heading_font_apply_header  ?? '1') === '1';
+    $shellApplyHero    = (string) ($shellSettings->heading_font_apply_hero    ?? '1') === '1';
+    $shellApplyFooter  = (string) ($shellSettings->heading_font_apply_footer  ?? '1') === '1';
+    $shellApplyContent = (string) ($shellSettings->heading_font_apply_content ?? '1') === '1';
+    $shellTrackingRegions = [
+        'header'  => (string) ($shellSettings->heading_font_tracking_header  ?? '0'),
+        'hero'    => (string) ($shellSettings->heading_font_tracking_hero    ?? '0'),
+        'footer'  => (string) ($shellSettings->heading_font_tracking_footer  ?? '0'),
+        'content' => (string) ($shellSettings->heading_font_tracking_content ?? '0'),
+    ];
 @endphp
+
+{{-- Per-render style block: emits the CSS variables + rules that
+     reflect the current operator settings on the preview-shell mock.
+     Kept outside the top-of-file static <style> block because these
+     values are dynamic. --}}
+<style @cspNonce>
+    #preview-inner {
+        --pv-primary-color: {{ $shellPrimaryColor }};
+        --pv-gradient-color: {{ $shellGradientColor }};
+        --font-heading: {!! $shellHeadingFontStack !!};
+        @if ($shellApplyHeader)  --font-heading-header:  var(--font-heading); @endif
+        @if ($shellApplyHero)    --font-heading-hero:    var(--font-heading); @endif
+        @if ($shellApplyFooter)  --font-heading-footer:  var(--font-heading); @endif
+        @if ($shellApplyContent) --font-heading-content: var(--font-heading); @endif
+        @foreach ($shellTrackingRegions as $region => $emValue)
+            @if ($emValue !== '' && (float) $emValue !== 0.0) --font-heading-tracking-{{ $region }}: {{ $emValue }}em; @endif
+        @endforeach
+        font-feature-settings: "palt";
+    }
+    /* Hero gradient decorations use the operator's chosen tint. When
+       mode='none' both blurs vanish. When a hero background image is
+       set the real hero also skips the decoration (image wins), so the
+       preview mirrors that here. Otherwise each blur is redrawn on the
+       shared --pv-gradient-color with the same alpha the static rules
+       had (30%). !important on the color keeps the light/dark theme
+       rules above from clobbering it. */
+    @if ($shellGradientMode === 'none' || $shellHeroBgPath)
+        #preview-inner .pv-glow-1,
+        #preview-inner .pv-glow-2 { display: none !important; }
+    @else
+        #preview-inner .pv-glow-1,
+        #preview-inner .pv-glow-2 { background: color-mix(in srgb, var(--pv-gradient-color) 30%, transparent) !important; }
+    @endif
+    /* Font-family + per-region tracking, mirroring the live layout rules. */
+    #preview-inner .pv-app-name    { font-family: var(--font-heading-header, inherit); letter-spacing: var(--font-heading-tracking-header, normal); }
+    #preview-inner .pv-title span  { font-family: var(--font-heading-hero, inherit);   letter-spacing: var(--font-heading-tracking-hero, normal); }
+    #preview-inner .pv-footer-title { font-family: var(--font-heading-footer, inherit); letter-spacing: var(--font-heading-tracking-footer, normal); }
+    #preview-inner h1,
+    #preview-inner h2,
+    #preview-inner h3,
+    #preview-inner h4 { font-family: var(--font-heading-content, inherit); letter-spacing: var(--font-heading-tracking-content, normal); }
+</style>
 
 <div x-data="{ ...previewContainerMixin(), previewDevice: 'desktop', previewDeviceWidth: 1440 }" x-init="initPreviewContainer()">
     <x-admin.theme-preview-container
