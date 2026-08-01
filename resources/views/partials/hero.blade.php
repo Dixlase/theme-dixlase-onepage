@@ -54,16 +54,21 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $heroForegroundPath = $themeSettings->heroForegroundPath ?? null;
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
 
-    // Hero radial gradient controls (see plumbing in SP / Request /
-    // Controller / Seeder). Mode 'none' skips the gradient div
-    // entirely; 'primary' uses the primary color; 'custom' uses the
-    // operator-picked color. Fallback validation defaults to 6-hex
-    // string via the Request rule, so the value can be interpolated
-    // into the inline style directly.
+    // Hero gradient controls (see plumbing in SP / Request /
+    // Controller / Seeder). Three knobs:
+    //   $heroGradientMode  = color source; 'none' skips the div entirely.
+    //   $heroGradientColor = resolved 6-hex tint.
+    //   $heroGradientShape = 'radial' (default) | 'linear-vertical'.
+    // All Request-validated so the values can be interpolated into
+    // the inline style directly.
     $heroGradientMode = $themeSettings->hero_gradient_mode ?? 'primary';
     $heroGradientColor = $heroGradientMode === 'custom'
         ? ($themeSettings->hero_gradient_color ?? '#3b82f6')
         : $primaryColor;
+    $heroGradientShape = $themeSettings->hero_gradient_shape ?? 'radial';
+    $heroGradientCss = $heroGradientShape === 'linear-vertical'
+        ? "linear-gradient(to bottom, {$heroGradientColor}80 0%, transparent 100%)"
+        : "radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, {$heroGradientColor}80 0%, transparent 65%)";
 
     // When the admin bar is present (member is logged in), it occupies
     // ~48px (Tailwind `top-12` = 3rem) at the top of the viewport.
@@ -125,7 +130,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
          8 桁 HEX 末尾 `80` = α 50%。 --}}
     @if(empty($heroBackgroundPath) && empty($heroVideoPath) && $heroGradientMode !== 'none')
         <div class="absolute inset-0 z-0 pointer-events-none"
-             style="background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, {{ $heroGradientColor }}80 0%, transparent 65%);"></div>
+             style="background: {{ $heroGradientCss }};"></div>
     @endif
 
     {{-- 背景画像（動画未設定 or 動画再生不可時のフォールバック） --}}

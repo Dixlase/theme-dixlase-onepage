@@ -76,6 +76,9 @@ class UpdateThemeSettingsRequest extends FormRequest
             // 6-digit hex — narrow regex keeps CSS injection out of the
             // style attribute this value is interpolated into.
             'hero_gradient_color' => 'nullable|regex:/^#[0-9a-fA-F]{6}$/',
+            // Gradient shape. The whitelist keeps future values slot-in
+            // ready without opening up the string field.
+            'hero_gradient_shape' => 'nullable|in:radial,linear-vertical',
 
             // Footer
             'footer_copyright' => 'nullable|string|max:500',

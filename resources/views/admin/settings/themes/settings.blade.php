@@ -140,12 +140,16 @@ function themeSettingsEditor() {
         heroButtonSecondaryEnabled: @json(old('hero_button_secondary_enabled', $settings->hero_button_secondary_enabled ?? '1')),
         heroButtonSecondaryTarget: @json(old('hero_button_secondary_target', $settings->hero_button_secondary_target ?? '_self')),
 
-        // Hero radial gradient — mode + custom-color pair. Mode value is
-        // one of 'primary' / 'custom' / 'none'; the color is only used
-        // when mode='custom' but is kept in state at all times so the
-        // last-selected shade returns when the operator toggles back.
+        // Hero gradient — three independent knobs:
+        //   mode  = color source ('primary' | 'custom' | 'none')
+        //   color = hex used when mode='custom'
+        //   shape = 'radial' | 'linear-vertical'
+        // All three are kept in Alpine state at all times so the last-
+        // selected shade / shape returns when the operator toggles
+        // back through 'none'.
         heroGradientMode: @json(old('hero_gradient_mode', $settings->hero_gradient_mode ?? 'primary')),
         heroGradientColor: @json(old('hero_gradient_color', $settings->hero_gradient_color ?? '#3b82f6')),
+        heroGradientShape: @json(old('hero_gradient_shape', $settings->hero_gradient_shape ?? 'radial')),
 
         // Footer settings
         // The `© <year>` prefix is rendered automatically at display time
@@ -232,11 +236,18 @@ function themeSettingsEditor() {
         },
 
         // Hero gradient inline style. Mirrors partials/hero.blade.php:
-        // radial-gradient in the resolved tint at 50% alpha (the trailing
-        // '80' = 8-hex alpha suffix).
+        // the resolved tint at 50% alpha (the trailing '80' = 8-hex
+        // alpha suffix). Shape switches between the classic centred
+        // radial glow and a top-heavy linear fade — kept in lockstep
+        // with the PHP resolver in partials/hero.blade.php.
         heroGradientStyle() {
             const color = this.heroGradientMode === 'custom' ? this.heroGradientColor : this.primaryColor;
-            return 'background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, ' + color + '80 0%, transparent 65%);';
+            const tint = color + '80';
+            if (this.heroGradientShape === 'linear-vertical') {
+                return 'background: linear-gradient(to bottom, ' + tint + ' 0%, transparent 100%);';
+            }
+            // Default / 'radial'
+            return 'background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, ' + tint + ' 0%, transparent 65%);';
         },
 
         init() {
