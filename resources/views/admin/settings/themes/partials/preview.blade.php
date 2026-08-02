@@ -187,14 +187,22 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     </div>
                 </template>
 
-                {{-- 背景なし時の中央正円放射グラデーション、viewport で
-                     スケール（フロントと 1:1）。テーマ設定の hero_gradient_mode
-                     が 'none' の場合は描画スキップ、'custom' の場合は
-                     hero_gradient_color を使う。ロジックは Alpine helper
-                     (showHeroGradient / heroGradientStyle) に集約。 --}}
+                {{-- 背景画像・動画なしのときの hero 背景塗り。shape 別
+                     (radial / linear-vertical / solid) + mode 別 (primary
+                     auto endpoint / custom 2-色) を Alpine helper
+                     (heroFillStyleRules) が light/dark ペアの CSS 文字列
+                     として返し、直下の <style x-text> に埋め込む。div は
+                     class のみで .pv-hero-fill を持ち、data-preview-theme
+                     切替でルールがそのまま効く (Alpine :style を要素ごとに
+                     貼らなくて済むので mock の DOM が軽い)。 --}}
                 <template x-if="showHeroGradient()">
-                    <div class="absolute inset-0 z-0 pointer-events-none" :style="heroGradientStyle()"></div>
+                    <div class="pv-hero-fill absolute inset-0 z-0 pointer-events-none"></div>
                 </template>
+                {{-- Per-render stylesheet driven by Alpine — updates on
+                     every gradient-related state change (shape / mode /
+                     color / color2 / primaryColor). Emitted inside the
+                     hero <section> so it colocates with the div it targets. --}}
+                <style x-text="heroFillStyleRules()"></style>
 
                 {{-- コンテンツ --}}
                 <div class="container mx-auto px-8 py-20 relative z-10">
