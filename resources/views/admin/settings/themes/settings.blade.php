@@ -140,15 +140,19 @@ function themeSettingsEditor() {
         heroButtonSecondaryEnabled: @json(old('hero_button_secondary_enabled', $settings->hero_button_secondary_enabled ?? '1')),
         heroButtonSecondaryTarget: @json(old('hero_button_secondary_target', $settings->hero_button_secondary_target ?? '_self')),
 
-        // Hero gradient — three independent knobs:
-        //   mode  = color source ('primary' | 'custom' | 'none')
-        //   color = hex used when mode='custom'
-        //   shape = 'radial' | 'linear-vertical'
-        // All three are kept in Alpine state at all times so the last-
-        // selected shade / shape returns when the operator toggles
-        // back through 'none'.
+        // Hero background fill — four independent knobs:
+        //   mode   = 'primary' | 'custom'  (color source; legacy 'none'
+        //             from the pre-restructure era is normalised at save
+        //             + at render, but Alpine holds whatever DB gave us).
+        //   color  = hex, custom mode's start / centre / solid color
+        //   color2 = hex, custom mode's outside / bottom endpoint
+        //             (ignored when shape='solid')
+        //   shape  = 'radial' | 'linear-vertical' | 'solid'
+        // All held in Alpine state at all times so the last-selected
+        // shade / shape returns when the operator flips modes / shapes.
         heroGradientMode: @json(old('hero_gradient_mode', $settings->hero_gradient_mode ?? 'primary')),
         heroGradientColor: @json(old('hero_gradient_color', $settings->hero_gradient_color ?? '#3b82f6')),
+        heroGradientColor2: @json(old('hero_gradient_color_2', $settings->hero_gradient_color_2 ?? '#ffffff')),
         heroGradientShape: @json(old('hero_gradient_shape', $settings->hero_gradient_shape ?? 'radial')),
 
         // Footer settings
@@ -229,25 +233,51 @@ function themeSettingsEditor() {
             return style;
         },
 
-        // Hero gradient template gate. Hidden when a hero background image
-        // or video is set (both win) or the gradient mode is 'none'.
+        // Hero fill gate. With the restructure there is no longer an
+        // 'off entirely' state — 'solid' IS the "no gradient" case,
+        // still rendered as a plain color fill. Only skip when a hero
+        // background image or video takes over.
         showHeroGradient() {
-            return !this.heroBgPreviewUrl && !this.heroVideoPreviewUrl && this.heroGradientMode !== 'none';
+            return !this.heroBgPreviewUrl && !this.heroVideoPreviewUrl;
         },
 
-        // Hero gradient inline style. Mirrors partials/hero.blade.php:
-        // the resolved tint at 50% alpha (the trailing '80' = 8-hex
-        // alpha suffix). Shape switches between the classic centred
-        // radial glow and a top-heavy linear fade — kept in lockstep
-        // with the PHP resolver in partials/hero.blade.php.
-        heroGradientStyle() {
-            const color = this.heroGradientMode === 'custom' ? this.heroGradientColor : this.primaryColor;
-            const tint = color + '80';
-            if (this.heroGradientShape === 'linear-vertical') {
-                return 'background: linear-gradient(to bottom, ' + tint + ' 0%, transparent 100%);';
+        // Resolve the fill CSS for a given preview theme ('light' | 'dark').
+        // Mirrors the PHP resolver in partials/hero.blade.php:
+        //   mode='primary'  → color1 = primaryColor, color2 = per-theme body bg
+        //   mode='custom'   → color1 + color2 both operator-picked
+        //   shape='solid'   → color1 only, no gradient
+        // No alpha suffix — 2-color pair gives an explicit gradient that
+        // matches what the operator picked. Legacy mode='none' is
+        // normalised to primary+solid for backward compat.
+        resolveHeroFillCss(themeMode) {
+            const isDark = themeMode === 'dark';
+            let mode = this.heroGradientMode;
+            let shape = this.heroGradientShape;
+            if (mode === 'none') { mode = 'primary'; shape = 'solid'; }
+
+            const color1 = mode === 'custom' ? this.heroGradientColor : this.primaryColor;
+            const color2 = mode === 'custom'
+                ? this.heroGradientColor2
+                : (isDark ? '#030712' : '#f3f4f6'); // Tailwind gray-950 / gray-100 — matches body bg
+
+            switch (shape) {
+                case 'solid':
+                    return color1;
+                case 'linear-vertical':
+                    return 'linear-gradient(to bottom, ' + color1 + ' 0%, ' + color2 + ' 100%)';
+                case 'radial':
+                default:
+                    return 'radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, ' + color1 + ' 0%, ' + color2 + ' 65%)';
             }
-            // Default / 'radial'
-            return 'background: radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, ' + tint + ' 0%, transparent 65%);';
+        },
+
+        // Emit both light + dark rules as a single stylesheet string.
+        // Bound via x-text on a <style> element in the preview mock so
+        // the fill reactively updates on every state change without any
+        // per-element :style binding.
+        heroFillStyleRules() {
+            return '#preview-inner[data-preview-theme="light"] .pv-hero-fill { background: ' + this.resolveHeroFillCss('light') + '; }\n'
+                + '#preview-inner[data-preview-theme="dark"]  .pv-hero-fill { background: ' + this.resolveHeroFillCss('dark') + '; }';
         },
 
         init() {
