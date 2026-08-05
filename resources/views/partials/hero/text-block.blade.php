@@ -11,13 +11,13 @@
      glyphs across wrapped lines so the visible break falls at a
      punctuation pause (e.g. ja: "、" "。") rather than mid-phrase
      greedy wrapping. --}}
-<h1 class="font-heading-hero text-2xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line"
+<h1 class="font-heading-hero text-2xl md:text-6xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight text-gray-900 dark:text-white whitespace-pre-line"
     style="text-wrap: balance;">
     {{ $heroMainTitle }}
 </h1>
 
 @if($heroSubTitle)
-    <p class="text-base md:text-lg text-gray-600 dark:text-gray-300 mb-6 md:mb-8 max-w-lg mx-auto whitespace-pre-line"
+    <p class="text-base md:text-lg text-gray-600 dark:text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto whitespace-pre-line"
        style="text-wrap: balance;">
         {{ $heroSubTitle }}
     </p>
