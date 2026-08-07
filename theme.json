@@ -26,7 +26,7 @@
             "front/scss/style.scss"
         ]
     },
-    "screenshot": "screenshot.png",
+    "thumbnail": "resources/assets/thumbnail.png",
     "namespace": "Themes\\DixlaseOnePage",
     "providers": [
         "Themes\\DixlaseOnePage\\App\\Providers\\DixlaseOnePageServiceProvider"
