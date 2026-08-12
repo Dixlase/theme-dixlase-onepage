@@ -63,11 +63,11 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_main_title' => 'required|string|max:255',
             'hero_sub_title' => 'nullable|string|max:1000',
             'hero_button_text' => 'nullable|string|max:100',
-            'hero_button_link' => 'nullable|string|max:500',
+            'hero_button_link' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
             'hero_button_enabled' => 'nullable|in:0,1',
             'hero_button_target' => 'nullable|in:_self,_blank',
             'hero_button_secondary_text' => 'nullable|string|max:100',
-            'hero_button_secondary_link' => 'nullable|string|max:500',
+            'hero_button_secondary_link' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
             'hero_button_secondary_enabled' => 'nullable|in:0,1',
             'hero_button_secondary_target' => 'nullable|in:_self,_blank',
 
@@ -151,6 +151,49 @@ class UpdateThemeSettingsRequest extends FormRequest
             // DixlaseMultilingual integration
             'multilingual_switcher_enabled' => 'nullable|in:0,1',
         ];
+    }
+
+    /**
+     * Reject link schemes that execute rather than navigate.
+     *
+     * The hero button links are rendered into `href="{{ ... }}"` on the front
+     * page, which every unauthenticated visitor sees. Blade escapes the HTML
+     * but does nothing about the scheme, so `javascript:` runs for anyone who
+     * clicks the call to action. These fields were validated only as
+     * `nullable|string|max:500`.
+     *
+     * Deliberately not FILTER_VALIDATE_URL: it accepts
+     * `javascript://%0aalert(1)` (verified on PHP 8.3), which is exactly the
+     * payload this needs to stop. Control characters are stripped before the
+     * scheme is read because browsers ignore them inside one -- `java\tscript:`
+     * navigates just like `javascript:`.
+     */
+    protected function safeLinkRule(): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail): void {
+            if (! is_string($value) || trim($value) === '') {
+                return;
+            }
+
+            $candidate = preg_replace('/[\x00-\x20]/', '', trim($value)) ?? '';
+
+            // No scheme: a relative path, query or fragment. Safe.
+            // `//host` is the exception -- it inherits the page scheme and
+            // leaves the origin, so it is treated as an absolute link.
+            if (str_starts_with($candidate, '//')) {
+                $fail(__('themes::admin.validation.link_scheme_not_allowed'));
+
+                return;
+            }
+
+            if (preg_match('/^([A-Za-z][A-Za-z0-9+.\-]*):/', $candidate, $matches) !== 1) {
+                return;
+            }
+
+            if (! in_array(strtolower($matches[1]), ['http', 'https', 'mailto', 'tel'], true)) {
+                $fail(__('themes::admin.validation.link_scheme_not_allowed'));
+            }
+        };
     }
 
     /**
