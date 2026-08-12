@@ -64,6 +64,8 @@ class ThemeSettingsSeeder extends Seeder
             'hero_gradient_mode' => 'primary',
             'hero_gradient_color' => '#3b82f6',
             'hero_gradient_color_2' => '#ffffff',
+            'hero_gradient_color_dark' => null,
+            'hero_gradient_color_2_dark' => null,
             'hero_gradient_shape' => 'radial',
 
             // Footer

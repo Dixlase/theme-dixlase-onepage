@@ -80,6 +80,10 @@ class UpdateThemeSettingsRequest extends FormRequest
             // style attribute these values are interpolated into.
             'hero_gradient_color' => 'nullable|regex:/^#[0-9a-fA-F]{6}$/',
             'hero_gradient_color_2' => 'nullable|regex:/^#[0-9a-fA-F]{6}$/',
+            // Dark-mode overrides (per-mode custom colors). Empty → dark
+            // resolver falls back to the light value.
+            'hero_gradient_color_dark' => 'nullable|regex:/^#[0-9a-fA-F]{6}$/',
+            'hero_gradient_color_2_dark' => 'nullable|regex:/^#[0-9a-fA-F]{6}$/',
             // Shape whitelist — extendable to 'linear-horizontal', 'conic'
             // etc. later without opening the string.
             'hero_gradient_shape' => 'nullable|in:radial,linear-vertical,solid',

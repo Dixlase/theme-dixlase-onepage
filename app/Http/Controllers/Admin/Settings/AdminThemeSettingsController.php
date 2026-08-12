@@ -65,6 +65,8 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_gradient_mode',
             'hero_gradient_color',
             'hero_gradient_color_2',
+            'hero_gradient_color_dark',
+            'hero_gradient_color_2_dark',
             'hero_gradient_shape',
             'footer_links',
             'footer_copyright',
@@ -118,6 +120,8 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_gradient_mode' => 'primary',
             'hero_gradient_color' => '#3b82f6',
             'hero_gradient_color_2' => '#ffffff',
+            'hero_gradient_color_dark' => null,
+            'hero_gradient_color_2_dark' => null,
             'hero_gradient_shape' => 'radial',
             'footer_links' => '[]',
             // `© <year>` is auto-rendered (current year) at display time;

@@ -81,21 +81,35 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         $heroGradientShape = 'solid';
     }
 
-    $heroGradientColor = $heroGradientMode === 'custom'
-        ? ($themeSettings->hero_gradient_color ?? '#3b82f6')
-        : $primaryColor;
-    $heroGradientColor2 = $heroGradientMode === 'custom'
-        ? ($themeSettings->hero_gradient_color_2 ?? '#ffffff')
-        : null; // primary mode: computed per-appearance below
-
     // Endpoint colors for mode='primary'. Match the body bg tokens
     // (bg-gray-100 light / bg-gray-950 dark) so the hero fills read as
     // a continuation of the page rather than a boxed panel.
     $heroPrimaryEndpointLight = '#f3f4f6'; // Tailwind gray-100 = body bg (light)
     $heroPrimaryEndpointDark  = '#030712'; // Tailwind gray-950 = body bg (dark)
 
-    $heroColor2Light = $heroGradientColor2 ?? $heroPrimaryEndpointLight;
-    $heroColor2Dark  = $heroGradientColor2 ?? $heroPrimaryEndpointDark;
+    // Custom mode has per-appearance color pairs since operators
+    // routinely want a different hero tint in dark mode than in light
+    // (e.g. navy-to-white in light + navy-to-navy in dark). The _dark
+    // fields fall back to the light values when empty for backward
+    // compatibility with sites saved before the per-mode split landed.
+    $heroCustomColor1Light = $themeSettings->hero_gradient_color ?? '#3b82f6';
+    $heroCustomColor2Light = $themeSettings->hero_gradient_color_2 ?? '#ffffff';
+    $heroCustomColor1Dark  = $themeSettings->hero_gradient_color_dark ?: $heroCustomColor1Light;
+    $heroCustomColor2Dark  = $themeSettings->hero_gradient_color_2_dark ?: $heroCustomColor2Light;
+
+    if ($heroGradientMode === 'custom') {
+        $heroC1Light = $heroCustomColor1Light;
+        $heroC2Light = $heroCustomColor2Light;
+        $heroC1Dark  = $heroCustomColor1Dark;
+        $heroC2Dark  = $heroCustomColor2Dark;
+    } else {
+        // primary mode: color1 = --color-primary in both modes,
+        // color2 auto-picks the body bg per appearance.
+        $heroC1Light = $primaryColor;
+        $heroC2Light = $heroPrimaryEndpointLight;
+        $heroC1Dark  = $primaryColor;
+        $heroC2Dark  = $heroPrimaryEndpointDark;
+    }
 
     // Build the two background strings (light + dark).
     $heroBgBuilder = function (string $shape, string $c1, string $c2): string {
@@ -105,8 +119,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             default => "radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, {$c1} 0%, {$c2} 65%)",
         };
     };
-    $heroBgLight = $heroBgBuilder($heroGradientShape, $heroGradientColor, $heroColor2Light);
-    $heroBgDark  = $heroBgBuilder($heroGradientShape, $heroGradientColor, $heroColor2Dark);
+    $heroBgLight = $heroBgBuilder($heroGradientShape, $heroC1Light, $heroC2Light);
+    $heroBgDark  = $heroBgBuilder($heroGradientShape, $heroC1Dark, $heroC2Dark);
 
     // When the admin bar is present (member is logged in), it occupies
     // ~48px (Tailwind `top-12` = 3rem) at the top of the viewport.

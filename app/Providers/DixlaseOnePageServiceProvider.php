@@ -243,8 +243,14 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             // by the front resolver to shape='solid' + mode='primary'
             // (see partials/hero.blade.php).
             'hero_gradient_mode' => 'primary',
+            // Light-mode colors (default for both modes; dark can override).
             'hero_gradient_color' => '#3b82f6',
             'hero_gradient_color_2' => '#ffffff',
+            // Dark-mode overrides. Blank / null → fall back to the light
+            // value at resolve time (backward-compatible for sites that
+            // saved custom colors before per-mode split landed).
+            'hero_gradient_color_dark' => null,
+            'hero_gradient_color_2_dark' => null,
             'hero_gradient_shape' => 'radial',
             'footer_links' => '[]',
             // The footer render strips any leading `© YYYY ` prefix and
