@@ -271,4 +271,8 @@ return [
             'sidebar_close' => '設定パネルを閉じる',
         ],
     ],
+
+    'validation' => [
+        'link_scheme_not_allowed' => 'このリンクは許可されていないスキームを使用しています。http、https、mailto、tel、または / で始まるパスを指定してください。',
+    ],
 ];

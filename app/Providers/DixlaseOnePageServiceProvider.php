@@ -398,9 +398,22 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             return null;
         }
 
-        // 既に完全なURLの場合はそのまま返す
+        // Return an already-complete URL as-is, but only when it is one the
+        // browser will navigate to rather than execute.
+        //
+        // FILTER_VALIDATE_URL alone is not that check: it accepts
+        // `javascript://%0aalert(1)` (verified on PHP 8.3). Since the result
+        // goes straight into `href="{{ $snsLinks[...] }}"` in the footer of
+        // every page, that early return handed an executable link to every
+        // visitor. Scheme is read after stripping control characters, which
+        // browsers ignore inside a scheme.
         if (filter_var($value, FILTER_VALIDATE_URL)) {
-            return $value;
+            $scheme = strtolower((string) parse_url(
+                preg_replace('/[\x00-\x20]/', '', $value) ?? '',
+                PHP_URL_SCHEME
+            ));
+
+            return in_array($scheme, ['http', 'https'], true) ? $value : null;
         }
 
         // プラットフォームごとのURL生成
