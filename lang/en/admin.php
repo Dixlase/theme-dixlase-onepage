@@ -271,4 +271,8 @@ return [
             'sidebar_close' => 'Close settings panel',
         ],
     ],
+
+    'validation' => [
+        'link_scheme_not_allowed' => 'This link uses a scheme that is not allowed. Use http, https, mailto, tel, or a path beginning with /.',
+    ],
 ];
