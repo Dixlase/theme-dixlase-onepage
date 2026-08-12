@@ -153,6 +153,11 @@ function themeSettingsEditor() {
         heroGradientMode: @json(old('hero_gradient_mode', $settings->hero_gradient_mode ?? 'primary')),
         heroGradientColor: @json(old('hero_gradient_color', $settings->hero_gradient_color ?? '#3b82f6')),
         heroGradientColor2: @json(old('hero_gradient_color_2', $settings->hero_gradient_color_2 ?? '#ffffff')),
+        // Dark-mode overrides. Empty string ('') when unset — the front
+        // resolver falls back to the light value (matches the PHP resolver
+        // in partials/hero.blade.php).
+        heroGradientColorDark: @json(old('hero_gradient_color_dark', $settings->hero_gradient_color_dark ?? '')),
+        heroGradientColor2Dark: @json(old('hero_gradient_color_2_dark', $settings->hero_gradient_color_2_dark ?? '')),
         heroGradientShape: @json(old('hero_gradient_shape', $settings->hero_gradient_shape ?? 'radial')),
 
         // Footer settings
@@ -255,10 +260,21 @@ function themeSettingsEditor() {
             let shape = this.heroGradientShape;
             if (mode === 'none') { mode = 'primary'; shape = 'solid'; }
 
-            const color1 = mode === 'custom' ? this.heroGradientColor : this.primaryColor;
-            const color2 = mode === 'custom'
-                ? this.heroGradientColor2
-                : (isDark ? '#030712' : '#f3f4f6'); // Tailwind gray-950 / gray-100 — matches body bg
+            // Custom mode carries per-appearance color pairs. Empty dark
+            // → fall back to the light value (matches the PHP resolver
+            // and keeps sites saved before the per-mode split working).
+            let color1, color2;
+            if (mode === 'custom') {
+                color1 = isDark
+                    ? (this.heroGradientColorDark || this.heroGradientColor)
+                    : this.heroGradientColor;
+                color2 = isDark
+                    ? (this.heroGradientColor2Dark || this.heroGradientColor2)
+                    : this.heroGradientColor2;
+            } else {
+                color1 = this.primaryColor;
+                color2 = isDark ? '#030712' : '#f3f4f6'; // Tailwind gray-950 / gray-100 — matches body bg
+            }
 
             switch (shape) {
                 case 'solid':

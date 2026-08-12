@@ -359,6 +359,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         <input type="hidden" name="hero_gradient_mode" :value="heroGradientMode">
         <input type="hidden" name="hero_gradient_color" :value="heroGradientColor">
         <input type="hidden" name="hero_gradient_color_2" :value="heroGradientColor2">
+        {{-- Dark-mode overrides. Empty string when unset — the front
+             resolver falls back to the light value (backward-compat
+             for sites saved before per-mode split). --}}
+        <input type="hidden" name="hero_gradient_color_dark" :value="heroGradientColorDark">
+        <input type="hidden" name="hero_gradient_color_2_dark" :value="heroGradientColor2Dark">
         <input type="hidden" name="hero_gradient_shape" :value="heroGradientShape">
 
         {{-- Color mode picker (2 buttons — primary / custom) --}}
@@ -382,45 +387,80 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
 
         {{-- Custom color inputs — visible only in custom mode.
-             Number of slots depends on shape:
-               solid           → 1 slot (color1 only)
-               radial / linear → 2 slots (color1 + color2) --}}
+             Each color slot has a light + dark input pair; the front
+             resolver in partials/hero.blade.php picks per appearance
+             mode. Empty dark → falls back to the light value at render
+             time. Number of slots depends on shape:
+               solid           → 1 slot × 2 modes = 2 inputs
+               radial / linear → 2 slots × 2 modes = 4 inputs --}}
         <div x-show="heroGradientMode === 'custom'" x-cloak class="mt-3">
-            {{-- Color 1 (center / top / solid fill) --}}
-            <label for="hero_gradient_color_picker" class="block text-xs text-gray-600 dark:text-gray-400 mb-1"
+            {{-- Color 1 (center / top / solid fill) — light + dark --}}
+            <div class="text-xs text-gray-600 dark:text-gray-400 mb-1"
                 x-text="heroGradientShape === 'solid'
                     ? '{{ __('themes::admin.settings.hero.gradient.custom_color_solid_label') }}'
                     : '{{ __('themes::admin.settings.hero.gradient.custom_color_label') }}'">
-            </label>
-            <div class="flex items-center gap-2">
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] text-gray-500 dark:text-gray-400 w-8 shrink-0">{{ __('themes::admin.settings.hero.gradient.custom_color_light') }}</span>
                 <input type="color"
                     id="hero_gradient_color_picker"
                     x-model="heroGradientColor"
-                    class="h-8 w-12 rounded border border-gray-300 dark:border-gray-500 cursor-pointer bg-transparent">
+                    class="h-7 w-10 rounded border border-gray-300 dark:border-gray-500 cursor-pointer bg-transparent">
                 <input type="text"
                     x-model="heroGradientColor"
                     pattern="^#[0-9a-fA-F]{6}$"
                     maxlength="7"
                     class="input-common flex-1 p-1 text-xs font-mono bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded dark:text-white">
             </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] text-gray-500 dark:text-gray-400 w-8 shrink-0">{{ __('themes::admin.settings.hero.gradient.custom_color_dark') }}</span>
+                <input type="color"
+                    id="hero_gradient_color_dark_picker"
+                    :value="heroGradientColorDark || heroGradientColor"
+                    @input="heroGradientColorDark = $event.target.value"
+                    class="h-7 w-10 rounded border border-gray-300 dark:border-gray-500 cursor-pointer bg-transparent">
+                <input type="text"
+                    x-model="heroGradientColorDark"
+                    :placeholder="heroGradientColor"
+                    pattern="^#[0-9a-fA-F]{6}$"
+                    maxlength="7"
+                    class="input-common flex-1 p-1 text-xs font-mono bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded dark:text-white">
+            </div>
 
-            {{-- Color 2 (outside / bottom) — hidden for solid --}}
-            <div x-show="heroGradientShape !== 'solid'" x-cloak class="mt-2">
-                <label for="hero_gradient_color_2_picker" class="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+            {{-- Color 2 (outside / bottom) — hidden for solid. Light + dark. --}}
+            <div x-show="heroGradientShape !== 'solid'" x-cloak class="mt-3">
+                <div class="text-xs text-gray-600 dark:text-gray-400 mb-1">
                     {{ __('themes::admin.settings.hero.gradient.custom_color_2_label') }}
-                </label>
-                <div class="flex items-center gap-2">
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400 w-8 shrink-0">{{ __('themes::admin.settings.hero.gradient.custom_color_light') }}</span>
                     <input type="color"
                         id="hero_gradient_color_2_picker"
                         x-model="heroGradientColor2"
-                        class="h-8 w-12 rounded border border-gray-300 dark:border-gray-500 cursor-pointer bg-transparent">
+                        class="h-7 w-10 rounded border border-gray-300 dark:border-gray-500 cursor-pointer bg-transparent">
                     <input type="text"
                         x-model="heroGradientColor2"
                         pattern="^#[0-9a-fA-F]{6}$"
                         maxlength="7"
                         class="input-common flex-1 p-1 text-xs font-mono bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded dark:text-white">
                 </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400 w-8 shrink-0">{{ __('themes::admin.settings.hero.gradient.custom_color_dark') }}</span>
+                    <input type="color"
+                        id="hero_gradient_color_2_dark_picker"
+                        :value="heroGradientColor2Dark || heroGradientColor2"
+                        @input="heroGradientColor2Dark = $event.target.value"
+                        class="h-7 w-10 rounded border border-gray-300 dark:border-gray-500 cursor-pointer bg-transparent">
+                    <input type="text"
+                        x-model="heroGradientColor2Dark"
+                        :placeholder="heroGradientColor2"
+                        pattern="^#[0-9a-fA-F]{6}$"
+                        maxlength="7"
+                        class="input-common flex-1 p-1 text-xs font-mono bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded dark:text-white">
+                </div>
             </div>
+
+            <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.hero.gradient.custom_color_dark_hint') }}</p>
         </div>
 
         {{-- Shape picker (radial / linear-vertical / solid) --}}
