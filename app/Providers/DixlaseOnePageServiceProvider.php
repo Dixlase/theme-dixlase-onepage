@@ -123,9 +123,24 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
                 // ThemeSettingモデルで全設定を取得
                 $themeSettings = ThemeSetting::getAllAsObject();
 
-                // 設定が空の場合はデフォルト値を使用
-                if (! isset($themeSettings->hero_main_title)) {
-                    $themeSettings = $this->getDefaultThemeSettings();
+                // Merge defaults for any key the DB does not yet carry.
+                // Critical for the update path: when a new theme release
+                // introduces a setting field (e.g. hero_gradient_color_dark
+                // in v0.1.2), existing installs have no corresponding
+                // DB row, so `getAllAsObject()` returns a stdClass
+                // missing that property. Accessing it in a Blade view
+                // via `->prop ?: fallback` then triggers a PHP 8
+                // "Undefined property" warning that production error
+                // handling escalates to a 500. Merging defaults here
+                // means the update flow does not require re-running
+                // the seeder against an already-populated table.
+                // property_exists() (not isset()) so an explicitly
+                // saved null value is not clobbered by the default.
+                $defaults = $this->getDefaultThemeSettings();
+                foreach ((array) $defaults as $key => $value) {
+                    if (! property_exists($themeSettings, $key)) {
+                        $themeSettings->{$key} = $value;
+                    }
                 }
 
                 // メディアオブジェクトとパスを取得して追加

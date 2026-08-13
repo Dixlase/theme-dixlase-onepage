@@ -92,10 +92,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // (e.g. navy-to-white in light + navy-to-navy in dark). The _dark
     // fields fall back to the light values when empty for backward
     // compatibility with sites saved before the per-mode split landed.
+    // `?? ''` before `?:` so an undefined property (e.g. right after
+    // updating from a version that predates these fields, if the SP
+    // defaults-merge somehow did not run) becomes an empty string
+    // rather than triggering a PHP 8 "Undefined property" warning
+    // that production error handling escalates to a 500. Empty
+    // string then falls back to the light value via the `?:` step,
+    // matching the original design intent.
     $heroCustomColor1Light = $themeSettings->hero_gradient_color ?? '#3b82f6';
     $heroCustomColor2Light = $themeSettings->hero_gradient_color_2 ?? '#ffffff';
-    $heroCustomColor1Dark  = $themeSettings->hero_gradient_color_dark ?: $heroCustomColor1Light;
-    $heroCustomColor2Dark  = $themeSettings->hero_gradient_color_2_dark ?: $heroCustomColor2Light;
+    $heroCustomColor1Dark  = ($themeSettings->hero_gradient_color_dark ?? '') ?: $heroCustomColor1Light;
+    $heroCustomColor2Dark  = ($themeSettings->hero_gradient_color_2_dark ?? '') ?: $heroCustomColor2Light;
 
     if ($heroGradientMode === 'custom') {
         $heroC1Light = $heroCustomColor1Light;
