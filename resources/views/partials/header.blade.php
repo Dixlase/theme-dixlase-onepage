@@ -357,16 +357,23 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     {{-- Mobile Drawer: x-teleport で body 直下に転送し stacking context を脱出 --}}
     <template x-teleport="body">
-        {{-- Mobile Drawer Overlay --}}
+        {{-- Mobile Drawer Overlay. Persistent visible state is encoded
+             in the base class (opacity + backdrop-blur-sm); Alpine
+             removes enter/enter-end classes once the transition ends,
+             so anything that must stay while the drawer is open MUST
+             live on the base element — otherwise it snaps off the
+             moment the animation finishes. Only enter-start / leave-end
+             define the animated-away state. `transition-all` covers the
+             backdrop-filter change so the blur animates in and out.
+             Same recipe as the core admin bar overlay (see
+             components/ui-admin-bar.blade.php). --}}
         <div
             x-show="mobileMenuOpen"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-[60] bg-black/50"
+            x-transition:enter="transition-all ease-out duration-300"
+            x-transition:enter-start="opacity-0 backdrop-blur-none"
+            x-transition:leave="transition-all ease-in duration-200"
+            x-transition:leave-end="opacity-0 backdrop-blur-none"
+            class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
             style="top: var(--front-banner-stack-height, {{ $stackHeightFallback }})"
             :class="{ 'lg:hidden': !forceHamburger }"
             x-cloak
