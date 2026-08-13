@@ -202,15 +202,6 @@ return [
             'help' => 'The language the hero text and other translatable settings are written in. The translation manager excludes this language from its selector, and the front renders the primary values directly for viewers in this language.',
         ],
 
-        // Multilingual switcher (DixlaseMultilingual integration)
-        'multilingual' => [
-            'title' => 'Multilingual switcher',
-            'switcher_label' => 'Show language switcher in header / footer',
-            'help' => 'Renders the language switcher in the header and footer when more than one locale is enabled. Picking the default locale jumps to the bare path (no locale prefix); picking another locale jumps to /{locale}/...',
-            'requires_plugin' => 'Install and enable the DixlaseMultilingual plugin to surface the switcher.',
-            'requires_enabled' => 'Enable multilingual in the plugin\'s settings to surface the switcher.',
-        ],
-
         // Plugin Integration
         'plugins' => [
             'menu' => [
