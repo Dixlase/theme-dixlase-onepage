@@ -37,6 +37,31 @@ const CSS_ENTRY = join(THEME_ROOT, 'resources/src/front/css/tailwind.css');
 // codebase, but they can balloon the scan time.
 const SKIP_DIR_NAMES = new Set(['node_modules', 'vendor', '.git', 'storage']);
 
+// Sources that are legitimately absent depending on where the build runs.
+//
+// Plugins are optional: an operator installs the ones they want, and the
+// core release build (`.github/workflows/release.yml`) runs `npm run build`
+// in a tree that contains the theme but no plugins at all. Treating those
+// as hard failures made the theme unbuildable outside a full development
+// checkout — a release build fails on ten paths that are *supposed* to be
+// missing there.
+//
+// A missing plugin still costs something: utilities used only in that
+// plugin's views will not be in the emitted CSS. That is reported as a
+// warning so it stays visible, rather than silently passing.
+// storage/ holds runtime content the site writes after installation (the
+// front page's editable HTML). A clean checkout has never had a request
+// served, so the directory does not exist yet — absent is the normal
+// state at build time, not a broken path.
+const OPTIONAL_SOURCE_PATTERNS = [
+    /(^|\/)plugins\//,
+    /(^|\/)storage\//,
+];
+
+function isOptionalSource(src) {
+    return OPTIONAL_SOURCE_PATTERNS.some((re) => re.test(src));
+}
+
 const EXTENSIONS_BY_PATTERN = {
     'blade.php': /\.blade\.php$/,
     js: /\.js$/,
@@ -190,6 +215,7 @@ function main() {
     console.log(`@source check for ${cssRelative}:`);
     let errors = 0;
     let warnings = 0;
+    let optional = 0;
     for (const r of results) {
         // ✗ — path does not exist (hard fail: definite typo or stale path)
         // ⚠ — path exists but 0 files matched (soft warn: empty subtree
@@ -198,7 +224,11 @@ function main() {
         // ✓ — path exists and at least one file matched
         let status;
         let note;
-        if (!r.exists) {
+        if (!r.exists && isOptionalSource(r.src)) {
+            status = '–';
+            note = '  (optional source not present in this tree — utilities used only there will be absent from the emitted CSS)';
+            optional++;
+        } else if (!r.exists) {
             status = '✗';
             note = '  (path does not exist)';
             errors++;
@@ -223,6 +253,12 @@ function main() {
         console.error('  trees will not round-trip into the emitted CSS. Fix the @source');
         console.error('  path or remove the directive.');
         process.exit(1);
+    }
+    if (optional > 0) {
+        console.log(`– ${optional} optional @source directive(s) are absent from this tree.`);
+        console.log('  Expected when building outside a full development checkout (the core');
+        console.log('  release build has no plugins/). Utilities used only in those views are');
+        console.log('  not in the emitted CSS — install the plugin and rebuild if you need them.');
     }
     if (warnings > 0) {
         console.log(`⚠ ${warnings} @source directive(s) matched zero files but the path exists — review whether they are still needed.`);
