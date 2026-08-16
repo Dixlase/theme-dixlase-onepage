@@ -17,7 +17,10 @@
     "autoload": {
         "psr-4": {
             "Dixlase\\Themes\\OnePage\\": "src/"
-        }
+        },
+        "files": [
+            "app/Helpers/DixlaseOnePageHelpers.php"
+        ]
     },
     "extra": {
         "dixlase": {
