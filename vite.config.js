@@ -2,10 +2,30 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
 export default defineConfig({
+    // Static files copied verbatim to outDir on every build. Vite treats
+    // the contents of this directory as "assets that ship with the theme
+    // but aren't part of the build graph" — perfect fit for the hand-
+    // authored theme thumbnail that would otherwise be wiped by
+    // `emptyOutDir: true` below.
+    //
+    // Before this option existed in the theme's vite config, thumbnail.png
+    // lived directly at `resources/assets/thumbnail.png` and .gitignore
+    // carried a one-file exception (`!/resources/assets/thumbnail.*`) to
+    // keep it tracked. Every `npm run build` on a clean checkout deleted
+    // it — the core release CI hit this. `publicDir` fixes it by making
+    // the source location distinct from the output location: source
+    // stays under `resources/public/`, vite copies it into
+    // `resources/assets/` alongside the built CSS/JS at build time, and
+    // the runtime path `resources/assets/thumbnail.png` (which core's
+    // ExtensionCardPresenter probes) is unchanged.
+    publicDir: resolve(__dirname, 'resources/public'),
+
     build: {
         // ビルド出力先（コア側がシンボリックリンクで public/assets/themes/DixlaseOnePage として公開する）
         outDir: resolve(__dirname, 'resources/assets'),
         // ビルドごとに出力先をクリアして残骸ファイルを排除する
+        // (thumbnail.png は `publicDir` 経由で毎ビルド copy されるので
+        // wipe されても復活する)
         emptyOutDir: true,
 
         // ソースマップ
