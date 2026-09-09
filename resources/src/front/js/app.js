@@ -150,3 +150,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Alpine.js はコア側で既に起動済みのため、ここでは起動しない
 // （common/js/app.js で Alpine.start() が呼ばれている）
+
+// Sentinel marker for theme update verification. The sandbox greps for this
+// string in the built resources/assets/js/app.js to confirm that a theme
+// update actually replaces the built front-end assets, not just theme.json
+// and the source tree.
+//
+// v0.1.4 (the baseline) ships no marker at all, so the assertion pair is
+// "absent before the update, present after it" — and rolling back restores
+// the v0.1.4 build, which makes the marker disappear again rather than
+// revert to an older value. Harmless in production.
+window.DixlaseOnePage = window.DixlaseOnePage || {};
+window.DixlaseOnePage.buildMarker = 'DIXLASE_ONEPAGE_BUILD_MARKER:0.1.5';
