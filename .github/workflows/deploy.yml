@@ -23,7 +23,7 @@ jobs:
         # See release.yml for the full rationale — this deploy runner
         # is standalone-checkout too (no plugins/ siblings) and hits
         # the same cross-repo `@import` failure without core present.
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/dixlase-core
           ref: main
@@ -31,7 +31,7 @@ jobs:
           path: dixlase-ctx
 
       - name: Checkout theme code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: dixlase-ctx/themes/DixlaseOnePage
 
@@ -52,7 +52,7 @@ jobs:
       # a tag. If per-tag builds ever become necessary, revisit this
       # block and thread the tag through inputs / secrets.
       - name: Checkout plugin — DixlaseBlog
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-blog
           ref: main
@@ -60,7 +60,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlaseBlog
 
       - name: Checkout plugin — DixlaseCookie
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-cookie
           ref: main
@@ -68,7 +68,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlaseCookie
 
       - name: Checkout plugin — DixlaseCoreDevKit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-core-devkit
           ref: main
@@ -76,7 +76,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlaseCoreDevKit
 
       - name: Checkout plugin — DixlaseDeploy
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-deploy
           ref: main
@@ -84,7 +84,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlaseDeploy
 
       - name: Checkout plugin — DixlaseInquiry
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-inquiry
           ref: main
@@ -92,7 +92,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlaseInquiry
 
       - name: Checkout plugin — DixlaseLegal
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-legal
           ref: main
@@ -100,7 +100,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlaseLegal
 
       - name: Checkout plugin — DixlaseMenus
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-menus
           ref: main
@@ -108,7 +108,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlaseMenus
 
       - name: Checkout plugin — DixlaseMultilingual
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-multilingual
           ref: main
@@ -116,7 +116,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlaseMultilingual
 
       - name: Checkout plugin — DixlasePages
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-pages
           ref: main
@@ -124,7 +124,7 @@ jobs:
           path: dixlase-ctx/plugins/DixlasePages
 
       - name: Checkout plugin — DixlaseSEO
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-seo
           ref: main
@@ -170,7 +170,7 @@ jobs:
           mkdir -p "dixlase-ctx/storage/app/private/core/front"
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: 'npm'
