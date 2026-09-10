@@ -105,7 +105,7 @@ jobs:
         #   resources/src/components/**/*.js             (`@source` for core shared components)
         # A shallow default-branch checkout is enough — none of the
         # theme's build steps care about core's PHP source.
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/dixlase-core
           ref: main
@@ -117,7 +117,7 @@ jobs:
         # Dixlase install: `<ctx>/themes/DixlaseOnePage/`. Its
         # `tailwind.css` uses `../../../../../..` relative paths, so
         # every level of the path matters here.
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ steps.ref.outputs.ref }}
           path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
@@ -131,7 +131,7 @@ jobs:
       # site, since these are all first-party plugins that ship with
       # Dixlase). Same block deploy.yml uses.
       - name: Checkout plugin — DixlaseBlog
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-blog
           ref: main
@@ -139,7 +139,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseBlog
 
       - name: Checkout plugin — DixlaseCookie
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-cookie
           ref: main
@@ -147,7 +147,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseCookie
 
       - name: Checkout plugin — DixlaseCoreDevKit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-core-devkit
           ref: main
@@ -155,7 +155,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseCoreDevKit
 
       - name: Checkout plugin — DixlaseDeploy
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-deploy
           ref: main
@@ -163,7 +163,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseDeploy
 
       - name: Checkout plugin — DixlaseInquiry
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-inquiry
           ref: main
@@ -171,7 +171,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseInquiry
 
       - name: Checkout plugin — DixlaseLegal
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-legal
           ref: main
@@ -179,7 +179,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseLegal
 
       - name: Checkout plugin — DixlaseMenus
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-menus
           ref: main
@@ -187,7 +187,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseMenus
 
       - name: Checkout plugin — DixlaseMultilingual
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-multilingual
           ref: main
@@ -195,7 +195,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseMultilingual
 
       - name: Checkout plugin — DixlasePages
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-pages
           ref: main
@@ -203,7 +203,7 @@ jobs:
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlasePages
 
       - name: Checkout plugin — DixlaseSEO
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: Dixlase/plugin-dixlase-seo
           ref: main
@@ -246,7 +246,7 @@ jobs:
           mkdir -p "$DIXLASE_CTX/storage/app/private/core/front"
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -320,7 +320,7 @@ jobs:
 
       - name: Attach ZIPs to GitHub release
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             ${{ steps.zip.outputs.name }}
@@ -328,7 +328,7 @@ jobs:
 
       - name: Upload as workflow artifact
         if: github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.zip.outputs.name }}
           path: ${{ steps.zip.outputs.name }}
