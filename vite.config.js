@@ -28,13 +28,37 @@ export default defineConfig({
                 'app': resolve(__dirname, 'resources/src/front/js/app.js'),
             },
             output: {
-                // 出力ファイル名のパターン
-                entryFileNames: 'js/[name].js',
+                // Output filename patterns.
+                //
+                // Content-hash the JS/CSS entries so the URL changes
+                // on every build whose bytes changed — automatic cache
+                // busting without touching Cache-Control headers. The
+                // AssetHelper (`load_assets_from_manifest`) resolves
+                // requests through manifest.json's `file` mapping, so
+                // it picks up the hashed filename with no changes on
+                // the PHP side. Identical builds still produce
+                // identical filenames (Vite's `[hash]` is a content
+                // hash), so this does not force spurious re-fetches.
+                //
+                // Fonts and images stay stable — Font Awesome's
+                // woff2 blobs are ~110KB each and rarely change; a
+                // stable URL keeps them in the browser cache across
+                // rebuilds. If a font file ever does change, its
+                // reference in the built CSS carries a new hash (via
+                // Vite's asset-URL rewriting), so stale font content
+                // cannot silently ship.
+                //
+                // See dixlase-brand history around Sep 2026: the
+                // previous stable `css/style.css` URL let iOS Safari
+                // cache pre-refactor CSS indefinitely, breaking the
+                // footer layout on returning visitors even after
+                // Settings > Safari > Clear History.
+                entryFileNames: 'js/[name]-[hash].js',
                 chunkFileNames: 'js/[name]-[hash].js',
                 assetFileNames: (assetInfo) => {
                     // CSSファイル
                     if (assetInfo.name.endsWith('.css')) {
-                        return 'css/[name][extname]';
+                        return 'css/[name]-[hash][extname]';
                     }
                     // 画像ファイル
                     if (/\.(png|jpe?g|gif|svg|webp|ico)$/.test(assetInfo.name)) {
