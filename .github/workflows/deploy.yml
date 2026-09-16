@@ -292,6 +292,52 @@ jobs:
               mkdir -p "$ASSET_DIR"
               rsync -a "$BASE/_shared/themes/$THEME_DIR/" "$ASSET_DIR/"
 
+              # Sweep stale build artefacts. Vite content-hashes JS/CSS
+              # entry filenames so every build's URLs are unique; without
+              # this sweep, `rsync -a` (no --delete) leaves every prior
+              # build's files stacked in the asset dir forever. Files
+              # from the pre-hash era (bare `style.css` / `tailwind.css`
+              # / `app.js`) also get collected here on the first run.
+              #
+              # `manifest.json` is the source of truth for what the
+              # newly-compiled views will actually reference — anything
+              # under css/ / js/ / fonts/ / images/ / assets/ that
+              # isn't listed there is unreachable dead weight and gets
+              # removed. Trade-off: a browser holding STALE HTML that
+              # references an old hashed URL will 404 on that asset
+              # after this runs, until the next navigation re-fetches
+              # the HTML. HTML is served without Cache-Control so that
+              # window is short; the alternative (never cleaning up)
+              # leaks disk space and hides audit surface behind noise.
+              #
+              # Blanket `rsync --delete` would achieve the same effect
+              # but hides the intent behind an option flag. Keeping
+              # this as an explicit sweep documents WHY files get
+              # removed for anyone reading the deploy log.
+              MANIFEST="$ASSET_DIR/manifest.json"
+              if [ -f "$MANIFEST" ]; then
+                KEEP_LIST=$(mktemp)
+                grep -oE '"file"[[:space:]]*:[[:space:]]*"[^"]+"' "$MANIFEST" \
+                  | sed -E 's/.*"file"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/' \
+                  | sort -u > "$KEEP_LIST"
+                echo "manifest.json" >> "$KEEP_LIST"
+
+                REMOVED=0
+                for SUBDIR in css js fonts images assets; do
+                  DIR="$ASSET_DIR/$SUBDIR"
+                  [ -d "$DIR" ] || continue
+                  while IFS= read -r -d '' F; do
+                    REL="${F#$ASSET_DIR/}"
+                    if ! grep -qxF "$REL" "$KEEP_LIST"; then
+                      rm -f "$F"
+                      REMOVED=$((REMOVED + 1))
+                    fi
+                  done < <(find "$DIR" -type f -print0)
+                done
+                rm -f "$KEEP_LIST"
+                echo "Stale-asset sweep: removed $REMOVED file(s) not present in manifest.json"
+              fi
+
               # Invalidate Laravel's compiled bootstrap caches (views, config,
               # routes, events) so any blade / config / route changes shipped
               # by this push take effect on the next request without waiting
