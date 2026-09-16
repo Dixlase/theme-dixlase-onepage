@@ -73,6 +73,30 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: var(--color-gray-600) !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: var(--color-gray-300) !important; }
 
+/* Footer SNS icon row — same dimensions as `.sns-list` in
+   front/scss/style.scss (the theme SCSS is not loaded on this admin page).
+   `--sns-em` = largest glyph dimension / 1em of each Font Awesome brand
+   glyph, so the rendered mark is 32px (line art) / 28px (filled). */
+#preview-inner .pv-sns-list { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px; padding: 2px 0; margin: 0; list-style: none; }
+#preview-inner .pv-sns-link { display: grid; place-items: center; inline-size: 44px; block-size: 44px; border-radius: 8px; transition: opacity 0.15s ease; }
+#preview-inner .pv-sns-link:hover { opacity: 0.65; }
+#preview-inner .pv-sns-link i { --sns-em: 1; --fa-width: auto; display: block; width: auto; font-size: calc(32px / var(--sns-em)); line-height: 1; }
+#preview-inner .pv-sns-link.is-solid i { font-size: calc(28px / var(--sns-em)); }
+#preview-inner .pv-sns-link[data-sns="instagram"] i { --sns-em: 0.875; }
+#preview-inner .pv-sns-link[data-sns="x"] i { --sns-em: 0.899; }
+#preview-inner .pv-sns-link[data-sns="threads"] i { --sns-em: 0.938; }
+#preview-inner .pv-sns-link[data-sns="tiktok"] i { --sns-em: 1.0; }
+#preview-inner .pv-sns-link[data-sns="bluesky"] i { --sns-em: 1.125; }
+#preview-inner .pv-sns-link[data-sns="discord"] i { --sns-em: 1.148; }
+#preview-inner .pv-sns-link[data-sns="facebook"] i { --sns-em: 1.0; }
+#preview-inner .pv-sns-link[data-sns="linkedin"] i { --sns-em: 0.875; }
+#preview-inner .pv-sns-link[data-sns="youtube"] i { --sns-em: 1.067; }
+#preview-inner .pv-sns-link[data-sns="pinterest"] i { --sns-em: 0.969; }
+#preview-inner .pv-sns-link[data-sns="github"] i { --sns-em: 0.969; }
+#preview-inner[data-preview-theme="dark"] .pv-sns-link { color: #fff !important; }
+#preview-inner[data-preview-theme="light"] .pv-sns-link { color: #000 !important; }
+#preview-inner[data-preview-theme="light"] .pv-sns-link[data-sns="facebook"] { color: #1877f2 !important; }
+
 /* Front page content preview */
 #preview-inner[data-preview-theme="dark"] .pv-content { background: #111827 !important; }
 #preview-inner[data-preview-theme="dark"] .pv-content-text { color: #d1d5db !important; }
@@ -443,21 +467,25 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                                 <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-lg"><i class="fas fa-pencil-alt"></i></span>
                             </div>
                         </div>
-                        {{-- SNS Links --}}
-                        <div class="flex flex-wrap justify-center gap-3"
-                             x-show="snsLinks.instagram || snsLinks.x || snsLinks.facebook || snsLinks.tiktok || snsLinks.bluesky || snsLinks.threads || snsLinks.linkedin || snsLinks.youtube || snsLinks.pinterest || snsLinks.discord || snsLinks.github">
-                            <template x-if="snsLinks.instagram"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-instagram"></i></a></template>
-                            <template x-if="snsLinks.x"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-x-twitter"></i></a></template>
-                            <template x-if="snsLinks.facebook"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-facebook"></i></a></template>
-                            <template x-if="snsLinks.tiktok"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-tiktok"></i></a></template>
-                            <template x-if="snsLinks.bluesky"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-bluesky"></i></a></template>
-                            <template x-if="snsLinks.threads"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-threads"></i></a></template>
-                            <template x-if="snsLinks.linkedin"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-linkedin"></i></a></template>
-                            <template x-if="snsLinks.youtube"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-youtube"></i></a></template>
-                            <template x-if="snsLinks.pinterest"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-pinterest"></i></a></template>
-                            <template x-if="snsLinks.discord"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-discord"></i></a></template>
-                            <template x-if="snsLinks.github"><a class="pv-footer-text text-lg hover:opacity-75"><i class="fab fa-github"></i></a></template>
-                        </div>
+                        {{-- SNS Links — mirrors partials/footer.blade.php:
+                             32px line-art / 28px filled glyphs, 44px tap
+                             box, 20px gap, black (light) / white (dark),
+                             Facebook Blue in light mode. Sizing rules are
+                             in the <style> block above (`.pv-sns-*`). --}}
+                        <ul class="pv-sns-list"
+                            x-show="snsLinks.instagram || snsLinks.x || snsLinks.facebook || snsLinks.tiktok || snsLinks.bluesky || snsLinks.threads || snsLinks.linkedin || snsLinks.youtube || snsLinks.pinterest || snsLinks.discord || snsLinks.github">
+                            <template x-if="snsLinks.instagram"><li><a class="pv-sns-link" data-sns="instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.x"><li><a class="pv-sns-link" data-sns="x"><i class="fab fa-x-twitter" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.facebook"><li><a class="pv-sns-link is-solid" data-sns="facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.tiktok"><li><a class="pv-sns-link" data-sns="tiktok"><i class="fab fa-tiktok" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.bluesky"><li><a class="pv-sns-link" data-sns="bluesky"><i class="fab fa-bluesky" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.threads"><li><a class="pv-sns-link" data-sns="threads"><i class="fab fa-threads" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.linkedin"><li><a class="pv-sns-link is-solid" data-sns="linkedin"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.youtube"><li><a class="pv-sns-link is-solid" data-sns="youtube"><i class="fab fa-youtube" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.pinterest"><li><a class="pv-sns-link is-solid" data-sns="pinterest"><i class="fab fa-pinterest" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.discord"><li><a class="pv-sns-link" data-sns="discord"><i class="fab fa-discord" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.github"><li><a class="pv-sns-link is-solid" data-sns="github"><i class="fab fa-github" aria-hidden="true"></i></a></li></template>
+                        </ul>
                         {{-- Site Name --}}
                         <h2 class="pv-footer-title text-2xl font-bold" :style="regionTypographyStyle(headingFontApplyFooter, headingFontTrackingFooter)">{{ config('app.name', 'Dixlase') }}</h2>
                         {{-- Description (fixed) --}}

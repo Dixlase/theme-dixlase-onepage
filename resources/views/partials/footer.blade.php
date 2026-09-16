@@ -109,65 +109,50 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 @endif
             @endif
 
-            {{-- SNS Links --}}
+            {{-- SNS Links
+
+                 Sized to satisfy every published brand guideline at once
+                 (dimensions live in `.sns-list` in front/scss/style.scss):
+                 32px line-art glyph / 28px filled marks, 44px tap target,
+                 20px box gap (= 32px glyph-to-glyph clear space).
+
+                 `solid` flags marks that are a filled shape (circle, badge,
+                 tab) and therefore get the 28px visual correction. The
+                 container shapes are part of the mark itself (Facebook
+                 circle, Pinterest circle, YouTube tab) and must not be
+                 stripped. Order is the display order. --}}
+            @php
+                $snsBrands = [
+                    'facebook'  => ['icon' => 'fa-facebook',  'label' => 'Facebook',    'solid' => true],
+                    'x'         => ['icon' => 'fa-x-twitter', 'label' => 'X (Twitter)', 'solid' => false],
+                    'instagram' => ['icon' => 'fa-instagram', 'label' => 'Instagram',   'solid' => false],
+                    'tiktok'    => ['icon' => 'fa-tiktok',    'label' => 'TikTok',      'solid' => false],
+                    'bluesky'   => ['icon' => 'fa-bluesky',   'label' => 'Bluesky',     'solid' => false],
+                    'threads'   => ['icon' => 'fa-threads',   'label' => 'Threads',     'solid' => false],
+                    'linkedin'  => ['icon' => 'fa-linkedin',  'label' => 'LinkedIn',    'solid' => true],
+                    'youtube'   => ['icon' => 'fa-youtube',   'label' => 'YouTube',     'solid' => true],
+                    'pinterest' => ['icon' => 'fa-pinterest', 'label' => 'Pinterest',   'solid' => true],
+                    'discord'   => ['icon' => 'fa-discord',   'label' => 'Discord',     'solid' => false],
+                    'github'    => ['icon' => 'fa-github',    'label' => 'GitHub',      'solid' => true],
+                ];
+            @endphp
             @if(array_filter($snsLinks))
-                <div class="flex space-x-4">
-                    @if($snsLinks['facebook'])
-                        <a href="{{ $snsLinks['facebook'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Facebook">
-                            <i class="fa-brands fa-facebook text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['x'])
-                        <a href="{{ $snsLinks['x'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="X (Twitter)">
-                            <i class="fa-brands fa-x-twitter text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['instagram'])
-                        <a href="{{ $snsLinks['instagram'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Instagram">
-                            <i class="fa-brands fa-instagram text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['tiktok'])
-                        <a href="{{ $snsLinks['tiktok'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="TikTok">
-                            <i class="fa-brands fa-tiktok text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['bluesky'])
-                        <a href="{{ $snsLinks['bluesky'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Bluesky">
-                            <i class="fa-brands fa-bluesky text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['threads'])
-                        <a href="{{ $snsLinks['threads'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Threads">
-                            <i class="fa-brands fa-threads text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['linkedin'])
-                        <a href="{{ $snsLinks['linkedin'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="LinkedIn">
-                            <i class="fa-brands fa-linkedin text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['youtube'])
-                        <a href="{{ $snsLinks['youtube'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="YouTube">
-                            <i class="fa-brands fa-youtube text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['pinterest'])
-                        <a href="{{ $snsLinks['pinterest'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Pinterest">
-                            <i class="fa-brands fa-pinterest text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['discord'])
-                        <a href="{{ $snsLinks['discord'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="Discord">
-                            <i class="fa-brands fa-discord text-xl"></i>
-                        </a>
-                    @endif
-                    @if($snsLinks['github'])
-                        <a href="{{ $snsLinks['github'] }}" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-500 transition-colors" aria-label="GitHub">
-                            <i class="fa-brands fa-github text-xl"></i>
-                        </a>
-                    @endif
-                </div>
+                <nav aria-label="{{ __('themes::theme.footer.sns_nav_label') }}">
+                    <ul class="sns-list">
+                        @foreach($snsBrands as $key => $brand)
+                            @if(!empty($snsLinks[$key]))
+                                <li>
+                                    <a href="{{ $snsLinks[$key] }}" target="_blank" rel="noopener noreferrer"
+                                       class="sns-link{{ $brand['solid'] ? ' is-solid' : '' }}"
+                                       data-sns="{{ $key }}"
+                                       aria-label="{{ $brand['label'] }}">
+                                        <i class="fa-brands {{ $brand['icon'] }}" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </nav>
             @endif
 
             {{-- Site Name --}}
@@ -180,15 +165,21 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                  Layout mirrors Core's <x-brand-attribution> on admin
                  auth screens: small Dixlase brand mark on top, Powered
                  by line below. <x-brand-logo> is a Core @api component
-                 (SVG that inherits currentColor), sized to 20px so it
-                 reads as an attribution glyph, not a hero mark — and
-                 placed in the footer (not the header) so it can't be
-                 mistaken for the site's own logo. `and` (rather than
+                 (SVG that inherits currentColor). `.footer-brand-mark`
+                 (front/scss/style.scss) sizes the drawn monogram to the
+                 same 32px as the SNS icons and gives it the same black /
+                 white colour, so the attribution row reads as part of
+                 the icon cluster. It is placed in the footer (not the
+                 header) so it can't be mistaken for the site's own
+                 logo. `and` (rather than
                  the earlier `·`) reads naturally in a Powered-by line
                  that names two co-attribution targets. --}}
-            <div class="flex flex-col items-center gap-2 text-gray-600 dark:text-gray-400">
-                <x-brand-logo class="h-5 w-5" :aria-label="''" />
-                <p>Powered by Dixlase and DixlaseOnePage</p>
+            {{-- `gap-6` matches the column's `space-y-6` above, so the mark
+                 sits the same 24px from the site name and from the
+                 Powered-by line (the SVG's own padding is symmetric). --}}
+            <div class="flex flex-col items-center gap-6">
+                <x-brand-logo class="footer-brand-mark" :aria-label="''" />
+                <p class="text-gray-600 dark:text-gray-400">Powered by Dixlase and DixlaseOnePage</p>
             </div>
         </div>
 

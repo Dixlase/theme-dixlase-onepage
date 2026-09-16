@@ -60,8 +60,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|cormorant-garamond:400,700|jost:400,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap" rel="stylesheet" />
 
-    {{-- Font Awesome（フッターSNSアイコン等で使用） --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {{-- Font Awesome (footer SNS icons) comes from the theme's bundled
+         style.scss (FA 7.x); see layouts/app.blade.php for why the cdnjs
+         6.4.0 stylesheet must not be loaded here. --}}
 
     {{-- CSSのみ読み込み（JSバンドルは一切含めない）。コア共通
          Tailwind (`resources/src/common/css/tailwind.css`) を必ず

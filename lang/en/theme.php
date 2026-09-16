@@ -56,6 +56,7 @@ return [
         'contact' => 'Contact',
         'copyright' => '© :year :name. All rights reserved.',
         'powered_by' => 'Powered by Dixlase',
+        'sns_nav_label' => 'Social media',
     ],
     
     // Admin Settings
