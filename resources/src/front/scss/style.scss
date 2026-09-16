@@ -151,6 +151,14 @@ footer a:not(.sns-link):hover,
     block-size: var(--sns-box);
     border-radius: 8px;
     color: #000;
+    // Chip colours for brand marks that need an author-drawn
+    // container (currently just Facebook). Defined at the link level
+    // so `.dark .sns-link` can flip them in one place — child glyph
+    // rules cannot use `background-color: currentColor` because
+    // their own `color` override would resolve `currentColor` to the
+    // wrong value.
+    --sns-chip-bg: #000;
+    --sns-chip-fg: #fff;
     transition: opacity 0.15s ease;
 
     i {
@@ -198,36 +206,44 @@ footer a:not(.sns-link):hover,
     // complete mark: a single filled glyph with the "f" as a
     // transparent knockout.
     //
-    // The "f" knockout shows whatever is behind the glyph — on the
-    // site's gray-100 body the "f" reads gray, not white. Meta's
-    // primary lockup (blue circle with WHITE f) requires the "f" to
-    // show white regardless of page background. Achieve that by
-    // placing a white background circle behind the blue glyph:
+    // Rendered monochrome inside a black chip so the mark reads as
+    // one visual unit with the site's other SNS icons (which are all
+    // dark on the light footer / white on the dark footer) instead
+    // of standing out as the sole colour lockup in the row:
     //
-    //   layer 1 (bottom) — white circle, same 32px as the glyph
-    //   layer 2 (top)    — fa-facebook glyph filled Facebook Blue
+    //   layer 1 (bottom) — 32px chip filled --sns-chip-bg
+    //                      (black in light mode, white in dark mode
+    //                      via .dark .sns-link override below)
+    //   layer 2 (top)    — fa-facebook glyph sized SMALLER than the
+    //                      chip and filled --sns-chip-fg (white in
+    //                      light mode, black in dark mode) so the
+    //                      complete Meta mark sits VISIBLY INSIDE
+    //                      the chip with a ring of chip colour
+    //                      around it — matches Meta's approved
+    //                      monochrome lockup treatment while keeping
+    //                      the mark unmodified.
     //
-    // The blue glyph covers the white circle except at the "f"
-    // knockout, which reveals the white circle beneath. Net visual
-    // is exactly Meta's primary lockup with no logo modification.
+    // Glyph size is 24px inside the 32px chip (~75% ratio, 4px chip
+    // ring on each side). 24px is at Meta's typical digital-display
+    // minimum for the complete lockup, so the mark stays legible.
     &[data-sns="facebook"] i {
         display: grid;
         place-items: center;
-        // The 32px white background circle that fills the "f" knockout.
         inline-size: var(--sns-glyph);
         block-size: var(--sns-glyph);
-        background-color: #fff;
+        background-color: var(--sns-chip-bg);
         border-radius: 50%;
-        // fa-facebook glyph rendered in Facebook Blue on top, sized
-        // to match the background circle so the outer edge is a
-        // single clean blue circle with no visible white halo.
-        font-size: var(--sns-glyph);
-        color: #1877f2;
+        font-size: calc(var(--sns-glyph) * 0.75);
+        color: var(--sns-chip-fg);
     }
 }
 
 .dark .sns-link {
     color: #fff;
+    // Flip chip colours so the Facebook chip stays legible against
+    // the dark footer — white chip with a black fa-facebook glyph.
+    --sns-chip-bg: #fff;
+    --sns-chip-fg: #000;
 }
 
 @media (prefers-reduced-motion: reduce) {
