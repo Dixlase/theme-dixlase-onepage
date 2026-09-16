@@ -96,12 +96,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #preview-inner[data-preview-theme="dark"] .pv-sns-link { color: #fff !important; }
 #preview-inner[data-preview-theme="light"] .pv-sns-link { color: #000 !important; }
 /* Facebook — the fa-facebook glyph IS Meta's complete lockup (circle +
-   f as one mark); Meta's guideline forbids the "f" alone. Rendered as
-   a monochrome chip that inverts with the preview theme so the mark
-   sits visibly inside a container the same size as the other 32px
-   SNS icons. Mirrors the live .sns-list rule in front/scss/style.scss
-   (see the block-level comment there for the rationale). */
-#preview-inner .pv-sns-link[data-sns="facebook"] i { display: grid !important; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 50%; font-size: 24px !important; }
+   f as one mark); Meta's guideline forbids the "f" alone. Housed
+   inside a rounded-square chip so the container shape is structurally
+   distinct from the Meta round mark (no ambiguity about whether the
+   mark was modified). The chip flips colour with the preview theme.
+   Mirrors the live .sns-list rule in front/scss/style.scss (see the
+   block-level comment there for the rationale). */
+#preview-inner .pv-sns-link[data-sns="facebook"] i { display: grid !important; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 8px; font-size: 32px !important; }
 #preview-inner[data-preview-theme="light"] .pv-sns-link[data-sns="facebook"] i { background-color: #000 !important; color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-sns-link[data-sns="facebook"] i { background-color: #fff !important; color: #000 !important; }
 
