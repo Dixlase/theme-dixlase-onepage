@@ -244,12 +244,25 @@ footer a:not(.sns-link):hover,
 
 .dark .sns-link {
     color: #fff;
-    // Note: --sns-chip-bg / --sns-chip-fg do NOT flip in dark mode.
-    // Rendering the Facebook mark in black would violate Meta's
-    // brand guideline for this footer treatment — the chip must
-    // stay black + white FB glyph in both themes. The dark footer
-    // (bg-gray-950) provides enough contrast for the black chip
-    // to remain a distinct affordance.
+}
+
+// Dark mode Facebook — no chip. The dark footer bg (gray-950) is
+// already the "dark surface" Meta's reversed lockup expects, so
+// rendering fa-facebook directly in white gives the exact reversed
+// treatment (white filled circle, "f" knockout shows the dark footer
+// beneath as a dark "f"). Adding a chip on top of an already-dark
+// surface would nest a dark box inside a dark box and shrink the
+// mark unnecessarily — so we strip the light-mode chip and let the
+// glyph render at the standard 32px size, matching every other
+// line-art SNS icon in the row.
+.dark .sns-link[data-sns="facebook"] i {
+    display: block;
+    inline-size: auto;
+    block-size: auto;
+    background-color: transparent;
+    border-radius: 0;
+    font-size: calc(var(--sns-glyph) / var(--sns-em));
+    color: inherit;
 }
 
 @media (prefers-reduced-motion: reduce) {
