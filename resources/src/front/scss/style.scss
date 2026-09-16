@@ -206,34 +206,34 @@ footer a:not(.sns-link):hover,
     // complete mark: a single filled glyph with the "f" as a
     // transparent knockout.
     //
-    // Rendered monochrome inside a black chip so the mark reads as
-    // one visual unit with the site's other SNS icons (which are all
-    // dark on the light footer / white on the dark footer) instead
-    // of standing out as the sole colour lockup in the row:
+    // Housed inside a ROUNDED SQUARE chip so the container is
+    // structurally distinct from the Meta mark (which is a perfect
+    // circle) — a rounded square cannot be mistaken for a modified
+    // Meta logo, so there is no ambiguity about whether the mark
+    // itself was altered. The complete round fa-facebook glyph sits
+    // inscribed inside the square at its natural 32px size, with
+    // the four rounded corners of the chip visible around it:
     //
-    //   layer 1 (bottom) — 32px chip filled --sns-chip-bg
-    //                      (black in light mode, white in dark mode
-    //                      via .dark .sns-link override below)
-    //   layer 2 (top)    — fa-facebook glyph sized SMALLER than the
-    //                      chip and filled --sns-chip-fg (white in
-    //                      light mode, black in dark mode) so the
-    //                      complete Meta mark sits VISIBLY INSIDE
-    //                      the chip with a ring of chip colour
-    //                      around it — matches Meta's approved
-    //                      monochrome lockup treatment while keeping
-    //                      the mark unmodified.
-    //
-    // Glyph size is 24px inside the 32px chip (~75% ratio, 4px chip
-    // ring on each side). 24px is at Meta's typical digital-display
-    // minimum for the complete lockup, so the mark stays legible.
+    //   layer 1 (bottom) — 32px rounded-square chip (border-radius
+    //                      8px, matching the outer .sns-link tap
+    //                      box), filled --sns-chip-bg (black in
+    //                      light mode / white in dark mode via
+    //                      .dark .sns-link override below)
+    //   layer 2 (top)    — fa-facebook glyph at 32px filled
+    //                      --sns-chip-fg (white in light mode /
+    //                      black in dark mode). The "f" knockout
+    //                      shows the chip colour beneath, so the
+    //                      "f" letter reads in chip colour — the
+    //                      standard Meta monochrome lockup on a
+    //                      contrasting surface.
     &[data-sns="facebook"] i {
         display: grid;
         place-items: center;
         inline-size: var(--sns-glyph);
         block-size: var(--sns-glyph);
         background-color: var(--sns-chip-bg);
-        border-radius: 50%;
-        font-size: calc(var(--sns-glyph) * 0.75);
+        border-radius: 8px;
+        font-size: var(--sns-glyph);
         color: var(--sns-chip-fg);
     }
 }
