@@ -152,11 +152,12 @@ footer a:not(.sns-link):hover,
     border-radius: 8px;
     color: #000;
     // Chip colours for brand marks that need an author-drawn
-    // container (currently just Facebook). Defined at the link level
-    // so `.dark .sns-link` can flip them in one place — child glyph
-    // rules cannot use `background-color: currentColor` because
-    // their own `color` override would resolve `currentColor` to the
-    // wrong value.
+    // container (currently just Facebook). Fixed to black+white in
+    // both themes — Meta's brand guideline for our reversed
+    // monochrome treatment expects the white mark on a solid dark
+    // surface, and rendering the FB mark in black would read as
+    // "black Facebook logo" which the guideline treats differently
+    // from the reversed lockup.
     --sns-chip-bg: #000;
     --sns-chip-fg: #fff;
     transition: opacity 0.15s ease;
@@ -240,10 +241,12 @@ footer a:not(.sns-link):hover,
 
 .dark .sns-link {
     color: #fff;
-    // Flip chip colours so the Facebook chip stays legible against
-    // the dark footer — white chip with a black fa-facebook glyph.
-    --sns-chip-bg: #fff;
-    --sns-chip-fg: #000;
+    // Note: --sns-chip-bg / --sns-chip-fg do NOT flip in dark mode.
+    // Rendering the Facebook mark in black would violate Meta's
+    // brand guideline for this footer treatment — the chip must
+    // stay black + white FB glyph in both themes. The dark footer
+    // (bg-gray-950) provides enough contrast for the black chip
+    // to remain a distinct affordance.
 }
 
 @media (prefers-reduced-motion: reduce) {
