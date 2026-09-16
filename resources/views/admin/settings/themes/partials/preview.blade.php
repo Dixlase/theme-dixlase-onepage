@@ -106,7 +106,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
    Meta guideline for our reversed monochrome treatment expects white
    on dark; rendering the mark in black would read as a different
    (unauthorised) treatment. */
-#preview-inner .pv-sns-link[data-sns="facebook"] i { display: grid !important; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 8px; font-size: 32px !important; background-color: #000 !important; color: #fff !important; }
+#preview-inner .pv-sns-link[data-sns="facebook"] i { display: grid !important; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 8px; font-size: 20px !important; background-color: #000 !important; color: #fff !important; }
 
 /* Front page content preview */
 #preview-inner[data-preview-theme="dark"] .pv-content { background: #111827 !important; }

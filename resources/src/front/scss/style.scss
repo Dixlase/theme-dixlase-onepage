@@ -212,21 +212,24 @@ footer a:not(.sns-link):hover,
     // circle) — a rounded square cannot be mistaken for a modified
     // Meta logo, so there is no ambiguity about whether the mark
     // itself was altered. The complete round fa-facebook glyph sits
-    // inscribed inside the square at its natural 32px size, with
-    // the four rounded corners of the chip visible around it:
+    // inside the square at a smaller size so the chip reads as a
+    // container with an icon inside, not as the icon itself:
     //
     //   layer 1 (bottom) — 32px rounded-square chip (border-radius
     //                      8px, matching the outer .sns-link tap
-    //                      box), filled --sns-chip-bg (black in
-    //                      light mode / white in dark mode via
-    //                      .dark .sns-link override below)
-    //   layer 2 (top)    — fa-facebook glyph at 32px filled
-    //                      --sns-chip-fg (white in light mode /
-    //                      black in dark mode). The "f" knockout
-    //                      shows the chip colour beneath, so the
-    //                      "f" letter reads in chip colour — the
-    //                      standard Meta monochrome lockup on a
-    //                      contrasting surface.
+    //                      box), filled --sns-chip-bg (always black
+    //                      per the fixed reversed-lockup treatment)
+    //   layer 2 (top)    — fa-facebook glyph filled --sns-chip-fg
+    //                      (always white) sized to 20px so there is
+    //                      6px of chip visible on every side. 20px
+    //                      is comfortably above Meta's ~16px digital
+    //                      minimum for the complete lockup, and the
+    //                      6px inset makes the chip read as a
+    //                      deliberate container rather than as chip
+    //                      colour bleeding around a full-bleed mark.
+    //                      The "f" knockout in the white glyph shows
+    //                      the black chip beneath — the standard
+    //                      Meta reversed lockup on a dark surface.
     &[data-sns="facebook"] i {
         display: grid;
         place-items: center;
@@ -234,7 +237,7 @@ footer a:not(.sns-link):hover,
         block-size: var(--sns-glyph);
         background-color: var(--sns-chip-bg);
         border-radius: 8px;
-        font-size: var(--sns-glyph);
+        font-size: 20px;
         color: var(--sns-chip-fg);
     }
 }
