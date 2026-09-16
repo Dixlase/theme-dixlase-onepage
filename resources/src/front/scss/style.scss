@@ -185,32 +185,44 @@ footer a:not(.sns-link):hover,
     &[data-sns="tiktok"] i    { --sns-em: 1.0; }
     &[data-sns="bluesky"] i   { --sns-em: 1.125; }
     &[data-sns="discord"] i   { --sns-em: 1.148; }
+    &[data-sns="facebook"] i  { --sns-em: 1.0; }
     &[data-sns="linkedin"] i  { --sns-em: 0.875; }
     &[data-sns="youtube"] i   { --sns-em: 1.067; }
     &[data-sns="pinterest"] i { --sns-em: 0.969; }
     &[data-sns="github"] i    { --sns-em: 0.969; }
 
-    // Facebook — Meta's brand guideline REQUIRES the circular container
-    // (fa-facebook-f alone is not an approved usage; the circle must
-    // frame the "f"). We render the container via CSS chip on the
-    // .sns-link box: Facebook Blue background + white "f" glyph
-    // (fa-facebook-f). The chip fills a 32px inner circle inside the
-    // 44px tap target so it reads the same visual weight as the other
-    // line-art brand glyphs at 32px. Meta lists blue-circle-with-white-f
-    // as the primary expression that works on any background, so the
-    // chip stays #1877f2 in both light and dark modes.
+    // Facebook — Meta's brand guideline REQUIRES the complete logo
+    // mark (circle+F together as one unit) and forbids using the "f"
+    // letter alone even with an author-drawn container ("ロゴは完全で
+    // なければならず、変更してはなりません"). fa-facebook IS that
+    // complete mark: a single filled glyph with the "f" as a
+    // transparent knockout.
+    //
+    // The "f" knockout shows whatever is behind the glyph — on the
+    // site's gray-100 body the "f" reads gray, not white. Meta's
+    // primary lockup (blue circle with WHITE f) requires the "f" to
+    // show white regardless of page background. Achieve that by
+    // placing a white background circle behind the blue glyph:
+    //
+    //   layer 1 (bottom) — white circle, same 32px as the glyph
+    //   layer 2 (top)    — fa-facebook glyph filled Facebook Blue
+    //
+    // The blue glyph covers the white circle except at the "f"
+    // knockout, which reveals the white circle beneath. Net visual
+    // is exactly Meta's primary lockup with no logo modification.
     &[data-sns="facebook"] i {
         display: grid;
         place-items: center;
+        // The 32px white background circle that fills the "f" knockout.
         inline-size: var(--sns-glyph);
         block-size: var(--sns-glyph);
-        background-color: #1877f2;
+        background-color: #fff;
         border-radius: 50%;
-        // Font-size sizes the "f" letter itself inside the 32px chip.
-        // ~0.55 of chip diameter gives the same optical letter-to-mark
-        // ratio Meta uses in the primary lockup.
-        font-size: calc(var(--sns-glyph) * 0.55);
-        color: #fff;
+        // fa-facebook glyph rendered in Facebook Blue on top, sized
+        // to match the background circle so the outer edge is a
+        // single clean blue circle with no visible white halo.
+        font-size: var(--sns-glyph);
+        color: #1877f2;
     }
 }
 
