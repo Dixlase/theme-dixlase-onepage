@@ -33,6 +33,17 @@ Theme for **Dixlase CMS** (Laravel 12). The core application is located at `../.
 - **Responsive required**: mobile-first, test across all breakpoints
 - **Plugin compatible**: integrate with plugins but function without them
 
+### `custom/` Override Sync — required whenever a theme view is changed
+
+Sites that use this theme (Brand, docs, demo…) may shadow individual theme blade files via the `custom/themes/DixlaseOnePage/…` mirror. Overrides are per-site injections (e.g. Brand's footer override adds a DixlaseMultilingual language switcher between the SNS row and the site name) built by copying the whole theme file and inserting the site-specific block. The theme deliberately stays plugin-agnostic; the sites carry their own overrides.
+
+**When editing any file under `resources/views/`, check for a matching `custom/themes/DixlaseOnePage/…` mirror at every consuming site and apply the same change to each mirror in the same commit.** The deploy pipeline updates `themes/` via `git pull` but never touches `custom/`, so leaving the two out of sync silently ships the pre-update content on the production front page while the theme itself carries the new code.
+
+- Locate mirrors: `find … -path '*/custom/themes/DixlaseOnePage/resources/views/<relative-path>' -type f`
+- Local Brand dev mirror: `/Volumes/Data/Works/Dixlase/Sites/Brand/docker/html/custom/themes/DixlaseOnePage/…`
+- Production Brand mirror: `/srv/dixlase/brand/custom/themes/DixlaseOnePage/…` — sync via `scp` after the theme deploy runs (`docker exec compose-php-1 php /var/www/apps/brand/artisan view:clear && … view:cache` afterwards to invalidate compiled blade)
+- Sites without a matching mirror render the theme file directly — no action needed there
+
 ### PHP Standards
 - PHP 8.3, Laravel 12, Livewire 4
 - Use constructor property promotion
