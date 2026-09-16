@@ -102,9 +102,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
    mark was modified). The chip flips colour with the preview theme.
    Mirrors the live .sns-list rule in front/scss/style.scss (see the
    block-level comment there for the rationale). */
-#preview-inner .pv-sns-link[data-sns="facebook"] i { display: grid !important; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 8px; font-size: 32px !important; }
-#preview-inner[data-preview-theme="light"] .pv-sns-link[data-sns="facebook"] i { background-color: #000 !important; color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-sns-link[data-sns="facebook"] i { background-color: #fff !important; color: #000 !important; }
+/* Fixed to black chip + white FB glyph in BOTH preview themes — the
+   Meta guideline for our reversed monochrome treatment expects white
+   on dark; rendering the mark in black would read as a different
+   (unauthorised) treatment. */
+#preview-inner .pv-sns-link[data-sns="facebook"] i { display: grid !important; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 8px; font-size: 32px !important; background-color: #000 !important; color: #fff !important; }
 
 /* Front page content preview */
 #preview-inner[data-preview-theme="dark"] .pv-content { background: #111827 !important; }
