@@ -123,7 +123,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                  stripped. Order is the display order. --}}
             @php
                 $snsBrands = [
-                    'facebook'  => ['icon' => 'fa-facebook',  'label' => 'Facebook',    'solid' => true],
+                    'facebook'  => ['icon' => 'fa-facebook-f', 'label' => 'Facebook',   'solid' => true],
                     'x'         => ['icon' => 'fa-x-twitter', 'label' => 'X (Twitter)', 'solid' => false],
                     'instagram' => ['icon' => 'fa-instagram', 'label' => 'Instagram',   'solid' => false],
                     'tiktok'    => ['icon' => 'fa-tiktok',    'label' => 'TikTok',      'solid' => false],

@@ -88,14 +88,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #preview-inner .pv-sns-link[data-sns="tiktok"] i { --sns-em: 1.0; }
 #preview-inner .pv-sns-link[data-sns="bluesky"] i { --sns-em: 1.125; }
 #preview-inner .pv-sns-link[data-sns="discord"] i { --sns-em: 1.148; }
-#preview-inner .pv-sns-link[data-sns="facebook"] i { --sns-em: 1.0; }
 #preview-inner .pv-sns-link[data-sns="linkedin"] i { --sns-em: 0.875; }
 #preview-inner .pv-sns-link[data-sns="youtube"] i { --sns-em: 1.067; }
 #preview-inner .pv-sns-link[data-sns="pinterest"] i { --sns-em: 0.969; }
 #preview-inner .pv-sns-link[data-sns="github"] i { --sns-em: 0.969; }
 #preview-inner[data-preview-theme="dark"] .pv-sns-link { color: #fff !important; }
 #preview-inner[data-preview-theme="light"] .pv-sns-link { color: #000 !important; }
-#preview-inner[data-preview-theme="light"] .pv-sns-link[data-sns="facebook"] { color: #1877f2 !important; }
+/* Facebook — CSS chip (blue circle with white "f") to satisfy Meta's
+   required-container brand rule. Mirrors the live .sns-list block in
+   front/scss/style.scss so the preview reads the same in both modes. */
+#preview-inner .pv-sns-link[data-sns="facebook"] i { display: grid !important; place-items: center; inline-size: 32px; block-size: 32px; background-color: #1877f2; border-radius: 50%; font-size: calc(32px * 0.55) !important; color: #fff !important; }
 
 /* Front page content preview */
 #preview-inner[data-preview-theme="dark"] .pv-content { background: #111827 !important; }
@@ -476,7 +478,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                             x-show="snsLinks.instagram || snsLinks.x || snsLinks.facebook || snsLinks.tiktok || snsLinks.bluesky || snsLinks.threads || snsLinks.linkedin || snsLinks.youtube || snsLinks.pinterest || snsLinks.discord || snsLinks.github">
                             <template x-if="snsLinks.instagram"><li><a class="pv-sns-link" data-sns="instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li></template>
                             <template x-if="snsLinks.x"><li><a class="pv-sns-link" data-sns="x"><i class="fab fa-x-twitter" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.facebook"><li><a class="pv-sns-link is-solid" data-sns="facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a></li></template>
+                            <template x-if="snsLinks.facebook"><li><a class="pv-sns-link is-solid" data-sns="facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a></li></template>
                             <template x-if="snsLinks.tiktok"><li><a class="pv-sns-link" data-sns="tiktok"><i class="fab fa-tiktok" aria-hidden="true"></i></a></li></template>
                             <template x-if="snsLinks.bluesky"><li><a class="pv-sns-link" data-sns="bluesky"><i class="fab fa-bluesky" aria-hidden="true"></i></a></li></template>
                             <template x-if="snsLinks.threads"><li><a class="pv-sns-link" data-sns="threads"><i class="fab fa-threads" aria-hidden="true"></i></a></li></template>
