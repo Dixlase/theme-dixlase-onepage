@@ -69,15 +69,160 @@ header {
 // `hover:text-blue-600` / `hover:text-purple-600` utility classes whose
 // specificity ties with these selectors and would otherwise win on
 // source order.
+//
+// `.sns-link` is excluded: SNS brand guidelines (X, LinkedIn, GitHub,
+// Facebook, ...) only allow their marks in black / white (or the brand
+// colour), so the footer social icons must never be recoloured on
+// hover. They dim via opacity instead (see `.sns-list` below).
 header a:hover,
-footer a:hover,
+footer a:not(.sns-link):hover,
 .hero-btn-secondary:hover {
     color: var(--color-primary, #3b82f6) !important;
 }
 .dark header a:hover,
-.dark footer a:hover,
+.dark footer a:not(.sns-link):hover,
 .dark .hero-btn-secondary:hover {
     color: var(--color-primary-dark-safe, #3b82f6) !important;
+}
+
+// =============================================================================
+// Footer SNS icon row — brand-guideline-compliant sizing
+// =============================================================================
+// Dimensions are derived from the strictest rule among the 11 supported
+// brands (see partials/footer.blade.php for the per-brand table):
+//
+//   --sns-glyph        32px  Rendered size of line-art marks. Instagram's
+//                            official minimum is 29px (the strictest
+//                            published value); 32px is the next 8px step.
+//   --sns-glyph-solid  28px  Filled marks (Facebook circle, LinkedIn badge,
+//                            YouTube tab, Pinterest circle, GitHub
+//                            Invertocat) look heavier at equal size, so
+//                            they get a visual correction. Still well
+//                            above every published minimum (LinkedIn 21px,
+//                            Facebook 16px).
+//   --sns-box          44px  Tap target (WCAG 2.2 AAA / iOS HIG). Leaves a
+//                            6px inset around a 32px glyph.
+//   --sns-gap          20px  Box-to-box gap. Glyph-to-glyph distance is
+//                            20 + 6 + 6 = 32px = 100% clear space, the
+//                            strictest rule (X and Bluesky both require
+//                            clear space equal to the mark's own width).
+//   --sns-margin       26px  Clear space above / below the row, measured
+//                            from the box edge (32px - 6px inset).
+//
+// Font Awesome brand glyphs do not fill their 1em box uniformly (e.g.
+// Instagram occupies 448/512 = 0.875em, X only 0.813em tall), so each
+// brand carries its own `--sns-em` ratio (largest glyph dimension / em),
+// and the icon font-size is `target / ratio`. Ratios were measured from
+// @fortawesome/fontawesome-free 7.x `svgs/brands/*.svg` path bounds.
+//
+// Colour follows Meta's published options for the Facebook logo: on a
+// light background only the primary blue (#1877F2) or the all-white
+// version are sanctioned — black is not. Every other brand allows
+// black or white, so: light mode = black glyphs + blue Facebook, dark
+// mode = all white (the white Facebook mark is Meta's secondary form).
+// Tokens are shared with `.footer-brand-mark` so the Dixlase attribution
+// mark below the site name renders at the same glyph size as the SNS row.
+.sns-list,
+.footer-brand-mark {
+    --sns-glyph: 32px;
+    --sns-glyph-solid: 28px;
+    --sns-box: 44px;
+    --sns-gap: 20px;
+    --sns-margin: 26px;
+}
+
+.sns-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--sns-gap);
+    // The footer column stacks children with `space-y-6` (24px). Add the
+    // remaining 2px as padding so other elements stay >= 26px away.
+    padding-block: calc(var(--sns-margin) - 24px);
+    margin: 0;
+    list-style: none;
+}
+
+.sns-link {
+    display: grid;
+    place-items: center;
+    inline-size: var(--sns-box);
+    block-size: var(--sns-box);
+    border-radius: 8px;
+    color: #000;
+    transition: opacity 0.15s ease;
+
+    i {
+        --sns-em: 1;
+        // FA 7 gives every icon `width: var(--fa-width, 1.25em)`, which
+        // would exceed the 44px box at these font sizes. The glyph is
+        // centred by the grid, so let the box shrink to the glyph.
+        --fa-width: auto;
+        display: block;
+        width: auto;
+        font-size: calc(var(--sns-glyph) / var(--sns-em));
+        line-height: 1;
+    }
+
+    &.is-solid i {
+        font-size: calc(var(--sns-glyph-solid) / var(--sns-em));
+    }
+
+    &:hover {
+        opacity: 0.65;
+    }
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+
+    // Per-brand em ratios (largest glyph dimension / 1em in FA 7).
+    &[data-sns="instagram"] i { --sns-em: 0.875; }
+    &[data-sns="x"] i         { --sns-em: 0.899; }
+    &[data-sns="threads"] i   { --sns-em: 0.938; }
+    &[data-sns="tiktok"] i    { --sns-em: 1.0; }
+    &[data-sns="bluesky"] i   { --sns-em: 1.125; }
+    &[data-sns="discord"] i   { --sns-em: 1.148; }
+    &[data-sns="facebook"] i  { --sns-em: 1.0; }
+    &[data-sns="linkedin"] i  { --sns-em: 0.875; }
+    &[data-sns="youtube"] i   { --sns-em: 1.067; }
+    &[data-sns="pinterest"] i { --sns-em: 0.969; }
+    &[data-sns="github"] i    { --sns-em: 0.969; }
+
+    // Facebook Blue — Meta's primary logo colour on light backgrounds.
+    &[data-sns="facebook"] {
+        color: #1877f2;
+    }
+}
+
+.dark .sns-link,
+.dark .sns-link[data-sns="facebook"] {
+    color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sns-link {
+        transition: none;
+    }
+}
+
+// Dixlase attribution mark (<x-brand-logo>, Core @api). Its 1024-unit
+// viewBox has 112 units of padding on every side, so the drawn monogram
+// spans 800/1024 = 0.78125 of the box. Scale the box so the *drawn* mark
+// is `--sns-glyph` (32px), matching the SNS icons, and use the same
+// black / white colour as the SNS row.
+.footer-brand-mark {
+    --brand-mark-em: 0.78125;
+    display: block;
+    inline-size: calc(var(--sns-glyph) / var(--brand-mark-em));
+    block-size: calc(var(--sns-glyph) / var(--brand-mark-em));
+    color: #000;
+}
+
+.dark .footer-brand-mark {
+    color: #fff;
 }
 
 // Hero secondary "Learn More" / "Demo" button — translucent glass

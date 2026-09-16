@@ -155,8 +155,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         h1, h2, h3, h4       { font-family: var(--font-heading-content, inherit); letter-spacing: var(--font-heading-tracking-content, normal); }
     </style>
 
-    {{-- Font Awesome for SNS Icons --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {{-- Font Awesome (brand icons for the footer SNS row) is bundled by
+         front/scss/style.scss (@fortawesome/fontawesome-free 7.x, fonts
+         emitted by the Vite build). Do not add the cdnjs 6.4.0 stylesheet
+         here again: it loaded after the bundle, overrode `.fa-brands` to
+         the 6.4.0 font, which lacks the X / Threads / Bluesky glyphs. --}}
 </head>
 <body class="bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen">
     {{-- 管理バー / メンテナンスバナー / プラグインが @push('front-banners') で
