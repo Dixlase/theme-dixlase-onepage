@@ -50,11 +50,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 {{-- Front Page Content --}}
 @if(!empty($frontContent))
-{{-- pb-16 only: the hero above already fills the viewport, so a pt-16
-     here would push the page total beyond one screen and make the
-     hero appear to overflow. Bottom padding stays for separation
-     from the footer. --}}
-<section class="front-content pb-16">
+{{-- Top padding mirrors the inquiry section below (`pt-28`) so the
+     hero → content transition gets the same breathing room as the
+     content → inquiry transition — the operator's reference for
+     "the spacing feels right there" (2026-09-18). The hero fills
+     the initial viewport, so this space appears only after the
+     visitor scrolls past the hero, which is the natural moment to
+     signal a section break. `pb-16` stays for the content → next
+     section separation. --}}
+<section class="front-content pt-28 pb-16">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
             @if($frontEditorType === 'blade')
