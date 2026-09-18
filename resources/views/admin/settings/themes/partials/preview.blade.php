@@ -40,7 +40,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #preview-inner[data-preview-theme="dark"] .pv-app-name { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-title { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-subtitle { color: var(--color-gray-300) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { border-color: var(--color-gray-600) !important; color: #fff !important; }
+#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-hero-overlay { background: color-mix(in oklab, var(--color-gray-900) 70%, transparent) !important; }
 #preview-inner[data-preview-theme="dark"] .pv-edit-input { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
 #preview-inner[data-preview-theme="dark"] .pv-nav-item { color: var(--color-gray-400) !important; }
@@ -59,7 +59,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #preview-inner[data-preview-theme="light"] .pv-app-name { color: var(--color-gray-900) !important; }
 #preview-inner[data-preview-theme="light"] .pv-title { color: var(--color-gray-900) !important; }
 #preview-inner[data-preview-theme="light"] .pv-subtitle { color: var(--color-gray-600) !important; }
-#preview-inner[data-preview-theme="light"] .pv-btn-secondary { border-color: var(--color-gray-300) !important; color: var(--color-gray-700) !important; }
+#preview-inner[data-preview-theme="light"] .pv-btn-secondary { color: var(--color-gray-700) !important; }
 #preview-inner[data-preview-theme="light"] .pv-hero-overlay { background: rgba(255,255,255,0.6) !important; }
 #preview-inner[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05) !important; color: var(--color-gray-900) !important; }
 #preview-inner[data-preview-theme="light"] .pv-nav-item { color: var(--color-gray-500) !important; }
@@ -299,7 +299,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
                             {{-- Secondary button --}}
                             <div x-show="heroButtonSecondaryEnabled === '1'" class="relative group cursor-pointer" @click.stop="startEdit('heroButtonSecondary')">
-                                <div class="pv-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 border py-6" x-show="editing !== 'heroButtonSecondary'">
+                                <div class="pv-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 py-6" x-show="editing !== 'heroButtonSecondary'">
                                     <span x-text="heroButtonSecondaryText || '{{ __('themes::admin.settings.hero.button_secondary_text') }}'"></span>
                                 </div>
                                 <div x-show="editing === 'heroButtonSecondary'" class="flex gap-2" @click.away="stopEdit()">
