@@ -288,7 +288,7 @@ function themeSettingsEditor() {
         },
 
         // Emit both light + dark rules as a single stylesheet string.
-        // Bound via x-text on a <style> element in the preview mock so
+        // Bound via x-text on a style element in the preview mock so
         // the fill reactively updates on every state change without any
         // per-element :style binding.
         heroFillStyleRules() {

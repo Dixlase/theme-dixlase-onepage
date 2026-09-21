@@ -73,6 +73,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #preview-inner[data-preview-theme="light"] .pv-footer-text { color: var(--color-gray-600) !important; }
 #preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: var(--color-gray-300) !important; }
 
+/* Header logo light/dark swap — mirrors partials/header.blade.php. When a
+   dark-mode logo is uploaded, show one image per preview theme; with no dark
+   logo, invert the light mark in the dark preview theme (mono-mark fallback). */
+#preview-inner[data-preview-theme="dark"] .pv-logo-light { display: none !important; }
+#preview-inner[data-preview-theme="light"] .pv-logo-dark { display: none !important; }
+#preview-inner[data-preview-theme="dark"] .pv-logo-invert { filter: invert(1); }
+
 /* Footer SNS icon row — same dimensions as `.sns-list` in
    front/scss/style.scss (the theme SCSS is not loaded on this admin page).
    `--sns-em` = largest glyph dimension / 1em of each Font Awesome brand
@@ -162,8 +169,19 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     {{-- Logo --}}
                     <div class="flex items-center space-x-3">
                         <div class="relative group cursor-pointer" @click="openMediaSelector('header_logo_id_selector', 'header_logo_id', 'header_logo_id_preview', false, 'original')">
-                            <template x-if="headerLogoPreviewUrl">
-                                <img :src="headerLogoPreviewUrl" alt="Logo" class="h-8 w-auto">
+                            {{-- Logo image(s). Mirrors partials/header.blade.php:
+                                 with a dark-mode logo uploaded, swap per preview
+                                 theme; otherwise invert the light mark in the
+                                 dark preview theme. Toggling is driven by the
+                                 .pv-logo-* CSS keyed on data-preview-theme. --}}
+                            <template x-if="headerLogoPreviewUrl && headerLogoDarkPreviewUrl">
+                                <span class="inline-flex">
+                                    <img :src="headerLogoPreviewUrl" alt="Logo" class="pv-logo-light h-8 w-auto">
+                                    <img :src="headerLogoDarkPreviewUrl" alt="Logo" class="pv-logo-dark h-8 w-auto">
+                                </span>
+                            </template>
+                            <template x-if="headerLogoPreviewUrl && !headerLogoDarkPreviewUrl">
+                                <img :src="headerLogoPreviewUrl" alt="Logo" class="pv-logo-invert h-8 w-auto">
                             </template>
                             <template x-if="!headerLogoPreviewUrl">
                                 <svg class="h-8 w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -239,7 +257,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                      every gradient-related state change (shape / mode /
                      color / color2 / primaryColor). Emitted inside the
                      hero <section> so it colocates with the div it targets. --}}
-                <style x-text="heroFillStyleRules()"></style>
+                <style @cspNonce x-text="heroFillStyleRules()"></style>
 
                 {{-- コンテンツ --}}
                 <div class="container mx-auto px-8 py-20 relative z-10">

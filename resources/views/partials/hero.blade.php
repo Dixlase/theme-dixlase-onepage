@@ -66,7 +66,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // the page body colour per appearance mode so the hero fills blend
     // seamlessly into the surrounding page. The two-per-mode background
     // strings are emitted as `.hero-bg-fill{}` + `.dark .hero-bg-fill{}`
-    // rules in a per-render inline <style> below so the .dark class
+    // rules in a per-render inline style block below so the .dark class
     // toggle (from layouts/app.blade.php's appearanceTheme() Alpine data)
     // just works without any Alpine binding on the div itself.
     //
