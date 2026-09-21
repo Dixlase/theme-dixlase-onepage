@@ -46,10 +46,11 @@ agreement obtained from exc-D inc. See LICENSE for details.
 
     <div class="container mx-auto px-4 relative z-10">
         <div class="max-w-2xl mx-auto text-center">
-            {{-- Error code — oversized, semi-transparent so it reads as
-                 a decorative numeral behind the message rather than the
-                 main headline. --}}
-            <p class="text-7xl md:text-8xl lg:text-9xl font-bold leading-none mb-4 text-gray-300 dark:text-gray-700 select-none">
+            {{-- Error code — oversized and toned down so it reads as a
+                 decorative numeral behind the message rather than the main
+                 headline. In dark mode gray-700 vanished into the page
+                 background, so it is a softened white there. --}}
+            <p class="text-7xl md:text-8xl lg:text-9xl font-bold leading-none mb-4 text-gray-300 dark:text-white/80 select-none">
                 {{ $code }}
             </p>
 
