@@ -216,9 +216,25 @@ jobs:
             THEME_DIR="DixlaseOnePage"
             EXPECTED_URL="git@github.com:${{ github.repository }}.git"
 
-            for SITE in brand docs demo keys; do
+            # `keys` was renamed to `authority` (https://authority.dixlase.net/);
+            # /var/www/apps/keys no longer exists in compose-php-1.
+            for SITE in brand docs demo authority; do
               DEST="$BASE/$SITE/themes/$THEME_DIR"
               echo "=== Deploying theme $THEME_DIR to $SITE (${{ steps.target.outputs.env }}) ==="
+
+              # Skip a site that is not set up (renamed, retired, or not yet
+              # bind-mounted). Without this, a rename turns every later run
+              # red at the artisan call and hides real failures — which is
+              # exactly what `keys` did from 2026-09-16 on. Mirrors the same
+              # guard in dixlase-core's deploy.yml.
+              if [ ! -d "$BASE/$SITE" ]; then
+                echo "  SKIP: host path $BASE/$SITE does not exist"
+                continue
+              fi
+              if ! docker exec compose-php-1 test -f "/var/www/apps/$SITE/artisan"; then
+                echo "  SKIP: /var/www/apps/$SITE/artisan not found in compose-php-1"
+                continue
+              fi
 
               # themes ディレクトリがなければ作成
               mkdir -p "$BASE/$SITE/themes"
@@ -267,12 +283,37 @@ jobs:
               elif [ -d "$DEST" ]; then
                 BACKUP="${DEST}.stale.$(date +%Y%m%d-%H%M%S)"
                 echo "WARNING: $DEST exists but has no nested .git; moving aside to $BACKUP and re-cloning fresh."
+                # Diagnostics: this branch should fire once (the first deploy
+                # after the theme's .git is lost), not on every run. If it
+                # recurs, something between deploys removes the nested .git
+                # and this log line is the evidence for tracking it down.
+                echo "  Contents before move-aside: $(ls -A "$DEST" | wc -l) entr(ies); .git present: no"
                 mv "$DEST" "$BACKUP"
                 git clone --branch main "$EXPECTED_URL" "$DEST"
 
               else
                 git clone --branch main "$EXPECTED_URL" "$DEST"
               fi
+
+              # Keep at most STALE_KEEP move-aside copies per site. Each one is
+              # a full ~1.5 MB tree, and core's dls:migration:resync globs
+              # themes/* and reads theme.json from each, so every leftover
+              # copy adds a duplicate `theme:<slug>` scope to that command
+              # (see Src/Note/migration-resync-duplicate-scopes.md). Only
+              # directories matching this theme's own .stale.<timestamp>
+              # suffix are considered, newest kept first.
+              STALE_KEEP=1
+              for OLD in $(ls -dt "$DEST".stale.* 2>/dev/null | tail -n +$((STALE_KEEP + 1))); do
+                case "$OLD" in
+                  "$DEST".stale.*)
+                    echo "  Pruning old move-aside copy: $OLD"
+                    rm -rf "$OLD"
+                    ;;
+                  *)
+                    echo "  Refusing to prune unexpected path: $OLD" >&2
+                    ;;
+                esac
+              done
 
               if [ -f "$DEST/composer.json" ]; then
                 cd "$DEST"
