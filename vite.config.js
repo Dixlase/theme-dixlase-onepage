@@ -2,6 +2,20 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
 export default defineConfig({
+    // Emit asset URLs relative to the file that references them, instead of
+    // Vite's default `base: '/'`. The built CSS lives at
+    // `css/style-<hash>.css` and the fonts at `fonts/<name>.woff2`, so with
+    // the default the stylesheet asked for `/fonts/fa-solid-900.woff2` —
+    // an absolute site-root path that 404s, because the theme is served from
+    // `/assets/themes/DixlaseOnePage/`. Relative `../fonts/...` resolves
+    // correctly wherever the theme is mounted, so this does not have to be
+    // kept in step with the mount path.
+    //
+    // Safe for this theme specifically: the entry URLs are resolved by PHP
+    // from `manifest.json` (AssetHelper), which stores outDir-relative paths
+    // that `base` does not touch, and the JS build is a single entry with no
+    // dynamic imports, so there is no chunk loading to mis-resolve.
+    base: './',
     build: {
         // ビルド出力先（コア側がシンボリックリンクで public/assets/themes/DixlaseOnePage として公開する）
         outDir: resolve(__dirname, 'resources/assets'),
