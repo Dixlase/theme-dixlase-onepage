@@ -3,7 +3,7 @@
     "package": "DixlaseOnePage",
     "package_name": "dixlase/dixlase-onepage",
     "slug": "dixlase-onepage",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": {
         "ja": "Dixlase OnePage テーマ。プラグイン連動型のシングルページ/LP用テーマ。",
         "en": "Dixlase OnePage theme. Plugin-driven single page / landing page theme."
@@ -40,7 +40,7 @@
         "responsive"
     ],
     "requires": {
-        "dixlase": ">=1.0.0",
+        "dixlase": "^0.1.0",
         "dixlase_api": "^0.1",
         "php": ">=8.2"
     },
