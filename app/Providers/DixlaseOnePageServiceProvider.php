@@ -45,6 +45,14 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Load helper functions (dls_onepage_localized_setting etc.).
+        // Kept here rather than in composer.json's autoload.files: core's
+        // sync-local-autoload.php merges an extension's autoload.files into
+        // composer.local.json, so declaring it there registered the same
+        // file twice and composer warned about it. Loading it from the
+        // provider keeps the blast radius inside the theme.
+        require_once __DIR__.'/../Helpers/DixlaseOnePageHelpers.php';
+
         // Bind OnePage's appearance provider to Core's
         // SiteAppearanceProviderInterface contract so out-of-tree
         // consumers (Cloudflare Turnstile widget, third-party
@@ -77,9 +85,6 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
         // stock migrator makes a bare `php artisan migrate` try to
         // re-create tables that ThemeMigrator already created (SQLSTATE
         // 42S01). See PluginLoaderTrait::loadPluginMigrations() in core.
-
-        // Load helper functions (dls_onepage_localized_setting etc.)
-        require_once __DIR__.'/../Helpers/DixlaseOnePageHelpers.php';
 
         // Auto-seed theme settings if table exists but is empty
         $this->autoSeedThemeSettings();
