@@ -30,8 +30,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @extends('themes::layouts.app')
 
-@section('title', ' - ' . __('Home'))
-
 @if(!empty($hasCustomCss))
 @push('styles')
 <link rel="stylesheet" href="{{ route('front.custom-style') }}?v={{ $customAssetVersion }}">

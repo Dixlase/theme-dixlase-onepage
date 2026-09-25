@@ -51,7 +51,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'Dixlase') }} @yield('title')</title>
+    @pageTitle
 
     {{-- Fonts. All four heading families (Cormorant Garamond, Jost,
          Noto Sans JP, Noto Serif JP) are loaded so the operator sees

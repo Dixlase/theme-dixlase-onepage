@@ -26,7 +26,7 @@ agreement obtained from exc-D inc. See LICENSE for details.
 --}}
 @extends('themes::layouts.app')
 
-@section('title', ' - ' . $title)
+@section('title', $title)
 
 @section('content')
 @php

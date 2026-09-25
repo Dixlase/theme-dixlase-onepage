@@ -30,7 +30,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @extends('themes::layouts.preview')
 
-@section('title', ' - ' . __('Preview'))
+@section('title', __('Preview'))
 
 @if(!empty($hasCustomCss))
 @push('styles')
