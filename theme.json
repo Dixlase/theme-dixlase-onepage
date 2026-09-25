@@ -3,7 +3,7 @@
     "package": "DixlaseOnePage",
     "package_name": "dixlase/dixlase-onepage",
     "slug": "dixlase-onepage",
-    "version": "0.1.9",
+    "version": "0.1.0",
     "description": {
         "ja": "Dixlase OnePage テーマ。プラグイン連動型のシングルページ/LP用テーマ。",
         "en": "Dixlase OnePage theme. Plugin-driven single page / landing page theme."
@@ -11,7 +11,7 @@
     "author": "exc-D inc.",
     "email": "info@dixlase.org",
     "url": "https://exc-d.com",
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-or-later",
     "license_template": "license-dual-gpl.txt",
     "commercial_license": {
         "available": false,
