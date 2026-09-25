@@ -416,7 +416,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
     }
 
     /**
-     * 各SNSの完全なURLを生成
+     * Build the full URL for one SNS platform (null when the value is not safe to link)
      */
     protected function generateSnsUrl(string $platform, ?string $value): ?string
     {
@@ -442,7 +442,7 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             return in_array($scheme, ['http', 'https'], true) ? $value : null;
         }
 
-        // プラットフォームごとのURL生成
+        // Build the URL for each platform from a handle or ID.
         return match ($platform) {
             'instagram' => 'https://www.instagram.com/'.ltrim($value, '@').'/',
             'x' => 'https://twitter.com/'.ltrim($value, '@'),
@@ -457,9 +457,17 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
                 ? 'https://www.youtube.com/'.$value
                 : 'https://www.youtube.com/@'.$value,
             'pinterest' => 'https://www.pinterest.com/'.ltrim($value, '@').'/',
-            'discord' => $value, // Discordは招待リンクなのでそのまま
+            // A Discord link is an invite. A full URL was handled above (and
+            // only when it is http/https); anything else must be a bare invite
+            // code. Returning the value unchanged let `javascript:alert(1)` --
+            // which FILTER_VALIDATE_URL rejects, so it never reached the scheme
+            // check -- into the footer of every page.
+            'discord' => preg_match('/\A[A-Za-z0-9-]{2,64}\z/', $value) === 1
+                ? 'https://discord.gg/'.$value
+                : null,
             'github' => 'https://github.com/'.ltrim($value, '@'),
-            default => $value,
+            // Unknown platform: never echo a raw value into an href.
+            default => null,
         };
     }
 }
