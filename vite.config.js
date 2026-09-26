@@ -141,6 +141,13 @@ export default defineConfig({
 
     // CSS設定
     css: {
+        // Anchor PostCSS to this repo so Vite does not walk up and
+        // pick up the Dixlase Core `postcss.config.js` (a different
+        // Tailwind bundle configured for core; when building from a
+        // Core-mounted checkout, Vite would otherwise find core's
+        // file first and mix incompatible plugin registrations).
+        // Point at this theme's own postcss.config.js explicitly.
+        postcss: resolve(__dirname, 'postcss.config.js'),
         devSourcemap: true,
         preprocessorOptions: {
             scss: {
