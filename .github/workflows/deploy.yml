@@ -219,7 +219,37 @@ jobs:
             # `keys` was renamed to `authority` (https://authority.dixlase.net/);
             # /var/www/apps/keys no longer exists in compose-php-1.
             for SITE in brand docs demo authority; do
-              DEST="$BASE/$SITE/themes/$THEME_DIR"
+              # Resolve the site layout. A Docker Installer instance keeps the app in
+              # $BASE/$SITE/html and runs its own PHP container named after
+              # CONTAINER_PREFIX in $BASE/$SITE/.env, with files owned by
+              # deploy:www-data. The legacy shared stack mounts $BASE/$SITE into
+              # compose-php-1 at /var/www/apps/$SITE, owned by deploy:deploy.
+              if [ -f "$BASE/$SITE/docker-compose.yml" ] && [ -d "$BASE/$SITE/html" ]; then
+                SITE_ROOT="$BASE/$SITE/html"
+                APP_ROOT="/var/www/html"
+                PREFIX=$(grep -E '^CONTAINER_PREFIX=' "$BASE/$SITE/.env" 2>/dev/null | cut -d= -f2)
+                PHP_CONTAINER="${PREFIX:-dixlase-$SITE}-app"
+                OWNER="1001:33"
+                RUN_AS="-u www-data"
+                # The installer keeps dev packages in vendor/, so an autoload map
+                # built with --no-dev drops their service providers and every request
+                # then fails in package discovery.
+                NO_DEV=""
+              else
+                SITE_ROOT="$BASE/$SITE"
+                APP_ROOT="/var/www/apps/$SITE"
+                PHP_CONTAINER="compose-php-1"
+                OWNER="1001:1001"
+                RUN_AS=""
+                NO_DEV="--no-dev"
+              fi
+              # Installer sites need group write too: www-data writes caches and the
+              # deploy user's next rsync must be able to replace what it wrote.
+              fix_owner() {
+                docker exec "$PHP_CONTAINER" chown -R "$OWNER" "$@"
+                if [ -n "$RUN_AS" ]; then docker exec "$PHP_CONTAINER" chmod -R g+rwX "$@"; fi
+              }
+              DEST="$SITE_ROOT/themes/$THEME_DIR"
               echo "=== Deploying theme $THEME_DIR to $SITE (${{ steps.target.outputs.env }}) ==="
 
               # Skip a site that is not set up (renamed, retired, or not yet
@@ -227,17 +257,17 @@ jobs:
               # red at the artisan call and hides real failures — which is
               # exactly what `keys` did from 2026-09-16 on. Mirrors the same
               # guard in dixlase-core's deploy.yml.
-              if [ ! -d "$BASE/$SITE" ]; then
+              if [ ! -d "$SITE_ROOT" ]; then
                 echo "  SKIP: host path $BASE/$SITE does not exist"
                 continue
               fi
-              if ! docker exec compose-php-1 test -f "/var/www/apps/$SITE/artisan"; then
-                echo "  SKIP: /var/www/apps/$SITE/artisan not found in compose-php-1"
+              if ! docker exec "$PHP_CONTAINER" test -f "$APP_ROOT/artisan"; then
+                echo "  SKIP: $APP_ROOT/artisan not found in $PHP_CONTAINER"
                 continue
               fi
 
               # themes ディレクトリがなければ作成
-              mkdir -p "$BASE/$SITE/themes"
+              mkdir -p "$SITE_ROOT/themes"
 
               # Move-aside copies must NOT live under themes/. The site's
               # scripts/sync-local-autoload.php globs themes/* and registers
@@ -248,9 +278,9 @@ jobs:
               # call, not a degraded theme. Park them outside the glob instead,
               # and migrate any copy an older revision of this workflow left
               # behind so the next deploy self-heals.
-              BACKUP_ROOT="$BASE/$SITE/.theme-backups"
+              BACKUP_ROOT="$SITE_ROOT/.theme-backups"
               mkdir -p "$BACKUP_ROOT"
-              for LEGACY in "$BASE/$SITE/themes/$THEME_DIR".stale.*; do
+              for LEGACY in "$SITE_ROOT/themes/$THEME_DIR".stale.*; do
                 [ -d "$LEGACY" ] || continue
                 echo "  Migrating legacy copy out of themes/: $LEGACY"
                 mv "$LEGACY" "$BACKUP_ROOT/$(basename "$LEGACY")"
@@ -351,7 +381,7 @@ jobs:
               # の symlink を張ることがあり、その場合 `mkdir -p` がパスに非ディレクトリ
               # (symlink) を見つけて失敗する。symlink や通常ファイルが居座っていれば
               # 取り除いてから新規ディレクトリを掘り直す。
-              ASSET_DIR="$BASE/$SITE/public/assets/themes/$THEME_DIR"
+              ASSET_DIR="$SITE_ROOT/public/assets/themes/$THEME_DIR"
               if [ -L "$ASSET_DIR" ] || { [ -e "$ASSET_DIR" ] && [ ! -d "$ASSET_DIR" ]; }; then
                 rm -f "$ASSET_DIR"
               fi
@@ -417,14 +447,14 @@ jobs:
               # autoload.files entries unconditionally, which turns a stale
               # entry into a fatal on every request. Regenerating here keeps
               # the map in step with the tree we just deployed.
-              if [ -f "$BASE/$SITE/scripts/sync-local-autoload.php" ]; then
-                ( cd "$BASE/$SITE" \
+              if [ -f "$SITE_ROOT/scripts/sync-local-autoload.php" ]; then
+                ( cd "$SITE_ROOT" \
                   && php scripts/sync-local-autoload.php \
                   && composer dump-autoload --no-scripts --no-interaction ) \
                   || { echo "ERROR: autoload regeneration failed for $SITE" >&2; exit 1; }
               fi
 
-              docker exec compose-php-1 php /var/www/apps/$SITE/artisan optimize:clear
+              docker exec $RUN_AS "$PHP_CONTAINER" php $APP_ROOT/artisan optimize:clear
             done
 
             echo "=== Theme deploy complete ==="
