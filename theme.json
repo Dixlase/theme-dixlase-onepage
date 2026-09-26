@@ -138,8 +138,8 @@
         }
     },
     "files": {
-        "CHANGELOG.ja.md": "sha256:4c524deb9850009a029a93ac0bc610563c75ddd5c6ecca1756a012c807db0fda",
-        "CHANGELOG.md": "sha256:f453ab266c2ba199ec64d0ca189c89e254d660669a058aa2d3da0a7a18e2d246",
+        "CHANGELOG.ja.md": "sha256:18ea670d93518147d69b7d609c9ab55ea78e441d0a638cf175b497755fcb627b",
+        "CHANGELOG.md": "sha256:8c8458e74ab19adce5673268051dc4a7214dc318784c99333c71fe33f3daf8fb",
         "CONTRIBUTING.ja.md": "sha256:e0c5e0620ca0442664b7afc3ffdc845f505c864fa307b0ba3a8d8506a532ec95",
         "CONTRIBUTING.md": "sha256:e1deb6b11f8032b0b450de3116c88bf93fce813484d07d4ac68b5e965c2b64ee",
         "COPYRIGHT-POLICY.ja.md": "sha256:0fd5693910f7d31ed5f591912d476f3626f54035a96d6621a51d5bd73a0c0bd1",
@@ -149,8 +149,8 @@
         "LICENSE-COMMERCIAL.ja": "sha256:58b890eee17d237bca9a08d8f8fbb8d850794e38b98adf501e3477412f86a19e",
         "NOTICE": "sha256:a14b5bc2fc078f1d0cb46a8fbbabd42ad4d28e0d5ac2202a25db51e0efd8da13",
         "NOTICE.ja": "sha256:fe86a10232ba2abb62d66297e3c18d9f33ed3f236eb827b0295e1d6b35ae2af2",
-        "README.ja.md": "sha256:701a537d1fc0d4a92a411bd13bed715411c8d76303bf3ae3f38502db2f80252f",
-        "README.md": "sha256:bbc3e6ec6e9e049032120d84690aaf476f91082646ea021c5aed281fd3c8b3a0",
+        "README.ja.md": "sha256:cae8460e923bb71235d89328bba2f4e2224f4a36bc41a2ab7005f7e8404c8a48",
+        "README.md": "sha256:c53df163e4e94a7d89c714aee6f39fb724f08d436cb8a62ee472b6864cc0a8a6",
         "SECURITY.ja.md": "sha256:b71be9b4a0815cfc74e50d37183d7484d5ec5b0ac440c88b6370e905bfca14b8",
         "SECURITY.md": "sha256:f7bf590f8d9e65b115c41d18cebf0e4658ef48108837109d72fe06fc69ce547f",
         "app/Helpers/DixlaseOnePageHelpers.php": "sha256:3cd37426cdcee1babde4e26dee91449b6b8bef42c8452b69b545117e9c237f4f",
@@ -211,6 +211,6 @@
     "signing": {
         "algo": "ed25519",
         "key_id": "dixlase-authority-2026",
-        "signed_at": "2026-09-26T03:39:21+00:00"
+        "signed_at": "2026-09-26T07:42:06+00:00"
     }
 }
