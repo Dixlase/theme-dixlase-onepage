@@ -15,4 +15,3 @@ Dixlase OnePage テーマの主要な変更はすべてこのファイルに記�
   （`responsive`）。
 - フロントページビルダー対応（`front_page_builder`）。
 - カスタマイズ可能なカラー（`custom_colors`）。
-- 多言語コンテンツ対応（`multilingual-content` capability）。

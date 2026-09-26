@@ -9,8 +9,7 @@ The default theme that ships with every Dixlase install: a plugin-driven single-
 - **Hero section** — Image or video background, main title, sub title, and two toggleable CTA buttons.
 - **Header / Footer** — Logo, favicon, footer description, copyright with auto-updating year, and SNS link slots.
 - **Dark mode & primary color** — Auto / Light / Dark; accent color picked from a fixed palette.
-- **Multilingual hero text** — Hero title, sub-title, and button labels are translatable via DixlaseMultilingual.
-- **Plugin slots** — Header / footer menus (DixlaseMenus), contact form (DixlaseInquiry), language switcher (DixlaseMultilingual).
+- **Plugin slots** — Header / footer menus (DixlaseMenus), contact form (DixlaseInquiry).
 - **Front-page builder** — Renders DixlasePages content inline when the page builder is in use.
 
 ## Installation
@@ -19,7 +18,7 @@ The default theme that ships with every Dixlase install: a plugin-driven single-
 
 ## Usage
 
-Open **Dashboard → Appearance → Theme Settings** to edit the hero, header / footer, default locale, primary color, appearance mode, and plugin slots. Translations for hero text live in the central translation manager when DixlaseMultilingual is enabled.
+Open **Dashboard → Appearance → Theme Settings** to edit the hero, header / footer, default locale, primary color, appearance mode, and plugin slots.
 
 ## Documentation
 

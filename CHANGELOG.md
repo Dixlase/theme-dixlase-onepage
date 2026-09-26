@@ -14,4 +14,3 @@ Initial release. Requires Dixlase `^0.1.0` (Plugin API `^0.1`), PHP `>= 8.3`.
 - Light and dark mode (`dark_mode`) and a fully responsive layout (`responsive`).
 - Front-page builder support (`front_page_builder`).
 - Customizable colors (`custom_colors`).
-- Multilingual content support (`multilingual-content` capability).
