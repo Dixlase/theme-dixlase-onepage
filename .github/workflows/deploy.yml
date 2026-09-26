@@ -336,10 +336,14 @@ jobs:
                 esac
               done
 
-              if [ -f "$DEST/composer.json" ]; then
-                cd "$DEST"
-                composer install --no-dev --no-interaction --optimize-autoloader
-              fi
+              # The theme has no Composer dependencies (composer.json requires only
+              # php and declares no autoload), so `composer install` here produced
+              # nothing but vendor/ and composer.lock. Both sit outside the theme
+              # signature, and signature verification counted them as extra files,
+              # so the sites reported the theme as invalid. Remove the copies left
+              # by earlier deploys instead of creating them.
+              cd "$DEST"
+              rm -rf "$DEST/vendor" "$DEST/composer.lock"
 
               # CIでビルド済みのフロントエンドアセットをコピー
               # theme installer は dev 用に
