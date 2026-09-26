@@ -206,11 +206,11 @@
         "tests/Unit/LinkSchemeGuardTest.php": "sha256:5a2d092a8a2cf982f3d423f9e47a5a38003ab7a2f4f8932f49201096b696dbab",
         "tests/Unit/VersionManifestConsistencyTest.php": "sha256:34dc5aca39825d9e998cc60c1eaf4ba13617ba576131334490c5c95d0eeeb13c",
         "thumbnail.png": "sha256:e61b47ba25acbcec1647c2662234bc615360c75ebfbe8c710f8642093980918c",
-        "vite.config.js": "sha256:1ea823a06c06710805a580323a9b4be856c0fca9c3349cf23c234314ad078e27"
+        "vite.config.js": "sha256:651c3ce47af05e3a6c282b7d1b2e9c31a1cc2f0ef7fc7405ef7c599e032c82f2"
     },
     "signing": {
         "algo": "ed25519",
         "key_id": "dixlase-authority-2026",
-        "signed_at": "2026-09-26T07:42:06+00:00"
+        "signed_at": "2026-09-26T13:43:17+00:00"
     }
 }
