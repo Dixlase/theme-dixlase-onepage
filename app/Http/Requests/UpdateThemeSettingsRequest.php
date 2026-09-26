@@ -92,17 +92,17 @@ class UpdateThemeSettingsRequest extends FormRequest
             'footer_copyright' => 'nullable|string|max:500',
 
             // SNS Links
-            'footer_sns_instagram' => 'nullable|string|max:500',
-            'footer_sns_x' => 'nullable|string|max:500',
-            'footer_sns_facebook' => 'nullable|string|max:500',
-            'footer_sns_tiktok' => 'nullable|string|max:500',
-            'footer_sns_bluesky' => 'nullable|string|max:500',
-            'footer_sns_threads' => 'nullable|string|max:500',
-            'footer_sns_linkedin' => 'nullable|string|max:500',
-            'footer_sns_youtube' => 'nullable|string|max:500',
-            'footer_sns_pinterest' => 'nullable|string|max:500',
-            'footer_sns_discord' => 'nullable|string|max:500',
-            'footer_sns_github' => 'nullable|string|max:500',
+            'footer_sns_instagram' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_x' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_facebook' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_tiktok' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_bluesky' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_threads' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_linkedin' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_youtube' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_pinterest' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_discord' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'footer_sns_github' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
 
             // Appearance Mode
             'appearance_mode' => 'required|in:0,1,2',

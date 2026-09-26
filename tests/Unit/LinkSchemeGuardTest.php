@@ -138,4 +138,55 @@ class LinkSchemeGuardTest extends TestCase
             'A bare handle must still be expanded into the platform URL.'
         );
     }
+
+    /**
+     * `javascript:alert(1)` is not a URL to FILTER_VALIDATE_URL, so it skipped
+     * the scheme check and fell through to the per-platform match, where the
+     * Discord arm returned the value unchanged into the footer of every page.
+     *
+     * @return array<string, array{0: string}>
+     */
+    public static function discordPayloads(): array
+    {
+        return [
+            'javascript' => ['javascript:alert(document.cookie)'],
+            'tab in scheme' => ["java\tscript:alert(1)"],
+            'data url' => ['data:text/html,<script>alert(1)</script>'],
+            'vbscript' => ['vbscript:msgbox(1)'],
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('discordPayloads')]
+    public function test_discord_never_returns_an_executable_link(string $value): void
+    {
+        $this->assertNull($this->snsUrl('discord', $value));
+    }
+
+    public function test_discord_accepts_an_invite_url_or_code(): void
+    {
+        $this->assertSame('https://discord.gg/abc123', $this->snsUrl('discord', 'https://discord.gg/abc123'));
+        $this->assertSame('https://discord.gg/abc-123', $this->snsUrl('discord', 'abc-123'));
+    }
+
+    public function test_an_unknown_platform_never_echoes_the_raw_value(): void
+    {
+        $this->assertNull($this->snsUrl('myspace', 'javascript:alert(1)'));
+    }
+
+    public function test_every_sns_field_uses_the_safe_link_rule(): void
+    {
+        $rules = (new UpdateThemeSettingsRequest())->rules();
+
+        foreach ($rules as $field => $rule) {
+            if (! str_starts_with($field, 'footer_sns_')) {
+                continue;
+            }
+
+            $this->assertIsArray($rule, "{$field} must carry the safe-link closure");
+            $this->assertNotEmpty(
+                array_filter($rule, fn ($r) => $r instanceof \Closure),
+                "{$field} must carry the safe-link closure"
+            );
+        }
+    }
 }
