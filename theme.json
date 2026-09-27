@@ -26,7 +26,7 @@
             "front/scss/style.scss"
         ]
     },
-    "thumbnail": "resources/assets/thumbnail.png",
+    "thumbnail": "thumbnail.png",
     "namespace": "Themes\\DixlaseOnePage",
     "providers": [
         "Themes\\DixlaseOnePage\\App\\Providers\\DixlaseOnePageServiceProvider"
@@ -211,6 +211,6 @@
     "signing": {
         "algo": "ed25519",
         "key_id": "dixlase-authority-2026",
-        "signed_at": "2026-09-27T10:02:23+00:00"
+        "signed_at": "2026-09-27T10:05:48+00:00"
     }
 }
