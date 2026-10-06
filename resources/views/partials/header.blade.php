@@ -324,6 +324,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
             {{-- Desktop Extras (Auth Buttons + Language Switcher) --}}
             <div x-ref="navExtras" class="hidden lg:flex items-center" :class="{ '!hidden': forceHamburger }">
+                {{-- Appearance switcher. First in navExtras, so it sits between
+                     the menu and anything a site adds after it (a language
+                     switcher, the auth buttons). --}}
+                @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1')
+                <div class="flex items-center ml-4">
+                    @include('themes::partials.appearance-toggle', ['variant' => 'desktop'])
+                </div>
+                @endif
+
                 {{-- User Auth Buttons (provided by DixlaseUsers plugin) --}}
                 @if(view()->exists('dixlase-users::components.auth-buttons'))
                 <div class="flex items-center ml-4">
@@ -534,6 +543,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                     {{ __('No menu items') }}
                 </p>
             @endforelse
+
+            {{-- Appearance switcher — navExtras is hidden below lg, so the
+                 drawer carries its own copy. --}}
+            @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1')
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="px-4 py-2">
+                    @include('themes::partials.appearance-toggle', ['variant' => 'mobile'])
+                </div>
+            </div>
+            @endif
 
             {{-- Mobile User Auth (provided by DixlaseUsers plugin) --}}
             @if(view()->exists('dixlase-users::components.auth-buttons'))

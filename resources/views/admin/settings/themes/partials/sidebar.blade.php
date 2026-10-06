@@ -42,6 +42,22 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             <option value="2" {{ old('appearance_mode', $settings->appearance_mode ?? '0') === '2' ? 'selected' : '' }}>{{ __('themes::admin.settings.appearance.mode_dark') }}</option>
         </select>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
+
+        {{-- Front-end toggle. The mode above is the default; with this on,
+             a visitor can pick auto / light / dark for themselves and the
+             choice is remembered in their browser. Off by default so a
+             site that wants a fixed appearance keeps it. --}}
+        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('themes::admin.settings.appearance.toggle_title') }}</div>
+            <x-form-toggle
+                id="appearance_toggle_enabled_toggle"
+                name="appearance_toggle_enabled"
+                :label="__('themes::admin.settings.appearance.toggle_label')"
+                xModel="appearanceToggleEnabled"
+                color="blue"
+            />
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.toggle_help') }}</p>
+        </div>
     </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Heading Font (Gothic / Mincho) ===== --}}

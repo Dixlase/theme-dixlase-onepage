@@ -38,28 +38,90 @@ const Alpine = window.Alpine;
  * 
  * @param {string} defaultValue - テーマ設定の値 ('0': 自動, '1': ライト, '2': ダーク)
  */
+/**
+ * Appearance mode for the front end.
+ *
+ * `defaultValue` is the theme setting ('0' auto / '1' light / '2' dark) and
+ * acts as the default. When the front-end toggle is enabled a visitor can
+ * override it; that choice is kept in localStorage under STORAGE_KEY and wins
+ * on every later page. Clearing it ("auto" is a real value, not "unset") is
+ * done by choosing the same mode the operator set — there is deliberately no
+ * separate "reset" state to explain.
+ *
+ * The same precedence is duplicated in the FOUC guard in layouts/app.blade.php,
+ * which runs before Alpine and has to reach the same answer; keep the two in
+ * step.
+ */
+window.APPEARANCE_STORAGE_KEY = 'dls-appearance-mode';
+
 window.appearanceTheme = function (defaultValue) {
     return {
-        theme: defaultValue, // テーマ設定の値を使用
+        theme: defaultValue,
         isDark: false,
 
+        // The visitor's stored choice, or the theme setting when there is none.
+        resolveInitialTheme() {
+            try {
+                const stored = window.localStorage.getItem(window.APPEARANCE_STORAGE_KEY);
+                if (stored === '0' || stored === '1' || stored === '2') {
+                    return stored;
+                }
+            } catch (e) {
+                // Private mode or blocked storage: fall back to the setting.
+            }
+
+            return defaultValue;
+        },
+
         applyTheme() {
-            // テーマ設定に基づいてダークモードを判定
             this.isDark = this.theme === '2' ||
                 (this.theme === '0' && window.matchMedia('(prefers-color-scheme: dark)').matches);
             document.documentElement.classList.toggle('dark', this.isDark);
             document.documentElement.classList.toggle('light', !this.isDark);
         },
 
+        // Class string for one option button. Returned from a method rather
+        // than composed in the directive, so the markup stays within what the
+        // @alpinejs/csp build allows (no expressions in attributes).
+        optionClass(value) {
+            return this.theme === value
+                ? 'dls-appearance-option is-active'
+                : 'dls-appearance-option';
+        },
+
+        // aria-pressed wants the string 'true'/'false'.
+        optionPressed(value) {
+            return this.theme === value ? 'true' : 'false';
+        },
+
+        // Called by the header and mobile-menu controls.
+        setTheme(value) {
+            if (value !== '0' && value !== '1' && value !== '2') {
+                return;
+            }
+
+            this.theme = value;
+
+            try {
+                window.localStorage.setItem(window.APPEARANCE_STORAGE_KEY, value);
+            } catch (e) {
+                // Storage unavailable: the choice still applies to this page.
+            }
+
+            this.applyTheme();
+        },
+
         init() {
+            this.theme = this.resolveInitialTheme();
             this.applyTheme();
 
-            // 自動モードの場合、システム設定変更を監視
-            if (this.theme === '0') {
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            // Follow the OS only while on auto. The listener stays attached for
+            // the life of the page because the visitor can switch back to auto.
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (this.theme === '0') {
                     this.applyTheme();
-                });
-            }
+                }
+            });
         }
     }
 };

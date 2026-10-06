@@ -37,10 +37,21 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     :class="{ 'dark': isDark, 'light': !isDark }"
 >
 <head>
-    {{-- FOUC防止: Alpine.js初期化前にダークモードクラスを即時適用 --}}
+    {{-- Apply the dark/light class before Alpine boots, so the page never
+         paints in the wrong theme. The visitor's stored choice wins over the
+         theme setting — the same precedence appearanceTheme() applies in
+         resources/src/front/js/app.js. Keep the two in step. --}}
     <script @cspNonce>
     (function(){
         var m = '{{ $themeSettings->appearance_mode ?? '0' }}';
+        try {
+            var stored = window.localStorage.getItem('dls-appearance-mode');
+            if (stored === '0' || stored === '1' || stored === '2') {
+                m = stored;
+            }
+        } catch (e) {
+            // Private mode or blocked storage: keep the theme setting.
+        }
         if (m === '2' || (m === '0' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             document.documentElement.classList.remove('light');

@@ -154,6 +154,7 @@ class UpdateThemeSettingsRequest extends FormRequest
 
             // DixlaseMultilingual integration
             'multilingual_switcher_enabled' => 'nullable|in:0,1',
+            'appearance_toggle_enabled' => 'nullable|in:0,1',
         ];
     }
 

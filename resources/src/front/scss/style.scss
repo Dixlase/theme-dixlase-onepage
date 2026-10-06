@@ -420,3 +420,78 @@ footer {
         }
     }
 }
+
+// Appearance switcher (header + mobile drawer)
+//
+// Rendered by partials/appearance-toggle.blade.php when the operator enables
+// it. Colours come from the Tailwind v4 CSS variables so the control follows
+// the palette in both themes without a `dark:` variant per rule.
+.dls-appearance {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+
+    &__label {
+        font-size: var(--text-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-gray-700);
+    }
+
+    &__options {
+        display: inline-flex;
+        align-items: center;
+        gap: calc(var(--spacing) * 0.5);
+        padding: calc(var(--spacing) * 0.5);
+        border-radius: var(--radius-lg);
+        background-color: color-mix(in oklab, var(--color-gray-500) 12%, transparent);
+    }
+
+    &--mobile {
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+.dls-appearance-option {
+    display: grid;
+    place-items: center;
+    inline-size: calc(var(--spacing) * 8);
+    block-size: calc(var(--spacing) * 8);
+    border-radius: var(--radius-md);
+    color: var(--color-gray-600);
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color var(--default-transition-duration) var(--default-transition-timing-function),
+                color var(--default-transition-duration) var(--default-transition-timing-function);
+
+    &:hover {
+        color: var(--color-gray-900);
+        background-color: color-mix(in oklab, var(--color-gray-500) 16%, transparent);
+    }
+
+    // The mode currently in effect.
+    &.is-active {
+        color: var(--color-primary, var(--color-blue-600));
+        background-color: var(--color-white);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+}
+
+.dark {
+    .dls-appearance__label {
+        color: var(--color-gray-300);
+    }
+
+    .dls-appearance-option {
+        color: var(--color-gray-400);
+
+        &:hover {
+            color: var(--color-white);
+        }
+
+        &.is-active {
+            color: var(--color-primary-dark-safe, var(--color-blue-400));
+            background-color: color-mix(in oklab, var(--color-gray-100) 14%, transparent);
+        }
+    }
+}

@@ -291,6 +291,10 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
+            // Whether the front end offers a control to change the mode above.
+            // Off by default so an existing site keeps the fixed appearance
+            // the operator already chose.
+            'appearance_toggle_enabled' => '0',
             'heading_font_family' => 'noto-sans-jp', // cormorant | jost | noto-sans-jp | noto-serif-jp
             // Per-region apply toggles. When '0', that region inherits the body
             // font (system stack); when '1', it uses --font-heading.

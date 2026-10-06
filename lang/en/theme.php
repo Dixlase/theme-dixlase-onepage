@@ -49,6 +49,14 @@ return [
         'toggle_menu' => 'Toggle menu',
     ],
 
+    // Front-end appearance switcher (shown when the theme setting allows it)
+    'appearance' => [
+        'label' => 'Appearance',
+        'auto' => 'Auto',
+        'light' => 'Light',
+        'dark' => 'Dark',
+    ],
+
     // Footer
     'footer' => [
         'about_title' => 'About Us',

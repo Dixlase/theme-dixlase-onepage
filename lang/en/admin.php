@@ -193,6 +193,9 @@ return [
             'mode_light' => 'Light',
             'mode_dark' => 'Dark',
             'mode_help' => 'Auto: Follows user system settings / Light: Bright theme / Dark: Dark theme',
+            'toggle_title' => 'Appearance toggle on the front end',
+            'toggle_label' => 'Let visitors change the appearance mode',
+            'toggle_help' => 'Adds a control to the header and the mobile menu. The mode above stays the default; a visitor\'s choice overrides it and is remembered in their browser.',
         ],
 
         // Default locale (primary language the theme settings are authored in)
