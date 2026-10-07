@@ -35,8 +35,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
      layouts/app.blade.php puts on <html>, so this partial carries no state of
      its own and works wherever it is included.
 
-     `$variant` is 'desktop' (header) or 'mobile' (hamburger menu); it only
-     changes the surrounding layout classes, not the behaviour.
+     `$variant` is 'footer' (the stock placement, above the site name),
+     'desktop' or 'mobile'; it only changes the surrounding layout classes,
+     not the behaviour.
 --}}
 @php
     $variant = $variant ?? 'desktop';
@@ -48,7 +49,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 @endphp
 
 <div
-    class="dls-appearance {{ $variant === 'mobile' ? 'dls-appearance--mobile' : 'dls-appearance--desktop' }}"
+    class="dls-appearance dls-appearance--{{ $variant }}"
     role="group"
     aria-label="{{ __('themes::theme.appearance.label') }}"
 >

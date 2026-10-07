@@ -450,6 +450,12 @@ footer {
         justify-content: space-between;
         width: 100%;
     }
+
+    // Footer placement: centred on its own row above the site name, with
+    // the same vertical rhythm as the SNS row it follows.
+    &--footer {
+        justify-content: center;
+    }
 }
 
 .dls-appearance-option {
