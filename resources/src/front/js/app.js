@@ -54,6 +54,10 @@ const Alpine = window.Alpine;
  */
 window.APPEARANCE_STORAGE_KEY = 'dls-appearance-mode';
 
+// How long the surface colours cross-fade when the appearance mode
+// changes. Keep in step with `--dls-theme-fade` in style.scss.
+window.APPEARANCE_FADE_MS = 300;
+
 window.appearanceTheme = function (defaultValue) {
     return {
         theme: defaultValue,
@@ -80,6 +84,34 @@ window.appearanceTheme = function (defaultValue) {
             document.documentElement.classList.toggle('light', !this.isDark);
         },
 
+        // Timer that takes the cross-fade class off again.
+        fadeTimer: null,
+
+        // Turn the colour transition on for the length of one switch only.
+        // The surface colours come from Tailwind utilities spread over every
+        // section, so the universal selector is the only way to reach them
+        // all — and a permanent `* { transition: color }` would slow down
+        // every hover and fade the whole page in on first paint. Scoping it
+        // to a class that lives for APPEARANCE_FADE_MS keeps it to the
+        // switch itself.
+        beginFade() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return;
+            }
+
+            const root = document.documentElement;
+            root.classList.add('dls-theme-switching');
+
+            if (this.fadeTimer !== null) {
+                window.clearTimeout(this.fadeTimer);
+            }
+
+            this.fadeTimer = window.setTimeout(() => {
+                root.classList.remove('dls-theme-switching');
+                this.fadeTimer = null;
+            }, window.APPEARANCE_FADE_MS);
+        },
+
         // Class string for one option button. Returned from a method rather
         // than composed in the directive, so the markup stays within what the
         // @alpinejs/csp build allows (no expressions in attributes).
@@ -94,7 +126,7 @@ window.appearanceTheme = function (defaultValue) {
             return this.theme === value ? 'true' : 'false';
         },
 
-        // Called by the header and mobile-menu controls.
+        // Called by the footer switcher.
         setTheme(value) {
             if (value !== '0' && value !== '1' && value !== '2') {
                 return;
@@ -108,6 +140,7 @@ window.appearanceTheme = function (defaultValue) {
                 // Storage unavailable: the choice still applies to this page.
             }
 
+            this.beginFade();
             this.applyTheme();
         },
 
@@ -119,6 +152,7 @@ window.appearanceTheme = function (defaultValue) {
             // the life of the page because the visitor can switch back to auto.
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
                 if (this.theme === '0') {
+                    this.beginFade();
                     this.applyTheme();
                 }
             });
