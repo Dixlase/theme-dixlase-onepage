@@ -33,20 +33,16 @@ const Alpine = window.Alpine;
 // =============================================================================
 
 /**
- * 外観モード（ライト/ダーク）を制御する Alpine.js 関数
- * テーマ設定の値に基づいて自動的にテーマを切り替える
- * 
- * @param {string} defaultValue - テーマ設定の値 ('0': 自動, '1': ライト, '2': ダーク)
- */
-/**
  * Appearance mode for the front end.
  *
  * `defaultValue` is the theme setting ('0' auto / '1' light / '2' dark) and
- * acts as the default. When the front-end toggle is enabled a visitor can
- * override it; that choice is kept in localStorage under STORAGE_KEY and wins
- * on every later page. Clearing it ("auto" is a real value, not "unset") is
- * done by choosing the same mode the operator set — there is deliberately no
- * separate "reset" state to explain.
+ * acts as the default. When the front-end switcher is enabled
+ * (`toggleEnabled`), a visitor can override it; that choice is kept in
+ * localStorage under STORAGE_KEY and wins on every later page. While the
+ * switcher is disabled the stored choice is ignored, so turning the switcher
+ * off returns every visitor to the operator's mode. A stored choice is a
+ * fixed value: picking the mode that matches today's setting does not follow
+ * a later change of that setting.
  *
  * The same precedence is duplicated in the FOUC guard in layouts/app.blade.php,
  * which runs before Alpine and has to reach the same answer; keep the two in
@@ -58,13 +54,17 @@ window.APPEARANCE_STORAGE_KEY = 'dls-appearance-mode';
 // changes. Keep in step with `--dls-theme-fade` in style.scss.
 window.APPEARANCE_FADE_MS = 300;
 
-window.appearanceTheme = function (defaultValue) {
+window.appearanceTheme = function (defaultValue, toggleEnabled = false) {
     return {
         theme: defaultValue,
         isDark: false,
 
-        // The visitor's stored choice, or the theme setting when there is none.
+        // The visitor's stored choice while the switcher is enabled, otherwise
+        // the theme setting.
         resolveInitialTheme() {
+            if (!toggleEnabled) {
+                return defaultValue;
+            }
             try {
                 const stored = window.localStorage.getItem(window.APPEARANCE_STORAGE_KEY);
                 if (stored === '0' || stored === '1' || stored === '2') {

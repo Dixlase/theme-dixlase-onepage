@@ -32,25 +32,28 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 <html
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     class="scroll-smooth"
-    x-data="appearanceTheme('{{ $themeSettings->appearance_mode ?? '0' }}')"
-    x-init="init()"
+    x-data="appearanceTheme('{{ $themeSettings->appearance_mode ?? '0' }}', {{ (string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1' ? 'true' : 'false' }})"
     :class="{ 'dark': isDark, 'light': !isDark }"
 >
 <head>
     {{-- Apply the dark/light class before Alpine boots, so the page never
          paints in the wrong theme. The visitor's stored choice wins over the
-         theme setting — the same precedence appearanceTheme() applies in
+         theme setting, but only while the front-end switcher is enabled — the
+         same precedence appearanceTheme() applies in
          resources/src/front/js/app.js. Keep the two in step. --}}
     <script @cspNonce>
     (function(){
         var m = '{{ $themeSettings->appearance_mode ?? '0' }}';
-        try {
-            var stored = window.localStorage.getItem('dls-appearance-mode');
-            if (stored === '0' || stored === '1' || stored === '2') {
-                m = stored;
+        var toggleEnabled = {{ (string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1' ? 'true' : 'false' }};
+        if (toggleEnabled) {
+            try {
+                var stored = window.localStorage.getItem('dls-appearance-mode');
+                if (stored === '0' || stored === '1' || stored === '2') {
+                    m = stored;
+                }
+            } catch (e) {
+                // Private mode or blocked storage: keep the theme setting.
             }
-        } catch (e) {
-            // Private mode or blocked storage: keep the theme setting.
         }
         if (m === '2' || (m === '0' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
