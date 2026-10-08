@@ -177,14 +177,16 @@ jobs:
           cache-dependency-path: dixlase-ctx/themes/DixlaseOnePage/package-lock.json
 
       - name: Build frontend assets
-        # `--outDir` written as an absolute path so it lands back at
-        # the workspace root regardless of the working-directory
-        # switch — the rsync step downstream still uploads `dist/`
-        # from the workspace root.
+        # No `--outDir` override: `vite.config.js` already points
+        # `outDir` at `resources/assets`, which is where Dixlase Core
+        # expects a theme's build to live — `public/assets/themes/<slug>`
+        # is a symlink to it. Overriding the output here is what made the
+        # deploy write the build somewhere else and then fight core for
+        # that path (#61). `emptyOutDir` is on, so each build starts clean.
         working-directory: dixlase-ctx/themes/DixlaseOnePage
         run: |
           npm ci --no-audit --no-fund
-          NODE_ENV=production npx vite build --outDir "$GITHUB_WORKSPACE/dist"
+          NODE_ENV=production npx vite build
 
       - name: Create shared build directory on server
         uses: appleboy/ssh-action@v1
@@ -198,7 +200,7 @@ jobs:
         uses: burnett01/rsync-deployments@7.0.1
         with:
           switches: -avz --delete
-          path: dist/
+          path: dixlase-ctx/themes/DixlaseOnePage/resources/assets/
           remote_path: ${{ steps.target.outputs.base_dir }}/_shared/themes/DixlaseOnePage/
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_user: ${{ secrets.SERVER_USER }}
@@ -375,63 +377,53 @@ jobs:
               cd "$DEST"
               rm -rf "$DEST/vendor" "$DEST/composer.lock"
 
-              # CIでビルド済みのフロントエンドアセットをコピー
-              # theme installer は dev 用に
-              #   public/assets/themes/DixlaseOnePage → themes/DixlaseOnePage/resources/assets
-              # の symlink を張ることがあり、その場合 `mkdir -p` がパスに非ディレクトリ
-              # (symlink) を見つけて失敗する。symlink や通常ファイルが居座っていれば
-              # 取り除いてから新規ディレクトリを掘り直す。
-              ASSET_DIR="$SITE_ROOT/public/assets/themes/$THEME_DIR"
-              if [ -L "$ASSET_DIR" ] || { [ -e "$ASSET_DIR" ] && [ ! -d "$ASSET_DIR" ]; }; then
-                rm -f "$ASSET_DIR"
-              fi
-              mkdir -p "$ASSET_DIR"
-              rsync -a "$BASE/_shared/themes/$THEME_DIR/" "$ASSET_DIR/"
-
-              # Sweep stale build artefacts. Vite content-hashes JS/CSS
-              # entry filenames so every build's URLs are unique; without
-              # this sweep, `rsync -a` (no --delete) leaves every prior
-              # build's files stacked in the asset dir forever. Files
-              # from the pre-hash era (bare `style.css` / `tailwind.css`
-              # / `app.js`) also get collected here on the first run.
+              # Place the build inside the theme tree, and point the public
+              # path at it with a symlink.
               #
-              # `manifest.json` is the source of truth for what the
-              # newly-compiled views will actually reference — anything
-              # under css/ / js/ / fonts/ / images/ / assets/ that
-              # isn't listed there is unreachable dead weight and gets
-              # removed. Trade-off: a browser holding STALE HTML that
-              # references an old hashed URL will 404 on that asset
-              # after this runs, until the next navigation re-fetches
-              # the HTML. HTML is served without Cache-Control so that
-              # window is short; the alternative (never cleaning up)
-              # leaks disk space and hides audit surface behind noise.
+              # Core's arrangement is that `themes/<slug>/resources/assets`
+              # IS the build output and `public/assets/themes/<slug>` is a
+              # relative symlink to it — created by `dls:theme:symlink` and
+              # recreated by `PublicAssetRelinker` on every core update. The
+              # theme's own `vite.config.js` agrees.
               #
-              # Blanket `rsync --delete` would achieve the same effect
-              # but hides the intent behind an option flag. Keeping
-              # this as an explicit sweep documents WHY files get
-              # removed for anyone reading the deploy log.
-              MANIFEST="$ASSET_DIR/manifest.json"
-              if [ -f "$MANIFEST" ]; then
-                KEEP_LIST=$(mktemp)
-                grep -oE '"file"[[:space:]]*:[[:space:]]*"[^"]+"' "$MANIFEST" \
-                  | sed -E 's/.*"file"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/' \
-                  | sort -u > "$KEEP_LIST"
-                echo "manifest.json" >> "$KEEP_LIST"
+              # Earlier revisions of this workflow wrote the build to the
+              # public path as a real DIRECTORY and `rm -f`-ed the symlink to
+              # make room, which gave that one path two writers and whichever
+              # ran last won. `git reset --hard` leaves gitignored files
+              # alone, so the clone kept whatever stale build it happened to
+              # hold; the next core update relinked, deleted the real
+              # directory and pointed at that stale build, and every theme
+              # CSS/JS URL 404'd. The HTML's byte size was unchanged, so a
+              # size-based health check passed while the site rendered
+              # unstyled. See #61.
+              #
+              # `--delete` is safe here: the whole directory is build output
+              # (gitignored, and `emptyOutDir` wipes it on the runner too),
+              # which is also why the manifest-driven stale-asset sweep this
+              # replaces is no longer needed.
+              THEME_ASSETS="$DEST/resources/assets"
+              mkdir -p "$THEME_ASSETS"
+              rsync -a --delete "$BASE/_shared/themes/$THEME_DIR/" "$THEME_ASSETS/"
 
-                REMOVED=0
-                for SUBDIR in css js fonts images assets; do
-                  DIR="$ASSET_DIR/$SUBDIR"
-                  [ -d "$DIR" ] || continue
-                  while IFS= read -r -d '' F; do
-                    REL="${F#$ASSET_DIR/}"
-                    if ! grep -qxF "$REL" "$KEEP_LIST"; then
-                      rm -f "$F"
-                      REMOVED=$((REMOVED + 1))
-                    fi
-                  done < <(find "$DIR" -type f -print0)
-                done
-                rm -f "$KEEP_LIST"
-                echo "Stale-asset sweep: removed $REMOVED file(s) not present in manifest.json"
+              # Relative form matches core's RelativeSymlink: from
+              # public/assets/themes/, `../../..` is the site root. Created
+              # here rather than left to the next core update so a fresh
+              # deploy serves assets immediately. Replacing a real directory
+              # that is sitting at this path is the one-time migration off
+              # the old layout — by this point the build is already in the
+              # theme tree, so there is nothing to lose.
+              ASSET_LINK="$SITE_ROOT/public/assets/themes/$THEME_DIR"
+              ASSET_LINK_TARGET="../../../themes/$THEME_DIR/resources/assets"
+              mkdir -p "$(dirname "$ASSET_LINK")"
+              if [ "$(readlink "$ASSET_LINK" 2>/dev/null)" != "$ASSET_LINK_TARGET" ]; then
+                if [ -d "$ASSET_LINK" ] && [ ! -L "$ASSET_LINK" ]; then
+                  echo "  Replacing real directory at $ASSET_LINK with the symlink core expects"
+                  rm -rf "$ASSET_LINK"
+                else
+                  rm -f "$ASSET_LINK"
+                fi
+                ln -s "$ASSET_LINK_TARGET" "$ASSET_LINK"
+                echo "  Linked $ASSET_LINK -> $ASSET_LINK_TARGET"
               fi
 
               # Invalidate Laravel's compiled bootstrap caches (views, config,
