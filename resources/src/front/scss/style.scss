@@ -371,15 +371,17 @@ footer a:not(.sns-link):hover,
     }
 }
 
-// フッタースタイル
-footer {
-    a {
-        transition: color 0.2s ease;
-
-        &:hover {
-            color: var(--color-primary, #3b82f6);
-        }
-    }
+// Footer links.
+//
+// Only the transition lives here. The hover colour is set further up,
+// together with the header, by a rule that excludes `.sns-link` — the
+// social marks must keep their black / white treatment and dim via
+// opacity instead (see the brand-guideline note on `.sns-link`).
+// Repeating `footer a:hover` here without that exclusion is what used to
+// paint every social mark primary-blue on hover, and it reached them
+// because the exclusion only ever made the *other* rule skip them.
+footer a:not(.sns-link) {
+    transition: color 0.2s ease;
 }
 
 // ユーティリティクラス

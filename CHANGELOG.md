@@ -5,6 +5,14 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.1.2] — 2026-10-08
+
+### Fixed
+
+- The social icons in the footer dim on hover instead of taking on the link colour, so each
+  mark keeps its own shape and colour (#59, fixes #58). Other footer links still change
+  colour on hover.
+
 ## [0.1.1] — 2026-10-01
 
 ### Changed
