@@ -193,6 +193,9 @@ return [
             'mode_light' => 'ライト',
             'mode_dark' => 'ダーク',
             'mode_help' => '自動: ユーザーのシステム設定に従います / ライト: 明るいテーマ / ダーク: 暗いテーマ',
+            'toggle_title' => 'フロントの外観切替',
+            'toggle_label' => '訪問者が外観モードを切り替えられるようにする',
+            'toggle_help' => 'フッターに操作部品を表示します。上の設定が既定値で、訪問者の選択がそれを上書きし、ブラウザに保存されます。オフにすると、すべての訪問者が上の設定に戻ります。',
         ],
 
         // Default locale (primary language the theme settings are authored in)

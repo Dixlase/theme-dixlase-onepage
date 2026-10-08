@@ -155,6 +155,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 </nav>
             @endif
 
+            {{-- Appearance switcher. Sits directly above the site name, at the
+                 end of the footer's utility cluster (menu + SNS), where a site
+                 that also renders a language switcher puts it next to this.
+                 The footer is reachable on every breakpoint, so there is no
+                 separate mobile copy. --}}
+            @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1')
+                <div class="flex justify-center">
+                    @include('themes::partials.appearance-toggle', ['variant' => 'footer'])
+                </div>
+            @endif
+
             {{-- Site Name --}}
             <h2 class="font-heading-footer text-2xl font-bold text-gray-900 dark:text-white">
                 {{ config('app.name', 'Dixlase') }}

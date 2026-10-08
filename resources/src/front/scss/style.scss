@@ -422,3 +422,118 @@ footer a:not(.sns-link) {
         }
     }
 }
+
+// Appearance switcher (footer)
+//
+// Rendered by partials/appearance-toggle.blade.php when the operator enables
+// it. Colours come from the Tailwind v4 CSS variables so the control follows
+// the palette in both themes without a `dark:` variant per rule.
+.dls-appearance {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+
+    &__label {
+        font-size: var(--text-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-gray-700);
+    }
+
+    &__options {
+        display: inline-flex;
+        align-items: center;
+        gap: calc(var(--spacing) * 0.5);
+        padding: calc(var(--spacing) * 0.5);
+        border-radius: var(--radius-lg);
+        background-color: color-mix(in oklab, var(--color-gray-500) 12%, transparent);
+    }
+
+    &--mobile {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    // Footer placement: centred on its own row above the site name, with
+    // the same vertical rhythm as the SNS row it follows.
+    &--footer {
+        justify-content: center;
+    }
+}
+
+.dls-appearance-option {
+    display: grid;
+    place-items: center;
+    inline-size: calc(var(--spacing) * 8);
+    block-size: calc(var(--spacing) * 8);
+    border-radius: var(--radius-md);
+    color: var(--color-gray-600);
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color var(--default-transition-duration) var(--default-transition-timing-function),
+                color var(--default-transition-duration) var(--default-transition-timing-function);
+
+    &:hover {
+        color: var(--color-gray-900);
+        background-color: color-mix(in oklab, var(--color-gray-500) 16%, transparent);
+    }
+
+    // The mode currently in effect.
+    &.is-active {
+        color: var(--color-primary, var(--color-blue-600));
+        background-color: var(--color-white);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+}
+
+// Appearance switch cross-fade.
+//
+// `dls-theme-switching` is put on <html> by appearanceTheme() for the
+// length of one switch and taken off again (APPEARANCE_FADE_MS in
+// app.js). The transition is deliberately not permanent: the surface
+// colours come from Tailwind utilities spread over every section, so the
+// universal selector is the only way to reach them all, and a standing
+// `* { transition: color }` would slow every hover down and fade the
+// whole page in on first paint.
+:root {
+    --dls-theme-fade: 300ms;
+}
+
+.dls-theme-switching,
+.dls-theme-switching *,
+.dls-theme-switching *::before,
+.dls-theme-switching *::after {
+    transition-property: background-color, border-color, color, fill, stroke,
+                         box-shadow, outline-color, text-decoration-color;
+    transition-duration: var(--dls-theme-fade);
+    transition-timing-function: ease;
+}
+
+// app.js already skips the class here; this is the belt to that braces, so
+// the fade cannot appear if the class is ever set another way.
+@media (prefers-reduced-motion: reduce) {
+    .dls-theme-switching,
+    .dls-theme-switching *,
+    .dls-theme-switching *::before,
+    .dls-theme-switching *::after {
+        transition-property: none;
+    }
+}
+
+.dark {
+    .dls-appearance__label {
+        color: var(--color-gray-300);
+    }
+
+    .dls-appearance-option {
+        color: var(--color-gray-400);
+
+        &:hover {
+            color: var(--color-white);
+        }
+
+        &.is-active {
+            color: var(--color-primary-dark-safe, var(--color-blue-400));
+            background-color: color-mix(in oklab, var(--color-gray-100) 14%, transparent);
+        }
+    }
+}

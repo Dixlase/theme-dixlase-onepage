@@ -5,6 +5,22 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.2.0] — 2026-10-08
+
+### Added
+
+- Visitors can switch the appearance mode (auto / light / dark) from a control in the footer
+  (#57, fixes #56). The operator turns it on under the theme settings; it is **off by
+  default**. The appearance mode in the theme settings stays the default, and a visitor's
+  choice is remembered in their browser. While the switcher is off, stored choices are
+  ignored, so turning it off returns every visitor to the operator's mode. Colours
+  cross-fade on change, except with reduced motion.
+
+### Upgrade notes
+
+No action needed: nothing changes until the switcher is turned on. Re-signed with
+`dixlase-authority-2026`.
+
 ## [0.1.2] — 2026-10-08
 
 ### Fixed

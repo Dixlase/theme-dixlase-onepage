@@ -49,6 +49,14 @@ return [
         'toggle_menu' => 'メニューを開く',
     ],
 
+    // Front-end appearance switcher (shown when the theme setting allows it)
+    'appearance' => [
+        'label' => '外観',
+        'auto' => '自動',
+        'light' => 'ライト',
+        'dark' => 'ダーク',
+    ],
+
     // Footer
     'footer' => [
         'about_title' => '私たちについて',

@@ -97,6 +97,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'show_inquiry_form',
             'primary_color',
             'multilingual_switcher_enabled',
+            'appearance_toggle_enabled',
         ]);
 
         // デフォルト値を設定
@@ -156,6 +157,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'show_inquiry_form' => '0',
             'primary_color' => '#3b82f6',
             'multilingual_switcher_enabled' => '0',
+            'appearance_toggle_enabled' => '0',
         ];
 
         // デフォルト値とマージ
