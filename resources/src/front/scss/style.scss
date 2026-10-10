@@ -528,8 +528,11 @@ footer a:not(.sns-link) {
     &__trigger {
         display: grid;
         place-items: center;
-        inline-size: calc(var(--spacing) * 11);
-        block-size: calc(var(--spacing) * 11);
+        // 34px, the height of DixlaseCookie's trigger in the opposite corner
+        // (1rem of content + 0.5rem of padding each side + the 1px border),
+        // so the two read as one row of controls rather than two sizes.
+        inline-size: calc(var(--spacing) * 8.5);
+        block-size: calc(var(--spacing) * 8.5);
         border-radius: 9999px;
         color: var(--color-gray-700);
         cursor: pointer;
