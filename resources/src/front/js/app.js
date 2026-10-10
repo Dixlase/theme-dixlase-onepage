@@ -126,7 +126,45 @@ window.appearanceTheme = function (defaultValue, toggleEnabled = false) {
             return this.theme === value ? 'true' : 'false';
         },
 
-        // Called by the footer switcher.
+        // True for the mode in effect. Drives which icon the corner
+        // placement's collapsed trigger shows — a method rather than an
+        // expression in the attribute, for the same reason optionClass() is
+        // one.
+        isCurrent(value) {
+            return this.theme === value;
+        },
+
+        // ---------------------------------------------------------------
+        // Corner placement (partials/appearance-float.blade.php)
+        //
+        // Below 768px the control is one trigger that opens the three
+        // options; from 768px up the options are always visible and the
+        // trigger is display:none. Only the open state lives here — the
+        // media query in style.scss decides what `is-open` means — so a
+        // `true` left over from before a resize cannot show a collapsed
+        // control on a desktop width, and nothing writes an inline
+        // `display` that the breakpoint would be unable to undo.
+        // ---------------------------------------------------------------
+        floatOpen: false,
+
+        floatOpenClass() {
+            return this.floatOpen ? 'is-open' : '';
+        },
+
+        // aria-expanded wants the string 'true'/'false'.
+        floatExpanded() {
+            return this.floatOpen ? 'true' : 'false';
+        },
+
+        toggleFloat() {
+            this.floatOpen = !this.floatOpen;
+        },
+
+        closeFloat() {
+            this.floatOpen = false;
+        },
+
+        // Called by both switchers.
         setTheme(value) {
             if (value !== '0' && value !== '1' && value !== '2') {
                 return;
@@ -139,6 +177,12 @@ window.appearanceTheme = function (defaultValue, toggleEnabled = false) {
             } catch (e) {
                 // Storage unavailable: the choice still applies to this page.
             }
+
+            // Collapse the corner placement after a pick. On a phone it
+            // covers part of the page while open, and the choice has been
+            // made; above the breakpoint the stylesheet keeps the options
+            // visible regardless, so this is a no-op there.
+            this.floatOpen = false;
 
             this.beginFade();
             this.applyTheme();

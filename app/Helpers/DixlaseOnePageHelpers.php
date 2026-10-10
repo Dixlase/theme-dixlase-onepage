@@ -118,3 +118,30 @@ if (! function_exists('dls_onepage_localized_setting')) {
         }
     }
 }
+
+if (! function_exists('dls_onepage_appearance_options')) {
+    /**
+     * The appearance switcher's three modes, in display order.
+     *
+     * Single source of truth for the stored value, the label and the icon
+     * of each mode. Both placements read it: the option group rendered by
+     * `partials/appearance-toggle.blade.php`, and the collapsed trigger of
+     * the corner placement, which needs the icons on their own so it can
+     * show the mode in effect.
+     *
+     * Keys are the stored values, matching `appearance_mode` and the
+     * `dls-appearance-mode` localStorage entry ('0' auto / '1' light /
+     * '2' dark). Labels resolve at call time so they follow the request's
+     * locale.
+     *
+     * @return array<string, array{label: string, icon: string}>
+     */
+    function dls_onepage_appearance_options(): array
+    {
+        return [
+            '0' => ['label' => __('themes::theme.appearance.auto'),  'icon' => 'fa-circle-half-stroke'],
+            '1' => ['label' => __('themes::theme.appearance.light'), 'icon' => 'fa-sun'],
+            '2' => ['label' => __('themes::theme.appearance.dark'),  'icon' => 'fa-moon'],
+        ];
+    }
+}

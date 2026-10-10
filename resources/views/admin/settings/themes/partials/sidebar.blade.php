@@ -57,6 +57,22 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 color="blue"
             />
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.toggle_help') }}</p>
+
+            {{-- Where that control appears. Only shown while the toggle above
+                 is on, because the placement has no effect otherwise. The
+                 select keeps posting its value when hidden, which is harmless:
+                 the front end reads it only while the toggle is on. --}}
+            <div class="mt-3" x-show="appearanceToggleEnabled === '1'" x-cloak>
+                <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">{{ __('themes::admin.settings.appearance.placement_title') }}</div>
+                <select name="appearance_toggle_placement"
+                    x-model="appearanceTogglePlacement"
+                    class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+                    <option value="footer">{{ __('themes::admin.settings.appearance.placement_footer') }}</option>
+                    <option value="float">{{ __('themes::admin.settings.appearance.placement_float') }}</option>
+                    <option value="both">{{ __('themes::admin.settings.appearance.placement_both') }}</option>
+                </select>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.placement_help') }}</p>
+            </div>
         </div>
     </x-admin.theme-preview-sidebar-section>
 

@@ -206,6 +206,22 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     @include('themes::partials.footer')
 
+    {{-- Appearance switcher, fixed in the corner.
+
+         Included here rather than from partials/footer.blade.php: a `custom/`
+         override replaces a view wholesale, so a site that has forked the
+         footer would never receive a control added inside it. The layout is
+         also what owns the `appearanceTheme` data this partial drives.
+
+         `appearance_toggle_enabled` is the master switch — it also decides
+         whether a visitor's stored choice outranks `appearance_mode`, so the
+         placement setting below only chooses where the control appears while
+         that is on. --}}
+    @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1'
+        && in_array((string) ($themeSettings->appearance_toggle_placement ?? 'footer'), ['float', 'both'], true))
+        @include('themes::partials.appearance-float')
+    @endif
+
     {{-- Scripts --}}
     @if(app()->environment('local') && file_exists(public_path('hot')))
         @vite([

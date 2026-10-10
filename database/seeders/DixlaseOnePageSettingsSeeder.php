@@ -89,6 +89,7 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             // Appearance Mode
             ['name' => 'appearance_mode', 'value' => '0'], // 0: Auto, 1: Light, 2: Dark
             ['name' => 'appearance_toggle_enabled', 'value' => '0'], // 0: hidden, 1: shown on the front end
+            ['name' => 'appearance_toggle_placement', 'value' => 'footer'], // footer | float | both
 
             // Multilingual
             // The locale the primary-stored theme-settings values are written

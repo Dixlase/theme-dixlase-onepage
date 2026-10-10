@@ -485,6 +485,102 @@ footer a:not(.sns-link) {
     }
 }
 
+// Appearance switcher fixed in the corner
+// (partials/appearance-float.blade.php).
+//
+// Mirror of DixlaseCookie's persistent trigger, which sits in the opposite
+// bottom corner at the same offset and stacking level, so the two cannot
+// collide. z-index 40 also keeps this below the header (z-50) and the mobile
+// drawer (z-[60] / z-[70]) — a fixed control must never cover an open
+// navigation.
+//
+// The responsive split lives here rather than in the markup. Mobile first:
+// the options are hidden until `is-open`, and from `md` up they are always
+// shown and the trigger has no job. Alpine only adds the class, so a state
+// left over from before a resize cannot produce a collapsed control at a
+// desktop width, and no inline `display` is written that a media query would
+// be unable to undo.
+.dls-appearance-float {
+    position: fixed;
+    inset-block-end: calc(var(--spacing) * 4);
+    inset-inline-end: calc(var(--spacing) * 4);
+    z-index: 40;
+
+    // Hidden until Alpine resolves, so the trigger never shows all three
+    // icons at once before it knows which mode is in effect. Without
+    // JavaScript the control stays hidden, which is right: it cannot work.
+    &[x-cloak] {
+        display: none;
+    }
+
+    // Unlike the footer group, which sits on the footer's own background,
+    // this one floats over whatever it happens to cover and needs a surface
+    // of its own.
+    &__trigger,
+    &__options {
+        border: 1px solid var(--color-gray-200);
+        background-color: color-mix(in oklab, var(--color-white) 82%, transparent);
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    }
+
+    &__trigger {
+        display: grid;
+        place-items: center;
+        inline-size: calc(var(--spacing) * 11);
+        block-size: calc(var(--spacing) * 11);
+        border-radius: 9999px;
+        color: var(--color-gray-700);
+        cursor: pointer;
+        transition: color var(--default-transition-duration) var(--default-transition-timing-function);
+
+        &:hover {
+            color: var(--color-gray-900);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-primary, var(--color-blue-600));
+            outline-offset: 2px;
+        }
+    }
+
+    &__options {
+        display: none;
+        padding: calc(var(--spacing) * 0.5);
+        border-radius: var(--radius-xl);
+    }
+
+    // Phones: the options replace the trigger in place, so the control costs
+    // one button's worth of screen until the visitor asks for more.
+    &.is-open &__trigger {
+        display: none;
+    }
+
+    &.is-open &__options {
+        display: block;
+    }
+
+    // `md` (768px) and up — tablets and desktops. The three options are
+    // always there, so switching is one click and the trigger is redundant.
+    @media (min-width: 768px) {
+        &__trigger {
+            display: none;
+        }
+
+        &__options {
+            display: block;
+        }
+    }
+}
+
+// Inside the corner placement the group needs no surface of its own; the
+// wrapper above already is one.
+.dls-appearance--float .dls-appearance__options {
+    padding: 0;
+    background-color: transparent;
+}
+
 // Appearance switch cross-fade.
 //
 // `dls-theme-switching` is put on <html> by appearanceTheme() for the
@@ -534,6 +630,22 @@ footer a:not(.sns-link) {
         &.is-active {
             color: var(--color-primary-dark-safe, var(--color-blue-400));
             background-color: color-mix(in oklab, var(--color-gray-100) 14%, transparent);
+        }
+    }
+
+    .dls-appearance-float {
+        &__trigger,
+        &__options {
+            border-color: color-mix(in oklab, var(--color-gray-100) 14%, transparent);
+            background-color: color-mix(in oklab, var(--color-gray-900) 72%, transparent);
+        }
+
+        &__trigger {
+            color: var(--color-gray-300);
+
+            &:hover {
+                color: var(--color-white);
+            }
         }
     }
 }

@@ -155,6 +155,10 @@ class UpdateThemeSettingsRequest extends FormRequest
             // DixlaseMultilingual integration
             'multilingual_switcher_enabled' => 'nullable|in:0,1',
             'appearance_toggle_enabled' => 'nullable|in:0,1',
+            // Where the front-end switcher appears while the toggle above is
+            // on. 'footer' is the stock placement; 'float' is fixed in the
+            // corner of the viewport.
+            'appearance_toggle_placement' => 'nullable|in:footer,float,both',
         ];
     }
 

@@ -295,6 +295,10 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             // Off by default so an existing site keeps the fixed appearance
             // the operator already chose.
             'appearance_toggle_enabled' => '0',
+            // Where the switcher appears while the toggle above is on:
+            // 'footer' | 'float' (fixed in the corner) | 'both'. Defaults to
+            // the footer so an existing site renders exactly as before.
+            'appearance_toggle_placement' => 'footer',
             'heading_font_family' => 'noto-sans-jp', // cormorant | jost | noto-sans-jp | noto-serif-jp
             // Per-region apply toggles. When '0', that region inherits the body
             // font (system stack); when '1', it uses --font-heading.

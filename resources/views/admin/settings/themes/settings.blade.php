@@ -121,6 +121,9 @@ function themeSettingsEditor() {
         // not booleans. Do not write the tag name here: Blade's component
         // compiler reads it even inside a JS comment and looks for a close.
         appearanceToggleEnabled: @json((string) old('appearance_toggle_enabled', $settings->appearance_toggle_enabled ?? '0')),
+        // Where that switcher appears. Only meaningful while the toggle above
+        // is on, which is why the sidebar hides this control when it is off.
+        appearanceTogglePlacement: @json((string) old('appearance_toggle_placement', $settings->appearance_toggle_placement ?? 'footer')),
         headingFontApplyHeader:  @json((string) old('heading_font_apply_header',  $settings->heading_font_apply_header  ?? '1')),
         headingFontApplyHero:    @json((string) old('heading_font_apply_hero',    $settings->heading_font_apply_hero    ?? '1')),
         headingFontApplyFooter:  @json((string) old('heading_font_apply_footer',  $settings->heading_font_apply_footer  ?? '1')),

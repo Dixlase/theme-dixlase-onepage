@@ -195,7 +195,12 @@ return [
             'mode_help' => 'Auto: Follows user system settings / Light: Bright theme / Dark: Dark theme',
             'toggle_title' => 'Appearance toggle on the front end',
             'toggle_label' => 'Let visitors change the appearance mode',
-            'toggle_help' => 'Adds a control to the footer. The mode above stays the default; a visitor\'s choice overrides it and is remembered in their browser. Turning this off returns every visitor to the mode above.',
+            'toggle_help' => 'Adds a control the visitor can use. The mode above stays the default; a visitor\'s choice overrides it and is remembered in their browser. Turning this off returns every visitor to the mode above.',
+            'placement_title' => 'Where it appears',
+            'placement_footer' => 'Footer only',
+            'placement_float' => 'Fixed in the corner only',
+            'placement_both' => 'Footer and the corner',
+            'placement_help' => 'The corner control stays in the bottom-right of the window at any scroll position. On a phone it is one button that opens the three modes when tapped; from tablet width up all three are always visible.',
         ],
 
         // Default locale (primary language the theme settings are authored in)

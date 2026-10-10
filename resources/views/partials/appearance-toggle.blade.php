@@ -36,16 +36,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
      its own and works wherever it is included.
 
      `$variant` is 'footer' (the stock placement, above the site name),
+     'float' (inside the fixed corner placement, see partials/appearance-float),
      'desktop' or 'mobile'; it only changes the surrounding layout classes,
      not the behaviour.
+
+     The three modes come from dls_onepage_appearance_options() so that the
+     corner placement's collapsed trigger, which needs the icons on their own,
+     reads the same list rather than keeping a second copy of it.
 --}}
 @php
     $variant = $variant ?? 'desktop';
-    $appearanceOptions = [
-        '0' => ['label' => __('themes::theme.appearance.auto'),  'icon' => 'fa-circle-half-stroke'],
-        '1' => ['label' => __('themes::theme.appearance.light'), 'icon' => 'fa-sun'],
-        '2' => ['label' => __('themes::theme.appearance.dark'),  'icon' => 'fa-moon'],
-    ];
+    $appearanceOptions = dls_onepage_appearance_options();
 @endphp
 
 <div
