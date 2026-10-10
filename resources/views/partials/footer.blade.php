@@ -159,8 +159,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                  end of the footer's utility cluster (menu + SNS), where a site
                  that also renders a language switcher puts it next to this.
                  The footer is reachable on every breakpoint, so there is no
-                 separate mobile copy. --}}
-            @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1')
+                 separate mobile copy.
+
+                 Rendered unless the operator switched this placement off
+                 (`appearance_toggle_footer`); the one fixed in the corner is
+                 independent and is included from layouts/app.blade.php. --}}
+            @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1'
+                && (string) ($themeSettings->appearance_toggle_footer ?? '1') === '1')
                 <div class="flex justify-center">
                     @include('themes::partials.appearance-toggle', ['variant' => 'footer'])
                 </div>
