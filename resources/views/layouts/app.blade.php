@@ -215,10 +215,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
          `appearance_toggle_enabled` is the master switch — it also decides
          whether a visitor's stored choice outranks `appearance_mode`, so the
-         placement setting below only chooses where the control appears while
-         that is on. --}}
+         placement switches only choose where the control appears while that
+         is on. The two placements are independent of each other. --}}
     @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1'
-        && in_array((string) ($themeSettings->appearance_toggle_placement ?? 'footer'), ['float', 'both'], true))
+        && (string) ($themeSettings->appearance_toggle_float ?? '0') === '1')
         @include('themes::partials.appearance-float')
     @endif
 

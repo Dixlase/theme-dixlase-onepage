@@ -98,7 +98,8 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'primary_color',
             'multilingual_switcher_enabled',
             'appearance_toggle_enabled',
-            'appearance_toggle_placement',
+            'appearance_toggle_footer',
+            'appearance_toggle_float',
         ]);
 
         // デフォルト値を設定
@@ -159,7 +160,8 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'primary_color' => '#3b82f6',
             'multilingual_switcher_enabled' => '0',
             'appearance_toggle_enabled' => '0',
-            'appearance_toggle_placement' => 'footer', // footer | float | both
+            'appearance_toggle_footer' => '1', // 0: hidden, 1: shown in the footer
+            'appearance_toggle_float' => '0', // 0: hidden, 1: fixed in the corner
         ];
 
         // デフォルト値とマージ

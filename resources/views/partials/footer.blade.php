@@ -161,11 +161,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                  The footer is reachable on every breakpoint, so there is no
                  separate mobile copy.
 
-                 Rendered unless the operator moved the control to the corner
-                 placement alone (`appearance_toggle_placement`); the corner
-                 one is included from layouts/app.blade.php. --}}
+                 Rendered unless the operator switched this placement off
+                 (`appearance_toggle_footer`); the one fixed in the corner is
+                 independent and is included from layouts/app.blade.php. --}}
             @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1'
-                && in_array((string) ($themeSettings->appearance_toggle_placement ?? 'footer'), ['footer', 'both'], true))
+                && (string) ($themeSettings->appearance_toggle_footer ?? '1') === '1')
                 <div class="flex justify-center">
                     @include('themes::partials.appearance-toggle', ['variant' => 'footer'])
                 </div>
