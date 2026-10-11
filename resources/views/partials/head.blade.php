@@ -76,3 +76,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 </style>
 
 @stack('styles')
+
+{{-- Page-specific <head> tags pushed by plugins or by a page's own view:
+     hreflang alternates, a feed link, a page-level <meta>.
+
+     Last in the <head> so a pushed tag can override what is above it, and
+     after @stack('styles') so a stylesheet pushed to that stack still loads
+     first. A page that pushes nothing renders no extra markup.
+
+     Keep in step with layouts/preview.blade.php, which carries its own copy
+     of this <head> rather than including this partial. --}}
+@stack('head')
