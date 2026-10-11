@@ -159,10 +159,20 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'show_inquiry_form' => '0',
             'primary_color' => '#3b82f6',
             'multilingual_switcher_enabled' => '0',
-            'appearance_toggle_enabled' => '0',
-            'appearance_toggle_footer' => '1', // 0: hidden, 1: shown in the footer
+            'appearance_toggle_footer' => '0', // 0: hidden, 1: shown in the footer
             'appearance_toggle_float' => '0', // 0: hidden, 1: fixed in the corner
         ];
+
+        // Legacy (0.2.0): one switch for the whole front-end switcher, now
+        // one per placement. Mirrors DixlaseOnePageServiceProvider's merge so
+        // the form shows what the front end renders. `appearance_toggle_enabled`
+        // stays in the list above only to be read here; it is not a form field
+        // any more and is never written back.
+        if (($settingsData['appearance_toggle_footer'] ?? null) === null
+            && ($settingsData['appearance_toggle_enabled'] ?? null) !== null) {
+            $settingsData['appearance_toggle_footer'] = (string) $settingsData['appearance_toggle_enabled'];
+        }
+        unset($settingsData['appearance_toggle_enabled']);
 
         // デフォルト値とマージ
         $settingsData = array_merge($defaults, array_filter($settingsData, fn ($v) => $v !== null));

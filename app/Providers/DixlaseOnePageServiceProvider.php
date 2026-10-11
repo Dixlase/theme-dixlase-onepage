@@ -141,6 +141,19 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
                 // the seeder against an already-populated table.
                 // property_exists() (not isset()) so an explicitly
                 // saved null value is not clobbered by the default.
+                // Legacy (0.2.0): `appearance_toggle_enabled` was a single
+                // switch for the whole front-end switcher; it is now one per
+                // placement. A site upgrading from that release has the old
+                // row and neither new one, so the footer placement inherits
+                // what the operator had and the corner placement stays off.
+                // Runs before the defaults merge because that is the last
+                // point at which a missing row is distinguishable from a
+                // stored '0'. The old key is never written again.
+                if (! property_exists($themeSettings, 'appearance_toggle_footer')
+                    && property_exists($themeSettings, 'appearance_toggle_enabled')) {
+                    $themeSettings->appearance_toggle_footer = (string) $themeSettings->appearance_toggle_enabled;
+                }
+
                 $defaults = $this->getDefaultThemeSettings();
                 foreach ((array) $defaults as $key => $value) {
                     if (! property_exists($themeSettings, $key)) {
@@ -291,14 +304,13 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
-            // Whether the front end offers a control to change the mode above.
-            // Off by default so an existing site keeps the fixed appearance
-            // the operator already chose.
-            'appearance_toggle_enabled' => '0',
-            // Where the switcher appears while the toggle above is on. The
-            // two placements are independent; the footer one defaults to on
-            // so an existing site renders exactly as before.
-            'appearance_toggle_footer' => '1',
+            // Where the front end offers a control to change the mode above.
+            // Independent of each other, and both off by default so a site
+            // that wants a fixed appearance keeps it. With both off the
+            // switcher does not render at all and a visitor's stored choice
+            // is ignored, which is what the single `appearance_toggle_enabled`
+            // switch of 0.2.0 meant when it was off.
+            'appearance_toggle_footer' => '0',
             'appearance_toggle_float' => '0',
             'heading_font_family' => 'noto-sans-jp', // cormorant | jost | noto-sans-jp | noto-serif-jp
             // Per-region apply toggles. When '0', that region inherits the body

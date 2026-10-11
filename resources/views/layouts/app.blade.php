@@ -28,11 +28,21 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 --}}
 
+@php
+    // The two placements of the front-end appearance switcher, resolved once
+    // for the whole layout. A visitor's stored choice outranks
+    // `appearance_mode` while either placement is on; with both off no
+    // switcher is rendered, stored choices are ignored and every visitor
+    // returns to the operator's mode.
+    $appearanceFooter = (string) ($themeSettings->appearance_toggle_footer ?? '0') === '1';
+    $appearanceFloat = (string) ($themeSettings->appearance_toggle_float ?? '0') === '1';
+    $appearanceSwitchable = $appearanceFooter || $appearanceFloat;
+@endphp
 <!DOCTYPE html>
 <html
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     class="scroll-smooth"
-    x-data="appearanceTheme('{{ $themeSettings->appearance_mode ?? '0' }}', {{ (string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1' ? 'true' : 'false' }})"
+    x-data="appearanceTheme('{{ $themeSettings->appearance_mode ?? '0' }}', {{ $appearanceSwitchable ? 'true' : 'false' }})"
     :class="{ 'dark': isDark, 'light': !isDark }"
 >
 <head>
@@ -44,7 +54,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     <script @cspNonce>
     (function(){
         var m = '{{ $themeSettings->appearance_mode ?? '0' }}';
-        var toggleEnabled = {{ (string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1' ? 'true' : 'false' }};
+        var toggleEnabled = {{ $appearanceSwitchable ? 'true' : 'false' }};
         if (toggleEnabled) {
             try {
                 var stored = window.localStorage.getItem('dls-appearance-mode');
@@ -213,12 +223,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
          footer would never receive a control added inside it. The layout is
          also what owns the `appearanceTheme` data this partial drives.
 
-         `appearance_toggle_enabled` is the master switch — it also decides
-         whether a visitor's stored choice outranks `appearance_mode`, so the
-         placement switches only choose where the control appears while that
-         is on. The two placements are independent of each other. --}}
-    @if ((string) ($themeSettings->appearance_toggle_enabled ?? '0') === '1'
-        && (string) ($themeSettings->appearance_toggle_float ?? '0') === '1')
+         The two placements are independent of each other; `$appearanceFloat`
+         is resolved at the top of this file alongside the footer one. --}}
+    @if ($appearanceFloat)
         @include('themes::partials.appearance-float')
     @endif
 
