@@ -43,46 +43,32 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </select>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.mode_help') }}</p>
 
-        {{-- Front-end toggle. The mode above is the default; with this on,
-             a visitor can pick auto / light / dark for themselves and the
-             choice is remembered in their browser. Off by default so a
-             site that wants a fixed appearance keeps it. --}}
+        {{-- Front-end switcher, one switch per placement. The mode above is
+             the default; with either placement on, a visitor can pick auto /
+             light / dark for themselves and the choice is remembered in their
+             browser. Both off by default so a site that wants a fixed
+             appearance keeps it — and with both off the stored choices are
+             ignored again, so turning them off returns every visitor to the
+             mode above. --}}
         <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('themes::admin.settings.appearance.toggle_title') }}</div>
             <x-form-toggle
-                id="appearance_toggle_enabled_toggle"
-                name="appearance_toggle_enabled"
-                :label="__('themes::admin.settings.appearance.toggle_label')"
-                xModel="appearanceToggleEnabled"
+                id="appearance_toggle_footer_toggle"
+                name="appearance_toggle_footer"
+                :label="__('themes::admin.settings.appearance.placement_footer')"
+                xModel="appearanceToggleFooter"
                 color="blue"
             />
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.toggle_help') }}</p>
-
-            {{-- Where that control appears. The two placements are independent,
-                 so each gets its own switch. Shown only while the toggle above
-                 is on, because neither has any effect otherwise; the inputs
-                 keep posting while hidden, which is harmless since the front
-                 end reads them only while the toggle is on. --}}
-            <div class="mt-3" x-show="appearanceToggleEnabled === '1'" x-cloak>
-                <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('themes::admin.settings.appearance.placement_title') }}</div>
+            <div class="mt-2">
                 <x-form-toggle
-                    id="appearance_toggle_footer_toggle"
-                    name="appearance_toggle_footer"
-                    :label="__('themes::admin.settings.appearance.placement_footer')"
-                    xModel="appearanceToggleFooter"
+                    id="appearance_toggle_float_toggle"
+                    name="appearance_toggle_float"
+                    :label="__('themes::admin.settings.appearance.placement_float')"
+                    xModel="appearanceToggleFloat"
                     color="blue"
                 />
-                <div class="mt-2">
-                    <x-form-toggle
-                        id="appearance_toggle_float_toggle"
-                        name="appearance_toggle_float"
-                        :label="__('themes::admin.settings.appearance.placement_float')"
-                        xModel="appearanceToggleFloat"
-                        color="blue"
-                    />
-                </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.placement_help') }}</p>
             </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.appearance.toggle_help') }}</p>
         </div>
     </x-admin.theme-preview-sidebar-section>
 

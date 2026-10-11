@@ -30,7 +30,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 {{-- Appearance switcher: auto / light / dark.
 
-     Rendered only when the operator enabled it (`appearance_toggle_enabled`).
+     Rendered only for a placement the operator switched on
+     (`appearance_toggle_footer` / `appearance_toggle_float`).
      The buttons call setTheme() on the `appearanceTheme` Alpine data that
      layouts/app.blade.php puts on <html>, so this partial carries no state of
      its own and works wherever it is included.
