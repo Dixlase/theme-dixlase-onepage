@@ -5,6 +5,24 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.3.0] — 2026-10-11
+
+### Added
+
+- A fixed appearance switcher in the corner of the screen (#68).
+
+### Changed
+
+- The appearance master toggle is folded into the two placements, so one setting
+  controls where the switcher appears instead of a separate on/off plus a position
+  (#70).
+
+### Fixed
+
+- Re-signed. The signature no longer matched the tree, so sites reported the theme
+  as `signature_invalid` and deducted from its health score. Changes had reached
+  `main` through pull-request merges, which do not run the local signing hook.
+
 ## [0.2.0] — 2026-10-08
 
 ### Added
