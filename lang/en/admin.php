@@ -196,7 +196,7 @@ return [
             'toggle_title' => 'Appearance toggle on the front end',
             'placement_footer' => 'Show it in the footer',
             'placement_float' => 'Show it fixed in the bottom-right of the window',
-            'toggle_help' => 'Each placement is independent. The mode above stays the default; a visitor\'s choice overrides it and is remembered in their browser. The fixed one is reachable at any scroll position: on a phone it is one button that opens the three modes when tapped, and from tablet width up all three are always visible. With both off no switcher appears and every visitor returns to the mode above.',
+            'toggle_help' => 'Places a button that lets visitors switch the appearance mode (auto, light, dark). A visitor\'s choice overrides the default above and is remembered in their browser.',
         ],
 
         // Default locale (primary language the theme settings are authored in)
