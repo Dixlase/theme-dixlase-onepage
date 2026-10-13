@@ -17,6 +17,13 @@ and this theme follows Semantic Versioning.
   the same in the admin preview frame as on the live page. A page that pushes nothing
   renders exactly as before.
 
+### Fixed
+
+- The appearance switcher fixed in the corner is easier to hit on a phone (#74).
+  The collapsed trigger and each of the three mode buttons are now a 44px tap
+  target below 768px, instead of 34px and 32px — the same target the footer's
+  SNS row is built on. From 768px up nothing changes.
+
 ## [0.3.0] — 2026-10-11
 
 ### Added
