@@ -7,6 +7,16 @@ and this theme follows Semantic Versioning.
 
 ## [Unreleased]
 
+### Added
+
+- A `head` stack in the theme's `<head>`, so a plugin or a page's own view can push
+  page-specific tags and have them rendered: hreflang alternates, a feed link, a
+  page-level `<meta>` (#66). Only `@stack('styles')` existed before, so a tag pushed
+  to `head` was dropped without a word and DixlaseMultilingual's hreflang alternates
+  never reached the page. The preview layout carries the same stack, so a view renders
+  the same in the admin preview frame as on the live page. A page that pushes nothing
+  renders exactly as before.
+
 ### Fixed
 
 - The appearance switcher fixed in the corner is easier to hit on a phone (#74).

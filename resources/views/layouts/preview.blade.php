@@ -159,6 +159,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     </style>
 
     @stack('styles')
+
+    {{-- Page-specific <head> tags, same stack as partials/head.blade.php.
+         This layout carries its own <head> instead of including that
+         partial, so the stack is declared here too and a view behaves the
+         same whether it renders in the preview frame or on the live
+         page. --}}
+    @stack('head')
 </head>
 <body
     class="text-gray-900 dark:text-gray-100 {{ ($bareContent ?? false) ? '' : 'bg-gray-50 dark:bg-gray-900 flex flex-col min-h-screen' }}"
