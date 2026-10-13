@@ -3,7 +3,7 @@
     "package": "DixlaseOnePage",
     "package_name": "dixlase/dixlase-onepage",
     "slug": "dixlase-onepage",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": {
         "ja": "Dixlase OnePage テーマ。プラグイン連動型のシングルページ/LP用テーマ。",
         "en": "Dixlase OnePage theme. Plugin-driven single page / landing page theme."
@@ -138,8 +138,8 @@
         }
     },
     "files": {
-        "CHANGELOG.ja.md": "sha256:57c74085bca1066d3924c682388e84a55af3f215399969b72f5d12a12cbeeff3",
-        "CHANGELOG.md": "sha256:c0f42b46b85d5b4c16ac145b9259b9f4d587393a249986060551901d218b08a5",
+        "CHANGELOG.ja.md": "sha256:ec860feb07e824a12185dc0e44498aa736dc014bc9c50a9126d44442bcaeb13c",
+        "CHANGELOG.md": "sha256:975b3278cf12e178f57f29bc3525233ae4b07f1affe08e5b07c72ccbdd060851",
         "CONTRIBUTING.ja.md": "sha256:e0c5e0620ca0442664b7afc3ffdc845f505c864fa307b0ba3a8d8506a532ec95",
         "CONTRIBUTING.md": "sha256:e1deb6b11f8032b0b450de3116c88bf93fce813484d07d4ac68b5e965c2b64ee",
         "COPYRIGHT-POLICY.ja.md": "sha256:0fd5693910f7d31ed5f591912d476f3626f54035a96d6621a51d5bd73a0c0bd1",
@@ -160,7 +160,7 @@
         "app/Multilingual/DixlaseOnePageSettingsProvider.php": "sha256:ff918ac68e501e8b446d921d3dcecc62aaf0221f7d796897493124353796dff9",
         "app/Providers/DixlaseOnePageServiceProvider.php": "sha256:6eab47e5300c311919fba6d822c9789a4306ab4037eded4260cd173767efbe1a",
         "app/Services/DixlaseOnePageAppearanceProvider.php": "sha256:ade37f06182e2a598a4eb76407a62cdf818e07a826cf8b160acbcbf9a988140b",
-        "composer.json": "sha256:b05e049ee7ecb1cdb704e2f0a159c396da9c73857540aae9c2ca065741255c73",
+        "composer.json": "sha256:c4d4e81f7236dc5aebd9ae737fb42c7aa5748759350bb737df2db87a64e45779",
         "config/admin.php": "sha256:922953a2303b77d182bd4afec02640c17003686a0c8e7615ed76e32172ccf619",
         "config/admin/navigation.php": "sha256:1b39355c6ee9f963636065e42088428cffea836f4ab43b8274dabbc8eaa1d72b",
         "config/theme.php": "sha256:da99c1d0e53f341d8d57624824eec1bd8944d73144e90c468d4ba5357b1bd050",
@@ -176,12 +176,12 @@
         "lang/ja/theme.php": "sha256:16a23cce796928e7837ac55e18ca614df0104dc212ff2d1ba756f59678e1e709",
         "lisence-info.json": "sha256:47837f131eba0695bb83ff6fd9c04a614b76292707a34ad9798852a0c5557f67",
         "package-lock.json": "sha256:e571ef5c075e41b0411551557f86865801563e0b97c57e82e2d72f8fa6cb93dd",
-        "package.json": "sha256:d73d171e640711d73d6b1d17aebd5d65bc82274551871174f4a07a0883f4ff57",
+        "package.json": "sha256:c4d238bc371049cde77efdee09043518cbcbe588fd434e5f69f4bf5e72cac508",
         "phpunit.xml": "sha256:77ec274db7ba908e0c39b96381dd7c1a1ce4fd6b468f47ebe037090fe9c56959",
         "postcss.config.js": "sha256:9412b2d758c8d540555415661b58df2124e4e5077664c5fba9edafd6a72d4d51",
         "resources/src/front/css/tailwind.css": "sha256:d931e4fcd1249404dc8d453057aa5d0c027c12dd3ce12bcacd182cd6abe4867b",
         "resources/src/front/js/app.js": "sha256:ca5cfb780e803d7d1055ea0c7c3b3e60d5f3335bcf0adec1e3fde272fbe2f125",
-        "resources/src/front/scss/style.scss": "sha256:1bcc97c42cb0aa278cd743cadfbcea4831688141ed6c305f2741e71423a36320",
+        "resources/src/front/scss/style.scss": "sha256:128524d71bf2a9f399b07b7e90c2f75d4552d08b181720e34fc9d625040cc0b5",
         "resources/views/admin/preview-frame.blade.php": "sha256:b49ac68ff1c72341959d61ed1edec0db967c6a234eb9c266f3edeac0f440f324",
         "resources/views/admin/settings/themes/partials/preview.blade.php": "sha256:995a4b25e406d3b4b3566719cce7d1b493589b8e3b2387c4948c9e41fe3fcee3",
         "resources/views/admin/settings/themes/partials/sidebar.blade.php": "sha256:d1adbecd6f0c0bd2750f6f769e08d73d6b52b794775320ab808be93acecd9f10",
@@ -193,18 +193,20 @@
         "resources/views/index.blade.php": "sha256:bbfd16be1402106536b108e5fd047be76ad56abd41c24310078e99a4f84ef156",
         "resources/views/layouts/app.blade.php": "sha256:eab9a0c4452bd6f4a326304c38fc81294c5708d871c8a9bff7199ec2fb256f8f",
         "resources/views/layouts/frontpage.blade.php": "sha256:e8e748e50d3bda718380674a15d089fbae81e8d25518e0b8a7eb768aec85dd28",
-        "resources/views/layouts/preview.blade.php": "sha256:8ea13e59326f8bf56c467d05701eb8f9f7118b488b7dc1a320fc2bc869bd872b",
+        "resources/views/layouts/preview.blade.php": "sha256:20b3f2f459ff1f5b2c93e3c0f704689e761355c1d63c68c44f91bb042cf8b66e",
         "resources/views/partials/appearance-float.blade.php": "sha256:451e7c39198890959a86f8da76616d5c6b3a27f1acb4f04d4822c9e3f7b1b123",
         "resources/views/partials/appearance-toggle.blade.php": "sha256:89a560e2ef56a6691ebd4484627d27f9ea9330a24f720d33321b79502d122c20",
         "resources/views/partials/footer.blade.php": "sha256:c98566d570df6df542711204321d36e95cf2577774a2174bfe1c1350fc00f65b",
-        "resources/views/partials/head.blade.php": "sha256:52e3fd07fe712b5b902dacfab7b8288e275fc9bdcc059ba78f6c5edad281c681",
+        "resources/views/partials/head.blade.php": "sha256:1daca89051156ba788c88580175aaad87caa378a628b5eef9f0a9df13d07cbf4",
         "resources/views/partials/header.blade.php": "sha256:afef0f0358e7200676c8e4c4a78219a27e2f49518f8007bf0b39cd4683971006",
         "resources/views/partials/hero.blade.php": "sha256:29bee859c733f2bd83262bc132d2385588981918cda3af2d3df2ca79fa48da28",
         "resources/views/partials/hero/text-block.blade.php": "sha256:5ff574f9b495bce5315f91238fcb3fc35cbff5656b6d47c13e077348eeb2c8b4",
         "routes/admin.php": "sha256:c2c2db5d9711a29c82d10d136653b5900adb639780898c97d6dfeefed209b5ae",
         "scripts/bump-version.php": "sha256:02f680251320236bc06862dd8e921e3d13af86fefda168ef4fe495e7b212238e",
         "scripts/check-tailwind-sources.mjs": "sha256:9a7863f6af34b7c3c6773cd035a4afcb52e1d445e71c0645d347aa03d6268a9b",
+        "tests/Feature/Admin/AdminGetRoutesSmokeTest.php": "sha256:3d20b885882b59cc37a144ce9787b784dcc800576e2eb90ea359e742eddc1b52",
         "tests/Unit/DixlaseOnePageSettingsLocalizationTest.php": "sha256:00b7bea6b5fd858efbe8ba1c496909bbbafd76ca2a6bb5f419386b9369a649c7",
+        "tests/Unit/HeadStackTest.php": "sha256:d6499525cd69a6870e7fd2675349db81408e87a47dca2b55c398f4ba3cee4f2f",
         "tests/Unit/LinkSchemeGuardTest.php": "sha256:5a2d092a8a2cf982f3d423f9e47a5a38003ab7a2f4f8932f49201096b696dbab",
         "tests/Unit/VersionManifestConsistencyTest.php": "sha256:34dc5aca39825d9e998cc60c1eaf4ba13617ba576131334490c5c95d0eeeb13c",
         "thumbnail.png": "sha256:4ddee9c9c165a722ea8b9619cd049bb5e5d09f9356c30e6886cb7020f80c8a9c",
@@ -213,6 +215,6 @@
     "signing": {
         "algo": "ed25519",
         "key_id": "dixlase-authority-2026",
-        "signed_at": "2026-10-11T11:59:03+00:00"
+        "signed_at": "2026-10-13T13:34:56+00:00"
     }
 }
