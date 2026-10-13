@@ -528,11 +528,18 @@ footer a:not(.sns-link) {
     &__trigger {
         display: grid;
         place-items: center;
-        // 34px, the height of DixlaseCookie's trigger in the opposite corner
-        // (1rem of content + 0.5rem of padding each side + the 1px border),
-        // so the two read as one row of controls rather than two sizes.
-        inline-size: calc(var(--spacing) * 8.5);
-        block-size: calc(var(--spacing) * 8.5);
+        // 44px, the tap target Apple's HIG and WCAG 2.5.5 ask for and the
+        // one the footer's SNS row is already built on. The trigger exists
+        // only below `md` (it is display:none from 768px up), so this size
+        // is a phone size and nothing else reads it.
+        //
+        // It was 34px, matched to the height of DixlaseCookie's trigger in
+        // the opposite corner so the two read as one row of controls. That
+        // pairing is given up here: being able to hit the control with a
+        // thumb matters more than the two corners agreeing, and the plugin
+        // may not be installed at all.
+        inline-size: calc(var(--spacing) * 11);
+        block-size: calc(var(--spacing) * 11);
         border-radius: 9999px;
         color: var(--color-gray-700);
         cursor: pointer;
@@ -582,6 +589,24 @@ footer a:not(.sns-link) {
 .dls-appearance--float .dls-appearance__options {
     padding: 0;
     background-color: transparent;
+}
+
+// Phones: one 44px box per mode, so the panel the trigger opens is as easy to
+// hit as the trigger itself — three adjacent targets are the harder tap, not
+// the easier one. Scoped to the corner placement so the footer group, which
+// is laid out against the footer's own rhythm, keeps the shared 32px.
+//
+// From `md` up the control is driven by a mouse and the options go back to
+// the shared size, which also keeps the always-open panel from growing in the
+// corner of a desktop.
+.dls-appearance--float .dls-appearance-option {
+    inline-size: calc(var(--spacing) * 11);
+    block-size: calc(var(--spacing) * 11);
+
+    @media (min-width: 768px) {
+        inline-size: calc(var(--spacing) * 8);
+        block-size: calc(var(--spacing) * 8);
+    }
 }
 
 // Appearance switch cross-fade.
