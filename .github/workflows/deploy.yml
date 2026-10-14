@@ -5,6 +5,25 @@ on:
     branches:
       - main
 
+  # Manual entry point, for putting the built assets back on a site.
+  #
+  # This workflow is the only thing that produces
+  # `themes/DixlaseOnePage/resources/assets/` on a site: the build output is
+  # gitignored (#54), so neither a git checkout of this repository nor the
+  # Composer archive of this theme carries it. A core deploy whose
+  # `composer.lock` moves this theme replaces the theme directory from that
+  # archive and the build goes with it (Dixlase/dixlase-core#539) — core's
+  # re-adoption step restores `.git` and the tracked files, so the repair
+  # reports success while the assets stay missing.
+  #
+  # Re-running a past run is not a substitute: it deploys *that run's*
+  # commit, which rolls the deployed theme back to an older tree once `main`
+  # has moved on. A dispatch runs at a ref chosen at start time, which is
+  # what a recovery wants. The job is idempotent — vite builds with
+  # `emptyOutDir`, and the server side is `rsync --delete` into the theme
+  # tree followed by the symlink check.
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
