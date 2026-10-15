@@ -5,6 +5,13 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.4.1] — 2026-10-16
+
+### Development
+
+- A self-audit test runs the theme's views through the CSP strict-mode scanner and fails
+  when one breaks it (#82, fixes #81). No runtime code changed.
+
 ## [0.4.0] — 2026-10-13
 
 ### Added
