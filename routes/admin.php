@@ -59,9 +59,21 @@ Route::prefix('settings/themes')
         Route::get('/settings', [AdminThemeSettingsController::class, 'settings'])
             ->middleware('check.menu.access:settings.themes.settings')
             ->name('settings');
-        
+
         // 更新は編集権限が必要
         Route::post('/settings', [AdminThemeSettingsController::class, 'update'])
             ->middleware(['check.menu.access:settings.themes.settings', 'check.menu.edit:settings.themes.settings'])
             ->name('settings.update');
+
+        // The preview iframe. GET is its `src`, so the first paint needs no
+        // JavaScript; POST re-renders it with the values currently in the
+        // form, which are not saved. Both only render, so they ask for the
+        // same view permission the settings screen does — not the edit one.
+        Route::get('/settings/preview-frame', [AdminThemeSettingsController::class, 'previewFrame'])
+            ->middleware('check.menu.access:settings.themes.settings')
+            ->name('settings.preview-frame');
+
+        Route::post('/settings/preview', [AdminThemeSettingsController::class, 'preview'])
+            ->middleware('check.menu.access:settings.themes.settings')
+            ->name('settings.preview');
     });

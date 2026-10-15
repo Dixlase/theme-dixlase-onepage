@@ -5,6 +5,24 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [Unreleased]
+
+### Fixed
+
+- The theme settings preview renders the theme itself (#79). It was a hand-built
+  copy of the header, hero, contact section and footer — a second implementation
+  of the theme's appearance, drifting from the first with every change. It read
+  the untranslated setting, so the hero previewed in the wrong language on a
+  translated site; it never resolved media ids, so the hero background was
+  missing; and the appearance switcher added in 0.3.0 did not exist in it at
+  all. The preview now goes through the theme's own partials, so a `custom/`
+  override shows up in it exactly as on the live page, and a setting changed in
+  the form is still reflected without saving.
+- The preview layout shows the appearance switcher fixed in the corner, which it
+  had been missing since that placement was added.
+- The preview no longer disappears when the operator's language differs from the
+  front page's.
+
 ## [0.4.0] — 2026-10-13
 
 ### Added

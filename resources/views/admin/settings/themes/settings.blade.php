@@ -209,101 +209,6 @@ function themeSettingsEditor() {
         get headerMenuEditUrl() { return this.menuEditBaseUrl.replace('__ID__', this.headerMenuId); },
         get footerMenuEditUrl() { return this.menuEditBaseUrl.replace('__ID__', this.footerMenuId); },
 
-        // Editing state
-        editing: null,
-
-        // ===== Preview-mock helpers =====
-        // The inline sidebar preview (partials/preview.blade.php) needs to
-        // reflect hero_gradient + heading_font settings via Alpine :style
-        // bindings. These helpers keep the resolution logic in one place
-        // (mirrors layouts/app.blade.php's PHP resolvers) so per-element
-        // bindings stay short and CSP-safe (no complex inline expressions).
-
-        // Font-family stack lookup. Legacy 'gothic' / 'mincho' from the
-        // 2-choice era map onto the JP faces, same as layouts/app.blade.php.
-        resolvedHeadingFontStack() {
-            const stacks = {
-                cormorant: "'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
-                jost: "'Jost', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
-                'noto-sans-jp': "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
-                'noto-serif-jp': "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
-                gothic: "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
-                mincho: "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
-            };
-            return stacks[this.headingFontFamily] || stacks['noto-sans-jp'];
-        },
-
-        // Per-region typography :style object. font-family only when the
-        // region's apply toggle is ON (matches the live layout's
-        // var(--font-heading-{region}, inherit) fallback). letter-spacing
-        // is orthogonal: applies whenever non-zero, regardless of the apply
-        // toggle — same as the live layout's letter-spacing rule.
-        regionTypographyStyle(applyToggle, trackingValue) {
-            const style = {};
-            if (applyToggle === '1') style.fontFamily = this.resolvedHeadingFontStack();
-            const t = parseFloat(trackingValue);
-            if (!isNaN(t) && t !== 0) style.letterSpacing = trackingValue + 'em';
-            return style;
-        },
-
-        // Hero fill gate. With the restructure there is no longer an
-        // 'off entirely' state — 'solid' IS the "no gradient" case,
-        // still rendered as a plain color fill. Only skip when a hero
-        // background image or video takes over.
-        showHeroGradient() {
-            return !this.heroBgPreviewUrl && !this.heroVideoPreviewUrl;
-        },
-
-        // Resolve the fill CSS for a given preview theme ('light' | 'dark').
-        // Mirrors the PHP resolver in partials/hero.blade.php:
-        //   mode='primary'  → color1 = primaryColor, color2 = per-theme body bg
-        //   mode='custom'   → color1 + color2 both operator-picked
-        //   shape='solid'   → color1 only, no gradient
-        // No alpha suffix — 2-color pair gives an explicit gradient that
-        // matches what the operator picked. Legacy mode='none' is
-        // normalised to primary+solid for backward compat.
-        resolveHeroFillCss(themeMode) {
-            const isDark = themeMode === 'dark';
-            let mode = this.heroGradientMode;
-            let shape = this.heroGradientShape;
-            if (mode === 'none') { mode = 'primary'; shape = 'solid'; }
-
-            // Custom mode carries per-appearance color pairs. Empty dark
-            // → fall back to the light value (matches the PHP resolver
-            // and keeps sites saved before the per-mode split working).
-            let color1, color2;
-            if (mode === 'custom') {
-                color1 = isDark
-                    ? (this.heroGradientColorDark || this.heroGradientColor)
-                    : this.heroGradientColor;
-                color2 = isDark
-                    ? (this.heroGradientColor2Dark || this.heroGradientColor2)
-                    : this.heroGradientColor2;
-            } else {
-                color1 = this.primaryColor;
-                color2 = isDark ? '#030712' : '#f3f4f6'; // Tailwind gray-950 / gray-100 — matches body bg
-            }
-
-            switch (shape) {
-                case 'solid':
-                    return color1;
-                case 'linear-vertical':
-                    return 'linear-gradient(to bottom, ' + color1 + ' 0%, ' + color2 + ' 100%)';
-                case 'radial':
-                default:
-                    return 'radial-gradient(circle clamp(500px, 100vw, 2400px) at 50% 50%, ' + color1 + ' 0%, ' + color2 + ' 65%)';
-            }
-        },
-
-        // Emit both light + dark rules as a single stylesheet string.
-        // Bound via x-text on a style element in the preview mock so
-        // the fill reactively updates on every state change without any
-        // per-element :style binding.
-        heroFillStyleRules() {
-            return '#preview-inner[data-preview-theme="light"] .pv-hero-fill { background: ' + this.resolveHeroFillCss('light') + '; }\n'
-                + '#preview-inner[data-preview-theme="dark"]  .pv-hero-fill { background: ' + this.resolveHeroFillCss('dark') + '; }';
-        },
-
         init() {
             this.$dispatch('right-sidebar-active');
 
@@ -375,14 +280,6 @@ function themeSettingsEditor() {
                     cache: 'no-store',
                 }).catch(() => { /* silent — next tick retries */ });
             }, 25 * 60 * 1000);
-        },
-
-        startEdit(field) {
-            this.editing = field;
-        },
-
-        stopEdit() {
-            this.editing = null;
         },
     }
 }
