@@ -18,10 +18,10 @@ use Tests\TestCase;
  * so a plugin that pushed a <link rel="alternate"> or a page-level <meta> had
  * nowhere to render it and Blade dropped it without a word (#66).
  *
- * Two things depended on that stack existing: DixlaseMultilingual pushes its
- * hreflang alternates to `head`, so other-language URLs were never announced
- * to search engines, and DixlaseBlog had to borrow the stylesheet stack for
- * its feed link.
+ * Two things depended on that stack existing: a translation provider pushes
+ * its hreflang alternates to `head`, so other-language URLs were never
+ * announced to search engines, and DixlaseBlog had to borrow the stylesheet
+ * stack for its feed link.
  *
  * Both head-bearing templates have to carry the stack. layouts/preview.blade.php
  * keeps its own copy of the <head> rather than including partials/head.blade.php,

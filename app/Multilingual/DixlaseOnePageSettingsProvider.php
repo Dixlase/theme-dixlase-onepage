@@ -41,10 +41,11 @@ use Themes\DixlaseOnePage\App\Models\ThemeSetting;
  * hero_button_secondary_text).
  *
  * Registered in theme.json as the `provider` for the
- * `dixlase-onepage:settings` singleton type. DixlaseMultilingual calls
- * this when no per-locale translation exists for the requested locale,
- * so the front page falls back to the primary value stored in the
- * theme's existing key-value `thm_dixlase_onepage_settings` table.
+ * `dixlase-onepage:settings` singleton type. The central translation
+ * resolver calls this when no per-locale translation exists for the
+ * requested locale, so the front page falls back to the primary value
+ * stored in the theme's existing key-value
+ * `thm_dixlase_onepage_settings` table.
  *
  * Mirrors `Plugins\DixlaseInquiry\App\Multilingual\InquirySettingsProvider`
  * — both are read-only and exist solely to bridge the central translation
