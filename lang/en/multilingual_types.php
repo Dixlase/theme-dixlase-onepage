@@ -31,8 +31,8 @@
  */
 
 return [
-    // Card label shown in the DixlaseMultilingual central translation
-    // manager UI for the `dixlase-onepage:settings` type (see theme.json
+    // Card label shown in the central translation manager UI for the
+    // `dixlase-onepage:settings` type (see theme.json
     // `multilingual_content.types[0].label_key`).
     'settings' => 'OnePage theme settings',
 ];

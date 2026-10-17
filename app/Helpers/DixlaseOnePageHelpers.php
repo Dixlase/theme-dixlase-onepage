@@ -38,15 +38,15 @@ if (! function_exists('dls_onepage_localized_setting')) {
      *
      * Lookup chain:
      *
-     *   1. DixlaseMultilingual's SingletonTranslationResolver for the
-     *      current locale (anchored on
+     *   1. The bound `SingletonTranslationResolver` for the current
+     *      locale (anchored on
      *      `(translatable_type='dixlase-onepage:settings', translatable_id=1)`)
      *   2. Same resolver for the site's default locale
      *   3. The primary value from `thm_dixlase_onepage_settings`
      *
-     * On single-language sites (no DixlaseMultilingual installed) steps
-     * 1 and 2 are skipped because no resolver is bound, and the helper
-     * returns the primary value directly.
+     * On a single-language site steps 1 and 2 are skipped because no
+     * resolver is bound, and the helper returns the primary value
+     * directly.
      *
      * Intended fields: hero_main_title, hero_sub_title, hero_button_text,
      * hero_button_secondary_text. Callers outside this set get the
