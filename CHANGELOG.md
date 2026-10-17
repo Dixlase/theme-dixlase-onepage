@@ -23,6 +23,13 @@ and this theme follows Semantic Versioning.
 - The preview no longer disappears when the operator's language differs from the
   front page's.
 
+## [0.4.1] — 2026-10-16
+
+### Development
+
+- A self-audit test runs the theme's views through the CSP strict-mode scanner and fails
+  when one breaks it (#82, fixes #81). No runtime code changed.
+
 ## [0.4.0] — 2026-10-13
 
 ### Added
@@ -30,8 +37,8 @@ and this theme follows Semantic Versioning.
 - A `head` stack in the theme's `<head>`, so a plugin or a page's own view can push
   page-specific tags and have them rendered: hreflang alternates, a feed link, a
   page-level `<meta>` (#66). Only `@stack('styles')` existed before, so a tag pushed
-  to `head` was dropped without a word and DixlaseMultilingual's hreflang alternates
-  never reached the page. The preview layout carries the same stack, so a view renders
+  to `head` was dropped without a word and hreflang alternates never reached the
+  page. The preview layout carries the same stack, so a view renders
   the same in the admin preview frame as on the live page. A page that pushes nothing
   renders exactly as before.
 

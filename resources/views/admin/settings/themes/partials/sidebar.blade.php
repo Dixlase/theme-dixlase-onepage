@@ -206,10 +206,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     {{-- ===== Default Locale (primary language of theme settings) ===== --}}
     {{-- Declares the locale the operator authored the hero text and other  --}}
     {{-- translatable settings in. The central translation manager UI       --}}
-    {{-- (DixlaseMultilingual) excludes this locale from its language       --}}
-    {{-- selector, and dls_onepage_localized_setting() short-circuits it to --}}
-    {{-- the primary value instead of the resolver — matching the pattern  --}}
-    {{-- already used by DixlasePages (per-row `lang`) and DixlaseInquiry.  --}}
+    {{-- excludes this locale from its language selector, and               --}}
+    {{-- dls_onepage_localized_setting() short-circuits it to the primary   --}}
+    {{-- value instead of the resolver — matching the pattern already used  --}}
+    {{-- by DixlasePages (per-row `lang`) and DixlaseInquiry.               --}}
     @php
         $localeOptions = \App\Helpers\LocaleHelper::supportedLocaleOptions();
         $currentDefaultLocale = old('default_locale', $settings->default_locale ?? 'auto');

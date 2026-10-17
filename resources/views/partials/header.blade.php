@@ -324,7 +324,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
             {{-- Desktop Extras (Auth Buttons + Language Switcher) --}}
             <div x-ref="navExtras" class="hidden lg:flex items-center" :class="{ '!hidden': forceHamburger }">
-                {{-- User Auth Buttons (provided by DixlaseUsers plugin) --}}
+                {{-- User Auth Buttons (provided by a member-accounts plugin) --}}
                 @if(view()->exists('dixlase-users::components.auth-buttons'))
                 <div class="flex items-center ml-4">
                     @include('dixlase-users::components.auth-buttons')
@@ -535,7 +535,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 </p>
             @endforelse
 
-            {{-- Mobile User Auth (provided by DixlaseUsers plugin) --}}
+            {{-- Mobile User Auth (provided by a member-accounts plugin) --}}
             @if(view()->exists('dixlase-users::components.auth-buttons'))
             <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div class="px-4 py-2">

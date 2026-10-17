@@ -46,8 +46,8 @@ use Themes\DixlaseOnePage\App\Multilingual\DixlaseOnePageSettingsProvider;
  * to theme-owned storage:
  *
  * 1. {@see DixlaseOnePageSettingsProvider} — primary-locale source the
- *    Multilingual plugin calls when no translation exists for the
- *    requested locale.
+ *    central translation resolver calls when no translation exists for
+ *    the requested locale.
  * 2. `dls_onepage_localized_setting()` — front-side helper that drives
  *    the actual lookup chain: current locale via
  *    `SingletonTranslationResolver`, then site default locale, then

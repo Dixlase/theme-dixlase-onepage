@@ -152,7 +152,7 @@ class UpdateThemeSettingsRequest extends FormRequest
             'footer_menu_id' => 'nullable|integer',
             'show_inquiry_form' => 'nullable|in:0,1',
 
-            // DixlaseMultilingual integration
+            // Translation provider integration
             'multilingual_switcher_enabled' => 'nullable|in:0,1',
             // Where the front-end switcher appears. Independent of each
             // other: the footer placement and the one fixed in the corner of
