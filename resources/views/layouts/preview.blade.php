@@ -180,6 +180,22 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     @unless($bareContent ?? false)
         @include('themes::partials.footer')
+
+        {{-- Appearance switcher fixed in the corner, included here for the
+             same reason layouts/app.blade.php includes it rather than the
+             footer partial: a `custom/` override replaces a view wholesale,
+             so a site that has forked the footer would never receive a
+             control added inside it.
+
+             A preview that leaves it out is a preview of a different page,
+             which is the whole failure this layout exists to avoid. It does
+             not operate here — this layout disables interactive elements —
+             but it is shown, in the position and at the size the visitor
+             gets. The footer placement needs nothing extra: it lives inside
+             partials/footer.blade.php, which is included above. --}}
+        @if ((string) ($themeSettings->appearance_toggle_float ?? '0') === '1')
+            @include('themes::partials.appearance-float')
+        @endif
     @endunless
 
     @stack('scripts')

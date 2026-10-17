@@ -34,8 +34,12 @@ namespace Themes\DixlaseOnePage\App\Http\Controllers\Admin\Settings;
 
 use App\Http\Controllers\Admin\AdminLoggedInController;
 use App\Models\Media;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Themes\DixlaseOnePage\App\Http\Requests\UpdateThemeSettingsRequest;
 use Themes\DixlaseOnePage\App\Models\ThemeSetting;
+use Themes\DixlaseOnePage\App\Providers\DixlaseOnePageServiceProvider;
 
 class AdminThemeSettingsController extends AdminLoggedInController
 {
@@ -283,29 +287,123 @@ class AdminThemeSettingsController extends AdminLoggedInController
         }
         $this->viewParams['inquiryReady'] = $inquiryReady;
 
-        // フロントページコンテンツをプレビュー用に取得
-        $frontContentPreview = null;
-        $frontPage = \App\Models\FrontPage::findByTypeAndLang('main_content', app()->getLocale());
-        if ($frontPage && $frontPage->isPublished()) {
-            $contentService = app(\App\Services\FrontPageContentService::class);
-            $rawContent = $contentService->getContent($frontPage, app()->getLocale());
-            if ($rawContent) {
-                $editorType = $frontPage->editor_type;
-                if ($editorType === \App\Enums\ContentEditorType::GUI) {
-                    $renderedHtml = app(\App\Services\Editor\EditorManager::class)->renderContent('gui', $rawContent);
-                } elseif ($editorType === \App\Enums\ContentEditorType::MARKDOWN) {
-                    $renderedHtml = \Illuminate\Support\Str::markdown($rawContent);
-                } elseif ($editorType === \App\Enums\ContentEditorType::BLADE) {
-                    $renderedHtml = \Illuminate\Support\Facades\Blade::render($rawContent);
-                } else {
-                    $renderedHtml = $rawContent;
-                }
-                $frontContentPreview = shortcode_parse($renderedHtml);
-            }
-        }
-        $this->viewParams['frontContentPreview'] = $frontContentPreview;
-
         return view('themes::admin.settings.themes.settings', $this->viewParams);
+    }
+
+    /**
+     * Render the preview frame with the settings currently stored.
+     *
+     * This is the `src` of the preview iframe, so the first paint needs no
+     * JavaScript. It renders `themes::admin.preview-frame` — the same view
+     * the front page editor's preview uses — with `bareContent` false, so
+     * the header, hero, content, inquiry section and footer all come from
+     * the theme's own partials and a site's `custom/` overrides apply
+     * exactly as they do on the live page.
+     */
+    public function previewFrame(): View
+    {
+        return view('themes::admin.preview-frame', $this->previewFrameParams());
+    }
+
+    /**
+     * Render the preview frame with settings that have not been saved.
+     *
+     * The settings form posts itself here, targeting the preview iframe, so
+     * the operator sees the real theme rendered with the values in the form.
+     * Nothing is written: the values are bound for this request only and the
+     * view composer merges them over the stored ones.
+     *
+     * The rules are the ones the save path uses, so a value that would be
+     * rejected on save is not previewed as if it were acceptable. They are
+     * applied leniently though: a field that fails is dropped and the stored
+     * value shows through, rather than the request being rejected. Injecting
+     * the form request instead would redirect on the first invalid field,
+     * and since the form posts itself while the operator is still typing,
+     * that redirect would land in the preview frame — the settings page
+     * rendered inside its own preview.
+     */
+    public function preview(Request $request): View
+    {
+        $valid = Validator::make($request->all(), (new UpdateThemeSettingsRequest())->rules())->valid();
+
+        app()->instance(
+            DixlaseOnePageServiceProvider::PREVIEW_SETTINGS,
+            $this->normalizeCopyright($valid)
+        );
+
+        return view('themes::admin.preview-frame', $this->previewFrameParams());
+    }
+
+    /**
+     * The non-setting half of the preview frame: the front page body, and
+     * the custom CSS / JS the frame links as subresources.
+     *
+     * Theme settings do not reach the front page body, so this part is the
+     * same whether the preview is of saved or unsaved settings.
+     */
+    private function previewFrameParams(): array
+    {
+        // Keyed on the row rather than on the admin's locale, matching the
+        // front page editor's preview (`AdminFrontController::previewFrame`).
+        // Looking the page up by `app()->getLocale()` meant the frame went
+        // blank whenever the operator's locale differed from the page's.
+        $frontPage = \App\Models\FrontPage::findByType('main_content');
+
+        if (! $frontPage || ! $frontPage->isPublished()) {
+            // No published front page for this locale. The frame still
+            // renders: header, hero and footer are what this preview is
+            // mostly about, and an empty body is the truth about the page.
+            return [
+                'initialRenderedContent' => '',
+                'hasCustomCss' => false,
+                'hasCustomJs' => false,
+                'customAssetVersion' => '0',
+                'bareContent' => false,
+            ];
+        }
+
+        $contentService = app(\App\Services\FrontPageContentService::class);
+        $locale = $frontPage->lang;
+
+        $rawContent = $contentService->getContent($frontPage, $locale);
+        $renderedContent = $rawContent
+            ? shortcode_parse($this->renderFrontContent($frontPage, $rawContent))
+            : '';
+
+        // Custom CSS / JS belong to the HTML editor only, matching core's
+        // own preview frame.
+        $customCss = null;
+        $customJs = null;
+        if ($frontPage->editor_type === \App\Enums\ContentEditorType::HTML) {
+            $customCss = $contentService->getCssContent($frontPage, $locale);
+            $customJs = $contentService->getJsContent($frontPage, $locale);
+        }
+
+        return [
+            'initialRenderedContent' => $renderedContent,
+            'hasCustomCss' => ! empty($customCss),
+            'hasCustomJs' => ! empty($customJs),
+            'customAssetVersion' => \App\Http\Controllers\Front\FrontWelcomeController::customAssetVersion(
+                $frontPage,
+                (string) $customCss,
+                (string) $customJs
+            ),
+            'bareContent' => false,
+        ];
+    }
+
+    /**
+     * Turn stored front page content into HTML, by editor type.
+     */
+    private function renderFrontContent(\App\Models\FrontPage $frontPage, string $rawContent): string
+    {
+        return match ($frontPage->editor_type) {
+            \App\Enums\ContentEditorType::GUI => app(\App\Services\Editor\EditorManager::class)
+                ->renderContent('gui', $rawContent),
+            \App\Enums\ContentEditorType::MARKDOWN => (string) \Illuminate\Support\Str::markdown($rawContent),
+            \App\Enums\ContentEditorType::BLADE => \Illuminate\Support\Facades\Blade::render($rawContent),
+            default => $rawContent,
+        };
     }
 
     /**
@@ -313,19 +411,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
      */
     public function update(UpdateThemeSettingsRequest $request)
     {
-        $validated = $request->validated();
-
-        // The footer's `© <year>` prefix is rendered automatically from
-        // the current year on every request, so the DB only stores the
-        // editable suffix. Strip any prefix the user may have typed in
-        // (or that came through from legacy data) before persisting.
-        if (isset($validated['footer_copyright'])) {
-            $validated['footer_copyright'] = preg_replace(
-                '/^\s*©\s*\d{4}\s+/u',
-                '',
-                $validated['footer_copyright']
-            );
-        }
+        $validated = $this->normalizeCopyright($request->validated());
 
         // キーバリュー形式で保存
         ThemeSetting::setValues($validated);
@@ -336,5 +422,32 @@ class AdminThemeSettingsController extends AdminLoggedInController
         return redirect()
             ->route('admin.settings.themes.settings')
             ->with('success', __('themes::admin.settings.updated_successfully'));
+    }
+
+    /**
+     * Strip the `© <year>` prefix from the footer copyright.
+     *
+     * The footer renders that prefix from the current year on every
+     * request, so only the editable suffix is stored. A prefix the operator
+     * typed in, or one carried over from legacy data, would otherwise show
+     * twice.
+     *
+     * Shared by the save path and the preview path so the preview shows
+     * what saving would produce.
+     *
+     * @param  array<string, mixed>  $values
+     * @return array<string, mixed>
+     */
+    private function normalizeCopyright(array $values): array
+    {
+        if (isset($values['footer_copyright'])) {
+            $values['footer_copyright'] = preg_replace(
+                '/^\s*©\s*\d{4}\s+/u',
+                '',
+                (string) $values['footer_copyright']
+            );
+        }
+
+        return $values;
     }
 }

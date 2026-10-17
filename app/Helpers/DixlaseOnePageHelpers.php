@@ -32,6 +32,36 @@
 
 use Themes\DixlaseOnePage\App\Models\ThemeSetting;
 
+if (! function_exists('dls_onepage_primary_setting')) {
+    /**
+     * The primary-locale value of a theme setting.
+     *
+     * Normally the stored one. While the theme settings screen is
+     * previewing values the operator has not saved, the posted value stands
+     * in for it, so typing in the form is reflected in the preview.
+     *
+     * Deliberately the *primary* value and nothing more: a translation for
+     * the locale being previewed still wins, exactly as it does on the live
+     * page. Editing the primary field of a setting that the viewed locale
+     * translates changes neither, which is the truth about that page.
+     */
+    function dls_onepage_primary_setting(string $key): ?string
+    {
+        $override = \Themes\DixlaseOnePage\App\Providers\DixlaseOnePageServiceProvider::PREVIEW_SETTINGS;
+
+        if (app()->bound($override)) {
+            $values = (array) app($override);
+            if (array_key_exists($key, $values)) {
+                return $values[$key] === null ? null : (string) $values[$key];
+            }
+        }
+
+        $stored = ThemeSetting::getValue($key);
+
+        return $stored === null ? null : (string) $stored;
+    }
+}
+
 if (! function_exists('dls_onepage_localized_setting')) {
     /**
      * Read a translatable DixlaseOnePage theme setting in the current locale.
@@ -68,7 +98,7 @@ if (! function_exists('dls_onepage_localized_setting')) {
                 $primaryLocale = null;
             }
             if ($primaryLocale !== null && $primaryLocale === app()->getLocale()) {
-                $primary = ThemeSetting::getValue($key);
+                $primary = dls_onepage_primary_setting($key);
 
                 return $primary === null ? null : (string) $primary;
             }
@@ -103,13 +133,13 @@ if (! function_exists('dls_onepage_localized_setting')) {
                 }
             }
 
-            $primary = ThemeSetting::getValue($key);
+            $primary = dls_onepage_primary_setting($key);
 
             return $primary === null ? null : (string) $primary;
         } catch (\Throwable) {
             // Defensive: never let a translation lookup break the page.
             try {
-                $primary = ThemeSetting::getValue($key);
+                $primary = dls_onepage_primary_setting($key);
 
                 return $primary === null ? null : (string) $primary;
             } catch (\Throwable) {

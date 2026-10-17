@@ -41,6 +41,23 @@ use Themes\DixlaseOnePage\App\Models\ThemeSetting;
 class DixlaseOnePageServiceProvider extends ServiceProvider
 {
     /**
+     * Container key holding theme settings the operator has changed but not
+     * saved yet.
+     *
+     * The theme settings screen previews the real theme by rendering it with
+     * the values currently in the form. Those values are not in the database,
+     * and the view composer below rebuilds `$themeSettings` from the database
+     * for every view, so a controller cannot simply pass them down. Binding
+     * them here lets the composer merge them on top, and lets it do so
+     * *before* media ids are resolved to paths, so an unsaved hero background
+     * resolves exactly as a saved one does.
+     *
+     * The binding lives for one request. Nothing outside the preview request
+     * binds it, so the live front page is unaffected.
+     */
+    public const PREVIEW_SETTINGS = 'dls_onepage.preview_settings';
+
+    /**
      * Register services.
      */
     public function register(): void
@@ -157,6 +174,17 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
                 $defaults = $this->getDefaultThemeSettings();
                 foreach ((array) $defaults as $key => $value) {
                     if (! property_exists($themeSettings, $key)) {
+                        $themeSettings->{$key} = $value;
+                    }
+                }
+
+                // Unsaved settings from the theme settings screen's preview
+                // win over the stored ones. Applied after the defaults merge
+                // so a key the database does not carry yet can still be
+                // previewed, and before the media lookup below so an unsaved
+                // image id resolves to a path the same way a saved one does.
+                if (app()->bound(self::PREVIEW_SETTINGS)) {
+                    foreach ((array) app(self::PREVIEW_SETTINGS) as $key => $value) {
                         $themeSettings->{$key} = $value;
                     }
                 }

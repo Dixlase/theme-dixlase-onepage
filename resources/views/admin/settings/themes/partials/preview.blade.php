@@ -28,628 +28,168 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 --}}
 
-{{-- Preview theme styles (isolated from admin dark mode).
-     Colors use Tailwind v4 CSS custom properties (var(--color-*)) so they
-     resolve to the same oklch() values as the surrounding outer container.
-     Mixing hardcoded v3 hex values here would create visible color seams
-     between the inline mocks (header / hero / etc.) and the iframe area
-     that inherits from #preview-outer's bg-gray-* utility. --}}
-<style @cspNonce>
-#preview-inner[data-preview-theme="dark"] { background: var(--color-gray-950) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-header { background: color-mix(in oklab, var(--color-gray-900) 80%, transparent) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-app-name { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-title { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-subtitle { color: var(--color-gray-300) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-btn-secondary { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-hero-overlay { background: color-mix(in oklab, var(--color-gray-900) 70%, transparent) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-edit-input { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-nav-item { color: var(--color-gray-400) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-contact { background: var(--color-gray-800) !important; border-color: var(--color-gray-800) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-contact-title { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-contact-desc { color: var(--color-gray-400) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-contact-field { background: var(--color-gray-700) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-required-badge { background: color-mix(in oklab, var(--color-red-900) 80%, transparent) !important; color: var(--color-red-200) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-footer { background: var(--color-gray-950) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-footer-title { color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-footer-text { color: var(--color-gray-400) !important; }
-#preview-inner[data-preview-theme="dark"] .pv-footer-border { border-color: rgba(255,255,255,0.1) !important; }
+{{-- Theme settings preview.
 
-#preview-inner[data-preview-theme="light"] { background: #fff !important; }
-#preview-inner[data-preview-theme="light"] .pv-header { background: rgba(255,255,255,0.9) !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important; }
-#preview-inner[data-preview-theme="light"] .pv-app-name { color: var(--color-gray-900) !important; }
-#preview-inner[data-preview-theme="light"] .pv-title { color: var(--color-gray-900) !important; }
-#preview-inner[data-preview-theme="light"] .pv-subtitle { color: var(--color-gray-600) !important; }
-#preview-inner[data-preview-theme="light"] .pv-btn-secondary { color: var(--color-gray-700) !important; }
-#preview-inner[data-preview-theme="light"] .pv-hero-overlay { background: rgba(255,255,255,0.6) !important; }
-#preview-inner[data-preview-theme="light"] .pv-edit-input { background: rgba(0,0,0,0.05) !important; color: var(--color-gray-900) !important; }
-#preview-inner[data-preview-theme="light"] .pv-nav-item { color: var(--color-gray-500) !important; }
-#preview-inner[data-preview-theme="light"] .pv-contact { background: var(--color-gray-100) !important; border-color: var(--color-gray-200) !important; }
-#preview-inner[data-preview-theme="light"] .pv-contact-title { color: var(--color-gray-900) !important; }
-#preview-inner[data-preview-theme="light"] .pv-contact-desc { color: var(--color-gray-500) !important; }
-#preview-inner[data-preview-theme="light"] .pv-contact-field { background: var(--color-gray-200) !important; }
-#preview-inner[data-preview-theme="light"] .pv-required-badge { background: var(--color-red-100) !important; color: var(--color-red-800) !important; }
-#preview-inner[data-preview-theme="light"] .pv-footer { background: var(--color-gray-100) !important; }
-#preview-inner[data-preview-theme="light"] .pv-footer-title { color: var(--color-gray-900) !important; }
-#preview-inner[data-preview-theme="light"] .pv-footer-text { color: var(--color-gray-600) !important; }
-#preview-inner[data-preview-theme="light"] .pv-footer-border { border-color: var(--color-gray-300) !important; }
+     The frame below is the theme itself, rendered by the theme's own
+     partials through the `themes::` namespace, so a site that overrides a
+     partial in `custom/` sees its override here exactly as on the live page.
 
-/* Header logo light/dark swap — mirrors partials/header.blade.php. When a
-   dark-mode logo is uploaded, show one image per preview theme; with no dark
-   logo, invert the light mark in the dark preview theme (mono-mark fallback). */
-#preview-inner[data-preview-theme="dark"] .pv-logo-light { display: none !important; }
-#preview-inner[data-preview-theme="light"] .pv-logo-dark { display: none !important; }
-#preview-inner[data-preview-theme="dark"] .pv-logo-invert { filter: invert(1); }
+     It used to be a hand-built facsimile of the header, hero, contact
+     section and footer, with a content-only iframe in the middle (#79). A
+     second implementation of the theme's appearance cannot help drifting
+     from the first: it read the raw primary-locale settings instead of the
+     translated ones, so the hero previewed in the wrong language; it never
+     resolved media ids, so the hero background was missing; and controls
+     added to the real partials — the appearance switcher of #68 / #70 —
+     simply did not exist in it.
 
-/* Footer SNS icon row — same dimensions as `.sns-list` in
-   front/scss/style.scss (the theme SCSS is not loaded on this admin page).
-   `--sns-em` = largest glyph dimension / 1em of each Font Awesome brand
-   glyph, so the rendered mark is 32px (line art) / 28px (filled). */
-#preview-inner .pv-sns-list { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px; padding: 2px 0; margin: 0; list-style: none; }
-#preview-inner .pv-sns-link { display: grid; place-items: center; inline-size: 44px; block-size: 44px; border-radius: 8px; transition: opacity 0.15s ease; }
-#preview-inner .pv-sns-link:hover { opacity: 0.65; }
-#preview-inner .pv-sns-link i { --sns-em: 1; --fa-width: auto; display: block; width: auto; font-size: calc(32px / var(--sns-em)); line-height: 1; }
-#preview-inner .pv-sns-link.is-solid i { font-size: calc(28px / var(--sns-em)); }
-#preview-inner .pv-sns-link[data-sns="instagram"] i { --sns-em: 0.875; }
-#preview-inner .pv-sns-link[data-sns="x"] i { --sns-em: 0.899; }
-#preview-inner .pv-sns-link[data-sns="threads"] i { --sns-em: 0.938; }
-#preview-inner .pv-sns-link[data-sns="tiktok"] i { --sns-em: 1.0; }
-#preview-inner .pv-sns-link[data-sns="bluesky"] i { --sns-em: 1.125; }
-#preview-inner .pv-sns-link[data-sns="discord"] i { --sns-em: 1.148; }
-#preview-inner .pv-sns-link[data-sns="facebook"] i { --sns-em: 1.0; }
-#preview-inner .pv-sns-link[data-sns="linkedin"] i { --sns-em: 0.875; }
-#preview-inner .pv-sns-link[data-sns="youtube"] i { --sns-em: 1.067; }
-#preview-inner .pv-sns-link[data-sns="pinterest"] i { --sns-em: 0.969; }
-#preview-inner .pv-sns-link[data-sns="github"] i { --sns-em: 0.969; }
-#preview-inner[data-preview-theme="dark"] .pv-sns-link { color: #fff !important; }
-#preview-inner[data-preview-theme="light"] .pv-sns-link { color: #000 !important; }
-/* Facebook — the fa-facebook glyph IS Meta's complete lockup (circle +
-   f as one mark); Meta's guideline forbids the "f" alone. Housed
-   inside a rounded-square chip so the container shape is structurally
-   distinct from the Meta round mark (no ambiguity about whether the
-   mark was modified). The chip flips colour with the preview theme.
-   Mirrors the live .sns-list rule in front/scss/style.scss (see the
-   block-level comment there for the rationale). */
-/* Light preview theme: black rounded-square chip + 20px white FB
-   glyph inside (the reversed Meta lockup, wrapped in a chip so it
-   has enough contrast on the light footer). Dark preview theme: no
-   chip — the dark footer already provides the surface the reversed
-   lockup expects, so the bare 32px white glyph is the right form. */
-#preview-inner[data-preview-theme="light"] .pv-sns-link[data-sns="facebook"] i { display: grid !important; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 8px; font-size: 20px !important; background-color: #000 !important; color: #fff !important; }
-#preview-inner[data-preview-theme="dark"] .pv-sns-link[data-sns="facebook"] i { display: block !important; inline-size: auto; block-size: auto; background-color: transparent !important; border-radius: 0; font-size: 32px !important; }
+     `src` renders the stored settings, so the first paint needs no
+     JavaScript. The script below re-renders the frame with the values
+     currently in the form, which have not been saved, by posting the form
+     into the frame. Both go to the same view the front page editor's
+     preview uses, with `bareContent` false.
 
-/* Front page content preview */
-#preview-inner[data-preview-theme="dark"] .pv-content { background: #111827 !important; }
-#preview-inner[data-preview-theme="dark"] .pv-content-text { color: #d1d5db !important; }
-#preview-inner[data-preview-theme="dark"] .pv-content-text h1,
-#preview-inner[data-preview-theme="dark"] .pv-content-text h2,
-#preview-inner[data-preview-theme="dark"] .pv-content-text h3 { color: #f3f4f6 !important; }
-#preview-inner[data-preview-theme="light"] .pv-content { background: #fff !important; }
-#preview-inner[data-preview-theme="light"] .pv-content-text { color: #374151 !important; }
-#preview-inner[data-preview-theme="light"] .pv-content-text h1,
-#preview-inner[data-preview-theme="light"] .pv-content-text h2,
-#preview-inner[data-preview-theme="light"] .pv-content-text h3 { color: #111827 !important; }
-
-/* Hover badges for clickable preview sections */
-.pv-hero .pv-edit-badge,
-.pv-content .pv-edit-badge { opacity: 0; transition: opacity 0.2s ease; }
-.pv-hero:hover .pv-edit-badge,
-.pv-content:hover .pv-edit-badge { opacity: 1; }
-
-/* Reset admin global section styles leaking into preview */
-#preview-inner section { border-color: transparent !important; }
-#preview-inner[data-preview-theme="light"] section { background-color: transparent !important; border-color: transparent !important; }
-#preview-inner[data-preview-theme="dark"] section { background-color: transparent !important; border-color: transparent !important; }
-
-/* Front content iframe must be fully transparent so the surrounding
-   preview bg shows through, blending the section seamlessly into the
-   hero / inquiry / footer mocks above and below. */
-#preview-inner .pv-content-iframe,
-#preview-inner .pv-content-iframe iframe {
-    background: transparent !important;
-    border: 0 !important;
-    color-scheme: normal;
-}
-
-/* Match the live layout's global palt so the mock's Japanese glyph
-   shaping (kana / punctuation width) matches what the front will show.
-   No-op for the Latin faces (Cormorant / Jost) since they carry no palt
-   metadata, so this is safe as a preview-wide default. */
-#preview-inner { font-feature-settings: "palt"; }
-</style>
+     The frame is same-origin, so its height is read from its own document
+     rather than through a postMessage round-trip, and the container's
+     ResizeObserver picks the change up to rescale. --}}
 
 <x-admin.theme-preview-container
     :title="__('themes::admin.settings.editor.preview_title')"
     :appearanceMode="$settings->appearance_mode ?? '0'"
-    aspectRatio="16:9"
 >
-
-            {{-- ===== HEADER PREVIEW ===== --}}
-            <header class="pv-header h-14 w-full flex items-center backdrop-blur-md shadow-lg px-6">
-                <div class="flex items-center justify-between w-full">
-                    {{-- Logo --}}
-                    <div class="flex items-center space-x-3">
-                        <div class="relative group cursor-pointer" @click="openMediaSelector('header_logo_id_selector', 'header_logo_id', 'header_logo_id_preview', false, 'original')">
-                            {{-- Logo image(s). Mirrors partials/header.blade.php:
-                                 with a dark-mode logo uploaded, swap per preview
-                                 theme; otherwise invert the light mark in the
-                                 dark preview theme. Toggling is driven by the
-                                 .pv-logo-* CSS keyed on data-preview-theme. --}}
-                            <template x-if="headerLogoPreviewUrl && headerLogoDarkPreviewUrl">
-                                <span class="inline-flex">
-                                    <img :src="headerLogoPreviewUrl" alt="Logo" class="pv-logo-light h-8 w-auto">
-                                    <img :src="headerLogoDarkPreviewUrl" alt="Logo" class="pv-logo-dark h-8 w-auto">
-                                </span>
-                            </template>
-                            <template x-if="headerLogoPreviewUrl && !headerLogoDarkPreviewUrl">
-                                <img :src="headerLogoPreviewUrl" alt="Logo" class="pv-logo-invert h-8 w-auto">
-                            </template>
-                            <template x-if="!headerLogoPreviewUrl">
-                                <svg class="h-8 w-auto" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="40" height="40" rx="8" class="fill-blue-600"/>
-                                    <text x="20" y="28" class="fill-white font-bold text-2xl" font-family="system-ui, sans-serif" text-anchor="middle">D</text>
-                                </svg>
-                            </template>
-                            <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-image"></i></span>
-                            </div>
-                        </div>
-                        <span class="pv-app-name text-xl font-bold" :style="regionTypographyStyle(headingFontApplyHeader, headingFontTrackingHeader)">{{ config('app.name', 'Dixlase') }}</span>
-                    </div>
-
-                    {{-- Navigation - dynamic from selected menu --}}
-                    <nav class="pv-menu-area relative group/headernav flex items-center space-x-4 cursor-pointer"
-                         x-show="headerMenuId && allMenusData[headerMenuId]"
-                         @click.stop="window.__menuEditUrl = headerMenuEditUrl; openModal('editHeaderMenuModal')">
-                        {{-- Desktop/Tablet: show menu items --}}
-                        <template x-if="previewDevice !== 'mobile'">
-                            <template x-for="item in allMenusData[headerMenuId] || []" :key="item.title">
-                                <span class="pv-nav-item px-3 py-1 text-sm" x-text="item.title"></span>
-                            </template>
-                        </template>
-                        {{-- Mobile: show hamburger icon --}}
-                        <template x-if="previewDevice === 'mobile'">
-                            <span class="pv-nav-item text-xl cursor-pointer"><i class="fas fa-bars"></i></span>
-                        </template>
-                        {{-- Edit badge --}}
-                        <div class="absolute -top-2 -right-2 opacity-0 group-hover/headernav:opacity-100 transition-opacity z-20">
-                            <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-lg"><i class="fas fa-pencil-alt"></i></span>
-                        </div>
-                    </nav>
-                </div>
-            </header>
-
-            {{-- ===== HERO PREVIEW ===== --}}
-            {{-- Vertical alignment mirrors the front-end hero.blade.php:
-                 with a foreground image set, the text block is pushed
-                 toward the top (justify-start + top padding) so the
-                 image has room; without one, content stays centered. --}}
-            <section class="pv-hero relative min-h-[600px] flex flex-col overflow-hidden"
-                :class="heroForegroundPreviewUrl
-                    ? 'justify-start pt-12 md:pt-16 pb-12'
-                    : 'justify-center'">
-                {{-- 動画設定インジケーター --}}
-                <template x-if="heroVideoPreviewUrl">
-                    <div class="absolute top-4 left-4 z-20">
-                        <span class="bg-purple-600 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-video mr-1"></i>{{ __('themes::admin.settings.hero.background_video') }}</span>
-                    </div>
-                </template>
-
-                {{-- 背景画像 --}}
-                <template x-if="heroBgPreviewUrl">
-                    <div class="absolute inset-0 z-0">
-                        <img :src="heroBgPreviewUrl" alt="" class="w-full h-full object-cover">
-                        <div class="pv-hero-overlay absolute inset-0"></div>
-                    </div>
-                </template>
-
-                {{-- 背景画像・動画なしのときの hero 背景塗り。shape 別
-                     (radial / linear-vertical / solid) + mode 別 (primary
-                     auto endpoint / custom 2-色) を Alpine helper
-                     (heroFillStyleRules) が light/dark ペアの CSS 文字列
-                     として返し、直下の <style x-text> に埋め込む。div は
-                     class のみで .pv-hero-fill を持ち、data-preview-theme
-                     切替でルールがそのまま効く (Alpine :style を要素ごとに
-                     貼らなくて済むので mock の DOM が軽い)。 --}}
-                <template x-if="showHeroGradient()">
-                    <div class="pv-hero-fill absolute inset-0 z-0 pointer-events-none"></div>
-                </template>
-                {{-- Per-render stylesheet driven by Alpine — updates on
-                     every gradient-related state change (shape / mode /
-                     color / color2 / primaryColor). Emitted inside the
-                     hero <section> so it colocates with the div it targets. --}}
-                <style @cspNonce x-text="heroFillStyleRules()"></style>
-
-                {{-- コンテンツ --}}
-                <div class="container mx-auto px-8 py-20 relative z-10">
-                    <div class="max-w-4xl mx-auto text-center">
-                        {{-- Main Title — textarea で改行入力可、表示は white-space:pre-line で改行を反映 --}}
-                        <div class="relative group cursor-pointer mb-6" @click.stop="startEdit('heroMainTitle')">
-                            <h1 class="pv-title text-6xl lg:text-7xl font-bold leading-tight whitespace-pre-line" style="text-wrap: balance;" :style="regionTypographyStyle(headingFontApplyHero, headingFontTrackingHero)" x-show="editing !== 'heroMainTitle'" x-text="heroMainTitle">
-                            </h1>
-                            <textarea
-                                x-show="editing === 'heroMainTitle'"
-                                x-model="heroMainTitle"
-                                @click.away="stopEdit()"
-                                x-ref="editHeroMainTitle"
-                                x-effect="if (editing === 'heroMainTitle') $nextTick(() => $refs.editHeroMainTitle?.focus())"
-                                rows="2"
-                                class="pv-edit-input w-full text-6xl lg:text-7xl font-bold border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                            ></textarea>
-                            <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroMainTitle'">
-                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
-                            </div>
-                        </div>
-
-                        {{-- Sub Title --}}
-                        <div class="relative group cursor-pointer mb-8" @click.stop="startEdit('heroSubTitle')">
-                            <p class="pv-subtitle text-lg max-w-lg mx-auto whitespace-pre-line" style="text-wrap: balance;" x-show="editing !== 'heroSubTitle'" x-text="heroSubTitle"></p>
-                            <textarea
-                                x-show="editing === 'heroSubTitle'"
-                                x-model="heroSubTitle"
-                                @click.away="stopEdit()"
-                                x-ref="editHeroSubTitle"
-                                x-effect="if (editing === 'heroSubTitle') $nextTick(() => $refs.editHeroSubTitle?.focus())"
-                                rows="2"
-                                class="pv-edit-input w-full max-w-lg mx-auto text-lg border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                            ></textarea>
-                            <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroSubTitle'">
-                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
-                            </div>
-                        </div>
-
-                        {{-- Buttons --}}
-                        <div class="flex flex-col sm:flex-row justify-center gap-4">
-                            {{-- Primary button --}}
-                            <div x-show="heroButtonEnabled === '1'" class="relative group cursor-pointer" @click.stop="startEdit('heroButton')">
-                                <div class="inline-flex items-center justify-center gap-2 h-11 rounded-xl text-white px-8 py-6" x-show="editing !== 'heroButton'" :style="'background-color: ' + primaryColor">
-                                    <span x-text="heroButtonText"></span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 h-5 w-5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-                                </div>
-                                <div x-show="editing === 'heroButton'" class="flex gap-2" @click.away="stopEdit()">
-                                    <input x-model="heroButtonText" type="text" placeholder="{{ __('themes::admin.settings.hero.button_text') }}" class="pv-edit-input text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40"
-                                        x-ref="editHeroButton" x-effect="if (editing === 'heroButton') $nextTick(() => $refs.editHeroButton?.focus())">
-                                    <input x-model="heroButtonLink" type="text" placeholder="{{ __('themes::admin.settings.hero.button_link') }}" class="pv-edit-input text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
-                                </div>
-                                <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroButton'">
-                                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
-                                </div>
-                            </div>
-
-                            {{-- Secondary button --}}
-                            <div x-show="heroButtonSecondaryEnabled === '1'" class="relative group cursor-pointer" @click.stop="startEdit('heroButtonSecondary')">
-                                <div class="pv-btn-secondary inline-flex items-center justify-center gap-2 h-11 rounded-xl px-8 py-6" x-show="editing !== 'heroButtonSecondary'">
-                                    <span x-text="heroButtonSecondaryText || '{{ __('themes::admin.settings.hero.button_secondary_text') }}'"></span>
-                                </div>
-                                <div x-show="editing === 'heroButtonSecondary'" class="flex gap-2" @click.away="stopEdit()">
-                                    <input x-model="heroButtonSecondaryText" type="text" placeholder="{{ __('themes::admin.settings.hero.button_secondary_text') }}" class="pv-edit-input text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40"
-                                        x-ref="editHeroSecondary" x-effect="if (editing === 'heroButtonSecondary') $nextTick(() => $refs.editHeroSecondary?.focus())">
-                                    <input x-model="heroButtonSecondaryLink" type="text" placeholder="{{ __('themes::admin.settings.hero.button_secondary_link') }}" class="pv-edit-input text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
-                                </div>
-                                <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'heroButtonSecondary'">
-                                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- 前景画像（テキスト/ボタンの下に置くスクリーンショットなど）
-                         クリックで媒体ピッカーを直接開く。サイドバーにも同じ
-                         picker があるが、プレビュー上でその画像をクリックすると
-                         即差し替えできるという UX のため。 --}}
-                    <template x-if="heroForegroundPreviewUrl">
-                        <div class="mt-12 md:mt-16 lg:mt-20 max-w-[1200px] mx-auto relative group cursor-pointer"
-                            @click.stop="openMediaSelector('hero_foreground_image_id_selector', 'hero_foreground_image_id', 'hero_foreground_image_id_preview', false, 'hero')">
-                            <img :src="heroForegroundPreviewUrl" alt="" class="w-full h-auto rounded-2xl shadow-2xl">
-                            <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-image mr-1"></i>{{ __('themes::admin.settings.hero.select_foreground_image') }}</span>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </section>
-
-            {{-- ===== FRONT PAGE CONTENT PREVIEW (iframe with custom CSS/JS) ===== --}}
-            @if(!empty($frontContentPreview))
-            <section class="pv-content-iframe relative">
-                {{-- The iframe is same-origin (allow-same-origin), so we read
-                     contentDocument.scrollHeight directly instead of relying on
-                     a postMessage round-trip from the inner page.
-                     Iframe element + body are kept transparent so the
-                     surrounding preview bg shows through and the section
-                     blends with the hero / inquiry / footer mocks instead of
-                     looking like a white card. --}}
-                <iframe x-ref="frontPreviewIframe"
-                        src="{{ route('admin.front.preview-frame', ['bare' => 1]) }}"
-                        @load="
-                            const iframe = $event.target;
-                            const sync = () => {
-                                try {
-                                    const doc = iframe.contentDocument;
-                                    if (!doc) return;
-                                    const h = Math.max(
-                                        doc.documentElement ? doc.documentElement.scrollHeight : 0,
-                                        doc.body ? doc.body.scrollHeight : 0
-                                    );
-                                    if (h > 0 && Math.abs(iframe.clientHeight - h) > 1) {
-                                        iframe.style.height = h + 'px';
-                                        $nextTick(() => updatePreviewScale());
-                                    }
-                                } catch (e) {}
-                            };
-                            sync();
-                            try {
-                                const doc = iframe.contentDocument;
-                                if (doc && doc.body && typeof ResizeObserver !== 'undefined') {
-                                    new ResizeObserver(sync).observe(doc.body);
-                                }
-                                if (doc && doc.fonts && doc.fonts.ready) {
-                                    doc.fonts.ready.then(sync);
-                                }
-                            } catch (e) {}
-                        "
-                        class="w-full block border-0"
-                        style="height: 600px; background: transparent;"
-                        sandbox="allow-scripts allow-same-origin"
-                        title="{{ __('themes::admin.settings.editor.preview_title') }}"></iframe>
-            </section>
-            @endif
-
-            {{-- ===== CONTACT FORM PREVIEW ===== --}}
-            <section x-show="showInquiryForm === '1'" x-transition
-                class="pv-contact py-16 border-t relative group/inquiry cursor-pointer"
-                @click.stop="openModal('editInquiryFormModal')">
-                {{-- Edit badge --}}
-                <div class="absolute top-4 right-4 z-20 opacity-0 group-hover/inquiry:opacity-100 transition-opacity">
-                    <span class="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full shadow-lg"><i class="fas fa-pencil-alt mr-1"></i>{{ __('themes::admin.settings.inquiry_form.edit_badge') }}</span>
-                </div>
-                <div class="container mx-auto px-8 text-center">
-                    @if(!empty($inquiryPreview?->title))
-                        <h2 class="pv-contact-title text-3xl font-bold mb-3">{{ $inquiryPreview->title }}</h2>
-                    @endif
-                    @if(!empty($inquiryPreview?->description))
-                        <p class="pv-contact-desc mb-8 max-w-lg mx-auto">{!! nl2br(e($inquiryPreview->description)) !!}</p>
-                    @endif
-                    @if(!($inquiryPreview?->meta['use_single_page'] ?? true))
-                        {{-- 別ページモード: リンクボタンのみ --}}
-                        <div class="text-center mt-4">
-                            <span class="inline-flex items-center h-10 px-6 bg-blue-600 rounded-md text-white text-sm font-medium">
-                                <i class="fas fa-paper-plane mr-1"></i>
-                                {{ __('dixlase-inquiry::front.form.go_to_form') }}
-                            </span>
-                        </div>
-                    @else
-                    <div class="max-w-md mx-auto space-y-3 text-left">
-                        @if($inquiryPreview?->isForm())
-                            @php
-                                $renderedGroups = [];
-                                $fieldsByGroup = $inquiryPreview->getFieldsByGroup();
-                            @endphp
-                            @foreach($inquiryPreview->fields as $field)
-                                @if($field->group)
-                                    @if(!in_array($field->group, $renderedGroups))
-                                        @php $renderedGroups[] = $field->group; @endphp
-                                        @php $groupFields = $fieldsByGroup[$field->group]; @endphp
-                                        <div>
-                                            <div class="pv-contact-desc text-xs mb-1">{{ $groupFields[0]->label }}@if($groupFields[0]->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
-                                            <div class="flex gap-2">
-                                                @foreach($groupFields as $gf)
-                                                    <div class="flex-1">
-                                                        <div class="pv-contact-field h-10 rounded-md"></div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    @endif
-                                @elseif($field->type === 'radio_card')
-                                    <div>
-                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
-                                        <div class="flex gap-2 flex-wrap">
-                                            @foreach($field->options as $val => $optLabel)
-                                                <div class="pv-contact-field h-8 rounded-md px-3 flex items-center text-xs flex-1">
-                                                    <span class="pv-contact-desc">{{ $optLabel }}</span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @elseif($field->type === 'checkbox')
-                                    <div class="flex items-start gap-2 mt-2">
-                                        <div class="pv-contact-field w-4 h-4 rounded border flex-shrink-0 mt-0.5"></div>
-                                        <span class="pv-contact-desc text-xs leading-relaxed">{!! $field->label !!}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</span>
-                                    </div>
-                                @else
-                                    <div>
-                                        <div class="pv-contact-desc text-xs mb-1">{{ $field->label }}@if($field->required) <span class="pv-required-badge inline-flex items-center px-1.5 py-0.5 ml-1 text-[10px] font-medium rounded">{{ __('common.required') }}</span>@endif</div>
-                                        <div class="pv-contact-field {{ $field->type === 'textarea' ? 'h-24' : 'h-10' }} rounded-md"></div>
-                                    </div>
-                                @endif
-                            @endforeach
-                        @else
-                            {{-- Fallback: static placeholders --}}
-                            <div class="pv-contact-field h-10 rounded-md"></div>
-                            <div class="pv-contact-field h-10 rounded-md"></div>
-                            <div class="pv-contact-field h-24 rounded-md"></div>
-                        @endif
-                        <div class="text-center mt-2">
-                            <span class="inline-flex items-center h-10 px-6 bg-blue-600 rounded-md text-white text-sm font-medium">
-                                @if($inquiryPreview?->submitIcon)<i class="{{ $inquiryPreview->submitIcon }} mr-1"></i>@endif
-                                {{ $inquiryPreview?->submitLabel ?? 'Send' }}
-                            </span>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </section>
-
-            {{-- ===== FOOTER PREVIEW ===== --}}
-            <footer class="pv-footer pt-12 pb-6">
-                <div class="container mx-auto px-8">
-                    <div class="flex flex-col items-center text-center pb-6 space-y-4">
-                        {{-- Footer menu links --}}
-                        <div class="pv-menu-area relative group/footernav cursor-pointer"
-                             x-show="footerMenuId && allMenusData[footerMenuId]"
-                             @click.stop="window.__menuEditUrl = footerMenuEditUrl; openModal('editFooterMenuModal')">
-                            <div class="flex flex-wrap justify-center gap-4">
-                                <template x-for="item in (footerMenuId && allMenusData[footerMenuId]) ? allMenusData[footerMenuId] : []" :key="item.title">
-                                    <span class="pv-footer-text text-sm hover:underline cursor-default" x-text="item.title"></span>
-                                </template>
-                            </div>
-                            {{-- Edit badge --}}
-                            <div class="absolute -top-2 -right-2 opacity-0 group-hover/footernav:opacity-100 transition-opacity z-20">
-                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-lg"><i class="fas fa-pencil-alt"></i></span>
-                            </div>
-                        </div>
-                        {{-- SNS Links — mirrors partials/footer.blade.php:
-                             32px line-art / 28px filled glyphs, 44px tap
-                             box, 20px gap, black (light) / white (dark),
-                             Facebook Blue in light mode. Sizing rules are
-                             in the <style> block above (`.pv-sns-*`). --}}
-                        <ul class="pv-sns-list"
-                            x-show="snsLinks.instagram || snsLinks.x || snsLinks.facebook || snsLinks.tiktok || snsLinks.bluesky || snsLinks.threads || snsLinks.linkedin || snsLinks.youtube || snsLinks.pinterest || snsLinks.discord || snsLinks.github">
-                            <template x-if="snsLinks.instagram"><li><a class="pv-sns-link" data-sns="instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.x"><li><a class="pv-sns-link" data-sns="x"><i class="fab fa-x-twitter" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.facebook"><li><a class="pv-sns-link" data-sns="facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.tiktok"><li><a class="pv-sns-link" data-sns="tiktok"><i class="fab fa-tiktok" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.bluesky"><li><a class="pv-sns-link" data-sns="bluesky"><i class="fab fa-bluesky" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.threads"><li><a class="pv-sns-link" data-sns="threads"><i class="fab fa-threads" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.linkedin"><li><a class="pv-sns-link is-solid" data-sns="linkedin"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.youtube"><li><a class="pv-sns-link is-solid" data-sns="youtube"><i class="fab fa-youtube" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.pinterest"><li><a class="pv-sns-link is-solid" data-sns="pinterest"><i class="fab fa-pinterest" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.discord"><li><a class="pv-sns-link" data-sns="discord"><i class="fab fa-discord" aria-hidden="true"></i></a></li></template>
-                            <template x-if="snsLinks.github"><li><a class="pv-sns-link is-solid" data-sns="github"><i class="fab fa-github" aria-hidden="true"></i></a></li></template>
-                        </ul>
-                        {{-- Site Name --}}
-                        <h2 class="pv-footer-title text-2xl font-bold" :style="regionTypographyStyle(headingFontApplyFooter, headingFontTrackingFooter)">{{ config('app.name', 'Dixlase') }}</h2>
-                        {{-- Description (fixed) --}}
-                        <p class="pv-footer-text">Powered by Dixlase</p>
-                    </div>
-                    {{-- Copyright: `© <year>` is auto-rendered (and stays
-                         current across year boundaries); only the suffix
-                         after the year is user-editable. --}}
-                    <div class="pv-footer-border border-t pt-6 flex justify-center">
-                        <div class="relative group cursor-pointer" @click.stop="startEdit('footerCopyright')">
-                            <p class="pv-footer-text text-sm" x-show="editing !== 'footerCopyright'">
-                                © <span x-text="copyrightYear"></span> <span x-text="footerCopyright"></span>
-                            </p>
-                            <div x-show="editing === 'footerCopyright'"
-                                 class="flex flex-col gap-1"
-                                 @click.away="stopEdit()">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="pv-footer-text text-sm whitespace-nowrap">© <span x-text="copyrightYear"></span></span>
-                                    <input
-                                        x-model="footerCopyright"
-                                        @keydown.enter="stopEdit()"
-                                        x-ref="editFooterCopyright"
-                                        x-effect="if (editing === 'footerCopyright') $nextTick(() => $refs.editFooterCopyright?.focus())"
-                                        type="text"
-                                        class="pv-edit-input flex-1 min-w-0 text-sm border border-blue-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    >
-                                </div>
-                                <p class="pv-footer-text text-[11px] opacity-70 text-left">
-                                    {{ __('themes::admin.settings.footer.copyright_help') }}
-                                </p>
-                            </div>
-                            <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity" x-show="editing !== 'footerCopyright'">
-                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-pencil-alt"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-
+    <iframe id="dls-theme-preview-frame"
+            name="dls-theme-preview-frame"
+            src="{{ route('admin.settings.themes.settings.preview-frame') }}"
+            class="w-full block border-0"
+            style="height: 600px; background: transparent;"
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            title="{{ __('themes::admin.settings.editor.preview_title') }}"></iframe>
 </x-admin.theme-preview-container>
 
-{{-- ヘッダーメニュー編集確認モーダル --}}
-@if($menuPluginEnabled)
-@push('modals')
-    <x-ui-modal id="editHeaderMenuModal"
-        :title="__('themes::admin.settings.header_menu.confirm_title')"
-        :message="__('themes::admin.settings.header_menu.confirm_message')"
-        :confirm-label="__('themes::admin.settings.header_menu.confirm_ok')"
-        :cancel-label="__('common.cancel')"
-        icon-type="warning"
-        confirm-color="blue"
-        :form="null"
-    >
-        @slot('footer')
-            <x-form-button
-                type="button"
-                variant="secondary"
-                icon="fas fa-times"
-                @click="close()"
-                class="mx-2"
-            >{{ __('common.cancel') }}</x-form-button>
-            <x-form-button
-                type="button"
-                variant="primary"
-                icon="fas fa-pencil-alt"
-                @click="window.location.href = window.__menuEditUrl"
-                class="mx-2"
-            >{{ __('themes::admin.settings.header_menu.confirm_ok') }}</x-form-button>
-        @endslot
-    </x-ui-modal>
-@endpush
-@endif
+<script @cspNonce>
+(function () {
+    var FRAME_ID = 'dls-theme-preview-frame';
+    var FORM_ID = 'theme-settings-form';
+    var ACTION = @json(route('admin.settings.themes.settings.preview'));
 
-{{-- フッターメニュー編集確認モーダル --}}
-@if($menuPluginEnabled)
-@push('modals')
-    <x-ui-modal id="editFooterMenuModal"
-        :title="__('themes::admin.settings.footer_menu.confirm_title')"
-        :message="__('themes::admin.settings.footer_menu.confirm_message')"
-        :confirm-label="__('themes::admin.settings.footer_menu.confirm_ok')"
-        :cancel-label="__('common.cancel')"
-        icon-type="warning"
-        confirm-color="blue"
-        :form="null"
-    >
-        @slot('footer')
-            <x-form-button
-                type="button"
-                variant="secondary"
-                icon="fas fa-times"
-                @click="close()"
-                class="mx-2"
-            >{{ __('common.cancel') }}</x-form-button>
-            <x-form-button
-                type="button"
-                variant="primary"
-                icon="fas fa-pencil-alt"
-                @click="window.location.href = window.__menuEditUrl"
-                class="mx-2"
-            >{{ __('themes::admin.settings.footer_menu.confirm_ok') }}</x-form-button>
-        @endslot
-    </x-ui-modal>
-@endpush
-@endif
+    // How often the form is sampled, and how long it must stay unchanged
+    // before the frame is re-rendered. Sampling rather than listening for
+    // `input` events because several fields are hidden inputs written by
+    // Alpine or by the media picker, and a value set as a property fires no
+    // event. Sampling catches every field the form will actually submit,
+    // whoever wrote it.
+    var SAMPLE_MS = 300;
+    var SETTLE_MS = 600;
 
-{{-- お問い合わせフォーム編集確認モーダル --}}
-@if($inquiryPreview)
-@push('modals')
-    <x-ui-modal id="editInquiryFormModal"
-        :title="__('themes::admin.settings.inquiry_form.confirm_title')"
-        :message="__('themes::admin.settings.inquiry_form.confirm_message')"
-        :confirm-label="__('themes::admin.settings.inquiry_form.confirm_ok')"
-        :cancel-label="__('common.cancel')"
-        icon-type="warning"
-        confirm-color="blue"
-        :form="null"
-    >
-        @slot('footer')
-            <x-form-button
-                type="button"
-                variant="secondary"
-                icon="fas fa-times"
-                @click="close()"
-                class="mx-2"
-            >{{ __('common.cancel') }}</x-form-button>
-            <x-form-button
-                type="link"
-                variant="primary"
-                icon="fas fa-pencil-alt"
-                :href="route('dixlase-inquiry::admin.inquiry.settings.form-basic')"
-                class="mx-2"
-            >{{ __('themes::admin.settings.inquiry_form.confirm_ok') }}</x-form-button>
-        @endslot
-    </x-ui-modal>
-@endpush
-@endif
+    var frame = document.getElementById(FRAME_ID);
+    var form = document.getElementById(FORM_ID);
+    if (!frame || !form) {
+        return;
+    }
+
+    // --- height ------------------------------------------------------
+    // Same-origin, so the document can be measured directly. Observing the
+    // body covers content that arrives after load (web fonts, images), and
+    // fonts.ready covers the reflow when a heading face swaps in.
+    function syncHeight() {
+        try {
+            var doc = frame.contentDocument;
+            if (!doc) {
+                return;
+            }
+            var height = Math.max(
+                doc.documentElement ? doc.documentElement.scrollHeight : 0,
+                doc.body ? doc.body.scrollHeight : 0
+            );
+            if (height > 0 && Math.abs(frame.clientHeight - height) > 1) {
+                frame.style.height = height + 'px';
+            }
+        } catch (e) {
+            // Cross-origin or a frame mid-navigation: keep the last height.
+        }
+    }
+
+    frame.addEventListener('load', function () {
+        syncHeight();
+        try {
+            var doc = frame.contentDocument;
+            if (doc && doc.body && typeof ResizeObserver !== 'undefined') {
+                new ResizeObserver(syncHeight).observe(doc.body);
+            }
+            if (doc && doc.fonts && doc.fonts.ready) {
+                doc.fonts.ready.then(syncHeight);
+            }
+        } catch (e) {
+            // As above.
+        }
+    });
+
+    // --- re-render with unsaved values -------------------------------
+    function snapshot() {
+        try {
+            return new URLSearchParams(new FormData(form)).toString();
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // The frame starts on the stored settings, which is what the form shows
+    // before the operator touches it, so the first sample is already
+    // rendered and must not trigger a post.
+    var rendered = snapshot();
+    var seen = rendered;
+    var settledAt = 0;
+
+    function render() {
+        var data;
+        try {
+            data = new FormData(form);
+        } catch (e) {
+            return;
+        }
+
+        // A detached form, so submitting it navigates the frame without
+        // touching the real form's action or its submit button.
+        var carrier = document.createElement('form');
+        carrier.method = 'POST';
+        carrier.action = ACTION;
+        carrier.target = FRAME_ID;
+        carrier.style.display = 'none';
+
+        data.forEach(function (value, key) {
+            if (typeof File !== 'undefined' && value instanceof File) {
+                // File inputs are not theme settings; the media picker
+                // stores an id in a hidden field instead.
+                return;
+            }
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            carrier.appendChild(input);
+        });
+
+        document.body.appendChild(carrier);
+        carrier.submit();
+        document.body.removeChild(carrier);
+    }
+
+    window.setInterval(function () {
+        var current = snapshot();
+        if (current === null) {
+            return;
+        }
+
+        if (current !== seen) {
+            seen = current;
+            settledAt = Date.now();
+            return;
+        }
+
+        if (current !== rendered && Date.now() - settledAt >= SETTLE_MS) {
+            rendered = current;
+            render();
+        }
+    }, SAMPLE_MS);
+})();
+</script>
