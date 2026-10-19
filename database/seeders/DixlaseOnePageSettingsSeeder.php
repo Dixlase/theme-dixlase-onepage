@@ -65,7 +65,7 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             ['name' => 'hero_button_secondary_target', 'value' => '_self'],
 
             // Footer
-            ['name' => 'footer_description', 'value' => 'Powered by Dixlase CMS'],
+            ['name' => 'footer_description', 'value' => 'Powered by Dixlase'],
             ['name' => 'footer_links', 'value' => json_encode([])],
             // `© <year>` is rendered automatically by the front (current
             // year); persist only the editable suffix. `and Dixlase
