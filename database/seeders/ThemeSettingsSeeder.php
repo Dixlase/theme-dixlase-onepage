@@ -69,7 +69,7 @@ class ThemeSettingsSeeder extends Seeder
             'hero_gradient_shape' => 'radial',
 
             // Footer
-            'footer_description' => 'Powered by Dixlase CMS',
+            'footer_description' => 'Powered by Dixlase',
             'footer_links' => json_encode([]),
             // `© <year>` is rendered automatically by the front (current
             // year); persist only the editable suffix. `and Dixlase
