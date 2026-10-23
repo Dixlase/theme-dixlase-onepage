@@ -31,6 +31,14 @@
 
 @use "@fortawesome/fontawesome-free/css/all.min.css";
 
+// In-page links (#section) stop below what is fixed at the top: the
+// banner stack (admin bar, banners; the layout measures it into
+// --front-banner-stack-height for the header's top), the header (h-14 in
+// partials/header.blade.php) and a little room.
+html {
+    scroll-padding-top: calc(3.5rem + var(--front-banner-stack-height, 0px) + 1rem);
+}
+
 // Header: height and transition are controlled by Tailwind utility classes
 // (h-10, transition-all duration-300) on the <header> element in
 // partials/header.blade.php. Avoid hardcoding here so the height stays in
