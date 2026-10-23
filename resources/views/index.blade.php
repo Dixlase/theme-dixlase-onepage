@@ -62,7 +62,10 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             @if($frontEditorType === 'blade')
                 {!! shortcode_parse(\Illuminate\Support\Facades\Blade::render($frontContent)) !!}
             @elseif($frontEditorType === 'markdown')
-                {!! shortcode_parse(\Illuminate\Support\Str::markdown($frontContent)) !!}
+                {{-- Core's content renderer, as the editor's preview and the
+                     blog and the pages use: {#id} / {.class}, a single line
+                     break as <br>. It runs shortcode_parse() itself. --}}
+                {!! app(\App\Services\ContentPreviewService::class)->render($frontContent, \App\Enums\ContentEditorType::MARKDOWN) !!}
             @else
                 {!! shortcode_parse($frontContent) !!}
             @endif
