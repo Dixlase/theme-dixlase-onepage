@@ -5,11 +5,11 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
-## [Unreleased]
+## [0.4.2] — 2026-10-24
 
 ### Fixed
 
-- The theme settings preview renders the theme itself (#79). It was a hand-built
+- The theme settings preview renders the theme itself (#80, fixes #79). It was a hand-built
   copy of the header, hero, contact section and footer — a second implementation
   of the theme's appearance, drifting from the first with every change. It read
   the untranslated setting, so the hero previewed in the wrong language on a
@@ -22,6 +22,23 @@ and this theme follows Semantic Versioning.
   had been missing since that placement was added.
 - The preview no longer disappears when the operator's language differs from the
   front page's.
+- In-page links stop just below everything fixed at the top of the page (the header and any
+  banner) instead of under it (#93, fixes #92).
+
+### Changed
+
+- The front page's Markdown renders through core's `ContentPreviewService`, so the published
+  front page matches the editor's preview and renders the way the blog and the pages do (#91,
+  fixes #90): `{#id}` and `{.class}` give a block an id or classes, a single line break renders
+  as `<br>`, and `#Heading` without a space becomes a heading.
+- The seeders write `Powered by Dixlase` as the default footer description instead of
+  `Powered by Dixlase CMS` (#88). A site keeps the description it already stored.
+- The README, this changelog and the comments no longer name plugins that are not distributed
+  publicly (#85, fixes #84; #87, fixes #86). No behaviour changed.
+
+### Development
+
+- Bump `vite` from 8.3.1 to 8.3.3, a build-time dependency that is not shipped to sites (#89).
 
 ## [0.4.1] — 2026-10-16
 
