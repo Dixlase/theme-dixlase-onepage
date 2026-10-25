@@ -23,10 +23,11 @@ use Tests\TestCase;
  * announced to search engines, and DixlaseBlog had to borrow the stylesheet
  * stack for its feed link.
  *
- * Both head-bearing templates have to carry the stack. layouts/preview.blade.php
- * keeps its own copy of the <head> rather than including partials/head.blade.php,
- * so adding it to only one of them leaves the preview frame behaving
- * differently from the live page.
+ * The stack is declared once, in partials/head.blade.php, and every
+ * head-bearing layout includes that partial (#97). So this test asserts two
+ * things: the partial declares the stack in the right order, and no layout
+ * has gone back to carrying its own copy of the <head> — a second copy
+ * drifts, and a tag added to one is then missing from the other.
  */
 class HeadStackTest extends TestCase
 {
@@ -37,6 +38,18 @@ class HeadStackTest extends TestCase
     {
         return [
             'front head partial' => ['resources/views/partials/head.blade.php'],
+        ];
+    }
+
+    /**
+     * Every layout that renders a <head> of its own.
+     *
+     * @return array<string, array{0: string}>
+     */
+    public static function headBearingLayouts(): array
+    {
+        return [
+            'live layout' => ['resources/views/layouts/app.blade.php'],
             'preview layout' => ['resources/views/layouts/preview.blade.php'],
         ];
     }
@@ -81,6 +94,20 @@ class HeadStackTest extends TestCase
             $head,
             "In {$relativePath} the head stack must come after the styles stack, so a stylesheet "
             .'pushed to `styles` still loads before a tag pushed to `head`.'
+        );
+    }
+
+    #[DataProvider('headBearingLayouts')]
+    public function test_a_head_bearing_layout_includes_the_shared_head(string $relativePath): void
+    {
+        // The quotes matter: without them this also matches
+        // `themes::partials.header`, which both layouts include as well.
+        $this->assertStringContainsString(
+            "'themes::partials.head'",
+            $this->compiledTemplate($relativePath),
+            "{$relativePath} must include partials/head.blade.php rather than carry its own "
+            .'<head>. That partial is where @stack(\'head\') is declared, so a layout with a '
+            .'second copy silently drops a pushed tag — the defect this test exists for.'
         );
     }
 
