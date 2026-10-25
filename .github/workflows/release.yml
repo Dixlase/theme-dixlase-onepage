@@ -122,6 +122,15 @@ jobs:
           ref: ${{ steps.ref.outputs.ref }}
           path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
 
+      - name: Verify the signature manifest matches this tag
+        # The gate that keeps an unsigned tree out of production. Signing is
+        # the last step before the tag, so by the time a release is published
+        # the manifest must already describe this tree exactly. A hash
+        # comparison only -- no secret, no core checkout.
+        # Dixlase/dixlase-core#520.
+        working-directory: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
+        run: .github/scripts/check-manifest.sh theme.json
+
       # Check out every plugin the theme's `tailwind.css` scans via a
       # hardcoded `@source "…/plugins/<Plugin>/resources/views"` line.
       # Without these, Tailwind's scanner finds 0 matches for each
