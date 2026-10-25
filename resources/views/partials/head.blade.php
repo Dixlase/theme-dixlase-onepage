@@ -46,7 +46,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
 
-{{-- Styles --}}
+{{-- Styles.
+
+     `$stylesOnly` leaves the JavaScript bundle out. The admin preview frame
+     renders the page's appearance and deliberately runs no front-end JS, so
+     it includes this partial with the flag set rather than keeping a second
+     copy of the <head>. It only affects the Vite branch below: on the
+     non-Vite path this partial already emits stylesheets only, and
+     layouts/app.blade.php loads the bundle itself before </body>. --}}
+@php($stylesOnly = $stylesOnly ?? false)
 @if(app()->environment('local') && file_exists(public_path('hot')))
     {{-- Vite開発サーバーが起動している場合。コア共通 Tailwind
          (`resources/src/common/css/tailwind.css`) を必ず含めること。
@@ -55,13 +63,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
          non-Vite 経路 (`load_front_assets` → `load_core_assets`) は
          AssetHelper 側で自動 prepend されるが、こちらの直接 @vite
          呼び出しでは明示する必要がある。 --}}
-    @vite([
+    @vite(array_values(array_filter([
         'resources/src/common/css/tailwind.css',
         'themes/DixlaseOnePage/resources/src/front/css/tailwind.css',
         'resources/src/front/scss/style.scss',
         'themes/DixlaseOnePage/resources/src/front/scss/style.scss',
-        'themes/DixlaseOnePage/resources/src/front/js/app.js'
-    ])
+        $stylesOnly ? null : 'themes/DixlaseOnePage/resources/src/front/js/app.js',
+    ])))
 @else
     {{-- 本番/ステージング環境: シンボリックリンク経由でアセットを読み込む --}}
     {!! load_front_assets(
@@ -84,6 +92,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
      after @stack('styles') so a stylesheet pushed to that stack still loads
      first. A page that pushes nothing renders no extra markup.
 
-     Keep in step with layouts/preview.blade.php, which carries its own copy
-     of this <head> rather than including this partial. --}}
+     Both head-bearing layouts include this partial, so a tag added here
+     reaches the live page and the admin preview frame alike. --}}
 @stack('head')
