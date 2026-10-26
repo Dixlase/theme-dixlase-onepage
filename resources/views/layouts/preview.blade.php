@@ -48,41 +48,23 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     })();
     </script>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{-- The same <head> the live page renders, so a tag added there reaches
+         the preview with no second copy to keep in step. `stylesOnly` leaves
+         the JavaScript bundle out: this frame shows the page's appearance and
+         runs no front-end JS. --}}
+    @include('themes::partials.head', ['stylesOnly' => true])
 
-    @pageTitle
-
-    {{-- Fonts. All four heading families (Cormorant Garamond, Jost,
-         Noto Sans JP, Noto Serif JP) are loaded so the operator sees
-         an authentic preview no matter which setting they land on;
-         see layouts/app.blade.php for the rationale. --}}
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|cormorant-garamond:400,700|jost:400,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap" rel="stylesheet" />
+    {{-- Heading fonts. All four families (Cormorant Garamond, Jost, Noto
+         Sans JP, Noto Serif JP) load eagerly so the operator sees an
+         authentic preview whatever the setting lands on; see
+         layouts/app.blade.php for the per-face rationale. The partial above
+         carries the preconnect and the body face. --}}
+    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=cormorant-garamond:400,700|jost:400,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap">
 
     {{-- Font Awesome (footer SNS icons) comes from the theme's bundled
          style.scss (FA 7.x); see layouts/app.blade.php for why the cdnjs
          6.4.0 stylesheet must not be loaded here. --}}
 
-    {{-- CSSのみ読み込み（JSバンドルは一切含めない）。コア共通
-         Tailwind (`resources/src/common/css/tailwind.css`) を必ず
-         含めること（head.blade.php と同じ理由）。 --}}
-    @if(app()->environment('local') && file_exists(public_path('hot')))
-        @vite([
-            'resources/src/common/css/tailwind.css',
-            'themes/DixlaseOnePage/resources/src/front/css/tailwind.css',
-            'resources/src/front/scss/style.scss',
-            'themes/DixlaseOnePage/resources/src/front/scss/style.scss'
-        ])
-    @else
-        {!! load_front_assets(
-            ['scss/style.scss'],
-            ['css/tailwind.css', 'scss/style.scss']
-        ) !!}
-    @endif
-
-    {{-- Alpine.js x-cloak: Alpine未読込のため常時非表示を維持 --}}
-    {{-- ヘッダー位置: 管理バーがないため top-0 に固定 --}}
     @php
         // テーマプライマリカラー + ダークモード可読フォールバック。
         // layouts/app.blade.php と同じロジック(無彩色は白、有彩色は
@@ -130,9 +112,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         ];
     @endphp
     <style @cspNonce>
-        [x-cloak] { display: none !important; }
+        /* Header position: fixed at the top, since the frame has no admin bar. */
         header.fixed { top: 0 !important; }
-        /* テーマプライマリカラー (preview-frame でも有効に) */
+        /* Theme primary colour, so it applies in the preview frame too. */
         :root {
             --color-primary: {{ $primaryColor }};
             --color-primary-dark-safe: {{ $primaryColorDarkSafe }};
@@ -150,7 +132,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         .font-heading-hero   { font-family: var(--font-heading-hero, inherit);   letter-spacing: var(--font-heading-tracking-hero, normal); }
         .font-heading-footer { font-family: var(--font-heading-footer, inherit); letter-spacing: var(--font-heading-tracking-footer, normal); }
         h1, h2, h3, h4       { font-family: var(--font-heading-content, inherit); letter-spacing: var(--font-heading-tracking-content, normal); }
-        /* プレビュー専用: 全インタラクティブ要素を無効化 */
+        /* Preview only: every interactive element is disabled. */
         a, button, [role="button"],
         input, textarea, select {
             pointer-events: none !important;
@@ -158,14 +140,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         }
     </style>
 
-    @stack('styles')
-
-    {{-- Page-specific <head> tags, same stack as partials/head.blade.php.
-         This layout carries its own <head> instead of including that
-         partial, so the stack is declared here too and a view behaves the
-         same whether it renders in the preview frame or on the live
-         page. --}}
-    @stack('head')
 </head>
 <body
     class="text-gray-900 dark:text-gray-100 {{ ($bareContent ?? false) ? '' : 'bg-gray-50 dark:bg-gray-900 flex flex-col min-h-screen' }}"
