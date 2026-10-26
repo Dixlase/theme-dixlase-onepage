@@ -40,7 +40,7 @@ html {
 }
 
 // Header: height and transition are controlled by Tailwind utility classes
-// (h-10, transition-all duration-300) on the <header> element in
+// (h-14, transition-all duration-300) on the <header> element in
 // partials/header.blade.php. Avoid hardcoding here so the height stays in
 // sync with what the Blade template specifies.
 header {
