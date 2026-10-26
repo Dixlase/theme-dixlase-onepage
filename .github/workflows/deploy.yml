@@ -86,6 +86,11 @@ jobs:
       # Each checkout targets `main`; the theme's `@source` never pins
       # a tag. If per-tag builds ever become necessary, revisit this
       # block and thread the tag through inputs / secrets.
+      #
+      # Only plugins with front-facing views are listed, here and in
+      # `tailwind.css`. A plugin whose every view is an admin view
+      # cannot contribute anything the front stylesheet uses, so
+      # checking it out buys nothing — see #103, which dropped two.
       - name: Checkout plugin — DixlaseBlog
         uses: actions/checkout@v5
         with:
@@ -101,22 +106,6 @@ jobs:
           ref: main
           token: ${{ secrets.CORE_REPO_TOKEN }}
           path: dixlase-ctx/plugins/DixlaseCookie
-
-      - name: Checkout plugin — DixlaseCoreDevKit
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-core-devkit
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseCoreDevKit
-
-      - name: Checkout plugin — DixlaseDeploy
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-deploy
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseDeploy
 
       - name: Checkout plugin — DixlaseInquiry
         uses: actions/checkout@v5

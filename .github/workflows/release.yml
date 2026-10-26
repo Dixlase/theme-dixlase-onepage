@@ -139,6 +139,9 @@ jobs:
       # silently breaks any site using those plugins (which is every
       # site, since these are all first-party plugins that ship with
       # Dixlase). Same block deploy.yml uses.
+      #
+      # Only plugins with front-facing views are listed; an admin-only
+      # plugin cannot contribute to the front stylesheet (#103).
       - name: Checkout plugin — DixlaseBlog
         uses: actions/checkout@v5
         with:
@@ -154,22 +157,6 @@ jobs:
           ref: main
           token: ${{ secrets.CORE_REPO_TOKEN }}
           path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseCookie
-
-      - name: Checkout plugin — DixlaseCoreDevKit
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-core-devkit
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseCoreDevKit
-
-      - name: Checkout plugin — DixlaseDeploy
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-deploy
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseDeploy
 
       - name: Checkout plugin — DixlaseInquiry
         uses: actions/checkout@v5
