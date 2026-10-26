@@ -34,19 +34,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     class="scroll-smooth"
 >
 <head>
-    {{-- FOUC防止: ダークモードクラスを即時適用（Alpine.js不要） --}}
-    <script @cspNonce>
-    (function(){
-        var m = '{{ $themeSettings->appearance_mode ?? '0' }}';
-        if (m === '2' || (m === '0' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-        } else {
-            document.documentElement.classList.add('light');
-            document.documentElement.classList.remove('dark');
-        }
-    })();
-    </script>
+    @include('themes::partials.appearance-mode-script')
 
     {{-- The same <head> the live page renders, so a tag added there reaches
          the preview with no second copy to keep in step. `stylesOnly` leaves
@@ -54,84 +42,19 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
          runs no front-end JS. --}}
     @include('themes::partials.head', ['stylesOnly' => true])
 
-    {{-- Heading fonts. All four families (Cormorant Garamond, Jost, Noto
-         Sans JP, Noto Serif JP) load eagerly so the operator sees an
-         authentic preview whatever the setting lands on; see
-         layouts/app.blade.php for the per-face rationale. The partial above
-         carries the preconnect and the body face. --}}
-    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=cormorant-garamond:400,700|jost:400,700|noto-sans-jp:400,700|noto-serif-jp:400,700&display=swap">
+    {{-- The same appearance tokens the live page emits: the primary colour,
+         the heading font and its per-region toggles. Shared so the frame
+         shows what a visitor will get, and so a new setting reaches both
+         without being added twice. --}}
+    @include('themes::partials.appearance-tokens')
 
     {{-- Font Awesome (footer SNS icons) comes from the theme's bundled
          style.scss (FA 7.x); see layouts/app.blade.php for why the cdnjs
          6.4.0 stylesheet must not be loaded here. --}}
 
-    @php
-        // テーマプライマリカラー + ダークモード可読フォールバック。
-        // layouts/app.blade.php と同じロジック(無彩色は白、有彩色は
-        // 30% 白寄せで明度アップ)。詳細は app.blade.php のコメント参照。
-        $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
-        $pcHex = ltrim($primaryColor, '#');
-        if (strlen($pcHex) === 6) {
-            $pcR = hexdec(substr($pcHex, 0, 2));
-            $pcG = hexdec(substr($pcHex, 2, 2));
-            $pcB = hexdec(substr($pcHex, 4, 2));
-            if (max($pcR, $pcG, $pcB) - min($pcR, $pcG, $pcB) < 30) {
-                $primaryColorDarkSafe = '#ffffff';
-            } else {
-                $primaryColorDarkSafe = sprintf('#%02x%02x%02x',
-                    (int) round($pcR + (255 - $pcR) * 0.30),
-                    (int) round($pcG + (255 - $pcG) * 0.30),
-                    (int) round($pcB + (255 - $pcB) * 0.30)
-                );
-            }
-        } else {
-            $primaryColorDarkSafe = $primaryColor;
-        }
-    @endphp
-    @php
-        // Preview layout mirrors app.blade.php's heading-font wiring so
-        // the iframe reflects the same setting the front page will show.
-        // See app.blade.php for the per-face rationale.
-        $headingFontStack = match ($themeSettings->heading_font_family ?? 'noto-sans-jp') {
-            'cormorant' => "'Cormorant Garamond', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
-            'jost' => "'Jost', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
-            'noto-serif-jp', 'mincho' => "'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif",
-            default => "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic Medium', 'YuGothic', sans-serif",
-        };
-
-        $applyHeader = (string) ($themeSettings->heading_font_apply_header ?? '1') === '1';
-        $applyHero = (string) ($themeSettings->heading_font_apply_hero ?? '1') === '1';
-        $applyFooter = (string) ($themeSettings->heading_font_apply_footer ?? '1') === '1';
-        $applyContent = (string) ($themeSettings->heading_font_apply_content ?? '1') === '1';
-
-        $trackingRegions = [
-            'header'  => (string) ($themeSettings->heading_font_tracking_header  ?? '0'),
-            'hero'    => (string) ($themeSettings->heading_font_tracking_hero    ?? '0'),
-            'footer'  => (string) ($themeSettings->heading_font_tracking_footer  ?? '0'),
-            'content' => (string) ($themeSettings->heading_font_tracking_content ?? '0'),
-        ];
-    @endphp
     <style @cspNonce>
         /* Header position: fixed at the top, since the frame has no admin bar. */
         header.fixed { top: 0 !important; }
-        /* Theme primary colour, so it applies in the preview frame too. */
-        :root {
-            --color-primary: {{ $primaryColor }};
-            --color-primary-dark-safe: {{ $primaryColorDarkSafe }};
-            --font-heading: {!! $headingFontStack !!};
-            @if ($applyHeader) --font-heading-header: var(--font-heading); @endif
-            @if ($applyHero) --font-heading-hero: var(--font-heading); @endif
-            @if ($applyFooter) --font-heading-footer: var(--font-heading); @endif
-            @if ($applyContent) --font-heading-content: var(--font-heading); @endif
-            @foreach ($trackingRegions as $region => $emValue)
-                @if ($emValue !== '' && (float) $emValue !== 0.0) --font-heading-tracking-{{ $region }}: {{ $emValue }}em; @endif
-            @endforeach
-        }
-        body { font-feature-settings: "palt"; }
-        .font-heading-header { font-family: var(--font-heading-header, inherit); letter-spacing: var(--font-heading-tracking-header, normal); }
-        .font-heading-hero   { font-family: var(--font-heading-hero, inherit);   letter-spacing: var(--font-heading-tracking-hero, normal); }
-        .font-heading-footer { font-family: var(--font-heading-footer, inherit); letter-spacing: var(--font-heading-tracking-footer, normal); }
-        h1, h2, h3, h4       { font-family: var(--font-heading-content, inherit); letter-spacing: var(--font-heading-tracking-content, normal); }
         /* Preview only: every interactive element is disabled. */
         a, button, [role="button"],
         input, textarea, select {
