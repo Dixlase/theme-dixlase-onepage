@@ -29,15 +29,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 --}}
 
 @php
-    // テーマ設定はServiceProviderから自動的に渡される
+    // The theme settings are passed in automatically by the ServiceProvider.
     $logoText = config('app.name', 'Dixlase');
-    $hasAdminBar = auth('member')->check();
+    $hasAdminBar = app(\App\Services\Auth\SignedInMemberResolver::class)->check();
 
-    // <x-ui-front-banner-stack /> の ResizeObserver が
-    // --front-banner-stack-height を計算する前の初期値。プラグインが
-    // バナーを @push していない通常状態では 3rem (= 管理バー高さ) が
-    // ぴったり合う。ログアウト時はスタックが空なので 0px。JS が値を
-    // 設定したあとは CSS variable が優先される。
+    // Initial value, used before the ResizeObserver in
+    // <x-ui-front-banner-stack /> computes --front-banner-stack-height.
+    // With no plugin pushing a banner, 3rem (the admin bar's height) is
+    // exact; signed out the stack is empty, so 0px. Once JS has set the
+    // value, the CSS variable wins.
     $stackHeightFallback = $hasAdminBar ? '3rem' : '0px';
 
     // ロゴサイズ設定（ヘッダー用は sm サイズ）

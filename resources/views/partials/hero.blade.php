@@ -135,7 +135,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // viewport height — combined with the flex-1 image layout below,
     // this keeps "text + image" inside one screen even on very short
     // viewports (the image area shrinks to fit the remainder).
-    $hasAdminBar = auth('member')->check();
+    $hasAdminBar = app(\App\Services\Auth\SignedInMemberResolver::class)->check();
     $heroHeight = $hasAdminBar ? 'h-[calc(100vh-3rem)]' : 'h-screen';
 
     // Without a foreground image the hero is a centred text block.

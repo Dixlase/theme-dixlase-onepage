@@ -31,7 +31,7 @@ agreement obtained from exc-D inc. See LICENSE for details.
 @section('content')
 @php
     $primaryColor = $themeSettings->primary_color ?? '#3b82f6';
-    $hasAdminBar = auth('member')->check();
+    $hasAdminBar = app(\App\Services\Auth\SignedInMemberResolver::class)->check();
     // Match the hero's exact-height treatment so the error page fills
     // exactly one viewport — admin bar is subtracted when present.
     $sectionHeight = $hasAdminBar ? 'h-[calc(100vh-3rem)]' : 'h-screen';
