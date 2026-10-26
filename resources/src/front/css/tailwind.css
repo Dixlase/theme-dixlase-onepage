@@ -62,11 +62,19 @@
  * `.gitignore` for *glob* @source patterns. List each plugin's view
  * directory as an *explicit* (non-glob) path so Tailwind treats it as
  * an external-library scan and bypasses .gitignore.
+ *
+ * Only plugins with *front-facing* views belong here. This is the
+ * stylesheet `partials/head.blade.php` loads for a visitor; an admin
+ * page does not load it (the admin layout loads a theme's `common` and
+ * `admin` asset groups, and this theme declares both empty), so a
+ * plugin whose every view lives under `resources/views/admin/` only
+ * adds utilities nothing on the front can use — and costs both deploy
+ * workflows a checkout step to put those views on disk. Two were
+ * dropped for that reason in #103, which measured the 26 selectors
+ * that left and confirmed no other scanned source used them.
  */
 @source "../../../../../../plugins/DixlaseBlog/resources/views";
 @source "../../../../../../plugins/DixlaseCookie/resources/views";
-@source "../../../../../../plugins/DixlaseCoreDevKit/resources/views";
-@source "../../../../../../plugins/DixlaseDeploy/resources/views";
 @source "../../../../../../plugins/DixlaseInquiry/resources/views";
 @source "../../../../../../plugins/DixlaseLegal/resources/views";
 @source "../../../../../../plugins/DixlaseMenus/resources/views";
