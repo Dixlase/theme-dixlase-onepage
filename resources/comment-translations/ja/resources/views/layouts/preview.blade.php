@@ -32,6 +32,5 @@
 
 return [
     '/* Header position: fixed at the top, since the frame has no admin bar. */' => '/* ヘッダー位置: 管理バーがないため上端に固定 */',
-    '/* Theme primary colour, so it applies in the preview frame too. */' => '/* テーマプライマリカラー (preview-frame でも有効に) */',
     '/* Preview only: every interactive element is disabled. */' => '/* プレビュー専用: 全インタラクティブ要素を無効化 */',
 ];
