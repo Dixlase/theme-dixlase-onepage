@@ -24,6 +24,22 @@ on:
   # tree followed by the symlink check.
   workflow_dispatch:
 
+# One run at a time, for the whole workflow rather than per ref: every run
+# rsyncs into the same path on the same server, so two runs of different
+# refs collide exactly as two runs of the same ref do. (release.yml groups
+# per ref because its runs write to different tags.)
+#
+# `cancel-in-progress: false` is the point of the group. Cancelling a run
+# mid-rsync is what leaves a partial tree behind: `--delete` makes the
+# destination match the source, so a destination caught mid-transfer is not
+# a complete build, and the stylesheets and scripts are content-hashed —
+# the page still returns 200 with the HTML unchanged while the assets 404.
+# Queuing lets the first run finish and the second one then deploys the
+# newer commit over a complete tree.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
