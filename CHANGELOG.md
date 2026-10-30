@@ -5,6 +5,32 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.4.3] — 2026-10-30
+
+### Changed
+
+- The header, the hero and the error pages ask core whether a member is signed in, through
+  `App\Services\Auth\SignedInMemberResolver`, to decide whether to leave room for the admin bar
+  (#101, fixes #83). **The theme now needs core 0.1.13 or later**, the first release with that
+  service; `requires.dixlase` says so, written as a floor (`>=0.1.13`) rather than a caret, so a
+  core 0.2 release does not refuse to install or update it (#113; Dixlase/dixlase-core#790).
+- The front stylesheet no longer scans the views of plugins that have admin screens only, so classes
+  used only in the admin stay out of the stylesheet visitors load (#104, fixes #103).
+- The preview frame renders its `<head>` from the same partial as the live layout, and both compute
+  the appearance settings once, in shared partials (#102, fixes #97; #107, fixes #106). A setting
+  now reaches the preview and the live page from one place.
+
+### Development
+
+- Pull requests against `next`, the development branch, run the checks (#95, fixes #94).
+- The release build compares the files with the signature manifest at the tag and stops before
+  building the ZIP on a mismatch (#96; part of Dixlase/dixlase-core#520).
+- The deploy workflow recognises a checkout of this repository by its identity rather than by the
+  text of its URL, and a site it refuses no longer holds the update back from the others (#110;
+  fixes Dixlase/dixlase-core#518 and #519).
+- The deploy workflow runs one deploy at a time; a second run waits for the first (#99, fixes #78).
+- A stylesheet comment gives the header's real height (#100, fixes #98).
+
 ## [0.4.2] — 2026-10-24
 
 ### Fixed
