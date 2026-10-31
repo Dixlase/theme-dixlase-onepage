@@ -291,6 +291,27 @@ class AdminThemeSettingsController extends AdminLoggedInController
     }
 
     /**
+     * Let this response be framed by the admin panel.
+     *
+     * The admin area sends `frame-ancestors 'none'` (config/csp/admin.php), so
+     * a preview iframe is refused by the browser and the panel shows an empty
+     * frame with no error anywhere. Core's ContentSecurityPolicy middleware
+     * rewrites the directive to `'self'` for a response whose request carries
+     * this attribute, which is how core's own front page preview is framed
+     * (AdminFrontController::previewFrame). Every action that renders into the
+     * preview iframe has to call this, the POST one included: without it the
+     * frame goes blank again on the operator's first keystroke.
+     *
+     * Only visible where the admin CSP is enforced. In development mode the
+     * policy goes out as Content-Security-Policy-Report-Only, which browsers
+     * do not act on, so the same code renders the frame perfectly there.
+     */
+    private function permitAdminFraming(): void
+    {
+        request()->attributes->set('csp_frame_ancestors_self', true);
+    }
+
+    /**
      * Render the preview frame with the settings currently stored.
      *
      * This is the `src` of the preview iframe, so the first paint needs no
@@ -302,6 +323,8 @@ class AdminThemeSettingsController extends AdminLoggedInController
      */
     public function previewFrame(): View
     {
+        $this->permitAdminFraming();
+
         return view('themes::admin.preview-frame', $this->previewFrameParams());
     }
 
@@ -324,6 +347,8 @@ class AdminThemeSettingsController extends AdminLoggedInController
      */
     public function preview(Request $request): View
     {
+        $this->permitAdminFraming();
+
         $valid = Validator::make($request->all(), (new UpdateThemeSettingsRequest())->rules())->valid();
 
         app()->instance(
