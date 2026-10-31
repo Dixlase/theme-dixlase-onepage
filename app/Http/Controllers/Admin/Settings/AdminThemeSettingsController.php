@@ -104,6 +104,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'appearance_toggle_enabled',
             'appearance_toggle_footer',
             'appearance_toggle_float',
+            'back_to_top_enabled',
         ]);
 
         // デフォルト値を設定
@@ -165,6 +166,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'multilingual_switcher_enabled' => '0',
             'appearance_toggle_footer' => '0', // 0: hidden, 1: shown in the footer
             'appearance_toggle_float' => '0', // 0: hidden, 1: fixed in the corner
+            'back_to_top_enabled' => '0', // 0: hidden, 1: fixed in the corner
         ];
 
         // Legacy (0.2.0): one switch for the whole front-end switcher, now

@@ -199,6 +199,13 @@ return [
             'toggle_help' => 'Places a button that lets visitors switch the appearance mode (auto, light, dark). A visitor\'s choice overrides the default above and is remembered in their browser.',
         ],
 
+        // Back to the top of the page
+        'back_to_top' => [
+            'title' => 'Back to top',
+            'enable' => 'Show it fixed in the bottom-right of the window',
+            'help' => 'Places a button that returns the visitor to the top of the page. It appears once the page has been scrolled, so a page shorter than the window never shows it. With the appearance switcher also fixed in the corner, this sits above it.',
+        ],
+
         // Default locale (primary language the theme settings are authored in)
         'default_locale' => [
             'title' => 'Default Language',

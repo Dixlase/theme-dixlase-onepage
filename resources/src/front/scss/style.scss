@@ -502,6 +502,72 @@ footer a:not(.sns-link) {
 // drawer (z-[60] / z-[70]) — a fixed control must never cover an open
 // navigation.
 //
+// The controls that float in the bottom-right corner of the viewport, laid
+// out as one stack.
+//
+// Each control used to fix itself to the corner, which is fine while there is
+// only one. The appearance switcher's height changes at the `md` breakpoint
+// and again when it opens on a phone, so a second control offset from the
+// corner by a hardcoded amount would overlap it at some width. The stack owns
+// the position instead and the controls are ordinary flex items.
+//
+// A control hidden by `x-cloak` or by `x-show` is `display: none`, so it is
+// not a flex item and the gap above it goes with it. With every control
+// hidden the stack is an empty box of no size.
+.dls-corner-stack {
+    position: fixed;
+    inset-block-end: calc(var(--spacing) * 4);
+    inset-inline-end: calc(var(--spacing) * 4);
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: calc(var(--spacing) * 2);
+}
+
+// Inside the stack the switcher is placed by the stack. Its own fixed
+// positioning is left in place for anything that includes the partial on its
+// own, and overridden here rather than removed.
+.dls-corner-stack .dls-appearance-float {
+    position: static;
+    inset: auto;
+    z-index: auto;
+}
+
+// Back to the top of the page. The same surface and the same 44px tap target
+// as the appearance switcher's trigger, so the two read as one stack of
+// controls rather than two unrelated buttons.
+.dls-back-to-top {
+    display: grid;
+    place-items: center;
+    inline-size: calc(var(--spacing) * 11);
+    block-size: calc(var(--spacing) * 11);
+    border: 1px solid var(--color-gray-200);
+    border-radius: 9999px;
+    background-color: color-mix(in oklab, var(--color-white) 82%, transparent);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    color: var(--color-gray-700);
+    cursor: pointer;
+    transition: color var(--default-transition-duration) var(--default-transition-timing-function);
+
+    // Hidden until Alpine resolves. Without JavaScript it stays hidden, which
+    // is right: it cannot work.
+    &[x-cloak] {
+        display: none;
+    }
+
+    &:hover {
+        color: var(--color-gray-900);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-primary, var(--color-blue-600));
+        outline-offset: 2px;
+    }
+}
+
 // The responsive split lives here rather than in the markup. Mobile first:
 // the options are hidden until `is-open`, and from `md` up they are always
 // shown and the trigger has no job. Alpine only adds the class, so a state
@@ -682,6 +748,16 @@ footer a:not(.sns-link) {
             &:hover {
                 color: var(--color-white);
             }
+        }
+    }
+
+    .dls-back-to-top {
+        border-color: color-mix(in oklab, var(--color-gray-100) 14%, transparent);
+        background-color: color-mix(in oklab, var(--color-gray-900) 72%, transparent);
+        color: var(--color-gray-300);
+
+        &:hover {
+            color: var(--color-white);
         }
     }
 }
