@@ -552,6 +552,14 @@ footer a:not(.sns-link) {
     cursor: pointer;
     transition: color var(--default-transition-duration) var(--default-transition-timing-function);
 
+    // Tailwind v4's preflight gives svg `display: block`, so the icon is a
+    // single grid item and `place-items: center` above centres it. Sized
+    // here rather than on the element so the markup carries no dimensions.
+    &__icon {
+        inline-size: calc(var(--spacing) * 4.5);
+        block-size: calc(var(--spacing) * 4.5);
+    }
+
     // Hidden until Alpine resolves. Without JavaScript it stays hidden, which
     // is right: it cannot work.
     &[x-cloak] {

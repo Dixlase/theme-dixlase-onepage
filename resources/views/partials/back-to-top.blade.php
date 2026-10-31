@@ -39,6 +39,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
      Hidden until Alpine resolves, like the appearance switcher beside it.
      Without JavaScript it stays hidden, which is right: it cannot work.
 
+     It fades rather than appearing and vanishing: the control arrives while
+     the visitor is reading something else, and a shape that blinks into the
+     corner pulls the eye harder than one that resolves there. Opacity only —
+     no movement — which is the substitute WCAG asks for in place of motion,
+     so this needs no `prefers-reduced-motion` exception the way the scroll
+     itself does.
+
+     `x-transition` with modifiers carries no expression for Alpine to
+     evaluate, so it is as strict-mode-safe as the rest of this file.
+
      Rendered inside partials/corner-stack.blade.php, which owns the position.
      Nothing here is fixed or offset — the stack decides whether this sits in
      the corner or above the appearance switcher. --}}
@@ -47,10 +57,32 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     class="dls-back-to-top"
     x-data="backToTop"
     x-show="shown"
+    x-transition.opacity.duration.200ms
     x-cloak
     @click="toTop()"
     title="{{ __('themes::theme.back_to_top.label') }}"
 >
-    <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    {{-- An inline chevron rather than Font Awesome's `fa-chevron-up`, which
+         is a filled shape with mitred ends — heavier than this control wants
+         to be. Two strokes with round caps read as a hint rather than a
+         button face. It is the only inline icon in the theme; the SNS row and
+         the appearance switcher stay on the bundled font, which is right for
+         them (brand marks, and three icons that have to agree in weight).
+
+         `currentColor` so the light / dark rules on the button carry it, and
+         `focusable="false"` so IE-era tab order cannot reach the SVG. --}}
+    <svg
+        class="dls-back-to-top__icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+    >
+        <path d="m5 15 7-7 7 7" />
+    </svg>
     <span class="sr-only">{{ __('themes::theme.back_to_top.label') }}</span>
 </button>
