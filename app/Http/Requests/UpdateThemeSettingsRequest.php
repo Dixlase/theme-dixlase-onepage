@@ -159,6 +159,9 @@ class UpdateThemeSettingsRequest extends FormRequest
             // the viewport. With both off no switcher is rendered.
             'appearance_toggle_footer' => 'nullable|in:0,1',
             'appearance_toggle_float' => 'nullable|in:0,1',
+
+            // Back to top
+            'back_to_top_enabled' => 'nullable|in:0,1',
         ];
     }
 

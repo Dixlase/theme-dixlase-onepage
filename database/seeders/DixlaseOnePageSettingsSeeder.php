@@ -91,6 +91,9 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             ['name' => 'appearance_toggle_footer', 'value' => '0'], // 0: hidden, 1: shown in the footer
             ['name' => 'appearance_toggle_float', 'value' => '0'], // 0: hidden, 1: fixed in the corner
 
+            // Back to top
+            ['name' => 'back_to_top_enabled', 'value' => '0'], // 0: hidden, 1: fixed in the corner
+
             // Multilingual
             // The locale the primary-stored theme-settings values are written
             // in. 'auto' resolves to the site default at runtime. The central

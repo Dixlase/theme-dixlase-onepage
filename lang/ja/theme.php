@@ -57,6 +57,11 @@ return [
         'dark' => 'ダーク',
     ],
 
+    // ページの先頭へ戻る（テーマ設定で有効なときだけ表示）
+    'back_to_top' => [
+        'label' => 'ページの先頭へ戻る',
+    ],
+
     // Footer
     'footer' => [
         'about_title' => '私たちについて',
@@ -66,13 +71,13 @@ return [
         'powered_by' => 'Powered by Dixlase',
         'sns_nav_label' => 'SNS',
     ],
-    
+
     // Admin Settings
     'admin' => [
         'settings' => [
             'title' => 'テーマ設定',
             'updated_successfully' => 'テーマ設定が更新されました',
-            
+
             // Header Section
             'header' => [
                 'title' => 'ヘッダー設定',
@@ -81,7 +86,7 @@ return [
                 'logo_text' => 'ロゴテキスト',
                 'logo_text_help' => 'サイト名として表示されるテキスト',
             ],
-            
+
             // Hero Section
             'hero' => [
                 'title' => 'ヒーローセクション設定',
@@ -96,7 +101,7 @@ return [
                 'button_secondary_text' => 'サブボタンテキスト',
                 'button_secondary_link' => 'サブボタンリンク',
             ],
-            
+
             // Footer Section
             'footer' => [
                 'title' => 'フッター設定',
@@ -117,7 +122,7 @@ return [
                 'sns_linkedin' => 'LinkedIn URL',
                 'sns_youtube' => 'YouTube URL',
             ],
-            
+
             // Colors Section
             'colors' => [
                 'title' => 'カラー設定',

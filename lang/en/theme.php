@@ -57,6 +57,11 @@ return [
         'dark' => 'Dark',
     ],
 
+    // Back to the top of the page (shown when the theme setting allows it)
+    'back_to_top' => [
+        'label' => 'Back to top',
+    ],
+
     // Footer
     'footer' => [
         'about_title' => 'About Us',
@@ -66,13 +71,13 @@ return [
         'powered_by' => 'Powered by Dixlase',
         'sns_nav_label' => 'Social media',
     ],
-    
+
     // Admin Settings
     'admin' => [
         'settings' => [
             'title' => 'Theme Settings',
             'updated_successfully' => 'Theme settings updated successfully',
-            
+
             // Header Section
             'header' => [
                 'title' => 'Header Settings',
@@ -81,7 +86,7 @@ return [
                 'logo_text' => 'Logo Text',
                 'logo_text_help' => 'Text displayed as site name',
             ],
-            
+
             // Hero Section
             'hero' => [
                 'title' => 'Hero Section Settings',
@@ -96,7 +101,7 @@ return [
                 'button_secondary_text' => 'Secondary Button Text',
                 'button_secondary_link' => 'Secondary Button Link',
             ],
-            
+
             // Footer Section
             'footer' => [
                 'title' => 'Footer Settings',
@@ -117,7 +122,7 @@ return [
                 'sns_linkedin' => 'LinkedIn URL',
                 'sns_youtube' => 'YouTube URL',
             ],
-            
+
             // Colors Section
             'colors' => [
                 'title' => 'Color Settings',

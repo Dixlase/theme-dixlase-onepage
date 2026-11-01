@@ -206,30 +206,47 @@ window.appearanceTheme = function (defaultValue, toggleEnabled = false) {
 
 
 /**
- * スクロールトップボタン
+ * How far the page has to be scrolled before back-to-top appears, in pixels.
+ *
+ * Below this the control would point at a destination already on screen, and
+ * a page shorter than the threshold never shows it at all.
  */
-function initScrollToTop() {
-    const scrollTopBtn = document.querySelector('[data-scroll-top]');
+const BACK_TO_TOP_AFTER = 300;
 
-    if (scrollTopBtn) {
-        // スクロール位置に応じて表示/非表示
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                scrollTopBtn.classList.remove('hidden');
-            } else {
-                scrollTopBtn.classList.add('hidden');
-            }
-        });
+/**
+ * Back to the top of the page.
+ *
+ * Registered on `alpine:init` rather than at module scope: this file is
+ * loaded before core's bundle, which is what defines and starts Alpine, so
+ * `window.Alpine` does not exist yet when this module is evaluated.
+ *
+ * Registered through `Alpine.data()` and referenced by name from the markup,
+ * which is what the `@alpinejs/csp` build requires — there is no `x-data`
+ * object literal to evaluate.
+ */
+document.addEventListener('alpine:init', () => {
+    window.Alpine.data('backToTop', () => ({
+        shown: false,
 
-        // クリックでトップへスクロール
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    }
-}
+        init() {
+            this.sync();
+            window.addEventListener('scroll', () => this.sync(), { passive: true });
+        },
+
+        sync() {
+            this.shown = window.scrollY > BACK_TO_TOP_AFTER;
+        },
+
+        toTop() {
+            // `scroll-smooth` on <html> would animate this anyway, so ask
+            // explicitly and make the exception explicit with it: a visitor
+            // who has asked for reduced motion gets the jump, not the ride.
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+        },
+    }));
+});
 
 /**
  * 外部リンクに target="_blank" を自動追加
@@ -281,7 +298,6 @@ function initLazyLoading() {
  * ページ読み込み時の初期化
  */
 document.addEventListener('DOMContentLoaded', () => {
-    initScrollToTop();
     initExternalLinks();
     initLazyLoading();
 

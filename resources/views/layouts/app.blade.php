@@ -88,18 +88,20 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     @include('themes::partials.footer')
 
-    {{-- Appearance switcher, fixed in the corner.
+    {{-- The controls that float in the corner: back-to-top, and the
+         appearance switcher in its fixed placement. The stack decides which
+         are rendered and how they sit together, so this layout only has to
+         ask for it.
 
          Included here rather than from partials/footer.blade.php: a `custom/`
          override replaces a view wholesale, so a site that has forked the
          footer would never receive a control added inside it. The layout is
-         also what owns the `appearanceTheme` data this partial drives.
+         also what owns the `appearanceTheme` data the switcher drives.
 
-         The two placements are independent of each other; `$appearanceFloat`
-         is resolved at the top of this file alongside the footer one. --}}
-    @if ($appearanceFloat)
-        @include('themes::partials.appearance-float')
-    @endif
+         The footer placement is separate and stays with the footer;
+         `$appearanceFloat` above is still what decides `$appearanceSwitchable`
+         for the two of them together. --}}
+    @include('themes::partials.corner-stack')
 
     {{-- Scripts --}}
     @if(app()->environment('local') && file_exists(public_path('hot')))

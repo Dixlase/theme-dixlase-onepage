@@ -72,6 +72,21 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Back to top ===== --}}
+    {{-- Its own section rather than a third switch under Appearance: that --}}
+    {{-- section is about which appearance a visitor sees, and this is a    --}}
+    {{-- navigation control that happens to share the corner with it.       --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.back_to_top.title')" icon="fas fa-arrow-up">
+        <x-form-toggle
+            id="back_to_top_enabled_toggle"
+            name="back_to_top_enabled"
+            :label="__('themes::admin.settings.back_to_top.enable')"
+            xModel="backToTopEnabled"
+            color="blue"
+        />
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.back_to_top.help') }}</p>
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Heading Font (Gothic / Mincho) ===== --}}
     {{-- Two-card picker. The label previews the actual font family via an --}}
     {{-- inline style="font-family: ..." span so the operator sees what     --}}

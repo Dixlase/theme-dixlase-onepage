@@ -340,6 +340,11 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             // switch of 0.2.0 meant when it was off.
             'appearance_toggle_footer' => '0',
             'appearance_toggle_float' => '0',
+            // Back to the top of the page, in the same corner as the
+            // switcher above and stacked over it when both are on. Off by
+            // default: an existing site should not grow a control it never
+            // asked for.
+            'back_to_top_enabled' => '0',
             'heading_font_family' => 'noto-sans-jp', // cormorant | jost | noto-sans-jp | noto-serif-jp
             // Per-region apply toggles. When '0', that region inherits the body
             // font (system stack); when '1', it uses --font-heading.
