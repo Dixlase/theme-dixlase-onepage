@@ -140,9 +140,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 // not write the directive's name anywhere in this file as
                 // prose either: Blade compiles directives before it strips
                 // comments, so even a mention inside one breaks the file.
-                $snsBrands = dls_onepage_sns_services();
+                // The helpers are loaded by the theme's service provider. An
+                // error page can render this footer where that provider has
+                // not run (#128); it then shows no social links rather than
+                // failing.
+                $snsHelpers = function_exists('dls_onepage_sns_services') && function_exists('dls_onepage_sns_order');
+                $snsBrands = $snsHelpers ? dls_onepage_sns_services() : [];
                 $snsOrdered = [];
-                foreach (dls_onepage_sns_order() as $snsKey) {
+                foreach ($snsHelpers ? dls_onepage_sns_order() : [] as $snsKey) {
                     $snsOrdered[$snsKey] = $snsBrands[$snsKey];
                 }
             @endphp
