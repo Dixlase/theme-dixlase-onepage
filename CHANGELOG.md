@@ -5,6 +5,15 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.5.2] — 2026-11-01
+
+### Fixed
+
+- The 403, 404 and 419 pages render where the theme's service provider has not loaded its helpers,
+  instead of failing (#129, fixes #128). The footer has called two theme helpers for the social
+  links since 0.5.0; it now checks they exist and shows no social links when they do not. Sites with
+  the theme active load the helpers and were not affected.
+
 ## [0.5.1] — 2026-11-01
 
 ### Fixed
