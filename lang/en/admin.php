@@ -141,6 +141,8 @@ return [
             'sns_professional' => 'Professional',
             'sns_other' => 'Other',
             'sns_username' => 'Username',
+            'sns_reorder' => 'Drag to reorder',
+            'sns_reorder_help' => 'Drag the handles to change the order the icons appear in. Only the services with a username are shown.',
             'sns_invite_code' => 'Invite Code',
             'sns_instagram' => 'Instagram URL',
             'sns_x' => 'X (Twitter) URL',

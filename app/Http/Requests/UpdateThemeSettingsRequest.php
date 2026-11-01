@@ -64,6 +64,14 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_sub_title' => 'nullable|string|max:1000',
             'hero_button_text' => 'nullable|string|max:100',
             'hero_button_link' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            // A comma-separated list of service slugs. Only the length is
+            // checked here; the shape is enforced where it is read, by
+            // dls_onepage_sns_order(), which drops a slug that is not a
+            // service and appends one the catalogue has gained. Rejecting
+            // here instead would fail a save for a value the front end
+            // copes with, and would still have to cope with a row written
+            // before the service list changed.
+            'sns_links_order' => 'nullable|string|max:255',
             'hero_height' => 'nullable|in:none,custom,full',
             // Bounds, not just a type. The slider enforces the same two
             // numbers, but that is a convenience — this is the guarantee.

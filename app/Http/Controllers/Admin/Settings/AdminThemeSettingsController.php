@@ -107,6 +107,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'back_to_top_enabled',
             'hero_height',
             'hero_height_custom',
+            'sns_links_order',
         ]);
 
         // デフォルト値を設定
@@ -171,6 +172,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'back_to_top_enabled' => '0', // 0: hidden, 1: fixed in the corner
             'hero_height' => 'full', // none | custom | full
             'hero_height_custom' => (string) DLS_ONEPAGE_HERO_HEIGHT_DEFAULT,
+            'sns_links_order' => null, // null: the catalogue's own order
         ];
 
         // Legacy (0.2.0): one switch for the whole front-end switcher, now

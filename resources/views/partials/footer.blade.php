@@ -120,26 +120,36 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                  tab) and therefore get the 28px visual correction. The
                  container shapes are part of the mark itself (Facebook
                  circle, Pinterest circle, YouTube tab) and must not be
-                 stripped. Order is the display order. --}}
+                 stripped.
+
+                 The catalogue and the order both come from helpers, so this
+                 and the settings form cannot disagree about either — they
+                 used to hold a list each, and had already drifted on the
+                 first three. The order is the one the operator arranged
+                 (#116); with nothing saved it is the catalogue's own, which
+                 is what this list used to be. --}}
             @php
-                $snsBrands = [
-                    'facebook'  => ['icon' => 'fa-facebook',   'label' => 'Facebook',   'solid' => false],
-                    'x'         => ['icon' => 'fa-x-twitter', 'label' => 'X (Twitter)', 'solid' => false],
-                    'instagram' => ['icon' => 'fa-instagram', 'label' => 'Instagram',   'solid' => false],
-                    'tiktok'    => ['icon' => 'fa-tiktok',    'label' => 'TikTok',      'solid' => false],
-                    'bluesky'   => ['icon' => 'fa-bluesky',   'label' => 'Bluesky',     'solid' => false],
-                    'threads'   => ['icon' => 'fa-threads',   'label' => 'Threads',     'solid' => false],
-                    'linkedin'  => ['icon' => 'fa-linkedin',  'label' => 'LinkedIn',    'solid' => true],
-                    'youtube'   => ['icon' => 'fa-youtube',   'label' => 'YouTube',     'solid' => true],
-                    'pinterest' => ['icon' => 'fa-pinterest', 'label' => 'Pinterest',   'solid' => true],
-                    'discord'   => ['icon' => 'fa-discord',   'label' => 'Discord',     'solid' => false],
-                    'github'    => ['icon' => 'fa-github',    'label' => 'GitHub',      'solid' => true],
-                ];
+                // The catalogue in the order the operator arranged, built up
+                // front rather than looked up inside the loop: the loop then
+                // keeps exactly the shape it had, and the parenthesised short
+                // form of the php directive is avoided inside it. That form
+                // stops Blade compiling a `custom/` fork of this file
+                // outright — everything after it is emitted raw and the page
+                // 500s — and a construct that works here but not in the
+                // override is a trap for whoever keeps the two in step. Do
+                // not write the directive's name anywhere in this file as
+                // prose either: Blade compiles directives before it strips
+                // comments, so even a mention inside one breaks the file.
+                $snsBrands = dls_onepage_sns_services();
+                $snsOrdered = [];
+                foreach (dls_onepage_sns_order() as $snsKey) {
+                    $snsOrdered[$snsKey] = $snsBrands[$snsKey];
+                }
             @endphp
             @if(array_filter($snsLinks))
                 <nav aria-label="{{ __('themes::theme.footer.sns_nav_label') }}">
                     <ul class="sns-list">
-                        @foreach($snsBrands as $key => $brand)
+                        @foreach($snsOrdered as $key => $brand)
                             @if(!empty($snsLinks[$key]))
                                 <li>
                                     <a href="{{ $snsLinks[$key] }}" target="_blank" rel="noopener noreferrer"

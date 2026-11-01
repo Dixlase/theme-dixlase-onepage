@@ -88,6 +88,9 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             ['name' => 'footer_sns_pinterest', 'value' => null],
             ['name' => 'footer_sns_discord', 'value' => null],
             ['name' => 'footer_sns_github', 'value' => null],
+            // Display order, as a comma-separated list of service slugs.
+            // Empty means the catalogue's own order.
+            ['name' => 'sns_links_order', 'value' => null],
 
             // Appearance Mode
             ['name' => 'appearance_mode', 'value' => '0'], // 0: Auto, 1: Light, 2: Dark
