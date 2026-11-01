@@ -44,6 +44,11 @@ if (! function_exists('dls_onepage_primary_setting')) {
      * the locale being previewed still wins, exactly as it does on the live
      * page. Editing the primary field of a setting that the viewed locale
      * translates changes neither, which is the truth about that page.
+     *
+     * A lookup that fails (the settings table missing or unreachable) reads
+     * as "not set", as dls_onepage_localized_setting() already treats it:
+     * every caller has a default for null, so the page renders without the
+     * value instead of failing.
      */
     function dls_onepage_primary_setting(string $key): ?string
     {
@@ -56,7 +61,11 @@ if (! function_exists('dls_onepage_primary_setting')) {
             }
         }
 
-        $stored = ThemeSetting::getValue($key);
+        try {
+            $stored = ThemeSetting::getValue($key);
+        } catch (\Throwable) {
+            return null;
+        }
 
         return $stored === null ? null : (string) $stored;
     }
