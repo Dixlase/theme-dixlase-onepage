@@ -46,8 +46,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @section('content')
 @unless($bareContent ?? false)
-{{-- Hero Section --}}
+{{-- Hero Section, under the same setting the live page reads, so the
+     frame shows a page with no hero as a page with no hero. --}}
+@if(dls_onepage_hero_enabled())
 @include('themes::partials.hero')
+@endif
 @endunless
 
 {{-- Front Page Content --}}

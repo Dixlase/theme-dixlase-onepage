@@ -51,6 +51,9 @@ class DixlaseOnePageSettingsSeeder extends Seeder
 
         $settings = [
             // Hero Section
+            // none: no hero at all | custom: hero_height_custom vh | full: one viewport
+            ['name' => 'hero_height', 'value' => 'full'],
+            ['name' => 'hero_height_custom', 'value' => '55'], // percent of the window
             ['name' => 'hero_background_image_id', 'value' => null],
             ['name' => 'hero_foreground_image_id', 'value' => null],
             ['name' => 'hero_main_title', 'value' => 'Welcome to '.config('app.name', 'Dixlase')],

@@ -336,6 +336,54 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     </x-admin.theme-preview-sidebar-section>
     @endif
 
+    {{-- ===== Hero Height ===== --}}
+    {{-- First of the hero sections: it decides whether the rest of them do --}}
+    {{-- anything at all. The hero settings below are left in place when the --}}
+    {{-- height is "none" rather than hidden — a value the operator entered  --}}
+    {{-- should still be there when they turn the hero back on, and a        --}}
+    {{-- vanishing section reads as "my settings were deleted".              --}}
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.height.title')" icon="fas fa-up-right-and-down-left-from-center" :open="true">
+        <input type="hidden" name="hero_height" :value="heroHeight">
+        <div class="space-y-1">
+            @foreach (['none', 'custom', 'full'] as $heroHeightMode)
+                <button
+                    type="button"
+                    @click="heroHeight = '{{ $heroHeightMode }}'"
+                    :class="heroHeight === '{{ $heroHeightMode }}'
+                        ? 'w-full text-left text-sm px-3 py-2 rounded-md border border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200 dark:border-blue-400'
+                        : 'w-full text-left text-sm px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700'"
+                >
+                    {{ __('themes::admin.settings.hero.height.'.$heroHeightMode) }}
+                </button>
+            @endforeach
+        </div>
+
+        {{-- The slider only exists for the custom mode. `x-show` rather than a
+             Blade @if: the mode is switched in the browser and the preview
+             re-renders from the form, so the control has to appear without a
+             round trip. The hidden input stays mounted either way, so the
+             stored value survives a save made in another mode. --}}
+        <div class="mt-3" x-show="heroHeight === 'custom'" x-cloak>
+            <x-form-range
+                id="hero_height_custom_range"
+                name="hero_height_custom"
+                :min="DLS_ONEPAGE_HERO_HEIGHT_MIN"
+                :max="DLS_ONEPAGE_HERO_HEIGHT_MAX"
+                :step="5"
+                xModel="heroHeightCustom"
+                :showLabels="false"
+            />
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {{ __('themes::admin.settings.hero.height.custom_help', [
+                    'min' => DLS_ONEPAGE_HERO_HEIGHT_MIN,
+                    'max' => DLS_ONEPAGE_HERO_HEIGHT_MAX,
+                ]) }}
+            </p>
+        </div>
+
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.hero.height.help') }}</p>
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Hero Text (title / sub-title — also editable inline in the preview) ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.hero.edit_title')" icon="fas fa-heading" :open="true">
         <div class="space-y-3">

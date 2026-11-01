@@ -57,6 +57,16 @@ return [
         // Hero Section
         'hero' => [
             'title' => 'Hero Section Settings',
+
+            // How tall the hero is, or whether there is one
+            'height' => [
+                'title' => 'Hero Height',
+                'none' => 'None',
+                'custom' => 'Custom',
+                'full' => 'Full screen',
+                'help' => 'None leaves the hero out entirely and the page starts with its content. Full screen fills the window, less the admin bar when one is shown.',
+                'custom_help' => 'Percent of the window height, :min to :max. It is a minimum, so a hero whose text does not fit grows rather than cutting it off.',
+            ],
             'basic_settings' => 'Basic Settings',
             'background_section' => 'Background Settings',
             'background_image' => 'Hero Background Image',
