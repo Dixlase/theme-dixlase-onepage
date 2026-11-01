@@ -5,6 +5,41 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.5.0] — 2026-11-01
+
+### Added
+
+- The hero can be left out or given a height of its own (#120, fixes #115). The `hero_height`
+  setting is now none / custom / full: none renders no hero, custom is a minimum height of 20–90% of
+  the window set with a slider, and full screen stays the default, so an existing site does not
+  change. "None" is checked where the hero is included, so it also works on a site that overrides
+  `partials/hero.blade.php`.
+- A control in the corner takes the visitor back to the top of the page (#119, fixes #114). It is
+  off by default (`back_to_top_enabled`), appears once the page has been scrolled past 300px, and
+  jumps without the smooth scroll for a visitor who asks for reduced motion. When the appearance
+  switcher is also fixed in the corner, the two share one stack and the new control sits above it.
+- The social links in the footer can be dragged into any order on the settings screen (#123, fixes
+  #116). The footer and the settings form now read one list of services and one order; a service
+  added to the theme later is appended to a saved order rather than hidden.
+- The rows slide into place while the social links are reordered, over the same 150ms the admin side
+  menu uses, and move without the slide for a visitor who asks for reduced motion (#125, fixes
+  #124).
+
+### Fixed
+
+- The theme settings preview is shown on the settings screen again (#118, fixes #117). The admin's
+  `frame-ancestors 'none'` blocked the frame, so the panel stayed empty; the preview routes now ask
+  core's CSP middleware for `'self'`, as the front page preview does.
+- The settings preview takes the height of the chosen device and scrolls inside it (#122, fixes
+  #121). It used to size itself from its own content, which grows with the frame, so it kept
+  stretching downwards.
+
+### Changed
+
+- The theme thumbnail is replaced with a version with an adjusted layout and colours (#109, fixes
+  #108).
+- Both READMEs open with the social preview image (#112, fixes #111).
+
 ## [0.4.3] — 2026-10-30
 
 ### Changed
