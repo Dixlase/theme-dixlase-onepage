@@ -181,4 +181,18 @@ class SnsOrderTest extends TestCase
             "{$relativePath} still spells a brand icon out, so it is keeping a second catalogue."
         );
     }
+
+    public function test_the_footer_checks_the_helpers_exist_before_calling_them(): void
+    {
+        $footer = $this->contents('resources/views/partials/footer.blade.php');
+
+        foreach (['dls_onepage_sns_services', 'dls_onepage_sns_order'] as $helper) {
+            $this->assertStringContainsString(
+                "function_exists('{$helper}')",
+                $footer,
+                "The footer is rendered by the error pages, also where the theme's service provider "
+                ."has not loaded {$helper}() (#128). Calling it unchecked turns a 404 into a 500."
+            );
+        }
+    }
 }
