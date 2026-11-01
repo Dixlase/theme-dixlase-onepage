@@ -1,6 +1,6 @@
 {
     "name": "dixlase-onepage",
-    "version": "0.5.1",
+    "version": "0.5.2-dev",
     "description": "Dixlase OnePage theme - Plugin-driven single page / landing page theme",
     "private": true,
     "type": "module",

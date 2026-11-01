@@ -18,7 +18,7 @@
         "dixlase": {
             "type": "theme",
             "slug": "dixlase-onepage",
-            "version": "0.5.1"
+            "version": "0.5.2-dev"
         }
     },
     "minimum-stability": "stable",
