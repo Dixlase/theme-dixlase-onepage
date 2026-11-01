@@ -5,6 +5,16 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.5.1] — 2026-11-01
+
+### Fixed
+
+- The footer and the settings preview render where the theme's settings table is missing or
+  unreachable, instead of failing (#127, fixes #126). The settings added in 0.5.0 were read without
+  the guard every other setting has, so such a site, core's test database among them, got a 500; a
+  failed lookup now reads as not set and each setting falls back to its default. Sites with the
+  theme installed have the table and were not affected.
+
 ## [0.5.0] — 2026-11-01
 
 ### Added
