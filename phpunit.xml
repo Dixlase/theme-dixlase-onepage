@@ -21,7 +21,13 @@
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
-        <env name="CACHE_DRIVER" value="array"/>
+        <!-- CACHE_STORE, not CACHE_DRIVER: Laravel 11 renamed it, so the old
+             name is read by nothing and the cache quietly fell through to the
+             .env value. That is the database store, whose table the test
+             database does not have, so anything going through Cache::remember
+             died with "no such table". force, per the convention for test-only
+             env vars, so a value already in the process env cannot win. -->
+        <env name="CACHE_STORE" value="array" force="true"/>
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>
