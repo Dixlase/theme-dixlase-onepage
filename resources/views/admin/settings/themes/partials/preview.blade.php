@@ -49,19 +49,36 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
      into the frame. Both go to the same view the front page editor's
      preview uses, with `bareContent` false.
 
-     The frame is same-origin, so its height is read from its own document
-     rather than through a postMessage round-trip, and the container's
-     ResizeObserver picks the change up to rescale. --}}
+     The frame's height comes from the device preset, never from the
+     document inside it — see the note on the iframe, and #121. --}}
 
 <x-admin.theme-preview-container
     :title="__('themes::admin.settings.editor.preview_title')"
     :appearanceMode="$settings->appearance_mode ?? '0'"
 >
+    {{-- The frame is a window of the device the operator picked, and the page
+         scrolls inside it — the same shape core's front page preview uses.
+
+         The height has to come from the device rather than from the document,
+         and that is the whole fix for #121: the page inside is sized in
+         viewport units, and in an iframe the viewport is the frame, so a
+         height measured from the content fed straight back into the thing
+         that decides the content's size. Fixed here, nothing can inflate.
+
+         The numbers are the ones the container's own device buttons name in
+         their tooltips — 375x667, 768x1024, 1440x900. It tracks only the
+         widths (`DEVICE_WIDTHS`), so the heights are written out here; a free
+         width keeps the desktop shape. They would sit better in the
+         container, next to the widths and the tooltips that already quote
+         them, which is worth raising against core.
+
+         Width comes from the wrapper this sits in, and the scale is a
+         transform on that wrapper, so this is the unscaled device height. --}}
     <iframe id="dls-theme-preview-frame"
             name="dls-theme-preview-frame"
             src="{{ route('admin.settings.themes.settings.preview-frame') }}"
             class="w-full block border-0"
-            style="height: 600px; background: transparent;"
+            :style="'height: ' + (previewDevice === 'mobile' ? 667 : previewDevice === 'tablet' ? 1024 : 900) + 'px; background: transparent;'"
             sandbox="allow-scripts allow-same-origin allow-forms"
             title="{{ __('themes::admin.settings.editor.preview_title') }}"></iframe>
 </x-admin.theme-preview-container>
@@ -88,41 +105,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     }
 
     // --- height ------------------------------------------------------
-    // Same-origin, so the document can be measured directly. Observing the
-    // body covers content that arrives after load (web fonts, images), and
-    // fonts.ready covers the reflow when a heading face swaps in.
-    function syncHeight() {
-        try {
-            var doc = frame.contentDocument;
-            if (!doc) {
-                return;
-            }
-            var height = Math.max(
-                doc.documentElement ? doc.documentElement.scrollHeight : 0,
-                doc.body ? doc.body.scrollHeight : 0
-            );
-            if (height > 0 && Math.abs(frame.clientHeight - height) > 1) {
-                frame.style.height = height + 'px';
-            }
-        } catch (e) {
-            // Cross-origin or a frame mid-navigation: keep the last height.
-        }
-    }
-
-    frame.addEventListener('load', function () {
-        syncHeight();
-        try {
-            var doc = frame.contentDocument;
-            if (doc && doc.body && typeof ResizeObserver !== 'undefined') {
-                new ResizeObserver(syncHeight).observe(doc.body);
-            }
-            if (doc && doc.fonts && doc.fonts.ready) {
-                doc.fonts.ready.then(syncHeight);
-            }
-        } catch (e) {
-            // As above.
-        }
-    });
+    // There is none here, deliberately. The frame used to measure the
+    // document it contains and write the result back as its own height,
+    // which cannot converge: the page inside is sized in viewport units
+    // (`min-h-screen` on the body, the hero at `h-screen`), and inside an
+    // iframe the viewport *is* the frame. Growing the frame grew the page,
+    // which grew the measurement, which grew the frame — the runaway in
+    // #121. The height now comes from the device preset, above.
 
     // --- re-render with unsaved values -------------------------------
     function snapshot() {
