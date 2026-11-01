@@ -274,6 +274,10 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'header_logo_id' => null,
             'header_logo_dark_id' => null,
             'favicon_id' => null,
+            // How tall the hero is. 'full' is what every site had before
+            // the setting existed, so it stays the default.
+            'hero_height' => 'full', // none | custom | full
+            'hero_height_custom' => '55', // percent of the window
             'hero_background_image_id' => null,
             'hero_foreground_image_id' => null,
             'hero_main_title' => 'Welcome to '.config('app.name', 'Dixlase'),

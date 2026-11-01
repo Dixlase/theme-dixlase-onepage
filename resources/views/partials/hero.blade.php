@@ -129,14 +129,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     $heroBgLight = $heroBgBuilder($heroGradientShape, $heroC1Light, $heroC2Light);
     $heroBgDark  = $heroBgBuilder($heroGradientShape, $heroC1Dark, $heroC2Dark);
 
-    // When the admin bar is present (member is logged in), it occupies
-    // ~48px (Tailwind `top-12` = 3rem) at the top of the viewport.
-    // Use exact `h-[…]` (not `min-h-…`) so the hero is pinned to one
-    // viewport height — combined with the flex-1 image layout below,
-    // this keeps "text + image" inside one screen even on very short
-    // viewports (the image area shrinks to fit the remainder).
-    $hasAdminBar = app(\App\Services\Auth\SignedInMemberResolver::class)->check();
-    $heroHeight = $hasAdminBar ? 'h-[calc(100vh-3rem)]' : 'h-screen';
+    // How tall the hero is, from the `hero_height` setting. Full screen
+    // keeps an exact `h-[…]` (not `min-h-…`) so the hero is pinned to one
+    // viewport height — combined with the flex-1 image layout below, this
+    // keeps "text + image" inside one screen even on very short viewports
+    // (the image area shrinks to fit the remainder) — and subtracts the
+    // ~48px (Tailwind `top-12` = 3rem) the admin bar takes at the top when
+    // a member is signed in. A custom height is a minimum carried as a
+    // declaration instead; see the helpers for why both differ.
+    $heroHeight = dls_onepage_hero_height_class();
+    $heroHeightStyle = dls_onepage_hero_height_style();
 
     // Without a foreground image the hero is a centred text block.
     // With one, we lay out as: text on top (natural height), image
@@ -157,6 +159,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     // viewports to scale with.
     $heroVerticalAlign = $heroForegroundPath ? 'justify-start' : 'justify-center';
     $heroSectionStyle = $heroForegroundPath ? 'padding-top: calc(3.5rem + 3vh); padding-bottom: 3vh;' : '';
+    $heroSectionStyle = trim($heroHeightStyle.' '.$heroSectionStyle);
 @endphp
 
 <section class="relative {{ $heroHeight }} flex flex-col {{ $heroVerticalAlign }} overflow-hidden bg-gray-100 dark:bg-gray-950"

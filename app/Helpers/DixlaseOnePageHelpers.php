@@ -175,3 +175,134 @@ if (! function_exists('dls_onepage_appearance_options')) {
         ];
     }
 }
+
+/*
+ * The narrowest and widest custom hero height, as a percentage of the window.
+ *
+ * Below the floor the height stops deciding the hero's size — the text inside
+ * runs to roughly 260-340px on a desktop, taller than that on most screens, so
+ * the slider would appear to do nothing. Above the ceiling it is not
+ * meaningfully different from the full-screen mode, which additionally
+ * subtracts the admin bar and pins an exact height; the gap is what makes the
+ * two modes mean different things.
+ *
+ * Enforced twice: on the slider, and in UpdateThemeSettingsRequest. The
+ * slider's bounds are a convenience, not a guarantee.
+ */
+if (! defined('DLS_ONEPAGE_HERO_HEIGHT_MIN')) {
+    define('DLS_ONEPAGE_HERO_HEIGHT_MIN', 20);
+}
+
+if (! defined('DLS_ONEPAGE_HERO_HEIGHT_MAX')) {
+    define('DLS_ONEPAGE_HERO_HEIGHT_MAX', 90);
+}
+
+/** The custom height a site gets before it has moved the slider. */
+if (! defined('DLS_ONEPAGE_HERO_HEIGHT_DEFAULT')) {
+    define('DLS_ONEPAGE_HERO_HEIGHT_DEFAULT', 55);
+}
+
+if (! function_exists('dls_onepage_hero_mode')) {
+    /**
+     * The hero height mode: 'none', 'custom' or 'full'.
+     *
+     * Anything unrecognised reads as 'full', which is both the default and
+     * what every site had before this setting existed.
+     */
+    function dls_onepage_hero_mode(): string
+    {
+        $mode = (string) (dls_onepage_primary_setting('hero_height') ?? 'full');
+
+        return in_array($mode, ['none', 'custom', 'full'], true) ? $mode : 'full';
+    }
+}
+
+if (! function_exists('dls_onepage_hero_enabled')) {
+    /**
+     * Whether the page renders a hero at all.
+     *
+     * Read by the two views that include the hero partial rather than by the
+     * partial itself, on purpose: a site that overrides
+     * `partials/hero.blade.php` under `custom/` replaces it wholesale, and a
+     * check living inside the partial would be lost with it. Gating the
+     * include means "no hero" works even where the partial has been forked.
+     */
+    function dls_onepage_hero_enabled(): bool
+    {
+        return dls_onepage_hero_mode() !== 'none';
+    }
+}
+
+if (! function_exists('dls_onepage_hero_custom_height')) {
+    /**
+     * The stored custom height, clamped to the bounds above.
+     *
+     * Clamped on read as well as on save, so a row written before the bounds
+     * existed — or written by hand — cannot produce a hero taller than the
+     * window.
+     */
+    function dls_onepage_hero_custom_height(): int
+    {
+        $stored = dls_onepage_primary_setting('hero_height_custom');
+
+        $value = is_numeric($stored) ? (int) $stored : DLS_ONEPAGE_HERO_HEIGHT_DEFAULT;
+
+        return max(DLS_ONEPAGE_HERO_HEIGHT_MIN, min(DLS_ONEPAGE_HERO_HEIGHT_MAX, $value));
+    }
+}
+
+if (! function_exists('dls_onepage_hero_height_class')) {
+    /**
+     * The Tailwind class that gives the hero section its height.
+     *
+     * Full screen keeps an exact height and subtracts the admin bar when one
+     * is shown: that mode means "one viewport", and the arithmetic is what
+     * makes it exactly that. The comment in partials/hero.blade.php explains
+     * why exact rather than minimum — the flex layout below absorbs the
+     * remainder, which is what keeps text and image inside the screen
+     * together.
+     *
+     * Empty for a custom height, which is a declaration rather than a class;
+     * see dls_onepage_hero_height_style().
+     */
+    function dls_onepage_hero_height_class(): string
+    {
+        if (dls_onepage_hero_mode() === 'custom') {
+            return '';
+        }
+
+        $hasAdminBar = app(\App\Services\Auth\SignedInMemberResolver::class)->check();
+
+        return $hasAdminBar ? 'h-[calc(100vh-3rem)]' : 'h-screen';
+    }
+}
+
+if (! function_exists('dls_onepage_hero_height_style')) {
+    /**
+     * The inline height declaration for a custom hero, or an empty string.
+     *
+     * A declaration rather than a Tailwind class on purpose. `min-h-[55vh]`
+     * assembled from a stored number is invisible to Tailwind's scanner —
+     * it reads source files, not the values a site happens to hold — so the
+     * utility would simply not be in the emitted CSS and the hero would have
+     * no height at all. Safelisting all 15 steps would work and would put 15
+     * unused rules in every site's stylesheet. The value is data, so it goes
+     * where data goes.
+     *
+     * A *minimum*, not an exact height. The exact height the full-screen
+     * mode uses exists to pin the hero to one viewport; there is no single
+     * screen to stay inside here, and the section is `overflow-hidden`, so
+     * an exact 30% would cut a two-line title off on a laptop. As a minimum,
+     * the chosen height is what nearly every screen shows and a short one
+     * grows to fit rather than clipping. The admin bar is not subtracted for
+     * the same reason — this mode is not trying to fill the screen.
+     */
+    function dls_onepage_hero_height_style(): string
+    {
+        if (dls_onepage_hero_mode() !== 'custom') {
+            return '';
+        }
+
+        return 'min-height: '.dls_onepage_hero_custom_height().'vh;';
+    }
+}

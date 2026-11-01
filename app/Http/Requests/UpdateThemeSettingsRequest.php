@@ -64,6 +64,10 @@ class UpdateThemeSettingsRequest extends FormRequest
             'hero_sub_title' => 'nullable|string|max:1000',
             'hero_button_text' => 'nullable|string|max:100',
             'hero_button_link' => ['nullable', 'string', 'max:500', $this->safeLinkRule()],
+            'hero_height' => 'nullable|in:none,custom,full',
+            // Bounds, not just a type. The slider enforces the same two
+            // numbers, but that is a convenience — this is the guarantee.
+            'hero_height_custom' => 'nullable|integer|min:'.DLS_ONEPAGE_HERO_HEIGHT_MIN.'|max:'.DLS_ONEPAGE_HERO_HEIGHT_MAX,
             'hero_button_enabled' => 'nullable|in:0,1',
             'hero_button_target' => 'nullable|in:_self,_blank',
             'hero_button_secondary_text' => 'nullable|string|max:100',

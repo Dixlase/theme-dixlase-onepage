@@ -43,8 +43,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 @endif
 
 @section('content')
-{{-- Hero Section --}}
+{{-- Hero Section. Skipped entirely when the theme setting says so, and
+     gated here rather than inside the partial: a site that overrides
+     partials/hero.blade.php under `custom/` replaces it wholesale, and a
+     check living in there would be lost with it. --}}
+@if(dls_onepage_hero_enabled())
 @include('themes::partials.hero')
+@endif
 
 {{-- Front Page Content --}}
 @if(!empty($frontContent))

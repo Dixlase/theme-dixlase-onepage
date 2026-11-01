@@ -125,6 +125,8 @@ function themeSettingsEditor() {
         appearanceToggleFooter: @json((string) old('appearance_toggle_footer', $settings->appearance_toggle_footer ?? '0')),
         appearanceToggleFloat: @json((string) old('appearance_toggle_float', $settings->appearance_toggle_float ?? '0')),
         backToTopEnabled: @json((string) old('back_to_top_enabled', $settings->back_to_top_enabled ?? '0')),
+        heroHeight: @json((string) old('hero_height', $settings->hero_height ?? 'full')),
+        heroHeightCustom: @json((int) old('hero_height_custom', $settings->hero_height_custom ?? DLS_ONEPAGE_HERO_HEIGHT_DEFAULT)),
         headingFontApplyHeader:  @json((string) old('heading_font_apply_header',  $settings->heading_font_apply_header  ?? '1')),
         headingFontApplyHero:    @json((string) old('heading_font_apply_hero',    $settings->heading_font_apply_hero    ?? '1')),
         headingFontApplyFooter:  @json((string) old('heading_font_apply_footer',  $settings->heading_font_apply_footer  ?? '1')),
