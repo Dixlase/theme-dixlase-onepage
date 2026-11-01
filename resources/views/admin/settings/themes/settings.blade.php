@@ -218,7 +218,9 @@ function themeSettingsEditor() {
             }
 
             this.snsDragRow = row;
-            row.classList.add('opacity-50');
+            // The same ghost the admin side menu uses, so the two reorder
+            // controls look alike (sortablejs `ghostClass: 'opacity-30'`).
+            row.classList.add('opacity-30');
 
             if (event.dataTransfer) {
                 event.dataTransfer.effectAllowed = 'move';
@@ -243,14 +245,67 @@ function themeSettingsEditor() {
             const box = over.getBoundingClientRect();
             const below = (event.clientY - box.top) > box.height / 2;
 
+            // Where every row sits before the move, for the animation below.
+            const rows = Array.from(over.parentNode.children);
+            const before = new Map(rows.map((row) => [row, row.getBoundingClientRect().top]));
+
             over.parentNode.insertBefore(dragged, below ? over.nextSibling : over);
+
+            this.snsAnimateFrom(rows, before, dragged);
             this.snsSyncOrder();
+        },
+
+        // Slide the rows that moved from where they were to where they now
+        // are: read the old positions, let the DOM move, then put each row
+        // back with a transform and release it. Twenty lines of FLIP rather
+        // than a drag library — the reorder already moves real elements, so
+        // there is nothing for a library to own, and #116 showed this theme
+        // needs no admin bundle to carry one.
+        //
+        // 150ms is the admin side menu's `animation` value; this is the same
+        // gesture an operator has already met there.
+        snsAnimateFrom(rows, before, dragged) {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return;
+            }
+
+            rows.forEach((row) => {
+                // The dragged row is following the cursor already; animating
+                // it as well fights the pointer. sortablejs leaves it alone
+                // for the same reason.
+                if (row === dragged) {
+                    return;
+                }
+
+                const shift = before.get(row) - row.getBoundingClientRect().top;
+                if (!shift) {
+                    return;
+                }
+
+                row.style.transition = 'none';
+                row.style.transform = 'translateY(' + shift + 'px)';
+
+                requestAnimationFrame(() => {
+                    row.style.transition = 'transform 150ms ease';
+                    row.style.transform = '';
+                });
+            });
         },
 
         snsDragEnd() {
             if (this.snsDragRow) {
-                this.snsDragRow.classList.remove('opacity-50');
+                this.snsDragRow.classList.remove('opacity-30');
                 this.snsDragRow = null;
+            }
+
+            // Clear anything a transition left behind, so a row that was
+            // mid-slide when the drag ended does not keep a stale transform.
+            const list = document.getElementById('dls-sns-order-list');
+            if (list) {
+                Array.from(list.children).forEach((row) => {
+                    row.style.transition = '';
+                    row.style.transform = '';
+                });
             }
 
             this.snsSyncOrder();
