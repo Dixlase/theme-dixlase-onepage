@@ -141,6 +141,12 @@ class HeroHeightTest extends TestCase
      */
     public static function outOfRangeHeights(): array
     {
+        // A data provider runs before setUp(), so the helpers file — and the
+        // bounds it defines — is not loaded yet. Requiring it here keeps the
+        // expectations tied to the constants rather than repeating the two
+        // numbers, which is the point of asserting them at all.
+        require_once __DIR__.'/../../app/Helpers/DixlaseOnePageHelpers.php';
+
         return [
             'far below the floor' => ['1', DLS_ONEPAGE_HERO_HEIGHT_MIN],
             'just below the floor' => [(string) (DLS_ONEPAGE_HERO_HEIGHT_MIN - 1), DLS_ONEPAGE_HERO_HEIGHT_MIN],
