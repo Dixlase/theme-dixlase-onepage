@@ -335,6 +335,10 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'footer_sns_pinterest' => null,
             'footer_sns_discord' => null,
             'footer_sns_github' => null,
+            // Display order of the services above, comma-separated.
+            // Null means the catalogue's own order, which is what every
+            // site rendered before the setting existed.
+            'sns_links_order' => null,
             'appearance_mode' => '0', // 0: Auto, 1: Light, 2: Dark
             // Where the front end offers a control to change the mode above.
             // Independent of each other, and both off by default so a site

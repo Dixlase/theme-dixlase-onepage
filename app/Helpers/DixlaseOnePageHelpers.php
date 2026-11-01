@@ -306,3 +306,81 @@ if (! function_exists('dls_onepage_hero_height_style')) {
         return 'min-height: '.dls_onepage_hero_custom_height().'vh;';
     }
 }
+
+if (! function_exists('dls_onepage_sns_services')) {
+    /**
+     * Every social service the theme knows, keyed by its stored slug.
+     *
+     * One catalogue for the footer and for the settings form. They used to
+     * hold a list each and had already drifted: the footer opened with
+     * Facebook, X, Instagram and the settings form with Instagram, X,
+     * Facebook, so the order an operator filled the fields in was not the
+     * order a visitor saw.
+     *
+     * `solid` marks a mark that is a filled shape (circle, badge, tab) and so
+     * takes the 28px visual correction rather than the 32px line-art size;
+     * the container shapes are part of the mark and must not be stripped.
+     * `prefix` is what the settings form shows before the username box.
+     *
+     * The order here is the display order a site gets before anyone drags
+     * anything, and it is the footer's previous order on purpose — an
+     * existing site's footer must not rearrange itself on upgrade.
+     *
+     * @return array<string, array{label: string, icon: string, solid: bool, prefix: string}>
+     */
+    function dls_onepage_sns_services(): array
+    {
+        return [
+            'facebook' => ['label' => 'Facebook', 'icon' => 'fa-facebook', 'solid' => false, 'prefix' => 'facebook.com/'],
+            'x' => ['label' => 'X (Twitter)', 'icon' => 'fa-x-twitter', 'solid' => false, 'prefix' => 'x.com/'],
+            'instagram' => ['label' => 'Instagram', 'icon' => 'fa-instagram', 'solid' => false, 'prefix' => 'instagram.com/'],
+            'tiktok' => ['label' => 'TikTok', 'icon' => 'fa-tiktok', 'solid' => false, 'prefix' => 'tiktok.com/@'],
+            'bluesky' => ['label' => 'Bluesky', 'icon' => 'fa-bluesky', 'solid' => false, 'prefix' => 'bsky.app/profile/'],
+            'threads' => ['label' => 'Threads', 'icon' => 'fa-threads', 'solid' => false, 'prefix' => 'threads.net/@'],
+            'linkedin' => ['label' => 'LinkedIn', 'icon' => 'fa-linkedin', 'solid' => true, 'prefix' => 'linkedin.com/in/'],
+            'youtube' => ['label' => 'YouTube', 'icon' => 'fa-youtube', 'solid' => true, 'prefix' => 'youtube.com/@'],
+            'pinterest' => ['label' => 'Pinterest', 'icon' => 'fa-pinterest', 'solid' => true, 'prefix' => 'pinterest.com/'],
+            'discord' => ['label' => 'Discord', 'icon' => 'fa-discord', 'solid' => false, 'prefix' => 'discord.gg/'],
+            'github' => ['label' => 'GitHub', 'icon' => 'fa-github', 'solid' => true, 'prefix' => 'github.com/'],
+        ];
+    }
+}
+
+if (! function_exists('dls_onepage_sns_order')) {
+    /**
+     * The service slugs in the order the operator arranged them.
+     *
+     * Built from the stored order rather than trusted as it stands, because
+     * the stored value outlives the catalogue. A slug that is no longer a
+     * service is dropped, a repeated one counts once, and — the part that
+     * matters — **a service the catalogue has gained since the operator last
+     * saved is appended rather than lost**. A theme that adds a service must
+     * not make it invisible to every site that had already saved an order.
+     *
+     * With nothing stored this is the catalogue's own order, so a site that
+     * never touches the setting renders exactly as it did before it existed.
+     *
+     * @return array<int, string>
+     */
+    function dls_onepage_sns_order(): array
+    {
+        $services = dls_onepage_sns_services();
+        $stored = (string) (dls_onepage_primary_setting('sns_links_order') ?? '');
+
+        $ordered = [];
+        foreach (explode(',', $stored) as $slug) {
+            $slug = trim($slug);
+            if ($slug !== '' && isset($services[$slug]) && ! in_array($slug, $ordered, true)) {
+                $ordered[] = $slug;
+            }
+        }
+
+        foreach (array_keys($services) as $slug) {
+            if (! in_array($slug, $ordered, true)) {
+                $ordered[] = $slug;
+            }
+        }
+
+        return $ordered;
+    }
+}

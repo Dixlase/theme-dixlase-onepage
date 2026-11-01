@@ -692,29 +692,46 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
     {{-- ===== SNS Links ===== --}}
     <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.footer.sns_title')" icon="fas fa-share-alt">
-        <div class="space-y-3">
-            @php
-                $snsFields = [
-                    ['name' => 'footer_sns_instagram', 'label' => 'Instagram', 'prefix' => 'instagram.com/'],
-                    ['name' => 'footer_sns_x', 'label' => 'X (Twitter)', 'prefix' => 'x.com/'],
-                    ['name' => 'footer_sns_facebook', 'label' => 'Facebook', 'prefix' => 'facebook.com/'],
-                    ['name' => 'footer_sns_tiktok', 'label' => 'TikTok', 'prefix' => 'tiktok.com/@'],
-                    ['name' => 'footer_sns_bluesky', 'label' => 'Bluesky', 'prefix' => 'bsky.app/profile/'],
-                    ['name' => 'footer_sns_threads', 'label' => 'Threads', 'prefix' => 'threads.net/@'],
-                    ['name' => 'footer_sns_linkedin', 'label' => 'LinkedIn', 'prefix' => 'linkedin.com/in/'],
-                    ['name' => 'footer_sns_youtube', 'label' => 'YouTube', 'prefix' => 'youtube.com/@'],
-                    ['name' => 'footer_sns_pinterest', 'label' => 'Pinterest', 'prefix' => 'pinterest.com/'],
-                    ['name' => 'footer_sns_discord', 'label' => 'Discord', 'prefix' => 'discord.gg/'],
-                    ['name' => 'footer_sns_github', 'label' => 'GitHub', 'prefix' => 'github.com/'],
-                ];
-            @endphp
-            @foreach($snsFields as $sns)
-                @php $snsKey = str_replace('footer_sns_', '', $sns['name']); @endphp
-                <div>
-                    <label class="block text-xs font-medium mb-1 text-gray-600 dark:text-gray-400">{{ $sns['label'] }}</label>
+        {{-- The services, in the order the footer will render them, and
+             draggable into a different one (#116).
+
+             Rendered by Blade rather than by `x-for` so the fields exist
+             without JavaScript: an operator with no Alpine still sees every
+             box in the saved order and can still type in them — only the
+             dragging is missing. The same reason the hidden input below
+             carries a server-rendered `value` as well as a binding.
+
+             Dragging moves the row in the DOM and the order is then read
+             back off the DOM, which is why these are real elements and not
+             a list Alpine owns. The handle is what carries `draggable`, not
+             the row: with the row draggable, selecting text inside a
+             username box starts a drag instead. --}}
+        @php
+            $snsServices = dls_onepage_sns_services();
+            $snsOrderKeys = dls_onepage_sns_order();
+        @endphp
+        <input type="hidden" name="sns_links_order"
+               value="{{ implode(',', $snsOrderKeys) }}"
+               :value="snsOrder.join(',')">
+        <div id="dls-sns-order-list"
+             class="space-y-3"
+             @dragstart="snsDragStart($event)"
+             @dragover.prevent="snsDragOver($event)"
+             @drop.prevent="snsDragEnd()"
+             @dragend="snsDragEnd()">
+            @foreach($snsOrderKeys as $snsKey)
+                @php($sns = $snsServices[$snsKey])
+                <div data-sns-key="{{ $snsKey }}">
+                    <div class="flex items-center gap-1 mb-1">
+                        <span draggable="true"
+                              class="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 px-0.5"
+                              title="{{ __('themes::admin.settings.footer.sns_reorder') }}"
+                              aria-hidden="true"><i class="fas fa-grip-vertical text-xs"></i></span>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400">{{ $sns['label'] }}</label>
+                    </div>
                     <div class="flex items-stretch">
                         <span class="inline-flex items-center text-xs text-gray-500 dark:text-gray-400 mr-1 whitespace-nowrap">{{ $sns['prefix'] }}</span>
-                        <input type="text" name="{{ $sns['name'] }}"
+                        <input type="text" name="footer_sns_{{ $snsKey }}"
                                x-model="snsLinks.{{ $snsKey }}"
                                class="flex-1 min-w-0 block w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                placeholder="{{ __('themes::admin.settings.footer.sns_username') }}">
@@ -722,6 +739,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 </div>
             @endforeach
         </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.footer.sns_reorder_help') }}</p>
     </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Copyright =====

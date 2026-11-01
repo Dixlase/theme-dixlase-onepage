@@ -141,6 +141,8 @@ return [
             'sns_professional' => 'プロフェッショナル',
             'sns_other' => 'その他',
             'sns_username' => 'ユーザー名',
+            'sns_reorder' => 'ドラッグで並び替え',
+            'sns_reorder_help' => 'つまみをドラッグすると、アイコンの並び順を変えられます。表示されるのはユーザー名を入れたサービスだけです。',
             'sns_invite_code' => '招待コード',
             'sns_instagram' => 'Instagram URL',
             'sns_x' => 'X (Twitter) URL',

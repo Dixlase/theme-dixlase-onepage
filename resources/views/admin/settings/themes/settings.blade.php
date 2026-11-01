@@ -203,6 +203,72 @@ function themeSettingsEditor() {
             github: @json(old('footer_sns_github', $settings->footer_sns_github ?? '')),
         },
 
+        // The order the footer renders the services in (#116). Seeded from
+        // the resolved order, not the raw setting, so a service the theme
+        // has gained since the operator last saved is already in the list.
+        snsOrder: @json(dls_onepage_sns_order()),
+
+        // The row being dragged. Only set between dragstart and dragend.
+        snsDragRow: null,
+
+        snsDragStart(event) {
+            const row = event.target.closest('[data-sns-key]');
+            if (!row) {
+                return;
+            }
+
+            this.snsDragRow = row;
+            row.classList.add('opacity-50');
+
+            if (event.dataTransfer) {
+                event.dataTransfer.effectAllowed = 'move';
+                // Firefox refuses to start a drag unless something is set.
+                try {
+                    event.dataTransfer.setData('text/plain', row.dataset.snsKey || '');
+                } catch (e) {
+                    // Some browsers disallow setData outside a user gesture.
+                }
+            }
+        },
+
+        snsDragOver(event) {
+            const dragged = this.snsDragRow;
+            const over = event.target.closest('[data-sns-key]');
+            if (!dragged || !over || over === dragged || over.parentNode !== dragged.parentNode) {
+                return;
+            }
+
+            // Past the halfway line the dragged row belongs below this one,
+            // which is what lets a row be moved to the end of the list.
+            const box = over.getBoundingClientRect();
+            const below = (event.clientY - box.top) > box.height / 2;
+
+            over.parentNode.insertBefore(dragged, below ? over.nextSibling : over);
+            this.snsSyncOrder();
+        },
+
+        snsDragEnd() {
+            if (this.snsDragRow) {
+                this.snsDragRow.classList.remove('opacity-50');
+                this.snsDragRow = null;
+            }
+
+            this.snsSyncOrder();
+        },
+
+        // Read the order back off the DOM rather than tracking it alongside.
+        // The rows are the thing that moved, so they are the truth; keeping a
+        // second copy in step is how the two would come apart.
+        snsSyncOrder() {
+            const list = document.getElementById('dls-sns-order-list');
+            if (!list) {
+                return;
+            }
+
+            this.snsOrder = Array.from(list.querySelectorAll('[data-sns-key]'))
+                .map((row) => row.dataset.snsKey);
+        },
+
         // Plugin preview data
         headerMenuId: @json(old('header_menu_id', $settings->header_menu_id ?? '')),
         footerMenuId: @json(old('footer_menu_id', $settings->footer_menu_id ?? '')),
