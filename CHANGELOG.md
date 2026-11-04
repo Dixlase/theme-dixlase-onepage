@@ -5,6 +5,17 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.5.3] — 2026-11-04
+
+### Changed
+
+- The built stylesheets, script and fonts are produced once, when the release is cut, and shipped
+  with the release itself (#130). The release ZIP, the Composer package and every deployed site now
+  carry the same bytes, and they are covered by the theme's signature like every other distributed
+  file. A Composer install gets a styled front page without building the theme.
+- Requires Dixlase core 0.2.1 or later (`requires.dixlase`: `>=0.2.1`) (#130). Update core before
+  this theme.
+
 ## [0.5.2] — 2026-11-01
 
 ### Fixed
