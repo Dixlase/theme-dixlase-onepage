@@ -1,6 +1,12 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
+// The build output under `resources/assets/` is committed by the release,
+// covered by the theme's signature and distributed as those exact bytes.
+// Nothing rebuilds it downstream, so build from a clean checkout before
+// signing: `emptyOutDir` below starts each build from empty, but a file an
+// earlier local build left behind would otherwise be signed into the
+// manifest and then reported missing on every site.
 export default defineConfig({
     // Emit asset URLs relative to the file that references them, instead of
     // Vite's default `base: '/'`. The built CSS lives at

@@ -13,7 +13,10 @@
 # `resources/assets/thumbnail.png` on every build via vite's
 # `publicDir` option (see vite.config.js). Nothing tracked lives
 # directly under `resources/assets/` anymore.
-/resources/assets/*
+# resources/assets is NOT ignored: the built assets are committed by the
+# release, signed with the rest of the theme, and distributed as those
+# exact bytes. Nothing rebuilds them downstream -- not the deploy, not the
+# release ZIP, not an install.
 /storage/*.key
 /storage/pail
 /vendor

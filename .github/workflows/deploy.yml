@@ -45,115 +45,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Order-critical: core → theme (see the same note in release.yml).
-      # actions/checkout cleans its target before extracting, so the
-      # inverse order would wipe the theme subtree that setup-node
-      # then needs for its npm cache lookup and that vite needs for
-      # the build itself.
-      - name: Checkout dixlase-core (for CSS @import + components @source)
-        # Only needed for:
-        #   resources/src/common/css/                    (`@import` target)
-        #   resources/views/components/**/*.blade.php    (`@source` for core shared components)
-        #   resources/src/components/**/*.js             (`@source` for core shared components)
-        # See release.yml for the full rationale — this deploy runner
-        # is standalone-checkout too (no plugins/ siblings) and hits
-        # the same cross-repo `@import` failure without core present.
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/dixlase-core
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx
-
+      # The built assets are committed, covered by the theme's signature
+      # and distributed as those exact bytes, so this runner neither needs
+      # core and the plugins for Tailwind's scanner nor builds anything.
+      # Each site's own fetch and hard-reset below brings the assets along
+      # with the rest of the tree.
       - name: Checkout theme code
         uses: actions/checkout@v5
-        with:
-          path: dixlase-ctx/themes/DixlaseOnePage
 
-      # Check out every plugin the theme's `tailwind.css` scans via a
-      # hardcoded `@source "…/plugins/<Plugin>/resources/views"` line.
-      # Without these, the runner tree lacks the plugin view files,
-      # Tailwind's scanner (correctly) reports 0 matches for each
-      # plugin, and the emitted CSS drops every utility used only by
-      # plugin views (`bg-gray-900`, `border-gray-400`, `col-span-2`,
-      # form-focus / disabled variants, etc.) — ~140 classes at time
-      # of writing. The site still renders the *theme's* own views
-      # but breaks anywhere a plugin view or `custom/` override needs
-      # one of those utilities. This is the same problem PR #14 left
-      # unresolved (see #14's discussion + the follow-up in the
-      # `extension-update-prebuilt-assets-no-npm` backlog).
-      #
-      # Each checkout targets `main`; the theme's `@source` never pins
-      # a tag. If per-tag builds ever become necessary, revisit this
-      # block and thread the tag through inputs / secrets.
-      #
-      # Only plugins with front-facing views are listed, here and in
-      # `tailwind.css`. A plugin whose every view is an admin view
-      # cannot contribute anything the front stylesheet uses, so
-      # checking it out buys nothing — see #103, which dropped two.
-      - name: Checkout plugin — DixlaseBlog
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-blog
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseBlog
-
-      - name: Checkout plugin — DixlaseCookie
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-cookie
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseCookie
-
-      - name: Checkout plugin — DixlaseInquiry
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-inquiry
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseInquiry
-
-      - name: Checkout plugin — DixlaseLegal
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-legal
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseLegal
-
-      - name: Checkout plugin — DixlaseMenus
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-menus
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseMenus
-
-      - name: Checkout plugin — DixlaseMultilingual
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-multilingual
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseMultilingual
-
-      - name: Checkout plugin — DixlasePages
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-pages
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlasePages
-
-      - name: Checkout plugin — DixlaseSEO
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-seo
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: dixlase-ctx/plugins/DixlaseSEO
+      - name: Check the built assets are in the tree
+        run: |
+          if [ ! -f resources/assets/manifest.json ]; then
+            echo "::error::resources/assets/manifest.json is missing from this tree. The release has to build and commit the assets; refusing to deploy a tree without them." >&2
+            exit 1
+          fi
+          echo "Built assets present: $(ls resources/assets | tr '\n' ' ')"
 
       - name: Set deploy target
         id: target
@@ -165,70 +71,6 @@ jobs:
             echo "env=staging" >> $GITHUB_OUTPUT
             echo "base_dir=/srv/dixlase/staging" >> $GITHUB_OUTPUT
           fi
-
-      - name: Seed empty Tailwind plugin-sources stub
-        # Same trick release.yml uses (which itself mirrors
-        # dixlase-core release.yml). Runtime, `php artisan
-        # dls:tailwind:regenerate-plugin-sources` writes this file
-        # based on enabled plugins; in CI we do not install any
-        # plugin, so we write the empty form the runtime aggregator
-        # would produce on a fresh install. `theme/tailwind.css`
-        # `@import`s this path — the file must exist for `vite build`
-        # to succeed.
-        run: |
-          cat > "dixlase-ctx/resources/src/common/css/dixlase-tailwind-plugin-sources.css" <<'CSS'
-          /*
-           * Empty stub emitted by theme deploy CI. Same shape as
-           * `php artisan dls:tailwind:regenerate-plugin-sources`
-           * produces on a fresh install with no plugin enabled.
-           */
-          /* No enabled plugin currently declares Tailwind content sources. */
-          CSS
-
-      - name: Ensure optional scan paths exist
-        # `theme/tailwind.css` has a bare-dir `@source` for
-        # `storage/app/private/core/front/`. Tailwind silently skips
-        # missing paths but we `mkdir -p` so the scan output is
-        # clean.
-        run: |
-          mkdir -p "dixlase-ctx/storage/app/private/core/front"
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: dixlase-ctx/themes/DixlaseOnePage/package-lock.json
-
-      - name: Build frontend assets
-        # No `--outDir` override: `vite.config.js` already points
-        # `outDir` at `resources/assets`, which is where Dixlase Core
-        # expects a theme's build to live — `public/assets/themes/<slug>`
-        # is a symlink to it. Overriding the output here is what made the
-        # deploy write the build somewhere else and then fight core for
-        # that path (#61). `emptyOutDir` is on, so each build starts clean.
-        working-directory: dixlase-ctx/themes/DixlaseOnePage
-        run: |
-          npm ci --no-audit --no-fund
-          NODE_ENV=production npx vite build
-
-      - name: Create shared build directory on server
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: mkdir -p ${{ steps.target.outputs.base_dir }}/_shared/themes/DixlaseOnePage
-
-      - name: Deploy built assets via rsync
-        uses: burnett01/rsync-deployments@7.0.1
-        with:
-          switches: -avz --delete
-          path: dixlase-ctx/themes/DixlaseOnePage/resources/assets/
-          remote_path: ${{ steps.target.outputs.base_dir }}/_shared/themes/DixlaseOnePage/
-          remote_host: ${{ secrets.SERVER_HOST }}
-          remote_user: ${{ secrets.SERVER_USER }}
-          remote_key: ${{ secrets.SERVER_SSH_KEY }}
 
       - name: Deploy theme via SSH
         uses: appleboy/ssh-action@v1
@@ -450,33 +292,34 @@ jobs:
               cd "$DEST"
               rm -rf "$DEST/vendor" "$DEST/composer.lock"
 
-              # Place the build inside the theme tree, and point the public
-              # path at it with a symlink.
+              # The build lives inside the theme tree, and the public path
+              # points at it with a symlink.
               #
               # Core's arrangement is that `themes/<slug>/resources/assets`
               # IS the build output and `public/assets/themes/<slug>` is a
-              # relative symlink to it — created by `dls:theme:symlink` and
+              # relative symlink to it -- created by `dls:theme:symlink` and
               # recreated by `PublicAssetRelinker` on every core update. The
               # theme's own `vite.config.js` agrees.
               #
               # Earlier revisions of this workflow wrote the build to the
               # public path as a real DIRECTORY and `rm -f`-ed the symlink to
               # make room, which gave that one path two writers and whichever
-              # ran last won. `git reset --hard` leaves gitignored files
-              # alone, so the clone kept whatever stale build it happened to
-              # hold; the next core update relinked, deleted the real
-              # directory and pointed at that stale build, and every theme
+              # ran last won. The next core update relinked, deleted the real
+              # directory and pointed at a stale build, and every theme
               # CSS/JS URL 404'd. The HTML's byte size was unchanged, so a
               # size-based health check passed while the site rendered
               # unstyled. See #61.
               #
-              # `--delete` is safe here: the whole directory is build output
-              # (gitignored, and `emptyOutDir` wipes it on the runner too),
-              # which is also why the manifest-driven stale-asset sweep this
-              # replaces is no longer needed.
+              # The assets now arrive with the tree the fetch above brought,
+              # so nothing copies them here. What earlier deploys left
+              # behind is cleared instead: they wrote each build into this
+              # directory while it was untracked, so the reset leaves those
+              # files in place. The clean is scoped to this one directory
+              # and removes only what git does not track.
               THEME_ASSETS="$DEST/resources/assets"
-              mkdir -p "$THEME_ASSETS"
-              rsync -a --delete "$BASE/_shared/themes/$THEME_DIR/" "$THEME_ASSETS/"
+              if [ -d "$THEME_ASSETS" ]; then
+                git -C "$DEST" clean -fd -- resources/assets
+              fi
 
               # Relative form matches core's RelativeSymlink: from
               # public/assets/themes/, `../../..` is the site root. Created
