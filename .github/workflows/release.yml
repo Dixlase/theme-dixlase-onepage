@@ -56,16 +56,6 @@ on:
 permissions:
   contents: write   # required for softprops/action-gh-release
 
-env:
-  NODE_VERSION: '20'
-  # Path under the runner workspace where we assemble the minimal
-  # Dixlase directory tree needed to satisfy the theme's cross-repo
-  # `@import` and `@source` paths at build time. `dixlase-ctx/` mimics
-  # the html/ root of a full install; the theme sits at
-  # `dixlase-ctx/themes/DixlaseOnePage/` and its tailwind.css
-  # relative paths resolve to sibling files inside `dixlase-ctx/`.
-  DIXLASE_CTX: dixlase-ctx
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
@@ -82,45 +72,14 @@ jobs:
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
           echo "Building release from ref: $REF"
 
-      # Order matters. `actions/checkout` cleans its `path` before
-      # extracting the tree, so we must check out `dixlase-core` into
-      # `dixlase-ctx/` FIRST — that empties `dixlase-ctx/` (fine, it
-      # didn't exist yet) and drops core's tree there. THEN check out
-      # the theme into `dixlase-ctx/themes/DixlaseOnePage/`; that
-      # subdir either doesn't exist yet or is empty, so the theme
-      # checkout doesn't clobber anything from core, and the theme's
-      # tree lands intact (including `package-lock.json` needed by
-      # `setup-node --cache=npm` below).
-      #
-      # The initial version of this workflow had the checkouts in the
-      # reverse order (theme first, then core into the parent). The
-      # core checkout's clean-target-dir behaviour wiped the theme
-      # subtree, causing `setup-node` to fail with "Some specified
-      # paths were not resolved, unable to cache dependencies"
-      # (workflow run 28712783001).
-      - name: Checkout dixlase-core (for CSS @import + components @source)
-        # Only needed for:
-        #   resources/src/common/css/                    (`@import` target)
-        #   resources/views/components/**/*.blade.php    (`@source` for core shared components)
-        #   resources/src/components/**/*.js             (`@source` for core shared components)
-        # A shallow default-branch checkout is enough — none of the
-        # theme's build steps care about core's PHP source.
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/dixlase-core
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}
-
       - name: Checkout theme at target ref
-        # Land the theme at the same path it would occupy in a full
-        # Dixlase install: `<ctx>/themes/DixlaseOnePage/`. Its
-        # `tailwind.css` uses `../../../../../..` relative paths, so
-        # every level of the path matters here.
+        # A plain checkout: nothing here reads the theme through the path
+        # it occupies in an install any more. That mattered only while
+        # this workflow built the stylesheet, whose `tailwind.css` walks
+        # `../../../../../..` to reach core and the plugins.
         uses: actions/checkout@v5
         with:
           ref: ${{ steps.ref.outputs.ref }}
-          path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
 
       - name: Verify the signature manifest matches this tag
         # The gate that keeps an unsigned tree out of production. Signing is
@@ -128,144 +87,15 @@ jobs:
         # the manifest must already describe this tree exactly. A hash
         # comparison only -- no secret, no core checkout.
         # Dixlase/dixlase-core#520.
-        working-directory: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
         run: .github/scripts/check-manifest.sh theme.json
 
-      # Check out every plugin the theme's `tailwind.css` scans via a
-      # hardcoded `@source "…/plugins/<Plugin>/resources/views"` line.
-      # Without these, Tailwind's scanner finds 0 matches for each
-      # plugin path, and the emitted CSS drops ~140 utilities used
-      # only in plugin views — the release ZIP would ship a CSS that
-      # silently breaks any site using those plugins (which is every
-      # site, since these are all first-party plugins that ship with
-      # Dixlase). Same block deploy.yml uses.
-      #
-      # Only plugins with front-facing views are listed; an admin-only
-      # plugin cannot contribute to the front stylesheet (#103).
-      - name: Checkout plugin — DixlaseBlog
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-blog
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseBlog
-
-      - name: Checkout plugin — DixlaseCookie
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-cookie
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseCookie
-
-      - name: Checkout plugin — DixlaseInquiry
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-inquiry
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseInquiry
-
-      - name: Checkout plugin — DixlaseLegal
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-legal
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseLegal
-
-      - name: Checkout plugin — DixlaseMenus
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-menus
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseMenus
-
-      - name: Checkout plugin — DixlaseMultilingual
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-multilingual
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseMultilingual
-
-      - name: Checkout plugin — DixlasePages
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-pages
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlasePages
-
-      - name: Checkout plugin — DixlaseSEO
-        uses: actions/checkout@v5
-        with:
-          repository: Dixlase/plugin-dixlase-seo
-          ref: main
-          token: ${{ secrets.CORE_REPO_TOKEN }}
-          path: ${{ env.DIXLASE_CTX }}/plugins/DixlaseSEO
-
-      - name: Seed empty Tailwind plugin-sources stub
-        # Runtime, `php artisan dls:tailwind:regenerate-plugin-sources`
-        # writes this file every time a plugin is enabled / disabled /
-        # installed / uninstalled, aggregating `@source` directives
-        # from each enabled plugin's `plugin.json`. In release CI we do
-        # not install any plugin — the operator does that later from
-        # the admin panel — so we write an EMPTY stub in the same shape
-        # the aggregator would produce on a fresh install with no
-        # plugin enabled. `theme/resources/src/front/css/tailwind.css`
-        # `@import`s this path; the file must exist and be valid CSS
-        # for the vite build to succeed. This mirrors dixlase-core's
-        # own `release.yml` (see the "Seed Tailwind plugin-sources stub"
-        # step there).
-        run: |
-          cat > "$DIXLASE_CTX/resources/src/common/css/dixlase-tailwind-plugin-sources.css" <<'CSS'
-          /*
-           * Empty stub emitted by theme release CI. Same shape as
-           * `php artisan dls:tailwind:regenerate-plugin-sources`
-           * produces on a fresh install with no plugin enabled — the
-           * runtime aggregator rewrites this file once the operator
-           * enables their first plugin on the destination host.
-           */
-          /* No enabled plugin currently declares Tailwind content sources. */
-          CSS
-
-      - name: Ensure optional scan paths exist
-        # `theme/tailwind.css` has an `@source` for
-        # `storage/app/private/core/front/` (page-content HTML the
-        # operator authors in the admin panel). It is not populated by
-        # the core checkout — the directory only exists on a running
-        # install. Tailwind's `@source` silently skips missing paths,
-        # but we `mkdir -p` here so the check output is clean.
-        run: |
-          mkdir -p "$DIXLASE_CTX/storage/app/private/core/front"
-
-      - name: Setup Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage/package-lock.json
-
-      - name: Install npm dependencies
-        working-directory: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
-        run: npm ci --no-audit --no-fund
-
-      - name: Build front-end assets
-        # Invokes `vite build` directly (bypassing `npm run build`) so
-        # the theme's `prebuild` hook — `check-tailwind-sources.mjs` —
-        # does NOT run in this release context. That script exists to
-        # catch broken `@source` paths during development inside a full
-        # Dixlase install, where every cross-repo path resolves.
-        # Here, plugin-owned `@source` paths correctly do not resolve
-        # (we intentionally did not check out plugins), and the check
-        # would fail. Vite itself skips missing `@source` paths, so
-        # `vite build` succeeds and simply emits a CSS that excludes
-        # plugin utilities — matching what dixlase-core's release.yml
-        # produces for the same theme.
-        working-directory: ${{ env.DIXLASE_CTX }}/themes/DixlaseOnePage
-        run: npx vite build
+      # No build here. resources/assets/ is committed, and the manifest
+      # check above has already compared its bytes against the signature,
+      # so the ZIP ships exactly what was signed. Building on this runner
+      # could produce different bytes and would make the ZIP fail
+      # verification on every site that installs it. That also removes the
+      # need to check out core and the front-rendering plugins, which this
+      # workflow did only so Tailwind's scanner could see their views.
 
       - name: Stage release directory
         id: stage
@@ -274,8 +104,8 @@ jobs:
           DIR="theme-dixlase-onepage-${TAG}"
           mkdir -p "dist/${DIR}"
 
-          # Copy the theme's runtime tree (which by this point holds the
-          # freshly-built `resources/assets/`) into the staging dir.
+          # Copy the theme's runtime tree, `resources/assets/` included,
+          # into the staging dir.
           # Excludes:
           #   .git*             CI + git metadata
           #   node_modules      dev-only, regenerable from package.json
@@ -287,7 +117,7 @@ jobs:
                 --exclude 'dist' \
                 --exclude '.phpunit.cache' \
                 --exclude '.phpunit.result.cache' \
-                "$DIXLASE_CTX/themes/DixlaseOnePage/" "dist/${DIR}/"
+                ./ "dist/${DIR}/"
 
           echo "dir=$DIR" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
@@ -307,12 +137,25 @@ jobs:
           echo "name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
           echo "latest_alias=$LATEST_ALIAS" >> "$GITHUB_OUTPUT"
 
-          # Diagnostics — surface the ZIP contents so a reviewer can
-          # eyeball that resources/assets/ made it in.
           echo "=== ZIP top-level contents (first 30 lines) ==="
           unzip -l "$ZIP_NAME" | head -30
           echo "=== resources/assets/ inside ZIP ==="
           unzip -l "$ZIP_NAME" | grep 'resources/assets' | head -20
+
+          # Fail loudly if the built assets did not make it into the ZIP.
+          # They are committed by the release, so this fails when a release
+          # was cut without building them -- a ZIP that installs into an
+          # unstyled site. The entry stylesheet is content-hashed, so match
+          # the stem rather than a fixed filename, and require the manifest
+          # that resolves it at request time.
+          if ! unzip -l "$ZIP_NAME" | grep -qE 'resources/assets/manifest\.json'; then
+            echo "::error::resources/assets/manifest.json missing from the release ZIP — the release did not build and commit the assets." >&2
+            exit 1
+          fi
+          if ! unzip -l "$ZIP_NAME" | grep -qE 'resources/assets/css/style-[A-Za-z0-9_-]+\.css'; then
+            echo "::error::resources/assets/css/style-<hash>.css missing from the release ZIP — the release did not build and commit the assets." >&2
+            exit 1
+          fi
 
       - name: Attach ZIPs to GitHub release
         if: github.event_name == 'release'
