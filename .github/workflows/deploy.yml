@@ -355,10 +355,26 @@ jobs:
               # autoload.files entries unconditionally, which turns a stale
               # entry into a fatal on every request. Regenerating here keeps
               # the map in step with the tree we just deployed.
-              if [ -f "$SITE_ROOT/scripts/sync-local-autoload.php" ]; then
-                ( cd "$SITE_ROOT" \
-                  && php scripts/sync-local-autoload.php \
-                  && composer dump-autoload --no-scripts --no-interaction ) \
+              # Run it inside the container as the web server user, the way
+              # the optimize:clear below and every plugin's deploy already do.
+              # On the host it ran as the SSH user, which is not the owner of
+              # vendor/ on an installer-layout site whose core was updated by
+              # running dls:core:update as the web server user: that user
+              # writes vendor/ with its own umask, so the SSH user cannot
+              # write vendor/composer/ and the dump fails with Permission
+              # denied. Running as the user that wrote vendor/ removes the
+              # cross-user dependency instead of repairing its symptoms.
+              #
+              # $NO_DEV and --optimize match the plugins' call. The installer
+              # keeps dev packages in vendor/, so $NO_DEV is empty there and
+              # their providers stay in the map; --optimize is not a
+              # performance flag here, because an extension whose directory
+              # name differs in case from the namespace its files declare
+              # resolves only through the optimized classmap
+              # (dixlase-core#488).
+              if docker exec "$PHP_CONTAINER" test -f "$APP_ROOT/scripts/sync-local-autoload.php"; then
+                docker exec $RUN_AS "$PHP_CONTAINER" sh -c \
+                  "cd $APP_ROOT && php scripts/sync-local-autoload.php && composer dump-autoload $NO_DEV --optimize" \
                   || { echo "ERROR: autoload regeneration failed for $SITE" >&2; exit 1; }
               fi
 
