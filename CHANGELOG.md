@@ -5,6 +5,18 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.5.4] — 2026-11-06
+
+### Fixed
+
+- The deploy regenerates the site's autoload map inside the container, as the web server user, the
+  way every plugin's deploy does (#135). On an installer-layout site whose core was updated as the
+  web server user, the dump used to fail with `Permission denied`.
+
+### Changed
+
+- The built Tailwind stylesheet is rebuilt against core 0.2.7 and the current plugin releases.
+
 ## [0.5.3] — 2026-11-04
 
 ### Changed
