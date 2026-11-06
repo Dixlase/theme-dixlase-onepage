@@ -22,6 +22,9 @@
         "@alpinejs/collapse": "^3.13.0",
         "alpinejs": "^3.13.0"
     },
+    "overrides": {
+        "postcss-selector-parser": "^6.1.5"
+    },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^7.2.0",
         "@tailwindcss/postcss": "^4.2.2",
