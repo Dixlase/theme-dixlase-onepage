@@ -5,6 +5,13 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.5.5] — 2026-11-08
+
+### Security
+
+- `postcss-selector-parser` is overridden to 6.1.5 (CVE-2026-104844, #136). It runs only at
+  build time over this theme's own stylesheets; the shipped assets are unchanged.
+
 ## [0.5.4] — 2026-11-06
 
 ### Fixed

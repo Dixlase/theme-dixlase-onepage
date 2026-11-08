@@ -3,7 +3,7 @@
     "package": "DixlaseOnePage",
     "package_name": "dixlase/dixlase-onepage",
     "slug": "dixlase-onepage",
-    "version": "0.5.5-dev",
+    "version": "0.5.5",
     "description": {
         "ja": "Dixlase OnePage テーマ。プラグイン連動型のシングルページ/LP用テーマ。",
         "en": "Dixlase OnePage theme. Plugin-driven single page / landing page theme."
@@ -138,8 +138,8 @@
         }
     },
     "files": {
-        "CHANGELOG.ja.md": "sha256:def23a9fb3ca75340097c627c265ca99b0b1fc687dffed4690f43693dfcf9890",
-        "CHANGELOG.md": "sha256:a8d2a508bfe904b8b2086a96798454669fbe62c4f491866013d9aa78e92690cc",
+        "CHANGELOG.ja.md": "sha256:bc3d7568146200942376e07e1f587a41e31443e9e0506e7a38aa85a38754e65a",
+        "CHANGELOG.md": "sha256:3c23ff0791be636670dc59783d83f11eeaa2c1d8610ae944925bac1fb33c09f7",
         "CONTRIBUTING.ja.md": "sha256:e0c5e0620ca0442664b7afc3ffdc845f505c864fa307b0ba3a8d8506a532ec95",
         "CONTRIBUTING.md": "sha256:e1deb6b11f8032b0b450de3116c88bf93fce813484d07d4ac68b5e965c2b64ee",
         "COPYRIGHT-POLICY.ja.md": "sha256:0fd5693910f7d31ed5f591912d476f3626f54035a96d6621a51d5bd73a0c0bd1",
@@ -160,7 +160,7 @@
         "app/Multilingual/DixlaseOnePageSettingsProvider.php": "sha256:f4528c7e53116274d1834e1cf91de4a44c50db9680ee818f1bbd4ab59ef459c5",
         "app/Providers/DixlaseOnePageServiceProvider.php": "sha256:dd56761352eacf0ca85f3b0bfeb14619b296d231e7618e0a1d70e5d990e56859",
         "app/Services/DixlaseOnePageAppearanceProvider.php": "sha256:ade37f06182e2a598a4eb76407a62cdf818e07a826cf8b160acbcbf9a988140b",
-        "composer.json": "sha256:0d4b0b67f33d485161c89ead7d231bb86c98b4b700a2c950c9a9d5bcb7d37916",
+        "composer.json": "sha256:4613ba7658f3bb01f5f6a356e6f376d0650ea86e02593d865b21c45fdb8ce986",
         "config/admin.php": "sha256:922953a2303b77d182bd4afec02640c17003686a0c8e7615ed76e32172ccf619",
         "config/admin/navigation.php": "sha256:1b39355c6ee9f963636065e42088428cffea836f4ab43b8274dabbc8eaa1d72b",
         "config/theme.php": "sha256:da99c1d0e53f341d8d57624824eec1bd8944d73144e90c468d4ba5357b1bd050",
@@ -175,8 +175,8 @@
         "lang/ja/multilingual_types.php": "sha256:e6e0e2c8c6310311e7539acc586cb38c639e283038d626088766f9cf301b8e82",
         "lang/ja/theme.php": "sha256:508a826614f5a8289c0ded85ebe832e08fbbb0e6e1362ef2e52348d9ef5fc2ce",
         "lisence-info.json": "sha256:47837f131eba0695bb83ff6fd9c04a614b76292707a34ad9798852a0c5557f67",
-        "package-lock.json": "sha256:97c411a5e9c70ea7818d09eb04d565e6153500b3ba854cee536067f3bd9b4441",
-        "package.json": "sha256:6871470790df4df51f129dcff3f63c83be6b206a9390adb33c4b4f059325b849",
+        "package-lock.json": "sha256:3a60b30bdb80711e5c6847ba5d8fe14ac7cde14117d78c1cf7d4c1b4681a18b6",
+        "package.json": "sha256:d65858c3cb73587b7dbdb7f889bb7cddeff2bbd6404c58e1c56f761140ab1eb1",
         "phpunit.xml": "sha256:c4f0a741286fa4034e866fc9417beff3450b89de8501dee432833252f06bee0b",
         "postcss.config.js": "sha256:9412b2d758c8d540555415661b58df2124e4e5077664c5fba9edafd6a72d4d51",
         "resources/assets/css/style-M0SebmGX.css": "sha256:e780219d3786c085e0063e39fc10b14245717f19872ff0817d279118343c7272",
@@ -238,6 +238,6 @@
     "signing": {
         "algo": "ed25519",
         "key_id": "dixlase-authority-2026",
-        "signed_at": "2026-11-06T05:04:03+00:00"
+        "signed_at": "2026-11-08T12:45:21+00:00"
     }
 }
