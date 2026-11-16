@@ -100,6 +100,12 @@ class DixlaseOnePageSettingsSeeder extends Seeder
             // Back to top
             ['name' => 'back_to_top_enabled', 'value' => '0'], // 0: hidden, 1: fixed in the corner
 
+            // What the page shows between the hero and the footer. 'core' is
+            // core's own front page content, which is what every site
+            // rendered before the setting existed. Any other value is a
+            // provider choice composed by core's FrontPageBodyResolver.
+            ['name' => 'front_page_body', 'value' => 'core'],
+
             // Multilingual
             // The locale the primary-stored theme-settings values are written
             // in. 'auto' resolves to the site default at runtime. The central

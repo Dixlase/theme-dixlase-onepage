@@ -119,6 +119,18 @@ class UpdateThemeSettingsRequest extends FormRequest
             // Appearance Mode
             'appearance_mode' => 'required|in:0,1,2',
 
+            // What the page shows between the hero and the footer: 'core' for
+            // core's front page content, or a provider choice composed by
+            // core's FrontPageBodyResolver.
+            //
+            // The shape is checked, not the membership. A rule built from the
+            // choices currently on offer would reject the operator's own saved
+            // value whenever the plugin behind it is disabled — turning any
+            // save of an unrelated setting into a silent reset of this one.
+            // An unresolvable value is already safe: the resolver answers null
+            // and the page renders core's front page content.
+            'front_page_body' => 'nullable|string|max:255',
+
             // Heading font family (headings only — body stays on system stack).
             // Values:
             //   cormorant     → Cormorant Garamond (Latin serif display)
