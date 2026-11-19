@@ -1,9 +1,13 @@
 name: Deploy Theme
 
 on:
-  push:
-    branches:
-      - main
+  # Production receives a tagged release, never a merge. Nothing signs on a
+  # merge -- signing happens in one place, from the working copy that holds
+  # the key -- so `main` is free to drift from the signature manifest. What
+  # ships is the release, whose tree release.yml has already checked against
+  # that manifest. Dixlase/dixlase-core#520.
+  release:
+    types: [published]
 
   # Manual entry point, for putting the built assets back on a site.
   #
@@ -23,6 +27,10 @@ on:
   # `emptyOutDir`, and the server side is `rsync --delete` into the theme
   # tree followed by the symlink check.
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy, e.g. v0.5.6'
+        required: true
 
 # One run at a time, for the whole workflow rather than per ref: every run
 # rsyncs into the same path on the same server, so two runs of different
@@ -52,6 +60,12 @@ jobs:
       # with the rest of the tree.
       - name: Checkout theme code
         uses: actions/checkout@v5
+        with:
+          # Name the ref explicitly: on a release event the default is the
+          # tag's commit, but on a dispatch it is the branch the run was
+          # started from -- and the asset guard below would then inspect a
+          # different tree from the one the sites are moved onto.
+          ref: ${{ github.event.release.tag_name || github.event.inputs.tag }}
 
       - name: Check the built assets are in the tree
         run: |
@@ -111,6 +125,14 @@ jobs:
               _expected_tip=$(git ls-remote "$EXPECTED_URL" refs/heads/main 2>/dev/null | cut -f1)
               [ -n "$_actual_tip" ] && [ "$_actual_tip" = "$_expected_tip" ]
             }
+
+            # The ref every site is moved onto. A tag, so a site holds a
+            # released, signed tree and nothing else.
+            TAG="${{ github.event.release.tag_name || github.event.inputs.tag }}"
+            if [ -z "$TAG" ]; then
+              echo "ERROR: no tag to deploy." >&2
+              exit 1
+            fi
 
             # `keys` was renamed to `authority` (https://authority.dixlase.net/);
             # /var/www/apps/keys no longer exists in compose-php-1.
@@ -186,7 +208,7 @@ jobs:
               # Resolve $DEST into one of three shapes and act accordingly:
               #
               #   (a) Proper nested clone of this theme
-              #       -> fetch + reset to origin/main
+              #       -> fetch the tags and move it onto $TAG
               #
               #   (b) Directory exists but with no nested .git
               #       -> likely the outer parent repo was re-cloned over it and
@@ -231,7 +253,7 @@ jobs:
                     echo "       second extension, and removing it later takes the whole" >&2
                     echo "       site down, not just this theme:" >&2
                     echo "         sudo mv $DEST $BACKUP_ROOT/$THEME_DIR.stale.\$(date +%Y%m%d-%H%M%S)" >&2
-                    echo "         git clone --branch main $EXPECTED_URL $DEST" >&2
+                    echo "         git clone --branch $TAG $EXPECTED_URL $DEST" >&2
                     FAILED_SITES="$FAILED_SITES $SITE"
                     continue
                   fi
@@ -241,8 +263,8 @@ jobs:
                   git -C "$DEST" remote set-url origin "$EXPECTED_URL"
                 fi
                 cd "$DEST"
-                git fetch origin
-                git reset --hard origin/main
+                git fetch origin --tags --force --prune
+                git reset --hard "refs/tags/$TAG"
 
               elif [ -d "$DEST" ]; then
                 BACKUP="$BACKUP_ROOT/$THEME_DIR.stale.$(date +%Y%m%d-%H%M%S)"
@@ -253,10 +275,10 @@ jobs:
                 # and this log line is the evidence for tracking it down.
                 echo "  Contents before move-aside: $(ls -A "$DEST" | wc -l) entr(ies); .git present: no"
                 mv "$DEST" "$BACKUP"
-                git clone --branch main "$EXPECTED_URL" "$DEST"
+                git clone --branch "$TAG" "$EXPECTED_URL" "$DEST"
 
               else
-                git clone --branch main "$EXPECTED_URL" "$DEST"
+                git clone --branch "$TAG" "$EXPECTED_URL" "$DEST"
               fi
 
               # Keep at most STALE_KEEP move-aside copies per site. Each one is
