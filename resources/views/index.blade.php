@@ -30,6 +30,51 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @extends('themes::layouts.app')
 
+{{-- The body a plugin supplies, when the theme setting names one.
+
+     Resolved here rather than inside @section('content') so the title and the
+     provider's own assets can be pushed from the top level of the file, the
+     way the custom CSS / JS below already are. Null means "render core's
+     front page content exactly as before" and covers every failure: nothing
+     chosen, a core without the contract, a plugin that is gone, disabled, no
+     longer resolves the id, or threw. A missing plugin must never blank the
+     front page. --}}
+@php($frontPageBody = dls_onepage_front_page_body(DLS_ONEPAGE_FRONT_PAGE_SURFACE_FRONT))
+@php($hasProviderBody = $frontPageBody !== null && ! $frontPageBody->isEmpty())
+
+@if($hasProviderBody && $frontPageBody->title)
+{{-- Core's @pageTitle directive renders the whole <title> from this section,
+     so the provider names the page and the theme never concatenates the site
+     name by hand. --}}
+@section('title', $frontPageBody->title)
+@endif
+
+{{-- The provider's own stylesheets and scripts. A body that brings its own
+     layout — a listing, a card grid — generally brings assets with it, and
+     dropping them would render it unstyled. The theme's stacks are where they
+     belong; it does not inline them or guess at an order. --}}
+@if($hasProviderBody && $frontPageBody->styleUrls !== [])
+@push('styles')
+@foreach($frontPageBody->styleUrls as $styleUrl)
+<link rel="stylesheet" href="{{ $styleUrl }}">
+@endforeach
+@endpush
+@endif
+
+@if($hasProviderBody && $frontPageBody->scriptUrls !== [])
+@push('scripts')
+@foreach($frontPageBody->scriptUrls as $scriptUrl)
+<script @cspNonce src="{{ $scriptUrl }}"></script>
+@endforeach
+@endpush
+@endif
+
+{{-- $frontPageBody->description is deliberately not emitted. This theme has
+     nowhere to put a meta description: it emits none of its own, that being
+     the SEO extension's territory through $seoHeadMeta, and a second
+     description tag is not an override. Tracked separately rather than
+     silently dropped. --}}
+
 @if(!empty($hasCustomCss))
 @push('styles')
 <link rel="stylesheet" href="{{ route('front.custom-style') }}?v={{ $customAssetVersion }}">
@@ -51,16 +96,30 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 @include('themes::partials.hero')
 @endif
 
-{{-- Front Page Content --}}
-@if(!empty($frontContent))
-{{-- Top padding mirrors the inquiry section below (`pt-28`) so the
-     hero → content transition gets the same breathing room as the
-     content → inquiry transition — the operator's reference for
-     "the spacing feels right there" (2026-09-18). The hero fills
-     the initial viewport, so this space appears only after the
-     visitor scrolls past the hero, which is the natural moment to
-     signal a section break. `pb-16` stays for the content → next
-     section separation. --}}
+{{-- Front Page Body — a plugin's, or core's front page content.
+
+     The spacing is shared by both: top padding mirrors the inquiry section
+     below (`pt-28`) so the hero → body transition gets the same breathing
+     room as the body → inquiry transition — the operator's reference for
+     "the spacing feels right there" (2026-09-18). The hero fills the initial
+     viewport, so this space appears only after the visitor scrolls past the
+     hero, which is the natural moment to signal a section break. `pb-16`
+     stays for the body → next section separation.
+
+     What differs is the inner wrapper, and it is the one visible difference
+     between the two kinds of body. Core's content is Markdown or HTML an
+     operator wrote, so it gets `max-w-4xl` and the `prose` typographic
+     styles. A provider's body brings its own layout — a listing with a
+     sidebar, a grid of cards — which does not fit a narrow single column and
+     must not have `prose` applied over it. It gets the container width and
+     nothing else. --}}
+@if($hasProviderBody)
+<section class="front-page-body pt-28 pb-16">
+    <div class="container mx-auto px-4">
+        {!! $frontPageBody->html() !!}
+    </div>
+</section>
+@elseif(!empty($frontContent))
 <section class="front-content pt-28 pb-16">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto prose prose-lg dark:prose-invert">

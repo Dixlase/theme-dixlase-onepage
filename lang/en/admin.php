@@ -218,6 +218,16 @@ return [
             'help' => 'Places a button that returns the visitor to the top of the page. It appears once the page has been scrolled, so a page shorter than the window never shows it. With the appearance switcher also fixed in the corner, this sits above it.',
         ],
 
+        // What the page shows between the hero and the footer
+        'front_page_body' => [
+            'title' => 'Front page body',
+            'core_option' => 'Front page content (edited in Front Page)',
+            'help' => 'What the front page shows between the hero and the footer. Plugins can offer their own: a blog top page, a particular page. A plugin\'s body is rendered by that plugin with its own settings, so a blog top shows exactly what the blog settings say it should.',
+            'no_providers' => 'No plugin currently offers a front page body, so the front page content edited in Front Page is the only choice. Installing one that does adds its choices here.',
+            'unsupported' => 'This Dixlase version does not offer the front page body contract, so the front page content edited in Front Page is the only choice. Dixlase 0.2.18 or later adds it.',
+            'core_setting_wins' => 'Site Settings currently has the front page set to something other than the theme, which Dixlase resolves before this theme renders. While that is the case this choice has no effect.',
+        ],
+
         // Default locale (primary language the theme settings are authored in)
         'default_locale' => [
             'title' => 'Default Language',

@@ -108,6 +108,7 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_height',
             'hero_height_custom',
             'sns_links_order',
+            'front_page_body',
         ]);
 
         // デフォルト値を設定
@@ -173,6 +174,10 @@ class AdminThemeSettingsController extends AdminLoggedInController
             'hero_height' => 'full', // none | custom | full
             'hero_height_custom' => (string) DLS_ONEPAGE_HERO_HEIGHT_DEFAULT,
             'sns_links_order' => null, // null: the catalogue's own order
+            // What the page shows between the hero and the footer.
+            // 'core' is core's own front page content, which is what
+            // every site rendered before the setting existed.
+            'front_page_body' => DLS_ONEPAGE_FRONT_PAGE_BODY_CORE,
         ];
 
         // Legacy (0.2.0): one switch for the whole front-end switcher, now
@@ -295,6 +300,20 @@ class AdminThemeSettingsController extends AdminLoggedInController
         }
         $this->viewParams['inquiryReady'] = $inquiryReady;
 
+        // The front page body choices, grouped by the plugin that offers
+        // them, via core's FrontPageBodyResolver. Empty on a core without the
+        // contract and on a site with no provider installed — in both cases
+        // the chooser correctly offers core's front page content alone.
+        $this->viewParams['frontPageBodyGroups'] = dls_onepage_front_page_body_groups();
+        $this->viewParams['frontPageBodySupported'] = dls_onepage_front_page_body_resolver() !== null;
+
+        // Whether core's own per-site setting is taking the front page over.
+        // `front_page_display` is resolved before the theme renders at all, so
+        // while it names a provider or `forbidden` this setting has no effect,
+        // and the chooser says so rather than leaving the operator with two
+        // settings that appear to contradict each other.
+        $this->viewParams['frontPageDisplayOverridesTheme'] = $this->frontPageDisplayOverridesTheme();
+
         return view('themes::admin.settings.themes.settings', $this->viewParams);
     }
 
@@ -368,11 +387,19 @@ class AdminThemeSettingsController extends AdminLoggedInController
     }
 
     /**
-     * The non-setting half of the preview frame: the front page body, and
-     * the custom CSS / JS the frame links as subresources.
+     * The non-setting half of the preview frame: core's front page content,
+     * and the custom CSS / JS the frame links as subresources.
      *
-     * Theme settings do not reach the front page body, so this part is the
-     * same whether the preview is of saved or unsaved settings.
+     * Core's front page content does not depend on a theme setting, so this
+     * part is the same whether the preview is of saved or unsaved settings.
+     *
+     * The body a plugin supplies is not resolved here. It depends on the
+     * `front_page_body` setting, which the preview has to honour before it is
+     * saved, so the view asks dls_onepage_front_page_body() for it — that
+     * helper reads the setting through dls_onepage_primary_setting(), which
+     * already prefers a posted value over the stored one. Core's content is
+     * still computed, because it is what the frame falls back to when the
+     * chosen provider returns nothing.
      */
     private function previewFrameParams(): array
     {
@@ -455,6 +482,38 @@ class AdminThemeSettingsController extends AdminLoggedInController
         return redirect()
             ->route('admin.settings.themes.settings')
             ->with('success', __('themes::admin.settings.updated_successfully'));
+    }
+
+    /**
+     * Whether core's `front_page_display` setting is taking `/` over.
+     *
+     * Core resolves that setting before the theme is rendered: when it names
+     * a front page provider, or `forbidden`, the theme's front page never
+     * runs and the body choice below it cannot apply. Reported to the chooser
+     * so it can say so.
+     *
+     * Read through the resolver's own constants and the same repository
+     * core reads it from (SiteSettingRepositoryInterface), rather than by
+     * comparing strings here. False on a core that has neither — the state
+     * of a setting this theme does not own is not worth guessing at.
+     */
+    private function frontPageDisplayOverridesTheme(): bool
+    {
+        if (! class_exists(\App\Services\Front\FrontPageDisplayResolver::class)) {
+            return false;
+        }
+
+        try {
+            $mode = (string) app(\App\Contracts\Repositories\SiteSettingRepositoryInterface::class)
+                ->get(
+                    \App\Services\Front\FrontPageDisplayResolver::SETTING_KEY,
+                    \App\Services\Front\FrontPageDisplayResolver::MODE_THEME
+                );
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return $mode !== '' && $mode !== \App\Services\Front\FrontPageDisplayResolver::MODE_THEME;
     }
 
     /**

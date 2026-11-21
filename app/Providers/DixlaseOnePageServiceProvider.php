@@ -369,6 +369,10 @@ class DixlaseOnePageServiceProvider extends ServiceProvider
             'heading_font_tracking_content' => '0',
             'default_locale' => 'auto', // primary-locale for theme settings; 'auto' = site default
             'multilingual_switcher_enabled' => '0',
+            // What the page shows between the hero and the footer. 'core' is
+            // core's own front page content — what every site rendered before
+            // the setting existed — and every fallback lands back on it.
+            'front_page_body' => DLS_ONEPAGE_FRONT_PAGE_BODY_CORE,
             // メディア関連のプロパティ（loadMediaForThemeSettings()で設定されるが、デフォルトでも必要）
             'headerLogo' => null,
             'headerLogoPath' => null,
