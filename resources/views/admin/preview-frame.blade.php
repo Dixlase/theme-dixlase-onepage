@@ -32,6 +32,40 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 @section('title', __('Preview'))
 
+{{-- The body a plugin supplies, when the theme setting names one.
+
+     Only for the theme settings preview. In bare mode this view is the front
+     page editor's preview, where the body being edited *is* core's front page
+     content and the parent window live-replaces it through postMessage — a
+     provider's body there would be showing the operator something other than
+     what they are editing.
+
+     The surface says "preview", so a provider can tell this render from the
+     live page. The helper reads the setting through
+     dls_onepage_primary_setting(), which prefers a value posted by the
+     settings form over the stored one, so changing the chooser re-renders the
+     frame with the new body before anything is saved. --}}
+@php($previewProviderBody = ($bareContent ?? false)
+    ? null
+    : dls_onepage_front_page_body(DLS_ONEPAGE_FRONT_PAGE_SURFACE_PREVIEW))
+@php($hasPreviewProviderBody = $previewProviderBody !== null && ! $previewProviderBody->isEmpty())
+
+@if($hasPreviewProviderBody && $previewProviderBody->styleUrls !== [])
+@push('styles')
+@foreach($previewProviderBody->styleUrls as $styleUrl)
+<link rel="stylesheet" href="{{ $styleUrl }}">
+@endforeach
+@endpush
+@endif
+
+@if($hasPreviewProviderBody && $previewProviderBody->scriptUrls !== [])
+@push('scripts')
+@foreach($previewProviderBody->scriptUrls as $scriptUrl)
+<script @cspNonce src="{{ $scriptUrl }}"></script>
+@endforeach
+@endpush
+@endif
+
 @if(!empty($hasCustomCss))
 @push('styles')
 <link rel="stylesheet" id="preview-custom-css-link" href="{{ route('front.custom-style') }}?v={{ $customAssetVersion }}">
@@ -53,7 +87,25 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 @endif
 @endunless
 
-{{-- Front Page Content --}}
+{{-- Front Page Body — a plugin's, or core's front page content.
+
+     The wrappers differ exactly as they do on the live page
+     (resources/views/index.blade.php): core's content gets `max-w-4xl` and
+     `prose`, a provider's body gets the container width and no `prose`,
+     because it brings its own layout.
+
+     The provider branch carries neither `preview-content-area` nor
+     `preview-content-section`. Those ids are the front page editor's
+     live-update targets, and they belong to the element holding the content
+     being edited — which, in the provider branch, is not what is on screen.
+     Bare mode never takes this branch, so the editor always has them. --}}
+@if($hasPreviewProviderBody)
+<section class="front-page-body pb-16">
+    <div class="container mx-auto px-4">
+        {!! $previewProviderBody->html() !!}
+    </div>
+</section>
+@else
 {{-- Bare mode keeps the same wrapping classes as the live front so the
      embedding iframe shows the content centered at the same width. --}}
 <section class="front-content {{ ($bareContent ?? false) ? 'py-0' : 'pb-16' }}" id="preview-content-section">
@@ -63,6 +115,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
     </div>
 </section>
+@endif
 
 @unless($bareContent ?? false)
 {{-- Contact Form Section --}}

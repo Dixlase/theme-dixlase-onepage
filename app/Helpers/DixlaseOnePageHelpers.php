@@ -393,3 +393,208 @@ if (! function_exists('dls_onepage_sns_order')) {
         return $ordered;
     }
 }
+
+/**
+ * The stored value that means "core's front page content" — the default, and
+ * what every fallback lands on.
+ *
+ * It mirrors `App\Services\Front\FrontPageBodyResolver::BODY_CORE` and is
+ * written out as a literal on purpose: the helpers below have to read the
+ * setting on a core that predates the contract, where that class does not
+ * exist. A unit test asserts the two agree wherever the class is present, so
+ * the duplication cannot drift silently.
+ */
+if (! defined('DLS_ONEPAGE_FRONT_PAGE_BODY_CORE')) {
+    define('DLS_ONEPAGE_FRONT_PAGE_BODY_CORE', 'core');
+}
+
+/**
+ * Where a front page body is being rendered: the live page, or the theme
+ * settings preview.
+ *
+ * Mirrors `FrontPageBodyProviderInterface::SURFACE_FRONT` / `SURFACE_PREVIEW`,
+ * as literals and for the same reason as the constant above: the two views
+ * that render the body name a surface, and naming a constant on an interface
+ * that an older core does not ship is a fatal error at compile time, not a
+ * graceful fallback. The same unit test pins them to core's values.
+ */
+if (! defined('DLS_ONEPAGE_FRONT_PAGE_SURFACE_FRONT')) {
+    define('DLS_ONEPAGE_FRONT_PAGE_SURFACE_FRONT', 'front');
+}
+
+if (! defined('DLS_ONEPAGE_FRONT_PAGE_SURFACE_PREVIEW')) {
+    define('DLS_ONEPAGE_FRONT_PAGE_SURFACE_PREVIEW', 'preview');
+}
+
+if (! function_exists('dls_onepage_front_page_body_choice')) {
+    /**
+     * The stored front page body choice.
+     *
+     * Either DLS_ONEPAGE_FRONT_PAGE_BODY_CORE or a provider choice as the
+     * core resolver composes it. Nothing stored, or an empty row, reads as
+     * core's front page content — what every site rendered before this
+     * setting existed.
+     *
+     * Read through dls_onepage_primary_setting(), so the theme settings
+     * preview reflects a choice the operator has not saved yet.
+     */
+    function dls_onepage_front_page_body_choice(): string
+    {
+        $stored = dls_onepage_primary_setting('front_page_body');
+
+        return ($stored === null || $stored === '')
+            ? DLS_ONEPAGE_FRONT_PAGE_BODY_CORE
+            : $stored;
+    }
+}
+
+if (! function_exists('dls_onepage_front_page_body_resolver')) {
+    /**
+     * Core's front page body resolver, or null where this core has none.
+     *
+     * The contract arrived in core 0.2.18 and `requires.dixlase` is not
+     * enforced at install time (Dixlase/dixlase-core#473), so this theme can
+     * be running on a core without it. Null here means every caller falls
+     * back to core's front page content rather than fataling on a missing
+     * class — the one failure mode that would take a front page down.
+     */
+    function dls_onepage_front_page_body_resolver(): ?\App\Services\Front\FrontPageBodyResolver
+    {
+        if (! class_exists(\App\Services\Front\FrontPageBodyResolver::class)) {
+            return null;
+        }
+
+        try {
+            return app(\App\Services\Front\FrontPageBodyResolver::class);
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+}
+
+if (! function_exists('dls_onepage_front_page_body_groups')) {
+    /**
+     * The body choices on offer, grouped by the plugin that offers them, for
+     * the chooser in the theme settings sidebar.
+     *
+     * Empty when no plugin provides a body, or when this core has no
+     * resolver. The chooser then offers core's front page content alone,
+     * which is the correct and complete set of choices for such a site.
+     *
+     * @return array<string, array{label: string, choices: array<string, string>}>
+     */
+    function dls_onepage_front_page_body_groups(): array
+    {
+        $resolver = dls_onepage_front_page_body_resolver();
+
+        if ($resolver === null) {
+            return [];
+        }
+
+        try {
+            return $resolver->groupedBodies();
+        } catch (\Throwable $e) {
+            report($e);
+
+            return [];
+        }
+    }
+}
+
+if (! function_exists('dls_onepage_front_page_body')) {
+    /**
+     * The front page body a plugin supplies, or null to render core's front
+     * page content as before.
+     *
+     * Null covers every way a choice can fail to produce a body, so the two
+     * views that render the front page have one case to handle: nothing is
+     * stored, this core has no resolver, the plugin named is gone or
+     * disabled, it declined the id, or it threw.
+     *
+     * **A provider that throws is caught here.** The resolver answers null for
+     * the failures it can see, but a third-party render is arbitrary code, and
+     * an exception escaping it would blank the front page — the one outcome
+     * this setting must not be able to cause. The exception is reported, so it
+     * is not swallowed silently, and the page falls back.
+     *
+     * `showHeading` is false whenever the hero is enabled, because the hero
+     * already carries the page heading and a body that printed its own would
+     * give the page two `<h1>`s. With the hero off, the body is the top of the
+     * page and prints its own.
+     *
+     * @param  string  $surface  DLS_ONEPAGE_FRONT_PAGE_SURFACE_FRONT or
+                                 DLS_ONEPAGE_FRONT_PAGE_SURFACE_PREVIEW
+     */
+    function dls_onepage_front_page_body(
+        string $surface = DLS_ONEPAGE_FRONT_PAGE_SURFACE_FRONT
+    ): ?\App\DTO\Front\FrontPageBodyResult {
+        $choice = dls_onepage_front_page_body_choice();
+
+        if ($choice === DLS_ONEPAGE_FRONT_PAGE_BODY_CORE) {
+            return null;
+        }
+
+        $resolver = dls_onepage_front_page_body_resolver();
+
+        if ($resolver === null) {
+            return null;
+        }
+
+        try {
+            return $resolver->render($choice, new \App\DTO\Front\FrontPageBodyContext(
+                surface: $surface,
+                locale: app()->getLocale(),
+                page: dls_onepage_front_page_body_page(),
+                showHeading: ! dls_onepage_hero_enabled(),
+                siteId: dls_onepage_current_site_id(),
+            ));
+        } catch (\Throwable $e) {
+            report($e);
+
+            return null;
+        }
+    }
+}
+
+if (! function_exists('dls_onepage_front_page_body_page')) {
+    /**
+     * The page number a paginated body should render, from `?page=`.
+     *
+     * The front page is served at `/`, so a provider's own paginator produces
+     * `/?page=2` with nothing to configure — decided with the maintainer
+     * rather than giving the theme a path of its own. Anything below 1 reads
+     * as the first page.
+     */
+    function dls_onepage_front_page_body_page(): int
+    {
+        try {
+            $page = (int) request()->query('page', 1);
+        } catch (\Throwable) {
+            return 1;
+        }
+
+        return max(1, $page);
+    }
+}
+
+if (! function_exists('dls_onepage_current_site_id')) {
+    /**
+     * The current site id, or null where there is no site context.
+     *
+     * Passed to a provider so a body can be resolved per site. Null rather
+     * than a guess when the context cannot be resolved — in the admin
+     * preview, or on a core without the service.
+     */
+    function dls_onepage_current_site_id(): ?int
+    {
+        if (! interface_exists(\App\Contracts\Site\SiteContextInterface::class)) {
+            return null;
+        }
+
+        try {
+            return app(\App\Contracts\Site\SiteContextInterface::class)->currentSiteId();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+}
