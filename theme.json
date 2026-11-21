@@ -82,7 +82,6 @@
     "supports": {
         "dark_mode": true,
         "responsive": true,
-        "front_page_builder": true,
         "custom_colors": true
     },
     "customizable": {
@@ -202,7 +201,6 @@
         "resources/views/errors/_page.blade.php": "sha256:4feccd04f1d29cfe6fa4a778f320f7bda9b45089ae9eb8675678030fb822e58b",
         "resources/views/index.blade.php": "sha256:9ee9cb3bf37eaf832d096ef51ed854e2aa1bed5435ec87efd0261bc77c7adfa0",
         "resources/views/layouts/app.blade.php": "sha256:578ccd6d357cb92ab7842cca03158473ae2bf3c0988f35f802786cbe257f4e9e",
-        "resources/views/layouts/frontpage.blade.php": "sha256:e8e748e50d3bda718380674a15d089fbae81e8d25518e0b8a7eb768aec85dd28",
         "resources/views/layouts/preview.blade.php": "sha256:b4d3a420b0d8285a6583c6ba1da8b65b6e5100106db8bd3c2dfb82aeef506a83",
         "resources/views/partials/appearance-float.blade.php": "sha256:451e7c39198890959a86f8da76616d5c6b3a27f1acb4f04d4822c9e3f7b1b123",
         "resources/views/partials/appearance-mode-script.blade.php": "sha256:cd3d08af4bf552b37c2e9bb1a6eb36a6b121ea273a57f3cd888020ce2bdfdec2",
