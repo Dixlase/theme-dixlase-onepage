@@ -5,6 +5,33 @@ All notable changes to the Dixlase OnePage theme are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this theme follows Semantic Versioning.
 
+## [0.6.0] — 2026-11-23
+
+### Upgrade notes
+
+- Requires Dixlase core 0.2.18 or later, for the front page body contract.
+
+### Added
+
+- A theme setting chooses what the front page body shows: core's front page content, or a body
+  supplied by an installed extension. The hero stays above it and the footer below, and the body's
+  own heading is suppressed while the hero carries one. The chooser groups the choices by the
+  extension that offers them, and says so plainly when none is installed or when the per-site
+  `front_page_display` setting overrides the choice (#147).
+
+### Removed
+
+- `supports.front_page_builder` in `theme.json` and `resources/views/layouts/frontpage.blade.php`.
+  Neither was ever read: the flag was declared and never consulted, and the layout was an
+  unreferenced stub, so nothing changes for a site (#150).
+
+### Development
+
+- The deploy runs on a published release rather than on a merge (#148).
+- CI tests the newest MySQL and MariaDB LTS releases and the supported floor of each (#145).
+- Tests pin that the front page body setting is saved through the settings form, reflected in the
+  live preview before it is saved, and named in every file a theme setting has to appear in (#152).
+
 ## [0.5.6] — 2026-11-09
 
 ### Development
