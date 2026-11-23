@@ -180,5 +180,54 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
             render();
         }
     }, SAMPLE_MS);
+
+    // --- discrete controls skip the settle wait ----------------------
+    // SETTLE_MS is there for text inputs, which fire on every keystroke
+    // and would otherwise re-render the frame once per letter. A select, a
+    // checkbox and a radio are not like that: one `change` is a single
+    // deliberate choice that is already final, so the wait buys nothing and
+    // reads as the control doing nothing. Changing the front page body
+    // chooser took about a second to move the frame -- up to SAMPLE_MS to be
+    // noticed, then SETTLE_MS of enforced stillness, then the post.
+    //
+    // The sampling loop above is not replaced, only short-circuited for
+    // these controls. It stays the catch-all for a field written as a
+    // property, which fires no event at all.
+    form.addEventListener('change', function (event) {
+        var target = event.target;
+
+        if (!target || !target.tagName) {
+            return;
+        }
+
+        var tag = target.tagName.toLowerCase();
+        var type = (target.type || '').toLowerCase();
+        var discrete = tag === 'select'
+            || (tag === 'input' && (type === 'checkbox' || type === 'radio'));
+
+        if (!discrete) {
+            return;
+        }
+
+        // Deferred by one turn of the event loop rather than read here: a
+        // toggle's submitted value is often a hidden input that Alpine
+        // writes from its own state, and that write lands after this
+        // handler returns. Sampling now would catch the value the form held
+        // *before* the click, render that, and leave the loop to correct it
+        // a tick later -- two renders for one click.
+        window.setTimeout(function () {
+            var current = snapshot();
+
+            if (current === null || current === rendered) {
+                return;
+            }
+
+            // Keep the loop in step so it does not render this state again.
+            rendered = current;
+            seen = current;
+            settledAt = Date.now();
+            render();
+        }, 0);
+    });
 })();
 </script>
