@@ -72,6 +72,79 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
     </x-admin.theme-preview-sidebar-section>
 
+    {{-- ===== Front Page Body ===== --}}
+    {{-- Second in the sidebar, right after Appearance Mode, because this is a
+         structural choice and not a cosmetic one: it decides what the front
+         page *is*, while everything below it — hero, contact section, footer —
+         is chrome that applies whichever body is chosen. It also changes what
+         other settings mean, because choosing a provider's body stops core's
+         front page content being used at all, and a setting that does that
+         belongs before the ones it affects, not after them.
+
+         The cost is distance from the hero sections, which interact with it:
+         whether the hero is enabled decides whether the body renders its own
+         heading. The help text below carries that relationship.
+
+         The stored choice is kept selectable even when nothing offers it any
+         more. A plugin that is disabled for an afternoon would otherwise make
+         the select fall to the first option, and the next save of any
+         unrelated setting would quietly write that — losing a choice the
+         operator never changed. It is shown as unavailable instead, and the
+         front page is already falling back to core's content while it is. --}}
+    @php
+        $frontPageBodyGroupsSafe = $frontPageBodyGroups ?? [];
+        $frontPageBodyChoice = old('front_page_body', $settings->front_page_body ?? DLS_ONEPAGE_FRONT_PAGE_BODY_CORE);
+        $frontPageBodyOffered = [DLS_ONEPAGE_FRONT_PAGE_BODY_CORE];
+        foreach ($frontPageBodyGroupsSafe as $frontPageBodyGroup) {
+            $frontPageBodyOffered = array_merge($frontPageBodyOffered, array_keys($frontPageBodyGroup['choices']));
+        }
+        $frontPageBodyOrphaned = ! in_array($frontPageBodyChoice, $frontPageBodyOffered, true);
+    @endphp
+    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.front_page_body.title')" icon="fas fa-layer-group">
+        <select name="front_page_body"
+            class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
+            <option value="{{ DLS_ONEPAGE_FRONT_PAGE_BODY_CORE }}" {{ $frontPageBodyChoice === DLS_ONEPAGE_FRONT_PAGE_BODY_CORE ? 'selected' : '' }}>
+                {{ __('themes::admin.settings.front_page_body.core_option') }}
+            </option>
+            @foreach($frontPageBodyGroupsSafe as $frontPageBodyGroup)
+            <optgroup label="{{ $frontPageBodyGroup['label'] }}">
+                @foreach($frontPageBodyGroup['choices'] as $frontPageBodyValue => $frontPageBodyLabel)
+                <option value="{{ $frontPageBodyValue }}" {{ $frontPageBodyChoice === $frontPageBodyValue ? 'selected' : '' }}>
+                    {{ $frontPageBodyLabel }}
+                </option>
+                @endforeach
+            </optgroup>
+            @endforeach
+            @if($frontPageBodyOrphaned)
+            <option value="{{ $frontPageBodyChoice }}" selected>
+                {{ $frontPageBodyChoice }}
+            </option>
+            @endif
+        </select>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.front_page_body.help') }}</p>
+
+        @unless($frontPageBodySupported ?? false)
+        {{-- Core predates the contract. Said plainly rather than shown as an
+             empty chooser, which reads as "no plugins installed". --}}
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.front_page_body.unsupported') }}</p>
+        @elseif($frontPageBodyGroupsSafe === [])
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.front_page_body.no_providers') }}</p>
+        @endunless
+
+        @if($frontPageDisplayOverridesTheme ?? false)
+        {{-- Core resolves `front_page_display` before this theme renders, so
+             while it names a provider or `forbidden` the choice above does
+             nothing. An operator left to discover that for themselves reads
+             it as the setting being broken. --}}
+        <div class="mt-3 p-3 rounded-md border border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/30">
+            <p class="text-xs text-amber-800 dark:text-amber-200 flex items-start gap-2">
+                <i class="fas fa-exclamation-triangle mt-0.5"></i>
+                <span>{{ __('themes::admin.settings.front_page_body.core_setting_wins') }}</span>
+            </p>
+        </div>
+        @endif
+    </x-admin.theme-preview-sidebar-section>
+
     {{-- ===== Back to top ===== --}}
     {{-- Its own section rather than a third switch under Appearance: that --}}
     {{-- section is about which appearance a visitor sees, and this is a    --}}
@@ -639,71 +712,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
 
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.hero.buttons.help') }}</p>
-    </x-admin.theme-preview-sidebar-section>
-
-    {{-- ===== Front Page Body ===== --}}
-    {{-- Placed above the Contact Form section because that is where the body
-         of the page sits in the sidebar's top-to-bottom order: hero above,
-         contact section below.
-
-         The stored choice is kept selectable even when nothing offers it any
-         more. A plugin that is disabled for an afternoon would otherwise make
-         the select fall to the first option, and the next save of any
-         unrelated setting would quietly write that — losing a choice the
-         operator never changed. It is shown as unavailable instead, and the
-         front page is already falling back to core's content while it is. --}}
-    @php
-        $frontPageBodyGroupsSafe = $frontPageBodyGroups ?? [];
-        $frontPageBodyChoice = old('front_page_body', $settings->front_page_body ?? DLS_ONEPAGE_FRONT_PAGE_BODY_CORE);
-        $frontPageBodyOffered = [DLS_ONEPAGE_FRONT_PAGE_BODY_CORE];
-        foreach ($frontPageBodyGroupsSafe as $frontPageBodyGroup) {
-            $frontPageBodyOffered = array_merge($frontPageBodyOffered, array_keys($frontPageBodyGroup['choices']));
-        }
-        $frontPageBodyOrphaned = ! in_array($frontPageBodyChoice, $frontPageBodyOffered, true);
-    @endphp
-    <x-admin.theme-preview-sidebar-section :title="__('themes::admin.settings.front_page_body.title')" icon="fas fa-layer-group">
-        <select name="front_page_body"
-            class="input-common block w-full max-w-full p-2 pr-10 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:text-white">
-            <option value="{{ DLS_ONEPAGE_FRONT_PAGE_BODY_CORE }}" {{ $frontPageBodyChoice === DLS_ONEPAGE_FRONT_PAGE_BODY_CORE ? 'selected' : '' }}>
-                {{ __('themes::admin.settings.front_page_body.core_option') }}
-            </option>
-            @foreach($frontPageBodyGroupsSafe as $frontPageBodyGroup)
-            <optgroup label="{{ $frontPageBodyGroup['label'] }}">
-                @foreach($frontPageBodyGroup['choices'] as $frontPageBodyValue => $frontPageBodyLabel)
-                <option value="{{ $frontPageBodyValue }}" {{ $frontPageBodyChoice === $frontPageBodyValue ? 'selected' : '' }}>
-                    {{ $frontPageBodyLabel }}
-                </option>
-                @endforeach
-            </optgroup>
-            @endforeach
-            @if($frontPageBodyOrphaned)
-            <option value="{{ $frontPageBodyChoice }}" selected>
-                {{ $frontPageBodyChoice }}
-            </option>
-            @endif
-        </select>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ __('themes::admin.settings.front_page_body.help') }}</p>
-
-        @unless($frontPageBodySupported ?? false)
-        {{-- Core predates the contract. Said plainly rather than shown as an
-             empty chooser, which reads as "no plugins installed". --}}
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.front_page_body.unsupported') }}</p>
-        @elseif($frontPageBodyGroupsSafe === [])
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ __('themes::admin.settings.front_page_body.no_providers') }}</p>
-        @endunless
-
-        @if($frontPageDisplayOverridesTheme ?? false)
-        {{-- Core resolves `front_page_display` before this theme renders, so
-             while it names a provider or `forbidden` the choice above does
-             nothing. An operator left to discover that for themselves reads
-             it as the setting being broken. --}}
-        <div class="mt-3 p-3 rounded-md border border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/30">
-            <p class="text-xs text-amber-800 dark:text-amber-200 flex items-start gap-2">
-                <i class="fas fa-exclamation-triangle mt-0.5"></i>
-                <span>{{ __('themes::admin.settings.front_page_body.core_setting_wins') }}</span>
-            </p>
-        </div>
-        @endif
     </x-admin.theme-preview-sidebar-section>
 
     {{-- ===== Contact Form (Plugin: DixlaseInquiry) ===== --}}
