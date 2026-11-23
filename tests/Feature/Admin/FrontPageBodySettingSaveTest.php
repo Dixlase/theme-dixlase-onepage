@@ -314,13 +314,20 @@ class FrontPageBodySettingSaveTest extends TestCase
      * where Alpine writes the value — a toggle, a range, a hidden input set as
      * a property. `front_page_body` is a plain `<select name="front_page_body">`
      * inside `#theme-settings-form`, and the preview samples
-     * `new FormData(form)` on a timer instead of listening for events, so every
-     * field the form will submit is picked up with no Alpine entry.
+     * `new FormData(form)` on a timer, so every field the form will submit is
+     * picked up with no Alpine entry.
+     *
+     * #155 added a `change` listener as well, as a latency fast path for
+     * discrete controls. It short-circuits the settle wait; it does not replace
+     * the sampling, which is still what guarantees a field written as a
+     * property is seen at all. Either way a plain select needs no Alpine entry,
+     * so the conclusion above is unchanged — see
+     * test_discrete_controls_skip_the_settle_wait for the fast path itself.
      *
      * If the preview ever stops sampling the form, this fails — and that is
      * exactly when the select would need wiring after all.
      */
-    public function test_the_preview_samples_the_whole_form_rather_than_listening(): void
+    public function test_the_preview_samples_the_whole_form(): void
     {
         $preview = (string) file_get_contents(
             base_path('themes/DixlaseOnePage/resources/views/admin/settings/themes/partials/preview.blade.php')
@@ -337,6 +344,44 @@ class FrontPageBodySettingSaveTest extends TestCase
             $settingsForm,
             'settings.blade.php has gained a front_page_body entry. If the chooser now needs '
             .'Alpine state, add that file to settingWiring() as well; if not, remove the entry.'
+        );
+    }
+
+    /**
+     * The chooser is a `<select>`, and before #155 changing it took about a
+     * second to move the frame: up to SAMPLE_MS to be noticed, then SETTLE_MS
+     * of enforced stillness, then the post. The wait exists for text inputs,
+     * which fire per keystroke; one `change` on a select is already final.
+     *
+     * Pinned here because the fast path is easy to lose in a refactor of this
+     * script, and losing it is silent — the chooser still works, just slowly
+     * enough to read as broken. SETTLE_MS is asserted to survive too: deleting
+     * the wait outright would make every keystroke re-render the frame.
+     */
+    public function test_discrete_controls_skip_the_settle_wait(): void
+    {
+        $preview = (string) file_get_contents(
+            base_path('themes/DixlaseOnePage/resources/views/admin/settings/themes/partials/preview.blade.php')
+        );
+
+        $this->assertStringContainsString(
+            "addEventListener('change'",
+            $preview,
+            'The preview no longer listens for change, so a select waits out SETTLE_MS again.'
+        );
+
+        foreach (["tag === 'select'", "type === 'checkbox'", "type === 'radio'"] as $discrete) {
+            $this->assertStringContainsString(
+                $discrete,
+                $preview,
+                'The change listener no longer recognises '.$discrete.' as a discrete control.'
+            );
+        }
+
+        $this->assertStringContainsString(
+            'SETTLE_MS',
+            $preview,
+            'SETTLE_MS is gone, so text inputs re-render the frame on every keystroke.'
         );
     }
 
